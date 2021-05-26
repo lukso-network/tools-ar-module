@@ -29,7 +29,13 @@ public class TextureFrame {
     texture.Apply();
   }
 
-  public Color32[] GetPixels32() {
+    public void CopyTextureFrom(Texture2D src) {
+        // TODO: Convert format on GPU
+        texture.SetPixels32(src.GetPixels32());
+        texture.Apply();
+    }
+
+    public Color32[] GetPixels32() {
     return texture.GetPixels32();
   }
 
@@ -55,4 +61,8 @@ public class TextureFrame {
   public void Release() {
     OnRelease((UInt64)GetNativeTexturePtr(false), IntPtr.Zero);
   }
+
+    public Texture2D GetTexture() {
+        return texture;
+    }
 }

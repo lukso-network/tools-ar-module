@@ -2,6 +2,7 @@ using Mediapipe;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class WebCamScreenController : MonoBehaviour {
   [SerializeField] int Width = 640;
@@ -11,12 +12,63 @@ public class WebCamScreenController : MonoBehaviour {
   private const int TEXTURE_SIZE_THRESHOLD = 50;
   private const int MAX_FRAMES_TO_BE_INITIALIZED = 500;
 
+
+    private int actualFrameWidth = 0;
+    private int actualFrameHeight = 0;
+    private int scrWidth = 0;
+    private int scrHeight = 0;
+    public Vector2 ScreenSize { get; private set; }
+
   private WebCamDevice webCamDevice;
   private WebCamTexture webCamTexture;
   private Texture2D outputTexture;
   private Color32[] pixelData;
 
-  public bool isPlaying {
+
+    public bool useCamera = true;
+    protected Texture2D videoTexture;
+    public VideoPlayer vp;
+
+
+    public delegate void OnNewFrameRendered(Texture2D texture);
+    public event OnNewFrameRendered newFrameRendered;
+
+    public void Start() {
+        //videoTexture = new Texture2D((intt)vp.clip.width, (int)vp.clip.height, TextureFormat.RGB24, false);
+        videoTexture = new Texture2D(640, 480, TextureFormat.RGB24, false);
+        vp.sendFrameReadyEvents = true;
+        vp.frameReady += OnNewFrame;
+
+        //vp.loopPointReached += LoopPointReached;
+        vp.Play();
+
+        UpdateSize(Width, Height);
+    }
+
+    private void Resize() {
+        var cam = Camera.main;
+        
+    }
+
+    protected void OnNewFrame(VideoPlayer source, long frameIdx) {
+        RenderTexture renderTexture = source.texture as RenderTexture;
+        if (videoTexture.width != renderTexture.width || videoTexture.height != renderTexture.height) {
+            videoTexture.Resize(renderTexture.width, renderTexture.height);
+            //GetComponent<Renderer>().material.mainTexture = videoTexture;
+        }
+
+        RenderTexture oldRT = RenderTexture.active;
+        RenderTexture.active = renderTexture;
+        videoTexture.ReadPixels(new UnityEngine.Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        videoTexture.Apply();
+        //videoTexture.Resize(640, 480);
+        RenderTexture.active = oldRT;
+        //OnNewFrame(this);
+    }
+
+    public bool isPaused;
+
+    public bool isPlaying {
     get { return isWebCamTextureInitialized && webCamTexture.isPlaying; }
   }
 
@@ -69,7 +121,8 @@ public class WebCamScreenController : MonoBehaviour {
     }
 
     Renderer renderer = GetComponent<Renderer>();
-    outputTexture = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
+   // outputTexture = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
+    outputTexture = new Texture2D(Width, Height, TextureFormat.RGBA32, false);
     renderer.material.mainTexture = outputTexture;
 
     pixelData = new Color32[webCamTexture.width * webCamTexture.height];
@@ -104,7 +157,8 @@ public class WebCamScreenController : MonoBehaviour {
 
     // TODO: size assertion
     src.CopyTexture(outputTexture);
-  }
+        newFrameRendered(src.GetTexture());
+    }
 
   public void DrawScreen(ImageFrame imageFrame) {
     if (!isWebCamReady) { return; }
@@ -124,13 +178,85 @@ public class WebCamScreenController : MonoBehaviour {
 #endif
   }
 
+
+    int frame = 0;
   public TextureFramePool.TextureFrameRequest RequestNextFrame() {
     return WebCamTextureFramePool.Instance.RequestNextTextureFrame((TextureFrame textureFrame) => {
-      if (isPlaying) {
-        textureFrame.CopyTextureFrom(webCamTexture);
+      if (isPlaying && !isPaused) {
+            //TODO TEMPORARY
+            if (useCamera) {
+                textureFrame.CopyTextureFrom(webCamTexture);
+                UpdateSize(webCamTexture.width, webCamTexture.height);
+            } else {
+                frame++;
+                if (frame % 1 == 0) {
+                    textureFrame.CopyTextureFrom(videoTexture);
+                    UpdateSize(videoTexture.width, videoTexture.height);
+                }
+            }
+           // textureFrame.CopyTextureFrom(webCamTexture);
+
+            //textureFrame.CopyTextureFrom((Texture2D)GetComponent<Renderer>().material.mainTexture);
+           // textureFrame.CopyTextureFrom(videoTexture);
       }
     });
   }
 
-  private class WebCamTextureFramePool : TextureFramePool {}
+    private void UpdateSize(int width, int height) {
+        if (width == actualFrameWidth && height == actualFrameHeight) {
+            return;
+        }
+
+        actualFrameWidth = width;
+        actualFrameHeight = height;
+        int refHeight = 4;
+        transform.localScale = new Vector3((float)width / height * refHeight, 1, refHeight);
+
+        UpdateCamera();
+    }
+
+    private void UpdateCamera() {
+        var cam = Camera.main;
+        float hCam = transform.localScale.z;
+
+
+        float texAspect = (float)actualFrameWidth / actualFrameHeight;
+
+        float dist = 0;
+        var tg = Mathf.Tan(cam.fieldOfView * Mathf.Deg2Rad/2);
+        if (texAspect < cam.aspect) {
+            dist = transform.localScale.z / tg / 2;
+            ScreenSize = new Vector2(texAspect / cam.aspect, 1);
+        } else {
+            dist = transform.localScale.x / cam.aspect / tg / 2;
+            ScreenSize = new Vector2(1, cam.aspect / texAspect);
+        }
+/*
+        float h1 = transform.localScale.x / cam.aspect ;
+        float h2 = transform.localScale.z;
+
+        
+
+
+        dist = Mathf.Max(h1, h2)/ tg / 2;
+        //  var h = Mathf.Max(h1, h2);
+*/
+        //  var dist = h / tg;
+        var pos = cam.transform.position;
+        pos.z = -dist;
+
+        cam.transform.position = pos;
+    }
+
+    void Update() {
+        if (Screen.width != scrWidth || Screen.height != scrHeight) {
+            scrWidth = Screen.width;
+            scrHeight = Screen.height;
+
+            UpdateCamera();
+        }
+
+    }
+
+    private class WebCamTextureFramePool : TextureFramePool {}
 }
