@@ -18,7 +18,7 @@ namespace Mediapipe {
     ///   it will return <c>new Vector3(40, 30, 1)</c>
     /// </example>
     protected Vector3 ScaleVector(Transform transform) {
-      return new Vector3(10 * transform.localScale.x, 10 * transform.localScale.z, 1);
+      return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.z, 1);
     }
 
     protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, float x, float y, bool isFlipped) {
@@ -28,8 +28,15 @@ namespace Mediapipe {
       return Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
     }
 
-    protected Vector3 GetPosition(Transform screenTransform, NormalizedLandmark point, bool isFlipped) {
-      return GetPositionFromNormalizedPoint(screenTransform, point.X, point.Y, isFlipped);
+        protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, float x, float y, float z, bool isFlipped) {
+            var relX = (isFlipped ? -1 : 1) * (x - 0.5f);
+            var relY = 0.5f - y;
+
+            return Vector3.Scale(new Vector3(relX, relY, z), ScaleVector(screenTransform)) + screenTransform.position;
+        }
+
+        protected Vector3 GetPosition(Transform screenTransform, NormalizedLandmark point, bool isFlipped) {
+      return GetPositionFromNormalizedPoint(screenTransform, point.X, point.Y, point.Z, isFlipped);
     }
 
     protected Vector3 GetPosition(Transform screenTransform, mplt.RelativeKeypoint point, bool isFlipped) {

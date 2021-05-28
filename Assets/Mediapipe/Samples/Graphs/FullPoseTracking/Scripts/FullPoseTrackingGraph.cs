@@ -80,13 +80,20 @@ public class FullPoseTrackingGraph : DemoGraph {
 
   private void RenderAnnotation(WebCamScreenController screenController, FullPoseTrackingValue value) {
     // NOTE: input image is flipped
-    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, false);
+    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, true);
 
-    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList);
+    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, true);
   }
 
   protected override void PrepareDependentAssets() {
-    PrepareDependentAsset("pose_detection.bytes");
-    PrepareDependentAsset("pose_landmark_upper_body.bytes");
-  }
+        PrepareDependentAsset("pose_detection.bytes");
+
+        //if (modelComplexity == ModelComplexity.Lite) {
+          //  PrepareDependentAsset("pose_landmark_lite.bytes");
+        //} else if (modelComplexity == ModelComplexity.Full) {
+            PrepareDependentAsset("pose_landmark_full.bytes");
+        //} else {
+            //PrepareDependentAsset("pose_landmark_heavy.bytes");
+        //}
+    }
 }

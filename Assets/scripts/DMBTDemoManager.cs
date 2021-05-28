@@ -107,6 +107,7 @@ namespace DeepMotion.DMBTDemo
 
         public delegate void OnNewPoseHandler();
         public event OnNewPoseHandler newPoseEvent;
+        private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
         //public GameObject[] JointBones { get; private set; }
 
@@ -161,7 +162,7 @@ namespace DeepMotion.DMBTDemo
             return Vector3.Scale(new Vector3(relX, relY, z), ScaleVector(screenTransform)) + screenTransform.position;
         }
 
-        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList) {
+        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
             int count = landmarkList.Landmark.Count;
 
             var points = new Vector3[count];
@@ -169,19 +170,28 @@ namespace DeepMotion.DMBTDemo
             for (int i = 0; i < count; ++i) {
                 var landmark = landmarkList.Landmark[i];
 
-                var p = GetPositionFromNormalizedPoint(transform, landmark.X, landmark.Y, landmark.Z, false);
+                var p = GetPositionFromNormalizedPoint(transform, landmark.X, landmark.Y, landmark.Z, flipped);
                // p.x *= 3;
                 points[i] = p;
             }
+
+            if (flipped) {
+                var fPoints = new Vector3[count];
+                for (int i = 0; i < FLIP_POINTS.Length; ++i) { 
+                    fPoints[i] = points[FLIP_POINTS[i]];
+                }
+                points = fPoints;
+            }
+
             return points;
         }
 
-        internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList) {
+        internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
             if (!enabled) {
                 return;
             }
 
-            var points = TransformPoints(transform, landmarkList);
+            var points = TransformPoints(transform, landmarkList, flipped);
             //TODO
             var ps = points.Select(x => new Vector3?(x)).ToArray();
             controller.SetIkTarget(ps);

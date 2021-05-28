@@ -1,4 +1,4 @@
-﻿using GD.MinMaxSlider;
+﻿//using GD.MinMaxSlider;
 using System;
 using UnityEngine;
 
@@ -57,16 +57,16 @@ namespace Assets
     public class BoneValidator
     {
 
-        [MinMaxSlider(0.1f, 1.5f)]
+     //   [MinMaxSlider(0.1f, 1.5f)]
         public Vector2 arm1to2 = new Vector2(0.64f, 1.3f);
 
-        [MinMaxSlider(0.4f, 0.8f)]
+       // [MinMaxSlider(0.4f, 0.8f)]
         public Vector2 arm2toSpine = new Vector2(0.4f, 0.7f);
 
-        [MinMaxSlider(0.1f, 1.3f)]
+     //   [MinMaxSlider(0.1f, 1.3f)]
         public Vector2 leg1to2 = new Vector2(0.75f, 1.05f);
 
-        [MinMaxSlider(0.25f, 1.6f)]
+     //   [MinMaxSlider(0.25f, 1.6f)]
         public Vector2 leg2toSpine = new Vector2(0.34f, 0.9f);
 
     }

@@ -65,7 +65,7 @@ namespace Mediapipe {
 
     private void DrawRelativeKeypoints(Transform screenTransform, pbc.RepeatedField<mplt.RelativeKeypoint> keypoints, bool isFlipped = false) {
       while (keypoints.Count > Keypoints.Count) {
-        Keypoints.Add(Instantiate(relativeKeypointPrefab));
+        Keypoints.Add(Instantiate(relativeKeypointPrefab, this.transform));
       }
 
       for (var i = 0; i < keypoints.Count; i++) {
