@@ -177,7 +177,8 @@ namespace DeepMotion.DMBTDemo
 
             if (flipped) {
                 var fPoints = new Vector3[count];
-                for (int i = 0; i < FLIP_POINTS.Length; ++i) { 
+                int maxSize = Math.Min(count, FLIP_POINTS.Length);
+                for (int i = 0; i <maxSize; ++i) { 
                     fPoints[i] = points[FLIP_POINTS[i]];
                 }
                 points = fPoints;

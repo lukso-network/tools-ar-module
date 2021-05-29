@@ -3,7 +3,16 @@ using Mediapipe;
 using UnityEngine;
 
 public class FullPoseTrackingGraph : DemoGraph {
-  private const string poseLandmarksStream = "pose_landmarks_smoothed";
+    enum ModelComplexity {
+    Lite = 0,
+    Full = 1,
+    Heavy = 2,
+  }
+
+  [SerializeField] ModelComplexity modelComplexity = ModelComplexity.Full;
+  [SerializeField] bool smoothLandmarks = true;
+
+  private const string poseLandmarksStream = "pose_landmarks";
   private OutputStreamPoller<NormalizedLandmarkList> poseLandmarksStreamPoller;
   private NormalizedLandmarkListPacket poseLandmarksPacket;
 
@@ -11,7 +20,7 @@ public class FullPoseTrackingGraph : DemoGraph {
   private OutputStreamPoller<Detection> poseDetectionStreamPoller;
   private DetectionPacket poseDetectionPacket;
 
-  private const string poseLandmarksPresenceStream = "pose_landmarks_smoothed_presence";
+  private const string poseLandmarksPresenceStream = "pose_landmarks_presence";
   private OutputStreamPoller<bool> poseLandmarksPresenceStreamPoller;
   private BoolPacket poseLandmarksPresencePacket;
 
@@ -20,10 +29,10 @@ public class FullPoseTrackingGraph : DemoGraph {
   private BoolPacket poseDetectionPresencePacket;
 
   private DMBTDemoManager skeletonManager;
+  private SidePacket sidePacket;
 
   public override Status StartRun() {
     skeletonManager = FindObjectOfType<DMBTDemoManager>();
-
     poseLandmarksStreamPoller = graph.AddOutputStreamPoller<NormalizedLandmarkList>(poseLandmarksStream).Value();
     poseLandmarksPacket = new NormalizedLandmarkListPacket();
 
@@ -36,7 +45,11 @@ public class FullPoseTrackingGraph : DemoGraph {
     poseDetectionPresenceStreamPoller = graph.AddOutputStreamPoller<bool>(poseDetectionPresenceStream).Value();
     poseDetectionPresencePacket = new BoolPacket();
 
-    return graph.StartRun();
+    sidePacket = new SidePacket();
+    sidePacket.Emplace("model_complexity", new IntPacket((int)modelComplexity));
+    sidePacket.Emplace("smooth_landmarks", new BoolPacket(smoothLandmarks));
+
+    return graph.StartRun(sidePacket);
   }
 
   public override void RenderOutput(WebCamScreenController screenController, TextureFrame textureFrame) {
@@ -86,14 +99,14 @@ public class FullPoseTrackingGraph : DemoGraph {
   }
 
   protected override void PrepareDependentAssets() {
-        PrepareDependentAsset("pose_detection.bytes");
+    PrepareDependentAsset("pose_detection.bytes");
 
-        //if (modelComplexity == ModelComplexity.Lite) {
-          //  PrepareDependentAsset("pose_landmark_lite.bytes");
-        //} else if (modelComplexity == ModelComplexity.Full) {
-            PrepareDependentAsset("pose_landmark_full.bytes");
-        //} else {
-            //PrepareDependentAsset("pose_landmark_heavy.bytes");
-        //}
+    if (modelComplexity == ModelComplexity.Lite) {
+      PrepareDependentAsset("pose_landmark_lite.bytes");
+    } else if (modelComplexity == ModelComplexity.Full) {
+      PrepareDependentAsset("pose_landmark_full.bytes");
+    } else {
+      PrepareDependentAsset("pose_landmark_heavy.bytes");
     }
+  }
 }
