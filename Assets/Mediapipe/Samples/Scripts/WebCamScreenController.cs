@@ -13,16 +13,19 @@ public class WebCamScreenController : MonoBehaviour {
   private const int MAX_FRAMES_TO_BE_INITIALIZED = 500;
 
 
+    private int prevAngle = -1;
     private int actualFrameWidth = 0;
     private int actualFrameHeight = 0;
     private int scrWidth = 0;
     private int scrHeight = 0;
     public Vector2 ScreenSize { get; private set; }
 
+    public Texture2D test;
   private WebCamDevice webCamDevice;
   private WebCamTexture webCamTexture;
   private Texture2D outputTexture;
   private Color32[] pixelData;
+    private Quaternion baseRotation;
 
 
     public bool useCamera = true;
@@ -38,6 +41,7 @@ public class WebCamScreenController : MonoBehaviour {
         videoTexture = new Texture2D(640, 480, TextureFormat.RGB24, false);
         vp.sendFrameReadyEvents = true;
         vp.frameReady += OnNewFrame;
+        baseRotation = transform.localRotation;
 
         //vp.loopPointReached += LoopPointReached;
         vp.Play();
@@ -186,12 +190,12 @@ public class WebCamScreenController : MonoBehaviour {
             //TODO TEMPORARY
             if (useCamera) {
                 textureFrame.CopyTextureFrom(webCamTexture);
-                UpdateSize(webCamTexture.width, webCamTexture.height);
+                UpdateSize(webCamTexture.width, webCamTexture.height, webCamTexture.videoRotationAngle);
             } else {
                 frame++;
-                if (frame % 1 == 0) {
+            if (frame % 1 == 0 && vp.isPlaying) {
                     textureFrame.CopyTextureFrom(videoTexture);
-                    UpdateSize(videoTexture.width, videoTexture.height);
+                    UpdateSize(videoTexture.width, videoTexture.height, 90);
                 }
             }
            // textureFrame.CopyTextureFrom(webCamTexture);
@@ -202,15 +206,30 @@ public class WebCamScreenController : MonoBehaviour {
     });
   }
 
-    private void UpdateSize(int width, int height) {
-        if (width == actualFrameWidth && height == actualFrameHeight) {
+    private void UpdateSize(int width, int height, int angle = 0) {
+        //Debug.Log("******* width:" + width + ", angle:" + angle);
+        if (angle == 90 || angle == 270) {
+            var temp = width;
+            width = height;
+            height = temp;
+        }
+
+        if (width == actualFrameWidth && height == actualFrameHeight && angle == prevAngle) {
             return;
         }
 
+        prevAngle = angle;
         actualFrameWidth = width;
         actualFrameHeight = height;
         int refHeight = 4;
         transform.localScale = new Vector3((float)width / height * refHeight, 1, refHeight);
+
+
+        Quaternion rot = Quaternion.Euler(0, 0, angle);
+        Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
+        
+        GetComponent<Renderer>().material.SetMatrix("_TextureRotation", m);
+        //transform.localRotation = baseRotation * Quaternion.Euler(0, angle, 0);
 
         UpdateCamera();
     }
