@@ -12,7 +12,7 @@ public class WebCamScreenController : MonoBehaviour {
   private const int TEXTURE_SIZE_THRESHOLD = 50;
   private const int MAX_FRAMES_TO_BE_INITIALIZED = 500;
 
-
+    public int VideoAngle { get => prevAngle; }
     private int prevAngle = -1;
     private int actualFrameWidth = 0;
     private int actualFrameHeight = 0;

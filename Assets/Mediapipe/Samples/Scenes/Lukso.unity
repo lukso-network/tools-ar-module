@@ -1749,7 +1749,7 @@ MonoBehaviour:
   FPS: 30
   FocalLengthPx: 2
   test: {fileID: 0}
-  useCamera: 0
+  useCamera: 1
   vp: {fileID: 1616823678}
   isPaused: 0
 --- !u!64 &496037460
@@ -5780,7 +5780,7 @@ VideoPlayer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616823677}
-  m_Enabled: 1
+  m_Enabled: 0
   m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0

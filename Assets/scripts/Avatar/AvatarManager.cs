@@ -143,7 +143,14 @@ public class AvatarManager : MonoBehaviour
         float h = webScreenPlane.ScreenSize.y;
         var mat = new Matrix4x4(new Vector4(1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4((w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
         //var mat = new Matrix4x4(new Vector4(-1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4(1-(w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
+        //mat = mat * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, 90), Vector3.one);
 
+        Quaternion rot = Quaternion.Euler(0, 0, webScreenPlane.VideoAngle);
+        Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
+        m[3*4 + 0] = 1;
+        mat = m * mat;
         bodyRenderer.material.SetMatrix("_TextureMat", mat);
+
+
     }
 }
