@@ -18,7 +18,7 @@ namespace Mediapipe {
     ///   it will return <c>new Vector3(40, 30, 1)</c>
     /// </example>
     protected Vector3 ScaleVector(Transform transform) {
-      return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.z, 1);
+      return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.z, transform.localScale.y);
     }
 
     protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, float x, float y, bool isFlipped) {

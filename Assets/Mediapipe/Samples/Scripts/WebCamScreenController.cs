@@ -11,6 +11,7 @@ public class WebCamScreenController : MonoBehaviour {
   [SerializeField] float FocalLengthPx = 2.0f; /// TODO: calculate it from webCamDevice info if possible.
   private const int TEXTURE_SIZE_THRESHOLD = 50;
   private const int MAX_FRAMES_TO_BE_INITIALIZED = 500;
+    public int videoRotateAngle = 0;
 
     public int VideoAngle { get => prevAngle; }
     private int prevAngle = -1;
@@ -36,6 +37,12 @@ public class WebCamScreenController : MonoBehaviour {
     public delegate void OnNewFrameRendered(Texture2D texture);
     public event OnNewFrameRendered newFrameRendered;
 
+    public void Awake() {
+        if (useCamera) {
+            vp.enabled = false;
+        }
+
+    }
     public void Start() {
         //videoTexture = new Texture2D((intt)vp.clip.width, (int)vp.clip.height, TextureFormat.RGB24, false);
         videoTexture = new Texture2D(640, 480, TextureFormat.RGB24, false);
@@ -195,7 +202,7 @@ public class WebCamScreenController : MonoBehaviour {
                 frame++;
             if (frame % 1 == 0 && vp.isPlaying) {
                     textureFrame.CopyTextureFrom(videoTexture);
-                    UpdateSize(videoTexture.width, videoTexture.height, 90);
+                    UpdateSize(videoTexture.width, videoTexture.height, videoRotateAngle);
                 }
             }
            // textureFrame.CopyTextureFrom(webCamTexture);

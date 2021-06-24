@@ -20,6 +20,7 @@ public class StatisticDisplay : MonoBehaviour
     private int count = 0;
     private float timeleft; // Left time for current interval
     private Text displayText;
+    private string message;
 
     void Start()
     {
@@ -55,7 +56,7 @@ public class StatisticDisplay : MonoBehaviour
                 //string formatText = System.String.Format(format, valueToDisplay);
                 //if (SetColor != null)
                   //  displayText.color = SetColor(valueToDisplay);
-                displayText.text = text;
+                displayText.text = message + "*\n" +  text;
             }
             ResetValue();
         }
@@ -67,8 +68,10 @@ public class StatisticDisplay : MonoBehaviour
         count = 0;
     }
 
-    public void LogValue(params float [] value)
+    public void LogValue(string message, params float [] value)
     {
+
+        this.message =  message;
         var len = Math.Min(value.Length, accumulatedValue.Length);
         for (int i = 0; i < len; ++i) {
             accumulatedValue[i] += value[i];

@@ -55,7 +55,7 @@ node: {
   output_stream: "IMAGE:transformed_input_video"
   node_options: {
     [type.googleapis.com/mediapipe.ImageTransformationCalculatorOptions] {
-      rotation_mode: 4
+      rotation_mode: 3
     }
   }
 }

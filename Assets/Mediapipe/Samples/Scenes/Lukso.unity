@@ -1748,8 +1748,9 @@ MonoBehaviour:
   Height: 720
   FPS: 30
   FocalLengthPx: 2
+  videoRotateAngle: 0
   test: {fileID: 0}
-  useCamera: 1
+  useCamera: 0
   vp: {fileID: 1616823678}
   isPaused: 0
 --- !u!64 &496037460
@@ -1824,7 +1825,7 @@ Transform:
   m_GameObject: {fileID: 496037458}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.33, y: 1, z: 3}
+  m_LocalScale: {x: 5.33, y: 2, z: 3}
   m_Children: []
   m_Father: {fileID: 1029208548}
   m_RootOrder: 0
@@ -3561,11 +3562,12 @@ MonoBehaviour:
   updateInterval: 0.5
   format: '{0:F2}'
   titles:
-  - Pose
-  - Drive
-  - Scale
-  - Tuning
-  - Total
+  - dt
+  - keep/r
+  - filter
+  - grad
+  - move
+  - steps
 --- !u!114 &1007728892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3625,7 +3627,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20.900024, y: -78.8999}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1013724545
 GameObject:
@@ -5780,7 +5782,7 @@ VideoPlayer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616823677}
-  m_Enabled: 0
+  m_Enabled: 1
   m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
@@ -5798,7 +5800,7 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: file://D:/projects/ml/media-pipe/video/person/p12.mp4
+  m_Url: file://D:/projects/ml/media-pipe/video/onegai_darling.mp4
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 01
   m_ControlledAudioTrackCount: 1

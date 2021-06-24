@@ -21,6 +21,12 @@ namespace Assets
         private Skeleton skeleton;
 
         private Vector3?[] ikTarget;
+        private Vector3?[] allTarget;
+
+
+        private Transform[] affectedSource;
+        private Vector3[] affectedTarget;
+
         private Transform[] ikSource;
         private int leftHipSourceIndex;
         private int rightHipSourceIndex;
@@ -37,16 +43,17 @@ namespace Assets
         private Quaternion[] rots;
         private Vector3[] pos;
         private Vector3[] scales;
-
+        private Vector3[] localPositions;
         //alias
         public GameObject obj => avatar;
         
         private CalcParam[] parameters = new CalcParam[] {
                 new CalcParam("Position", new CalcFilter(typeof(Position3DGradCalculator)), 0.001f, 1, 0.0001f),
-                new CalcParam("Scaling", new CalcFilter(typeof(ScalingGradCalculator)), 0.0001f, 1, 0.0001f),
+            //    new CalcParam("Scaling", new CalcFilter(typeof(ScalingGradCalculator)), 0.0001f, 1, 0.0001f),
                 new CalcParam("Rotation", new RotationFilter(), 0.1f, 500, 0.1f),
                 new CalcParam("Stretching", new CalcFilter(typeof(StretchingGradCalculator)), 0.0001f, 1, 0.0001f),
         };
+
 
 
         public Avatar(GameObject avatar, Skeleton skeleton) {
@@ -126,6 +133,7 @@ namespace Assets
         public void SetIkTarget(Vector3?[] target) {
             //this.ikTarget = target.Where((p, i) => skeleton.HasKeyPoint(i)).ToArray();
             this.ikTarget = skeleton.FilterKeyPoints(target);
+            this.allTarget = target;
         }
 
         private int GetIndexInSourceList(GameObject obj) {
@@ -232,7 +240,7 @@ namespace Assets
             return Mathf.Sqrt(s);
         }
 
-        public float TargetFunction() {
+        public float TargetFunctionOld() {
             double s = 0;
             var ln = Math.Min(ikSource.Length, ikTarget.Length);
             for (int i = 0; i < ln; ++i) {
@@ -247,8 +255,25 @@ namespace Assets
                 s += Dist(j.transform.position, j.initPosition)*0.1f;
             }*/
             return (float)Math.Sqrt(s);
-        }   
-        
+        }
+
+        public float TargetFunction() {
+            double s = 0;
+            var ln = affectedSource.Length;
+            for (int i = 0; i < ln; ++i) {
+                var p1 = affectedSource[i].transform.position;
+                var p2 = affectedTarget[i];
+                if (p2 != null) {
+                    s += (p1 - p2).sqrMagnitude;
+                }
+            }
+
+            /*foreach(var j in joints) {
+                s += Dist(j.transform.position, j.initPosition)*0.1f;
+            }*/
+            return (float)Math.Sqrt(s);
+        }
+
         public float[] DiffPos() {
             double s = 0;
             var ln = Math.Min(ikSource.Length, ikTarget.Length);
@@ -346,6 +371,66 @@ namespace Assets
 
         }
 
+        private bool SolveIkByStep(ICalcFilter calcFilter, float gradStep, ref float moveStep, float minStep, float minValDistance = 1e-5f) {
+
+            var zeroLevel = TargetFunction();
+            KeepJoints(rots, pos, scales);
+            FindGradients(calcFilter, gradStep, zeroLevel);
+            RestoreJoints(rots, pos, scales);
+
+            var maxGrad = FindMaxGradient(calcFilter);
+            int moved = 0;
+            var val = zeroLevel;
+            var stopCalc = false;
+            //for (int j = 0; j < 30 && moveStep > minStep; ++j) {
+            for (int j = 0; j < 30; ++j) {
+                KeepJoints(rots, pos, scales);
+                MoveByGradients(calcFilter, moveStep);
+
+                var maxDelta = maxGrad * moveStep;
+                if (maxGrad == 0) {
+                    RestoreJoints(rots, pos, scales);
+                    return false;
+                }
+
+                if (maxDelta < minStep) {
+                    RestoreJoints(rots, pos, scales);
+                    if (moveStep > 0) {
+                        moveStep = moveStep / settings.gradStepScale;
+                    }
+                    break;
+                }
+
+                var cur = TargetFunction();
+                var delta = cur - val;
+                if (-minValDistance < delta && delta < minValDistance) {
+                    RestoreJoints(rots, pos, scales);
+                    return false;
+                } else if (cur > val) {
+                    RestoreJoints(rots, pos, scales);
+                    if (moved != 0) {
+                        if (moved > 1) {
+                            moveStep /= settings.gradStepScale;
+                        }
+                        break;
+                    }
+
+                    moveStep *= settings.gradStepScale;
+                } else {
+                    val = cur;
+                    moved++;
+
+                    if (moved % 2 == 0) {
+                        //  moveStep /= settings.gradStepScale;
+                    }
+                }
+            }
+
+            // moveStep /= settings.gradStepScale;
+            return true;
+
+        }
+
         private void MoveHipsToCenter() {
           //  return;
             var hips = GetHips();
@@ -391,14 +476,125 @@ namespace Assets
                 Debug.LogError("Exception on gradient: " + e.Message);
             }
         }
-    
+
+        public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
+
+            if (localPositions == null) {
+                localPositions = new Vector3[this.joints.Count];
+                for (int i = 0; i < enabledJoints.Count; ++i) {
+                    var j = enabledJoints[i];
+                    localPositions[i] = j.transform.localPosition;
+                }
+            }
+            for (int i = 0; i < enabledJoints.Count; ++i) {
+                var j = enabledJoints[i];
+                j.transform.localPosition = localPositions[i];
+            }
+
+            MoveHipsToCenter();
+            float scale = FindScale();
+            var hips = GetHips();
+            hips.transform.localScale = hips.transform.localScale * scale;
+      
+
+
+            var testJoints = new List<Joint>(enabledJoints);
+
+            foreach(var j in testJoints) {
+                if (j.definition.AffectedPoints != null) {
+                    enabledJoints = new List<Joint>() { j };
+                    affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
+                    affectedSource = (from z in j.definition.AffectedPoints select skeleton.GetJoint(z).transform).ToArray();
+
+
+                    foreach (var p in parameters) {
+                        p.calculated = false;
+                    }
+
+                    try {
+                        for (int i = 0; i < steps; ++i) {
+                            foreach (var p in parameters) {
+                                if (!p.calculated) {
+                                    var res = SolveIk(p.calcFilter, p.gradStep * settings.gradientCalcStep, ref p.moveStep, p.minStep);
+                                    if (!res) {
+                                        p.calculated = true;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Debug.LogError("Exception on gradient: " + e.Message);
+                    }
+
+                }
+            }
+            //TODO
+            enabledJoints = testJoints;
+
+            var constraints = settings.useConstraints;
+
+            for (int i = 0; i < enabledJoints.Count; ++i) {
+                var j = enabledJoints[i];
+                localPositions[i] = j.transform.localPosition;
+            }
+
+            var ln = Math.Min(ikSource.Length, ikTarget.Length);
+            for (int i = 0; i < ln; ++i) {
+                var t1 = ikSource[i].transform;
+                var p2 = ikTarget[i];
+                if (p2 != null) {
+                    t1.position = p2.Value;
+                }
+            }
+        }
+
+        private float FindScale() {
+            float l1,l2;
+            l1 = l2 = 0;
+            for(var i = 0; i < skeleton.ScaleBones.GetLength(0); ++i) {
+                int idx1 = skeleton.ScaleBones[i,0];
+                int idx2 = skeleton.ScaleBones[i,1];
+
+                l1 += (skeleton.GetJoint(idx1).transform.position - skeleton.GetJoint(idx2).transform.position).magnitude;
+                l2 += (allTarget[idx1].Value - allTarget[idx2].Value).magnitude;
+            }
+
+            return l2 / l1;
+        }
+
+        private void UpdateBones() {
+
+            MoveHipsToCenter();
+            float scale = FindScale();
+            var hips = GetHips();
+            hips.transform.localScale = hips.transform.localScale * scale;
+
+
+            var ln = Math.Min(ikSource.Length, ikTarget.Length);
+            for (int i = 0; i < ln; ++i) {
+                var t1 = ikSource[i].transform;
+                var p2 = ikTarget[i];
+                if (p2 != null) {
+                    t1.position = p2.Value;
+                }
+            }
+
+        }
+
         public void Update(float gradStep, float moveStep, int steps) {
+            /*if (ikTarget.Length > 0) {
+                UpdateBones();
+            }
+
+            return;
+            */
+
             if (ikTarget.Length > 0) {
-                UpdateFast(gradStep, moveStep, steps);
+                UpdateFastBySteps(gradStep, moveStep, steps);
             }
 
             foreach(var j in enabledJoints) {
-                j.Filter();
+              //  j.Filter();
             }
 
             return;
