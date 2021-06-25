@@ -31,7 +31,8 @@ namespace Assets
 
         public bool enableRot;
         public bool enableMoveHips = true;
-        
+        public bool enableAttaching = true;
+
         [Range(0, 0.0005f)]
         public float levelChangeThreshold = 0.001f;
 

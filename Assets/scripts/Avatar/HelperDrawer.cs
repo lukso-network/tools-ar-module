@@ -27,7 +27,6 @@ namespace Assets.scripts.Avatar
         private List<Joint> joints = new List<Joint>();
         private List<Joint[]> bones = new List<Joint[]>();
 
-
         public bool ShowBody { 
             get => showBody; 
             set { 

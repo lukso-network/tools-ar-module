@@ -16,6 +16,7 @@ namespace Assets
 
         public JointFilter filter;
         public Joint parent;
+        public List<Joint> children = new List<Joint>();
         public bool gradEnabled;
         private readonly GradCalculator gradCalculator;
         public JointDefinition definition;

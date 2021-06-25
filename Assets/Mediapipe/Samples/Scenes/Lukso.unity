@@ -2546,6 +2546,7 @@ MonoBehaviour:
     scaleMoveMultiplier: 0.05
     enableRot: 1
     enableMoveHips: 1
+    enableAttaching: 1
     levelChangeThreshold: 0.0005
     gradStepScale: 0.5
     gradStepMin: 1

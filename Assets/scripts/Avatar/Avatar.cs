@@ -44,11 +44,12 @@ namespace Assets
         private Vector3[] pos;
         private Vector3[] scales;
         private Vector3[] localPositions;
+        private Quaternion[] localRotations;
         //alias
         public GameObject obj => avatar;
         
         private CalcParam[] parameters = new CalcParam[] {
-                new CalcParam("Position", new CalcFilter(typeof(Position3DGradCalculator)), 0.001f, 1, 0.0001f),
+            //    new CalcParam("Position", new CalcFilter(typeof(Position3DGradCalculator)), 0.001f, 1, 0.0001f),
             //    new CalcParam("Scaling", new CalcFilter(typeof(ScalingGradCalculator)), 0.0001f, 1, 0.0001f),
                 new CalcParam("Rotation", new RotationFilter(), 0.1f, 500, 0.1f),
                 new CalcParam("Stretching", new CalcFilter(typeof(StretchingGradCalculator)), 0.0001f, 1, 0.0001f),
@@ -88,14 +89,25 @@ namespace Assets
             }
 
             foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
-                var p = t.parent;
-                if (p) {
-                    var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
-                    Joint parentJoint;
-                    if (transformByName.TryGetValue(Utils.ReplaceSpace(p.gameObject.name), out parentJoint)) {
-                        joint.parent = parentJoint;
-                    }
 
+                var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
+
+                var obj = t;
+                while (true) {
+                    obj = obj.parent;
+                    if (obj == null) {
+                        break;
+                    } else {
+                        Joint parentJoint;
+                        if (transformByName.TryGetValue(Utils.ReplaceSpace(obj.gameObject.name), out parentJoint) && parentJoint.definition != null) {// && parentJoint.definition.pointId >= 0) {
+                            
+                            if (parentJoint.definition.pointId == -28 || parentJoint.definition.pointId == -27) {
+                                continue;
+                            }
+                            joint.parent = parentJoint;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -477,26 +489,83 @@ namespace Assets
             }
         }
 
+        private void PullAttachJoints() {
+
+
+            /*
+            var ln = Math.Min(ikSource.Length, ikTarget.Length);
+            for (int i = 0; i < ln; ++i) {
+                var t1 = ikSource[i].transform;
+                var p2 = ikTarget[i];
+                if (p2 != null) {
+                    t1.position = p2.Value;
+                }
+            }*/
+
+            /*  foreach(var j in joints) {
+                  if (j.children.Count != 1) {
+                      continue;
+                  }
+
+                  var c = j.children[0];
+                  if (c.definition == null || c.definition.pointId < 0) {
+                      continue;
+                  }
+            */
+            for (var i = 0; i < skeleton.ScaleBones.GetLength(0); ++i) {
+                int idx1 = skeleton.ScaleBones[i, 0];
+                int idx2 = skeleton.ScaleBones[i, 1];
+
+                var j = skeleton.GetJoint(idx1);
+                var c = skeleton.GetJoint(idx2);
+                if (settings.enableAttaching) {
+                    j.transform.position = allTarget[idx1].Value; ;
+                }
+                var pt = allTarget[idx2].Value;
+              // j.transform.position = allTarget[idx1].Value;
+                var v1 = (c.transform.position - j.transform.position).normalized;
+                var v2 = (pt - j.transform.position).normalized;
+                var rot = Quaternion.FromToRotation(v1, v2);
+               j.transform.rotation = rot * j.transform.rotation;
+
+                if (settings.enableAttaching) {
+                    c.transform.position = pt;
+                }
+            }
+            /*
+            if (settings.enableAttaching) {
+                var ln = Math.Min(ikSource.Length, ikTarget.Length);
+                for (int i = 0; i < ln; ++i) {
+                    var t1 = ikSource[i].transform;
+                    var p2 = ikTarget[i];
+                    if (p2 != null) {
+                        t1.position = p2.Value;
+                    }
+                }
+            }*/
+        }
+
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
 
             if (localPositions == null) {
                 localPositions = new Vector3[this.joints.Count];
+                localRotations = new Quaternion[this.joints.Count];
                 for (int i = 0; i < enabledJoints.Count; ++i) {
                     var j = enabledJoints[i];
                     localPositions[i] = j.transform.localPosition;
+                    localRotations[i] = j.transform.localRotation;
                 }
             }
             for (int i = 0; i < enabledJoints.Count; ++i) {
                 var j = enabledJoints[i];
                 j.transform.localPosition = localPositions[i];
+                j.transform.localRotation = localRotations[i];
             }
 
             MoveHipsToCenter();
             float scale = FindScale();
             var hips = GetHips();
             hips.transform.localScale = hips.transform.localScale * scale;
-      
-
 
             var testJoints = new List<Joint>(enabledJoints);
 
@@ -536,16 +605,14 @@ namespace Assets
             for (int i = 0; i < enabledJoints.Count; ++i) {
                 var j = enabledJoints[i];
                 localPositions[i] = j.transform.localPosition;
+                localRotations[i] = j.transform.localRotation;
             }
+        
 
-            var ln = Math.Min(ikSource.Length, ikTarget.Length);
-            for (int i = 0; i < ln; ++i) {
-                var t1 = ikSource[i].transform;
-                var p2 = ikTarget[i];
-                if (p2 != null) {
-                    t1.position = p2.Value;
-                }
-            }
+
+          
+            PullAttachJoints();
+          
         }
 
         private float FindScale() {
