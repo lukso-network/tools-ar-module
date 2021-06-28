@@ -121,6 +121,8 @@ namespace DeepMotion.DMBTDemo
         public IkSettings ikSettings;
         public FilterSettings scaleFilter;
         public FilterSettings posFilter;
+        [Range(0,2)]
+        public float scaleDepth = 0.5f;
 
         public delegate void OnNewPoseHandler();
         public event OnNewPoseHandler newPoseEvent;
@@ -208,6 +210,10 @@ namespace DeepMotion.DMBTDemo
             if (!enabled) {
                 return;
             }
+
+            var scale = transform.localScale;
+            scale.y = scaleDepth;
+            transform.localScale = scale;
 
             var points = TransformPoints(transform, landmarkList, flipped);
             //TODO

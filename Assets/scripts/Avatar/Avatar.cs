@@ -448,16 +448,27 @@ namespace Assets
             var hips = GetHips();
 
             if (leftHipSourceIndex < 0 || rightHipSourceIndex < 0) {
-                return;
+               // return;
             }
-            var left = ikTarget[leftHipSourceIndex].Value;
-            var right = ikTarget[rightHipSourceIndex].Value;
+            var left = allTarget[(int)Skeleton.Point.LEFT_HIP].Value;
+            var right = allTarget[(int)Skeleton.Point.RIGHT_HIP].Value;
+
+            var leftArm = allTarget[(int)Skeleton.Point.LEFT_SHOULDER].Value;
+            var rightArm = allTarget[(int)Skeleton.Point.RIGHT_SHOULDER].Value;
+
+            
 
             var center = (left + right) / 2;
+            var hipLen = (left - right).magnitude;
+
+            var dir = ((leftArm + rightArm) / 2 - center).normalized;
+
             var c = hips.transform.position;
             c.x = center.x;
             c.z = center.z;
             c.y = center.y;
+
+            c += dir * hipLen * 0.3f;
 
             hips.transform.position = c;
         }
