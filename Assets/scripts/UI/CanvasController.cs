@@ -19,12 +19,23 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public void SelectVideo() {
-        
+#if UNITY_EDITOR
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi");
+        player.LoadUrl(path);
+#endif
     }
 
     [Binding]
     public void ResetAvatar() {
         skeletonManager.ResetAvatar();
+    }
+
+    [Binding]
+    public void Rotate90() {
+        var angles = Camera.main.transform.eulerAngles;
+        angles.z += 90;
+        Camera.main.transform.eulerAngles = angles;
+
     }
 
     [Binding]

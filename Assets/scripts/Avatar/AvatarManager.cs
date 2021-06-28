@@ -147,7 +147,9 @@ public class AvatarManager : MonoBehaviour
 
         Quaternion rot = Quaternion.Euler(0, 0, webScreenPlane.VideoAngle);
         Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
+#if !UNITY_EDITOR
         m[3*4 + 0] = 1;
+#endif
         mat = m * mat;
         bodyRenderer.material.SetMatrix("_TextureMat", mat);
 

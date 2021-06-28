@@ -18,6 +18,7 @@ public class WebCamScreenController : MonoBehaviour {
     private int actualFrameWidth = 0;
     private int actualFrameHeight = 0;
     private int scrWidth = 0;
+
     private int scrHeight = 0;
     public Vector2 ScreenSize { get; private set; }
 
@@ -200,7 +201,14 @@ public class WebCamScreenController : MonoBehaviour {
                 UpdateSize(webCamTexture.width, webCamTexture.height, webCamTexture.videoRotationAngle);
             } else {
                 frame++;
-            if (frame % 1 == 0 && vp.isPlaying) {
+                if (frame % 1 == 0 && vp.isPlaying) {
+
+                    if (Width != videoTexture.width || Height != videoTexture.height) {
+                        Width = videoTexture.width;
+                        Height = videoTexture.height;
+                        StartCoroutine(ResetScreen(webCamDevice));
+                    }
+
                     textureFrame.CopyTextureFrom(videoTexture);
                     UpdateSize(videoTexture.width, videoTexture.height, videoRotateAngle);
                 }
@@ -284,5 +292,15 @@ public class WebCamScreenController : MonoBehaviour {
 
     }
 
+    internal void LoadUrl(string path) {
+        UriBuilder uri = new UriBuilder(path);
+        uri.Scheme = "file";
+        vp.url = uri.ToString();
+        vp.Stop();
+        vp.Play();
+    }
+
     private class WebCamTextureFramePool : TextureFramePool {}
+
+
 }

@@ -545,6 +545,42 @@ namespace Assets
             }*/
         }
 
+
+        private void PullAttachJoints(int src, int [] points) {
+            if (points == null) {
+                return;
+            }
+            int idx1 = src;
+            if (idx1 < 0) { 
+                if (settings.enableAttaching) {
+                    foreach (var idx2 in points) {
+                        var c = skeleton.GetJoint(idx2);
+                        c.transform.position = allTarget[idx2].Value;
+                    }
+                }
+                return;
+            }
+            var j = skeleton.GetJoint(idx1);
+            if (settings.enableAttaching) {
+                j.transform.position = allTarget[idx1].Value; ;
+            }
+
+            foreach(var idx2 in points) {
+                var c = skeleton.GetJoint(idx2);
+                var pt = allTarget[idx2].Value;
+
+                var v1 = (c.transform.position - j.transform.position).normalized;
+                var v2 = (pt - j.transform.position).normalized;
+                var rot = Quaternion.FromToRotation(v1, v2);
+                j.transform.rotation = rot * j.transform.rotation;
+
+                if (settings.enableAttaching) {
+                    c.transform.position = pt;
+                }
+            }
+          
+        }
+
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
 
             if (localPositions == null) {
@@ -594,8 +630,9 @@ namespace Assets
                     } catch (Exception e) {
                         Debug.LogError("Exception on gradient: " + e.Message);
                     }
-
+                   // PullAttachJoints(j.definition.pointId, j.definition.AffectedPoints);
                 }
+                
             }
             //TODO
             enabledJoints = testJoints;
