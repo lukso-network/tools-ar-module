@@ -2562,6 +2562,7 @@ MonoBehaviour:
     sigma: 0.1
     dt: 22
     filterType: 1
+  scaleDepth: 0.5
 --- !u!114 &780931514
 MonoBehaviour:
   m_ObjectHideFlags: 0

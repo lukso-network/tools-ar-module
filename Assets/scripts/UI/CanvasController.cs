@@ -20,7 +20,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     [Binding]
     public void SelectVideo() {
 #if UNITY_EDITOR
-        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi");
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi,mov");
         player.LoadUrl(path);
 #endif
     }
