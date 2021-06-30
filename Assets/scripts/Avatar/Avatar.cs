@@ -463,14 +463,15 @@ namespace Assets
 
             var dir = ((leftArm + rightArm) / 2 - center).normalized;
 
-            var c = hips.transform.position;
-            c.x = center.x;
-            c.z = center.z;
-            c.y = center.y;
+            hips.transform.position = center + dir * hipLen * 0.2f;
 
-            c += dir * hipLen * 0.3f;
-
-            hips.transform.position = c;
+            var norm = Vector3.Cross(dir, right - left).normalized;
+          //  var rot = Matrix4x4.LookAt(hips.transform.position, hips.transform.position + norm, dir);
+         //   var rot = Quaternion.LookRotation(norm, dir);
+          //  hips.transform.
+            //1,0,0 - direction to front
+            hips.transform.rotation = Quaternion.LookRotation(norm, dir); ;// Quaternion.FromToRotation(Vector3.right, norm) * Quaternion.FromToRotation(Vector3.;
+            hips.transform.rotation = Quaternion.LookRotation(dir, (right-left).normalized); ;// Quaternion.FromToRotation(Vector3.right, norm) * Quaternion.FromToRotation(Vector3.;
         }
 
         public void UpdateFast(float gradStep, float moveStep, int steps) {
@@ -597,16 +598,20 @@ namespace Assets
             if (localPositions == null) {
                 localPositions = new Vector3[this.joints.Count];
                 localRotations = new Quaternion[this.joints.Count];
-                for (int i = 0; i < enabledJoints.Count; ++i) {
-                    var j = enabledJoints[i];
-                    localPositions[i] = j.transform.localPosition;
-                    localRotations[i] = j.transform.localRotation;
+                for (int i = 0; i < this.joints.Count; ++i) {
+                    var j = this.joints[i];
+                    if (j != null) {
+                        localPositions[i] = j.transform.localPosition;
+                        localRotations[i] = j.transform.localRotation;
+                    }
                 }
             }
-            for (int i = 0; i < enabledJoints.Count; ++i) {
-                var j = enabledJoints[i];
-                j.transform.localPosition = localPositions[i];
-                j.transform.localRotation = localRotations[i];
+            for (int i = 0; i < this.joints.Count; ++i) {
+                var j = this.joints[i];
+                if (j != null) {
+                    j.transform.localPosition = localPositions[i];
+                    j.transform.localRotation = localRotations[i];
+                }
             }
 
             MoveHipsToCenter();
@@ -617,6 +622,9 @@ namespace Assets
             var testJoints = new List<Joint>(enabledJoints);
 
             foreach(var j in testJoints) {
+                if (settings.chestOnly && (j.transform.name != "Chest" && j.transform.name != "Hips")) {
+                    continue;
+                }
                 if (j.definition.AffectedPoints != null) {
                     enabledJoints = new List<Joint>() { j };
                     affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
@@ -650,16 +658,18 @@ namespace Assets
 
             var constraints = settings.useConstraints;
 
-            for (int i = 0; i < enabledJoints.Count; ++i) {
-                var j = enabledJoints[i];
-                localPositions[i] = j.transform.localPosition;
-                localRotations[i] = j.transform.localRotation;
+            for (int i = 0; i < this.joints.Count; ++i) {
+                var j = this.joints[i];
+                if (j != null) {
+                    localPositions[i] = j.transform.localPosition;
+                    localRotations[i] = j.transform.localRotation;
+                }
             }
-        
 
 
-          
-            PullAttachJoints();
+            if (settings.enableAttaching) {
+                PullAttachJoints();
+            }
           
         }
 
@@ -709,7 +719,7 @@ namespace Assets
             }
 
             foreach(var j in enabledJoints) {
-              //  j.Filter();
+                // j.Filter();
             }
 
             return;

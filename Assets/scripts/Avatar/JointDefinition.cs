@@ -15,6 +15,12 @@ public class JointDefinition
         this.name = name;
         this.pointId = pointId;
         this.filter = filter;
+
+      //  if (name != "Hips" && name != "Chest") {
+       // if (name != "Hip222s" && name != "Chest") {
+        if (name == "Hips" ) {
+          // gradCalculator = new GradCalculator[] { };
+        }
         this.gradCalculator = gradCalculator.Length == 0 ? null : gradCalculator.Length == 1 ? gradCalculator[0] : new GeneralGradCalculator(gradCalculator);
     }
 
