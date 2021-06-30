@@ -11,11 +11,23 @@ using Joint = Assets.Joint;
 
 public class Skeleton
 {
+
+    public class Bone
+    {
+        public readonly int fromIdx;
+        public readonly int toIdx;
+
+        public Bone(int fromIdx, int toIdx) {
+            this.fromIdx = fromIdx;
+            this.toIdx = toIdx;
+        }
+    }
+
     public List<JointDefinition> joints = new List<JointDefinition>();
     private GameObject[] jointBones;
     private int[] keyPointsIds;
 
-    public int[,] ScaleBones;
+    public List<Bone> ScaleBones;
 
     public enum Point:int
     {
@@ -35,7 +47,7 @@ public class Skeleton
         return jointBones[id] != null;
     }
 
-    internal void Init(GameObject obj) {
+    internal void Init(GameObject obj, int[,] scaleBones) {
         jointBones = new GameObject[joints.Count];
         var children = obj.GetComponentsInChildren<Transform>();
 
@@ -51,6 +63,12 @@ public class Skeleton
         ids.Sort();
         this.keyPointsIds = ids.ToArray();
 
+        ScaleBones = new List<Bone>();
+        for (var i = 0; i < scaleBones.GetLength(0); ++i) {
+            int idx1 = scaleBones[i, 0];
+            int idx2 = scaleBones[i, 1];
+            ScaleBones.Add(new Bone(idx1, idx2));
+        }
     }
 
     // returns only points which corresponds to joint bone
@@ -305,13 +323,9 @@ namespace DeepMotion.DMBTDemo
             skeleton.joints.Add(new JointDefinition("Thumb2_R_end", -1));
             skeleton.joints.Add(new JointDefinition("Body", -1));
 
+            var scalesBones = new int[,] { { 11, 13 }, { 13, 15 }, { 12, 14 }, { 14, 16 }, { 23, 25 }, { 25, 29 }, { 24, 26 }, { 26, 30 } };
+            skeleton.Init(obj, scalesBones);
 
-            skeleton.ScaleBones = new int[,] { { 11, 13 }, { 13, 15 }, { 12, 14 }, { 14, 16 }, { 23, 25 }, { 25, 29 }, { 24, 26 }, { 26, 30 } };
-            
-
-
-            skeleton.Init(obj);
-         
             return skeleton;
         }
 
