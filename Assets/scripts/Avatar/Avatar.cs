@@ -56,7 +56,7 @@ namespace Assets
 
         private GameObject avatar;
         private List<Joint> joints;
-        private List<Joint> enabledJoints;
+        private List<Joint> calculatedJoints;
 
         private Skeleton skeleton;
 
@@ -104,6 +104,9 @@ namespace Assets
 
         public Joint GetHips() {
             return transformByName["Hips"];
+        }
+        public Joint GetChest() {
+            return transformByName["Chest"];
         }
 
         private void InitJoints() {
@@ -204,10 +207,10 @@ namespace Assets
 
             this.joints.ForEach(j => j.transform.GetComponent<JointController>().gradientEnabled = j.gradEnabled);
 
-            enabledJoints = this.joints.Where(x => x.gradEnabled).ToList();
+            calculatedJoints = this.joints.Where(x => x.gradEnabled).ToList();
 
-            Debug.Log("Enabled gradient:" + enabledJoints.Count + " of " + joints.Count);
-            foreach(var j in enabledJoints) {
+            Debug.Log("Enabled gradient:" + calculatedJoints.Count + " of " + joints.Count);
+            foreach(var j in calculatedJoints) {
                 Debug.Log("Grad: " + j.transform.gameObject.name + " ");
             }
         }
@@ -229,13 +232,13 @@ namespace Assets
             return transformByName[name];
         }
 
-        public void FindGradients(ICalcFilter calcFilter, float step, float zeroLevel= -1) {
+        public void FindGradients(List<Joint> enabledJoints, ICalcFilter calcFilter, float step, float zeroLevel= -1) {
             zeroLevel = zeroLevel > 0 ? zeroLevel : TargetFunction();
             foreach (var j in enabledJoints) {
                 zeroLevel = j.CalcGradients(calcFilter, zeroLevel, TargetFunction, step, step * settings.posMoveMultiplier, GradientThreshold, settings);
             }
         }
-        private float FindMaxGradient(ICalcFilter calcFilter) {
+        private float FindMaxGradient(List<Joint> enabledJoints, ICalcFilter calcFilter) {
             float maxRotGrad = 0;
             foreach (var j in enabledJoints) {
                 maxRotGrad = Mathf.Max(maxRotGrad, j.FindMaxGradient(calcFilter));
@@ -243,7 +246,7 @@ namespace Assets
             return maxRotGrad;
         }
 
-        private void MoveByGradients(ICalcFilter calcFilter, float step) {
+        private void MoveByGradients(List<Joint> enabledJoints, ICalcFilter calcFilter, float step) {
             foreach (var j in enabledJoints) {
                 j.MoveByGradients(calcFilter, step, -1, -1, settings);
             }
@@ -323,40 +326,40 @@ namespace Assets
         }
 
 
-        void KeepJoints() {
+        void KeepJoints(List<Joint> enabledJoints) {
             gradientSkeletonTransform.CopyFrom(enabledJoints);
         }
 
-        void RestoreJoints() {
+        void RestoreJoints(List<Joint> enabledJoints) {
             gradientSkeletonTransform.CopyTo(enabledJoints);
 
         }
 
-        private bool SolveIk(ICalcFilter calcFilter, float gradStep, ref float moveStep, float minStep, float minValDistance = 1e-5f) {
+        private bool SolveIk(List<Joint> enabledJoints, ICalcFilter calcFilter, float gradStep, ref float moveStep, float minStep, float minValDistance = 1e-5f) {
 
             var zeroLevel = TargetFunction();
             
-            KeepJoints();
-            FindGradients(calcFilter, gradStep, zeroLevel);
-            RestoreJoints();
+            KeepJoints(enabledJoints);
+            FindGradients(enabledJoints, calcFilter, gradStep, zeroLevel);
+            RestoreJoints(enabledJoints);
 
-            var maxGrad = FindMaxGradient(calcFilter);
+            var maxGrad = FindMaxGradient(enabledJoints, calcFilter);
             int moved = 0;
             var val = zeroLevel;
             var stopCalc = false;
             //for (int j = 0; j < 30 && moveStep > minStep; ++j) {
             for (int j = 0; j < 10; ++j) {
-                KeepJoints();
-                MoveByGradients(calcFilter, moveStep);
+                KeepJoints(enabledJoints);
+                MoveByGradients(enabledJoints, calcFilter, moveStep);
 
                 var maxDelta = maxGrad * moveStep;
                 if (maxGrad == 0) {
-                    RestoreJoints();
+                    RestoreJoints(enabledJoints);
                     return false;
                 }
 
                 if (maxDelta < minStep) {
-                    RestoreJoints();
+                    RestoreJoints(enabledJoints);
                     if (moveStep > 0) {
                         moveStep = moveStep / settings.gradStepScale;
                     }
@@ -366,10 +369,10 @@ namespace Assets
                 var cur = TargetFunction();
                 var delta = cur - val;
                 if (-minValDistance < delta && delta < minValDistance ) {
-                    RestoreJoints();
+                    RestoreJoints(enabledJoints);
                     return false;
                 } else if (cur > val) {
-                    RestoreJoints();
+                    RestoreJoints(enabledJoints);
                     if (moved != 0) {
                         if (moved > 1) {
                             moveStep /= settings.gradStepScale;
@@ -424,11 +427,13 @@ namespace Assets
                 p.calculated = false;
             }
 
+            var enabledJoints = calculatedJoints;
+
             try {
                 for (int i = 0; i < steps; ++i) {
                    foreach(var p in parameters) {
                         if (!p.calculated) {
-                            var res = SolveIk(p.calcFilter, p.gradStep * settings.gradientCalcStep, ref p.moveStep, p.minStep);
+                            var res = SolveIk(enabledJoints, p.calcFilter, p.gradStep * settings.gradientCalcStep, ref p.moveStep, p.minStep);
                             if (!res) { 
                                 p.calculated = true;
                             }
@@ -467,22 +472,21 @@ namespace Assets
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
 
             initalSkeletonTransform.CopyTo(this.joints);
+
             MoveHipsToCenter();
-            float scale = FindScale();
+            ScaleHips();
+
+            var chest = GetChest();
             var hips = GetHips();
-            hips.transform.localScale = hips.transform.localScale * scale;
 
-            var testJoints = new List<Joint>(enabledJoints);
-
-            foreach(var j in testJoints) {
-                if (settings.chestOnly && (j.transform.name != "Chest" && j.transform.name != "Hips")) {
+            foreach(var j in calculatedJoints) {
+                if (settings.chestOnly && (j != chest)) {// && j != hips)) {
                     continue;
                 }
                 if (j.definition.AffectedPoints != null) {
-                    enabledJoints = new List<Joint>() { j };
+                    var enabledJoints = new List<Joint>() { j };
                     affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
                     affectedSource = (from z in j.definition.AffectedPoints select skeleton.GetJoint(z).transform).ToArray();
-
 
                     foreach (var p in parameters) {
                         p.calculated = false;
@@ -492,7 +496,7 @@ namespace Assets
                         for (int i = 0; i < steps; ++i) {
                             foreach (var p in parameters) {
                                 if (!p.calculated) {
-                                    var res = SolveIk(p.calcFilter, p.gradStep * settings.gradientCalcStep, ref p.moveStep, p.minStep);
+                                    var res = SolveIk(enabledJoints, p.calcFilter, p.gradStep * settings.gradientCalcStep, ref p.moveStep, p.minStep);
                                     if (!res) {
                                         p.calculated = true;
                                     }
@@ -502,12 +506,9 @@ namespace Assets
                     } catch (Exception e) {
                         Debug.LogError("Exception on gradient: " + e.Message);
                     }
-                   // PullAttachJoints(j.definition.pointId, j.definition.AffectedPoints);
                 }
                 
             }
-            //TODO
-            enabledJoints = testJoints;
 
             if (settings.enableAttaching) {
                 PullAttachJoints();
@@ -515,7 +516,7 @@ namespace Assets
           
         }
 
-        private float FindScale() {
+        private void ScaleHips() {
             float l1,l2;
             l1 = l2 = 0;
             foreach (var bone in skeleton.ScaleBones) {
@@ -526,7 +527,10 @@ namespace Assets
                 l2 += (allTarget[idx1].Value - allTarget[idx2].Value).magnitude;
             }
 
-            return l2 / l1;
+
+            float scale = l2 / l1;
+            var hips = GetHips();
+            hips.transform.localScale = hips.transform.localScale * scale;
         }
 
 
@@ -542,7 +546,7 @@ namespace Assets
                 UpdateFastBySteps(gradStep, moveStep, steps);
             }
 
-            foreach(var j in enabledJoints) {
+            foreach(var j in calculatedJoints) {
                 // j.Filter();
             }
 
