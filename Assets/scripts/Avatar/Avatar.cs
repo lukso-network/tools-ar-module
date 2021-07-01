@@ -12,8 +12,48 @@ using Joint = Assets.Joint;
 
 namespace Assets
 {
+    
+    public class SkeletonTransform {
+        internal Quaternion[] rots;
+        internal Vector3[] pos;
+        internal Vector3[] scales;
+
+        public void CopyFrom(List<Joint> joints) {
+            if (pos == null || pos.Length != joints.Count) {
+                rots = new Quaternion[joints.Count];
+                pos = new Vector3[joints.Count];
+                scales = new Vector3[joints.Count];
+            }
+            int i = 0;
+            foreach(var j in joints) {
+                if (j != null) {
+                    rots[i] = j.transform.localRotation;
+                    pos[i] = j.transform.localPosition;
+                    scales[i] = j.transform.localScale;
+                }
+                ++i;
+            }
+        }
+
+        public void CopyTo(List<Joint> joints) {
+            if (pos == null || pos.Length != joints.Count) {
+                Debug.LogError("Incorrect joints count on copy from skeleton transformations");
+                return;
+            }
+            int i = 0;
+            foreach (var j in joints) {
+                if (j != null) {
+                    j.transform.localRotation = rots[i];
+                    j.transform.localPosition = pos[i];
+                    j.transform.localScale = scales[i];
+                }
+                ++i;
+            }
+        }
+    }
 
     public partial class Avatar {
+
         private GameObject avatar;
         private List<Joint> joints;
         private List<Joint> enabledJoints;
@@ -28,8 +68,6 @@ namespace Assets
         private Vector3[] affectedTarget;
 
         private Transform[] ikSource;
-        private int leftHipSourceIndex;
-        private int rightHipSourceIndex;
         private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();
         private Joint[] jointByPointId;
 
@@ -40,11 +78,9 @@ namespace Assets
         public GradientDrawer gradientDrawer;
 
         public IkSettings settings;
-        private Quaternion[] rots;
-        private Vector3[] pos;
-        private Vector3[] scales;
-        private Vector3[] localPositions;
-        private Quaternion[] localRotations;
+        private SkeletonTransform gradientSkeletonTransform = new SkeletonTransform();
+        private SkeletonTransform initalSkeletonTransform = new SkeletonTransform();
+
         //alias
         public GameObject obj => avatar;
         
@@ -69,6 +105,7 @@ namespace Assets
         public Joint GetHips() {
             return transformByName["Hips"];
         }
+
         private void InitJoints() {
             joints = new List<Joint>();
             const int MAX_POINT_COUNT = 33;
@@ -111,9 +148,10 @@ namespace Assets
                 }
             }
 
+            initalSkeletonTransform.CopyFrom(this.joints);
           //  var hip = transformByName["Hips"];
-           // hip.gradCalculator = new GeneralGradCalculator(new Position3DGradCalculator(), new RotationGradCalculator(), new ScalingGradCalculator());
-           // hip.gradCalculator =  new RotationGradCalculator();
+          // hip.gradCalculator = new GeneralGradCalculator(new Position3DGradCalculator(), new RotationGradCalculator(), new ScalingGradCalculator());
+          // hip.gradCalculator =  new RotationGradCalculator();
         }
 
         public void CopyRotationFromAvatar(Avatar avatar) {
@@ -161,32 +199,12 @@ namespace Assets
         public void SetIkSource() {
             this.ikSource = skeleton.GetKeyBones().Select(x => x.transform).ToArray();
 
-            leftHipSourceIndex = GetIndexInSourceList(skeleton.GetLeftHips());
-            rightHipSourceIndex = GetIndexInSourceList(skeleton.GetRightHips());
-
-
-            //this.joints.ForEach(x => x.gradEnabled = false);
-
             this.joints.ForEach(x => x.gradEnabled = x.definition?.gradCalculator != null);
             //this.joints.ForEach(x => x.gradEnabled = x.transform.name == "Hips");
 
             this.joints.ForEach(j => j.transform.GetComponent<JointController>().gradientEnabled = j.gradEnabled);
-            /*
-            foreach (var t in ikSource) {
-                var j = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
-
-				//TODO < 10
-                while (j != null && !j.gradEnabled && j.parent != null && j.transform.localScale.x < 10 ) {
-                    j.gradEnabled = j.definition?.gradCalculator != null;
-                    j = j.parent;
-                }
-            }*/
 
             enabledJoints = this.joints.Where(x => x.gradEnabled).ToList();
-
-            rots = new Quaternion[joints.Count];
-            pos = new Vector3[joints.Count];
-            scales = new Vector3[joints.Count];
 
             Debug.Log("Enabled gradient:" + enabledJoints.Count + " of " + joints.Count);
             foreach(var j in enabledJoints) {
@@ -305,30 +323,22 @@ namespace Assets
         }
 
 
-        void KeepJoints(Quaternion[] rotations, Vector3[] pos, Vector3[] scales) {
-            for (int i = 0; i < enabledJoints.Count; ++i) {
-                var j = enabledJoints[i];
-                rotations[i] = j.transform.localRotation;
-                pos[i] = j.transform.localPosition;
-                scales[i] = j.transform.localScale;
-            }
+        void KeepJoints() {
+            gradientSkeletonTransform.CopyFrom(enabledJoints);
         }
 
-        void RestoreJoints(Quaternion[] rotations, Vector3[] pos, Vector3[] scales) {
-            for (int i = 0; i < enabledJoints.Count; ++i) {
-                var j = enabledJoints[i];
-                j.transform.localRotation = rotations[i];
-                j.transform.localPosition = pos[i];
-                j.transform.localScale = scales[i];
-            }
+        void RestoreJoints() {
+            gradientSkeletonTransform.CopyTo(enabledJoints);
+
         }
 
         private bool SolveIk(ICalcFilter calcFilter, float gradStep, ref float moveStep, float minStep, float minValDistance = 1e-5f) {
 
             var zeroLevel = TargetFunction();
-            KeepJoints(rots, pos, scales);
+            
+            KeepJoints();
             FindGradients(calcFilter, gradStep, zeroLevel);
-            RestoreJoints(rots, pos, scales);
+            RestoreJoints();
 
             var maxGrad = FindMaxGradient(calcFilter);
             int moved = 0;
@@ -336,17 +346,17 @@ namespace Assets
             var stopCalc = false;
             //for (int j = 0; j < 30 && moveStep > minStep; ++j) {
             for (int j = 0; j < 10; ++j) {
-                KeepJoints(rots, pos, scales);
+                KeepJoints();
                 MoveByGradients(calcFilter, moveStep);
 
                 var maxDelta = maxGrad * moveStep;
                 if (maxGrad == 0) {
-                    RestoreJoints(rots, pos, scales);
+                    RestoreJoints();
                     return false;
                 }
 
                 if (maxDelta < minStep) {
-                    RestoreJoints(rots, pos, scales);
+                    RestoreJoints();
                     if (moveStep > 0) {
                         moveStep = moveStep / settings.gradStepScale;
                     }
@@ -356,10 +366,10 @@ namespace Assets
                 var cur = TargetFunction();
                 var delta = cur - val;
                 if (-minValDistance < delta && delta < minValDistance ) {
-                    RestoreJoints(rots, pos, scales);
+                    RestoreJoints();
                     return false;
                 } else if (cur > val) {
-                    RestoreJoints(rots, pos, scales);
+                    RestoreJoints();
                     if (moved != 0) {
                         if (moved > 1) {
                             moveStep /= settings.gradStepScale;
@@ -456,25 +466,7 @@ namespace Assets
 
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
 
-            if (localPositions == null) {
-                localPositions = new Vector3[this.joints.Count];
-                localRotations = new Quaternion[this.joints.Count];
-                for (int i = 0; i < this.joints.Count; ++i) {
-                    var j = this.joints[i];
-                    if (j != null) {
-                        localPositions[i] = j.transform.localPosition;
-                        localRotations[i] = j.transform.localRotation;
-                    }
-                }
-            }
-            for (int i = 0; i < this.joints.Count; ++i) {
-                var j = this.joints[i];
-                if (j != null) {
-                    j.transform.localPosition = localPositions[i];
-                    j.transform.localRotation = localRotations[i];
-                }
-            }
-
+            initalSkeletonTransform.CopyTo(this.joints);
             MoveHipsToCenter();
             float scale = FindScale();
             var hips = GetHips();
@@ -516,17 +508,6 @@ namespace Assets
             }
             //TODO
             enabledJoints = testJoints;
-
-            var constraints = settings.useConstraints;
-
-            for (int i = 0; i < this.joints.Count; ++i) {
-                var j = this.joints[i];
-                if (j != null) {
-                //    localPositions[i] = j.transform.localPosition;
-                //    localRotations[i] = j.transform.localRotation;
-                }
-            }
-
 
             if (settings.enableAttaching) {
                 PullAttachJoints();

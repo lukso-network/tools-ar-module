@@ -253,12 +253,12 @@ namespace DeepMotion.DMBTDemo
 
 //            skeleton.joints.Add(new JointDefinition("Hips", -1, new int[] {23,24 }, new GeneralFilter(new ScaleFilter(scaleFilter), new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(-10, 10, -10, 10, 0, 359.99f), new ScalingGradCalculator()));
             skeleton.joints.Add(new JointDefinition("Hips", -1, new int[] {23,24, 11, 12}, new GeneralFilter(new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(0, 359.99f, 0, 359.99f, 0, 359.99f), new ScalingGradCalculator()));
-            skeleton.joints.Add(new JointDefinition("Left leg", 23, new int[] {23,25,29}, new Rotation3DGradCalculator(-70, 15, -70, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
+            skeleton.joints.Add(new JointDefinition("Left leg", 23, new int[] {23,25,29}, new Rotation3DGradCalculator(-70, 15, -120, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
             skeleton.joints.Add(new JointDefinition("Left knee", 25, new int[] {25, 29 }, new Rotation1DGradCalculator(-5, 140, Rotation1DGradCalculator.Axis.Y), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
             skeleton.joints.Add(new JointDefinition("Left ankle", 29, new int[] { 29 }, new StretchingGradCalculator(0.7f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
             skeleton.joints.Add(new JointDefinition("Left toe", -31));
             skeleton.joints.Add(new JointDefinition("Left toe_end", -31));
-            skeleton.joints.Add(new JointDefinition("Right leg", 24, new int[] {24, 26,30 }, new Rotation3DGradCalculator(-15, 70, -70, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
+            skeleton.joints.Add(new JointDefinition("Right leg", 24, new int[] {24, 26,30 }, new Rotation3DGradCalculator(-15, 70, -70, 120, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
             skeleton.joints.Add(new JointDefinition("Right knee", 26, new int[] {26, 30 }, new Rotation1DGradCalculator(-140, 5, Rotation1DGradCalculator.Axis.Y), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
             //TODO ankle in blender == heel in mediapipe
             skeleton.joints.Add(new JointDefinition("Right ankle", 30, new int[] { 30 }, new StretchingGradCalculator(0.7f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
@@ -266,7 +266,7 @@ namespace DeepMotion.DMBTDemo
             skeleton.joints.Add(new JointDefinition("Right toe_end", -32));
             skeleton.joints.Add(new JointDefinition("Spine", -1, null, new Rotation3DGradCalculator(-15, 15, -15, 15, -15, 15), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.Z)));
            // skeleton.joints.Add(new JointDefinition("Chest", -1, new int[] { 11, 12 }, new Rotation3DGradCalculator(-10, 10, -15, 15, -15, 15), new StretchingGradCalculator(0.9f, 1.5f, StretchingGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition("Chest", -1, new int[] { 11, 12 }, new StretchingGradCalculator(0.9f, 1.5f, StretchingGradCalculator.Axis.Z)));
+            skeleton.joints.Add(new JointDefinition("Chest", -1, new int[] { 11, 12 }, new StretchingGradCalculator(0.5f, 1.5f, StretchingGradCalculator.Axis.Z)));
             skeleton.joints.Add(new JointDefinition("Left shoulder", -1));//, new Rotation1DGradCalculator(-15, 15, Rotation1DGradCalculator.Axis.Z)));
             skeleton.joints.Add(new JointDefinition("Left arm", 11, new int[] { 11, 13,15 }, new Rotation3DGradCalculator(-85, 80, -15, 120, -115, 85), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
             skeleton.joints.Add(new JointDefinition("Left elbow", 13, new int[] { 13, 15 }, new Rotation1DGradCalculator(0, 140, Rotation1DGradCalculator.Axis.Z), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Y)));
