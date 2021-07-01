@@ -108,6 +108,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         OnPropertyChanged("ShowLandmarks");
         OnPropertyChanged("IsShowOrig");
         OnPropertyChanged("RootScaleValue");
+        OnPropertyChanged("ScaleDepth");
     }
 
     public void Update() {
@@ -123,6 +124,17 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
                 player.vp.playbackSpeed = value;
                 OnPropertyChanged("PlaybackSpeed");
             }
+        }
+
+    }
+
+    [Binding]
+    public float ScaleDepth {
+
+        get => skeletonManager.scaleDepth; 
+        set {
+            skeletonManager.scaleDepth = value;
+            OnPropertyChanged("ScaleDepth");
         }
 
     }
