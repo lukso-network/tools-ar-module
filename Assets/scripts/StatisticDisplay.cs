@@ -70,7 +70,9 @@ public class StatisticDisplay : MonoBehaviour
 
     public void LogValue(string message, params float [] value)
     {
-
+        if (accumulatedValue == null) {
+            return;
+        }
         this.message =  message;
         var len = Math.Min(value.Length, accumulatedValue.Length);
         for (int i = 0; i < len; ++i) {

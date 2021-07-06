@@ -12,13 +12,13 @@ public class AvatarManager : MonoBehaviour
     public string avatarType = "female-normal";
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public DMBTDemoManager skeletonManager;
-    public GameObject body;
+    public GameObject transparentBody;
 
-    private Renderer bodyRenderer;
+    private Renderer transparentBodyRenderer;
 
     private int scrWidth = 0;
     private int scrHeight = 0;
-    private bool showAvatar = true;
+
     private WebCamScreenController webScreenPlane;
     
  
@@ -61,7 +61,11 @@ public class AvatarManager : MonoBehaviour
             }
         }
 
-        bodyRenderer = body.GetComponentInChildren<Renderer>();
+        if (transparentBody != null && !transparentBody.activeSelf) {
+            transparentBody = null;
+        }
+
+        transparentBodyRenderer = transparentBody?.GetComponentInChildren<Renderer>();
     }
 
     public void ShowAvatar(bool value) {
@@ -129,8 +133,6 @@ public class AvatarManager : MonoBehaviour
     }
 
     private void OnNewFrameRendered(Texture2D texture) {
-
-        bodyRenderer.material.mainTexture = texture;
         texture.wrapMode = TextureWrapMode.Clamp;
 
         if (Screen.width == scrWidth && Screen.height == scrHeight) {
@@ -138,6 +140,10 @@ public class AvatarManager : MonoBehaviour
         }
         scrWidth = Screen.width;
         scrHeight = Screen.height;
+
+        if (transparentBodyRenderer == null) {
+            return;
+        }
 
         float w = webScreenPlane.ScreenSize.x;
         float h = webScreenPlane.ScreenSize.y;
@@ -151,7 +157,9 @@ public class AvatarManager : MonoBehaviour
         m[3*4 + 0] = 1;
 #endif
         mat = m * mat;
-        bodyRenderer.material.SetMatrix("_TextureMat", mat);
+
+        transparentBodyRenderer.material.mainTexture = texture;
+        transparentBodyRenderer.material.SetMatrix("_TextureMat", mat);
 
 
     }

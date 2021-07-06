@@ -70,6 +70,7 @@ namespace Assets
         private Transform[] ikSource;
         private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();
         private Joint[] jointByPointId;
+        private bool avatarXDirected;
 
         public List<Joint> Joints {get => joints; }
         public float GradientThreshold;
@@ -90,7 +91,6 @@ namespace Assets
                 new CalcParam("Rotation", new RotationFilter(), 0.1f, 500, 0.1f),
                 new CalcParam("Stretching", new CalcFilter(typeof(StretchingGradCalculator)), 0.0001f, 1, 0.0001f),
         };
-
 
 
         public Avatar(GameObject avatar, Skeleton skeleton) {
@@ -152,9 +152,9 @@ namespace Assets
             }
 
             initalSkeletonTransform.CopyFrom(this.joints);
-          //  var hip = transformByName["Hips"];
-          // hip.gradCalculator = new GeneralGradCalculator(new Position3DGradCalculator(), new RotationGradCalculator(), new ScalingGradCalculator());
-          // hip.gradCalculator =  new RotationGradCalculator();
+
+            avatarXDirected = GetHips().transform.localEulerAngles.x < 45;
+
         }
 
         public void CopyRotationFromAvatar(Avatar avatar) {
@@ -413,9 +413,12 @@ namespace Assets
 
             hips.transform.position = center + dir * hipLen * 0.2f;
 
-            //hips.transform.rotation = Quaternion.LookRotation(dir, (right-left).normalized); 
-            var forward = Vector3.Cross((right - left).normalized, dir);
-            hips.transform.rotation = Quaternion.LookRotation(forward, dir); 
+            if (avatarXDirected) {
+                hips.transform.rotation = Quaternion.LookRotation(dir, (right - left).normalized);
+            } else {
+                var forward = Vector3.Cross((right - left).normalized, dir);
+                hips.transform.rotation = Quaternion.LookRotation(forward, dir);
+            }
         }
 
         public void UpdateFast(float gradStep, float moveStep, int steps) {

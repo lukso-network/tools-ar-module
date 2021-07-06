@@ -126,6 +126,8 @@ namespace DeepMotion.DMBTDemo
 
     [Binding]
     public class DMBTDemoManager : MonoBehaviour {
+
+        [HideInInspector]
         public string avatarType = "female";
         public AvatarDescription[] avatars = new AvatarDescription[0];
 
