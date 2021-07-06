@@ -413,7 +413,9 @@ namespace Assets
 
             hips.transform.position = center + dir * hipLen * 0.2f;
 
-             hips.transform.rotation = Quaternion.LookRotation(dir, (right-left).normalized); 
+            //hips.transform.rotation = Quaternion.LookRotation(dir, (right-left).normalized); 
+            var forward = Vector3.Cross((right - left).normalized, dir);
+            hips.transform.rotation = Quaternion.LookRotation(forward, dir); 
         }
 
         public void UpdateFast(float gradStep, float moveStep, int steps) {
