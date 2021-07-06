@@ -1342,7 +1342,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1226858599190183158}
   - component: {fileID: 7725702471486044488}
-  - component: {fileID: 8051183301672249909}
   m_Layer: 0
   m_Name: body_contraints
   m_TagString: Untagged
@@ -1368,19 +1367,6 @@ Transform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7725702471486044488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1895309323805746764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e0ae0ec372ac8840b1cc274a1e4c13f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: pants
---- !u!114 &8051183301672249909
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1569,7 +1555,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4868801098014439217, guid: 3205a9bf3a70f844093ea05f5962a257, type: 3}
+  - {fileID: 2100000, guid: dc1c27249d33e8d478fcbeccd09d4f8a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
