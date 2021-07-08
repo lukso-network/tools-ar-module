@@ -9,15 +9,10 @@ using Assets.Demo.Scripts;
 
 public class AvatarManager : MonoBehaviour
 {
-    public string avatarType = "female-normal";
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public DMBTDemoManager skeletonManager;
     public Material transparentMaterial;
      
-    void Awake() {
-        skeletonManager.avatarType = avatarType;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -36,11 +31,8 @@ public class AvatarManager : MonoBehaviour
 
             var found = false;
             foreach (var md in descriptors) { 
-                if (md.type == avatarType) {
-                    Utils.AddMissedJoints(sourceObj, md.gameObject);
-                    Utils.PreparePivots(md.gameObject);
-                    var controller = new Assets.Avatar(md.gameObject, null);
-                    avatars.Add(controller);
+                if (md.type == skeletonManager.avatarType) {
+                    AddModel(md.gameObject);
                     found = true;
                 }
             }
@@ -50,6 +42,13 @@ public class AvatarManager : MonoBehaviour
                 t.gameObject.SetActive(false);
             }
         }
+    }
+
+    public void AddModel(GameObject obj) {
+        Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
+        Utils.PreparePivots(obj);
+        var controller = new Assets.Avatar(obj, null);
+        avatars.Add(controller);
     }
 
     public void ShowAvatar(bool value) {
