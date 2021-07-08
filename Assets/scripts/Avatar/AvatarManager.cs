@@ -12,37 +12,47 @@ public class AvatarManager : MonoBehaviour
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public DMBTDemoManager skeletonManager;
     public Material transparentMaterial;
-     
+
+    public GameObject testSpawner;
+    public GameObject modelRoot;
+
+    private int testModelIdx = -1;
+
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
 
         skeletonManager.newPoseEvent += UpdateSkeleton;
-            
+
+        LoadNextTestModel();
+
+    }
+
+    public void LoadNextTestModel() {
+        if (testSpawner.transform.childCount == 0) {
+            return;
+        }
+
+        foreach (Transform child in modelRoot.transform) {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        testModelIdx = (testModelIdx + 1) % testSpawner.transform.childCount;
+
+
         avatars = new List<Assets.Avatar>();
 
-        var sourceObj = skeletonManager.controller.obj;
-        foreach (Transform t in transform) {
-
-            if (!t.gameObject.activeSelf) {
-                continue;
-            }
-            var descriptors = t.GetComponentsInChildren<ModelDescriptor>();
-
-            var found = false;
-            foreach (var md in descriptors) { 
-                if (md.type == skeletonManager.avatarType) {
-                    AddModel(md.gameObject);
-                    found = true;
-                }
-            }
-
-
-            if (!found) {
-                t.gameObject.SetActive(false);
+        var testObj = testSpawner.transform.GetChild(testModelIdx);
+        var md = testObj.GetComponent<ModelDescriptor>();
+        
+        if( md.type == skeletonManager.avatarType) {
+            foreach (Transform child in testObj.transform) {
+                var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
+                AddModel(cpy);
             }
         }
+
     }
+
 
     public void AddModel(GameObject obj) {
         Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
@@ -61,7 +71,9 @@ public class AvatarManager : MonoBehaviour
 
     public void UpdateSkeleton() {
         foreach (var avatar in avatars) {
+            var pos = avatar.obj.transform.localPosition;
             avatar.CopyRotationAndPositionFromAvatar(skeletonManager.controller);
+            avatar.obj.transform.localPosition = pos;
         }
 
         UpdateTransparentBody();

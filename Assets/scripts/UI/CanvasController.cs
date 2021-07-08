@@ -16,6 +16,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;
     public HelperDrawer helper;
     public DMBTDemoManager skeletonManager;
+    public AvatarManager avatarManager;
 
     [Binding]
     public void SelectVideo() {
@@ -23,6 +24,12 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi,mov");
         player.LoadUrl(path);
 #endif
+    }
+
+    [Binding]
+    public void ShowNextModel() {
+        avatarManager.LoadNextTestModel();
+
     }
 
     [Binding]

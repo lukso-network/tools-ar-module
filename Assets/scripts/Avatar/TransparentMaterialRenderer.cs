@@ -17,6 +17,10 @@ namespace Assets.scripts.Avatar
             renderer.material = FindObjectOfType<AvatarManager>().transparentMaterial;
         }
 
+        void OnDestroy() {
+            webScreenPlane.newFrameRendered -= OnNewFrameRendered;
+        }
+
         private void OnNewFrameRendered(Texture2D texture) {
             if (!gameObject.activeSelf) {
                 return;

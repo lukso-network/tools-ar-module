@@ -169,8 +169,12 @@ public class WebCamScreenController : MonoBehaviour {
 
     // TODO: size assertion
     src.CopyTexture(outputTexture);
-        newFrameRendered(src.GetTexture());
-    }
+
+
+        if (newFrameRendered != null) {
+            newFrameRendered(src.GetTexture());
+        }
+}
 
   public void DrawScreen(ImageFrame imageFrame) {
     if (!isWebCamReady) { return; }
