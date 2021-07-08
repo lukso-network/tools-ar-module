@@ -12,16 +12,8 @@ public class AvatarManager : MonoBehaviour
     public string avatarType = "female-normal";
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public DMBTDemoManager skeletonManager;
-    public GameObject transparentBody;
-
-    private Renderer transparentBodyRenderer;
-
-    private int scrWidth = 0;
-    private int scrHeight = 0;
-
-    private WebCamScreenController webScreenPlane;
-    
- 
+    public Material transparentMaterial;
+     
     void Awake() {
         skeletonManager.avatarType = avatarType;
     }
@@ -29,8 +21,6 @@ public class AvatarManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        webScreenPlane = FindObjectOfType<WebCamScreenController>();
-        webScreenPlane.newFrameRendered += OnNewFrameRendered;
 
         skeletonManager.newPoseEvent += UpdateSkeleton;
             
@@ -60,12 +50,6 @@ public class AvatarManager : MonoBehaviour
                 t.gameObject.SetActive(false);
             }
         }
-
-        if (transparentBody != null && !transparentBody.activeSelf) {
-            transparentBody = null;
-        }
-
-        transparentBodyRenderer = transparentBody?.GetComponentInChildren<Renderer>();
     }
 
     public void ShowAvatar(bool value) {
@@ -74,15 +58,6 @@ public class AvatarManager : MonoBehaviour
 
     public bool IsAvatarsVisible() {
         return avatars.Any(a => a.obj.active);
-    }
-
-    // Update is called once per frame
-    void Update() {
-        /*
-        if (skeletonManager.videoPaused) {
-            return;
-        }*/
-       // UpdateSkeleton();
     }
 
     public void UpdateSkeleton() {
@@ -132,35 +107,4 @@ public class AvatarManager : MonoBehaviour
         */
     }
 
-    private void OnNewFrameRendered(Texture2D texture) {
-        texture.wrapMode = TextureWrapMode.Clamp;
-
-        if (Screen.width == scrWidth && Screen.height == scrHeight) {
-            //   return;
-        }
-        scrWidth = Screen.width;
-        scrHeight = Screen.height;
-
-        if (transparentBodyRenderer == null) {
-            return;
-        }
-
-        float w = webScreenPlane.ScreenSize.x;
-        float h = webScreenPlane.ScreenSize.y;
-        var mat = new Matrix4x4(new Vector4(1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4((w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
-        //var mat = new Matrix4x4(new Vector4(-1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4(1-(w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
-        //mat = mat * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, 90), Vector3.one);
-
-        Quaternion rot = Quaternion.Euler(0, 0, webScreenPlane.VideoAngle);
-        Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
-#if !UNITY_EDITOR
-        m[3*4 + 0] = 1;
-#endif
-        mat = m * mat;
-
-        transparentBodyRenderer.material.mainTexture = texture;
-        transparentBodyRenderer.material.SetMatrix("_TextureMat", mat);
-
-
-    }
 }
