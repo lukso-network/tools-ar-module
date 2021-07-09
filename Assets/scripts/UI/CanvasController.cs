@@ -85,7 +85,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public bool IsShowOrig {
-        get { return skeletonManager.controller.obj.activeSelf; }
+        get { return skeletonManager.controller?.obj?.activeSelf ?? true; }
         set {
             skeletonManager.controller.obj.SetActive(value);
              OnPropertyChanged("IsShowOrig");

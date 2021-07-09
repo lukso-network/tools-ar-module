@@ -297,6 +297,8 @@ public class WebCamScreenController : MonoBehaviour {
     }
 
     internal void LoadUrl(string path) {
+        vp.enabled = true;
+        useCamera = false;
         UriBuilder uri = new UriBuilder(path);
         uri.Scheme = "file";
         vp.url = uri.ToString();
