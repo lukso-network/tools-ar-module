@@ -2111,7 +2111,7 @@ MonoBehaviour:
   FocalLengthPx: 2
   videoRotateAngle: 0
   test: {fileID: 0}
-  useCamera: 0
+  useCamera: 1
   vp: {fileID: 1616823678}
   isPaused: 0
 --- !u!64 &496037460
