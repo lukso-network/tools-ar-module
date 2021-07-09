@@ -9,6 +9,26 @@ using System.Linq;
 using UnityEngine;
 using Joint = Assets.Joint;
 
+
+public class FPSCounter 
+{
+    const float fpsMeasurePeriod = 0.5f;
+    private int counter = 0;
+    private float lastTime = 0;
+    private float fps;
+
+    public float UpdateFps() {
+        counter++;
+        float t = Time.realtimeSinceStartup;
+        if (t > lastTime + fpsMeasurePeriod) {
+            fps = counter / (t - lastTime);
+            counter = 0;
+            lastTime = t;
+        }
+        return fps;
+    }
+}
+
 public class Skeleton
 {
 
@@ -147,6 +167,8 @@ namespace DeepMotion.DMBTDemo
         public event OnNewPoseHandler newPoseEvent;
         private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
+        private FPSCounter counter = new FPSCounter();
+
         //public GameObject[] JointBones { get; private set; }
 
         public GameObject GetAvatar() {
@@ -230,6 +252,8 @@ namespace DeepMotion.DMBTDemo
                 return;
             }
 
+            var fps = counter.UpdateFps();
+
             var scale = transform.localScale;
             scale.y = scaleDepth;
             transform.localScale = scale;
@@ -243,7 +267,7 @@ namespace DeepMotion.DMBTDemo
             controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
             var dt = Time.realtimeSinceStartup - t;
 
-            display.LogValue("", dt, 0, 0, 0, 0);
+            display.LogValue($"FPS:{fps:0.0}", dt, 0, 0, 0, 0);
 
             newPoseEvent();
 
