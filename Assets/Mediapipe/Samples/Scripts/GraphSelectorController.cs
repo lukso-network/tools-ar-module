@@ -10,6 +10,7 @@ public class GraphSelectorController : MonoBehaviour {
   [SerializeField] GameObject irisTrackingGraph = null;
   [SerializeField] GameObject handTrackingGraph = null;
   [SerializeField] GameObject poseTrackingGraph = null;
+  [SerializeField] GameObject fullPoseTrackingGraph = null;
   [SerializeField] GameObject holisticGraph = null;
   [SerializeField] GameObject hairSegmentationGraph = null;
   [SerializeField] GameObject objectDetectionGraph = null;
@@ -38,6 +39,7 @@ public class GraphSelectorController : MonoBehaviour {
     AddGraph("Iris Tracking", irisTrackingGraph);
     AddGraph("Hand Tracking", handTrackingGraph);
     AddGraph("Pose Tracking", poseTrackingGraph);
+    AddGraph("FullPose Tracking", fullPoseTrackingGraph);
     AddGraph("Holistic", holisticGraph);
 #if !UNITY_IOS
     AddGraph("Hair Segmentation", hairSegmentationGraph);
@@ -51,7 +53,7 @@ public class GraphSelectorController : MonoBehaviour {
     var graphSelector = GetComponent<Dropdown>();
     graphSelector.ClearOptions();
     graphSelector.AddOptions(graphs.Select(pair => pair.Key).ToList());
-
+        graphSelector.value = 5;
     OnValueChanged(graphSelector);
   }
 

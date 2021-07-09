@@ -20,7 +20,14 @@ public class TextureFrame {
   }
 
   public void CopyTexture(Texture dst) {
-    Graphics.CopyTexture(texture, dst);
+        if (texture.width != dst.width) {
+            return;
+        }
+        try {
+            Graphics.CopyTexture(texture, dst);
+        } catch(Exception ex) {
+            Debug.LogError("Can't copy texture:" + ex);
+        }
   }
 
   public void CopyTextureFrom(WebCamTexture src) {
@@ -29,7 +36,17 @@ public class TextureFrame {
     texture.Apply();
   }
 
-  public Color32[] GetPixels32() {
+    public void CopyTextureFrom(Texture2D src) {
+        if (src.width != texture.width || src.height != texture.height) {
+            Debug.Log("Incorrect texture size on copy texture");
+            return;
+        }
+        // TODO: Convert format on GPU
+        texture.SetPixels32(src.GetPixels32());
+        texture.Apply();
+    }
+
+    public Color32[] GetPixels32() {
     return texture.GetPixels32();
   }
 
@@ -55,4 +72,8 @@ public class TextureFrame {
   public void Release() {
     OnRelease((UInt64)GetNativeTexturePtr(false), IntPtr.Zero);
   }
+
+    public Texture2D GetTexture() {
+        return texture;
+    }
 }

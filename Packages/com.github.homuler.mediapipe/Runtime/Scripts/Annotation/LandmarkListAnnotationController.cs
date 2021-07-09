@@ -16,12 +16,13 @@ namespace Mediapipe {
     void Awake() {
       Nodes = new List<GameObject>(NodeSize);
       for (var i = 0; i < NodeSize; i++) {
-        Nodes.Add(Instantiate(nodePrefab));
+        Nodes.Add(Instantiate(nodePrefab, this.transform));
+        Nodes[i].name = "Node:" + i;
       }
 
       Edges = new List<GameObject>(EdgeSize);
       for (var i = 0; i < EdgeSize; i++) {
-        Edges.Add(Instantiate(edgePrefab));
+        Edges.Add(Instantiate(edgePrefab, this.transform));
       }
     }
 
