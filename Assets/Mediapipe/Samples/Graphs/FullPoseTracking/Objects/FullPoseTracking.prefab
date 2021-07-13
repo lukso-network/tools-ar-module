@@ -46,7 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gpuConfig: {fileID: 0}
   cpuConfig: {fileID: 4900000, guid: f5825ec1868bc944285ce83f9e761a04, type: 3}
-  androidConfig: {fileID: 4900000, guid: a8b652cfe4b3d034dbfbaa80197e65ec, type: 3}
+  androidConfig: {fileID: 4900000, guid: e10182a1aab1407409250e0bceb2d4c7, type: 3}
+  androidFrontConfig: {fileID: 4900000, guid: a8b652cfe4b3d034dbfbaa80197e65ec, type: 3}
+  modelComplexity: 1
+  smoothLandmarks: 1
 --- !u!114 &-2646006979509118027
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -61,7 +61,7 @@ Shader "Unlit/ScreenSpaceShader"
                 // sample the texture
                // fixed4 col = tex2D(_MainTex, i.uv);
                 float c = screenPosition.y;
-                fixed4 col = float4(c,c,c, 1);
+                fixed4 col = float4(screenPosition.x, screenPosition.y,0, 1);
 
                 float4x4 m = _TextureMat;
                 float2 uv = mul(m, float4(screenPosition.x, screenPosition.y, 0, 1)).xy;

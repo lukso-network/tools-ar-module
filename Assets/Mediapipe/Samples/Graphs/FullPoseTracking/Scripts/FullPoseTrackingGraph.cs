@@ -93,9 +93,9 @@ public class FullPoseTrackingGraph : DemoGraph {
 
   private void RenderAnnotation(WebCamScreenController screenController, FullPoseTrackingValue value) {
     // NOTE: input image is flipped
-    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, true);
+    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, !IsFlipped());
 
-    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, true);
+    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, !IsFlipped());
   }
 
   protected override void PrepareDependentAssets() {
