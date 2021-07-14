@@ -34,9 +34,14 @@ namespace Assets.scripts.Avatar
             //mat = mat * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, 90), Vector3.one);
 
             Quaternion rot = Quaternion.Euler(0, 0, webScreenPlane.VideoAngle);
-            Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, Vector3.one);
+            // Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, webScreenPlane.IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one);
+
+
+            Matrix4x4 m = Matrix4x4.Translate(new Vector3(0.5f, 0.5f, 0)) * Matrix4x4.Rotate(rot) * Matrix4x4.Scale(webScreenPlane.IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one) *  Matrix4x4.Translate(new Vector3(-0.5f, -0.5f, 0));
+
+            //   m[3 * 4 + 0] = 1;
 #if !UNITY_EDITOR
-        m[3*4 + 0] = 1;
+     //   m[3*4 + 0] = 1;
 #endif
             mat = m * mat;
 

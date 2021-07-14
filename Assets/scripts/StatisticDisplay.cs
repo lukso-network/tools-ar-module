@@ -56,7 +56,7 @@ public class StatisticDisplay : MonoBehaviour
                 //string formatText = System.String.Format(format, valueToDisplay);
                 //if (SetColor != null)
                   //  displayText.color = SetColor(valueToDisplay);
-                displayText.text = message + "*\n" +  text;
+                displayText.text = message + "\n" +  text;
             }
             ResetValue();
         }

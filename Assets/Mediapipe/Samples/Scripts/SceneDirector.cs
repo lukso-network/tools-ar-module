@@ -165,6 +165,10 @@ public class SceneDirector : MonoBehaviour {
     graphContainer = Instantiate(graphPrefab);
     var graph = graphContainer.GetComponent<IDemoGraph<TextureFrame>>();
 
+        if (graph is DemoGraph dg) {
+            dg.SetWebCamDevice(this.webCamDevice.Value);
+        }
+
     if (IsGpuEnabled()) {
       graph.Initialize(gpuResources, gpuHelper);
     } else {

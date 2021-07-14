@@ -9,6 +9,7 @@ public abstract class DemoGraph : MonoBehaviour, IDemoGraph<TextureFrame> {
   [SerializeField] protected TextAsset gpuConfig = null;
   [SerializeField] protected TextAsset cpuConfig = null;
   [SerializeField] protected TextAsset androidConfig = null;
+  [SerializeField] protected TextAsset androidFrontConfig = null;
 
   GameObject resourceManager;
   protected const string inputStream = "input_video";
@@ -16,12 +17,18 @@ public abstract class DemoGraph : MonoBehaviour, IDemoGraph<TextureFrame> {
   protected static CalculatorGraph graph;
   protected static GlCalculatorHelper gpuHelper;
   protected static Timestamp currentTimestamp;
+    private WebCamDevice webCam;
+
 
 #if UNITY_ANDROID
   static readonly object frameLock = new object();
   static TextureFrame currentTextureFrame;
   static IntPtr currentTextureName;
 #endif
+
+    public void SetWebCamDevice(WebCamDevice device) {
+        this.webCam = device;
+    }
 
   void OnEnable() {
     resourceManager = GameObject.Find("ResourceManager");
@@ -164,6 +171,10 @@ public abstract class DemoGraph : MonoBehaviour, IDemoGraph<TextureFrame> {
     return gpuHelper != null;
   }
 
+    protected bool IsFlipped() {
+        return webCam.isFrontFacing;
+    }
+
   protected TextAsset GetConfig() {
     if (!IsGpuEnabled()) {
       return cpuConfig;
@@ -171,10 +182,10 @@ public abstract class DemoGraph : MonoBehaviour, IDemoGraph<TextureFrame> {
 
 #if UNITY_ANDROID && !UNITY_EDITOR
     if (androidConfig != null) {
-      return androidConfig;
+      return IsFlipped()? androidFrontConfig : androidConfig;
     }
 #endif
-    return gpuConfig;
+        return gpuConfig;
   }
 
   protected Timestamp GetCurrentTimestamp() {
