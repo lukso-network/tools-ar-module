@@ -15,6 +15,7 @@ public class AvatarManager : MonoBehaviour
 
     public GameObject testSpawner;
     public GameObject modelRoot;
+    public Vector3 skinScaler = Vector3.one;
 
     private int testModelIdx = -1;
 
@@ -48,9 +49,24 @@ public class AvatarManager : MonoBehaviour
             foreach (Transform child in testObj.transform) {
                 var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
                 AddModel(cpy);
+
+                SplitModel(cpy);
             }
         }
 
+    }
+
+    private void SplitModel(GameObject model) {
+        //var root = model.transform.parent;
+        var root = new GameObject("LinearRoot:"+model.name);
+        root.transform.parent = model.transform.parent;
+
+        model.transform.parent = root.transform;
+        List<Transform> children = new List<Transform>();
+        Utils.GetAllChildrenDSF(model.transform, children);
+        foreach(Transform t in children){//model.transform.GetComponentInChildren<Transform>()) {
+            t.transform.parent = root.transform;
+        }
     }
 
 
@@ -72,7 +88,7 @@ public class AvatarManager : MonoBehaviour
     public void UpdateSkeleton() {
         foreach (var avatar in avatars) {
             var pos = avatar.obj.transform.localPosition;
-            avatar.CopyRotationAndPositionFromAvatar(skeletonManager.controller);
+            avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler);
             avatar.obj.transform.localPosition = pos;
         }
 

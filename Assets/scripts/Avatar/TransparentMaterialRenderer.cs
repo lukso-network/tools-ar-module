@@ -13,7 +13,8 @@ namespace Assets.scripts.Avatar
             webScreenPlane = FindObjectOfType<WebCamScreenController>();
             webScreenPlane.newFrameRendered += OnNewFrameRendered;
 
-            renderer = GetComponentInChildren<Renderer>();
+            //TODO
+            renderer = transform.parent.GetComponentInChildren<Renderer>();
             renderer.material = FindObjectOfType<AvatarManager>().transparentMaterial;
         }
 

@@ -178,9 +178,42 @@ namespace Assets
                 if (transformByName.TryGetValue(entry.Key, out j)) {
                     j.CopyRotationAndPosition(entry.Value);
                 }
-
-                joints[0].CopyRotationAndPosition(avatar.joints[0]);
             }
+
+            joints[0].CopyRotationAndPosition(avatar.joints[0]);
+        }
+
+        public void CopyToLocalFromGlobal(Avatar avatar, Vector3 scaleVector) {
+            if (avatar.joints.Count != joints.Count) {
+               // Debug.LogWarning("Incorrect joints count on copy avatar");
+                //return;
+            }
+            
+            foreach (var entry in avatar.transformByName) {
+                Joint j;
+                if (transformByName.TryGetValue(entry.Key, out j)) {
+                    j.CopyToLocalFromGlobal(entry.Value);
+                    j.transform.localScale = Vector3.Scale(j.transform.localScale, scaleVector);
+                }
+            }
+
+            joints[0].CopyToLocalFromGlobal(avatar.joints[0]);
+            joints[0].transform.localScale = Vector3.Scale(joints[0].transform.localScale, scaleVector);
+
+            /*
+            int i = 0;
+            foreach (var j in joints) {
+                j.CopyToLocalFromGlobal(avatar.joints[i]);
+                ++i;
+            }*/
+        }
+
+        public void ScaleEveryJoint(Vector3 scaleVector) {
+
+            foreach(var j in joints) {
+                j.transform.localScale = Vector3.Scale(j.transform.localScale, scaleVector);
+            }
+
         }
 
         public void SetIkTarget(Vector3?[] target) {

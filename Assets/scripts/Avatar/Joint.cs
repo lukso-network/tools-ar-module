@@ -98,6 +98,15 @@ namespace Assets
 
         }
 
+        internal void CopyToLocalFromGlobal(Joint joint) {
+            transform.localPosition = joint.transform.position;
+            transform.localRotation = joint.transform.rotation;
+            transform.localScale = joint.transform.lossyScale;
+            initPosition = joint.transform.position;
+            // transform.rotation = joint.transform.rotation;
+
+        }
+
     }
   
 }

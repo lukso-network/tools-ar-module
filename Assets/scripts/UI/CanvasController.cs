@@ -116,6 +116,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         OnPropertyChanged("IsShowOrig");
         OnPropertyChanged("RootScaleValue");
         OnPropertyChanged("ScaleDepth");
+        OnPropertyChanged("SkinScaleX");
+        OnPropertyChanged("SkinScaleZ");
     }
 
     public void Update() {
@@ -145,128 +147,33 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         }
 
     }
-    /*
-    private static string[] filterOptions = Enum.GetNames(typeof(FilterType));
-    private string selectedFilter;
 
     [Binding]
-    public float KalmanDt {
-        get { return poseScaler.kalmanDt; }
-        set {
-            poseScaler.kalmanDt = value;
-            OnPropertyChanged("KalmanDt");
-            poseScaler.OnValidate();
-        }
-    }
+    public float SkinScaleX {
 
-    [Binding]
-    public float ScalingFilterSmoothStep {
-        get { return poseScaler.cameraScaleKalmanDt; }
+        get => avatarManager.skinScaler.x;
         set {
-            poseScaler.cameraScaleKalmanDt = value;
-            OnPropertyChanged("ScalingFilterSmoothStep");
-            poseScaler.OnValidate();
+            var v = avatarManager.skinScaler;
+            // Note X changes Z too for simulteneous update
+            avatarManager.skinScaler = new Vector3(value, v.y, value);
+            OnPropertyChanged("SkinScaleX");
+            OnPropertyChanged("SkinScaleZ");
         }
+
     }
 
     [Binding]
-    public float StepCount {
-        get { return dmManager.ikSettings.stepCount; }
+    public float SkinScaleZ {
+
+        get => avatarManager.skinScaler.z;
         set {
-            dmManager.ikSettings.stepCount = (int) value;
-            OnPropertyChanged("StepCount");
+            var v = avatarManager.skinScaler;
+            // Note X changes Z too for simulteneous update
+            avatarManager.skinScaler = new Vector3(v.x, v.y, value);
+            OnPropertyChanged("SkinScaleZ");
         }
+
     }
-
-
-    [Binding]
-    public bool SelfieEnabled {
-        get { return poseScaler.selfieEnabled; }
-        set {
-            poseScaler.selfieEnabled = value;
-            OnPropertyChanged("SelfieEnabled");
-        }
-    }
-
-    [Binding]
-    public bool StretchingEnabled {
-        get { return dmManager.ikSettings.stretchingEnabled; }
-        set {
-            dmManager.ikSettings.stretchingEnabled = value;
-            OnPropertyChanged("StretchingEnabled");
-        }
-    }
-
-
-    [Binding]
-    public bool ShowAvatar {
-        get { return avatarManager.IsAvatarsVisible(); }
-        set {
-            avatarManager.ShowAvatar(value);
-            OnPropertyChanged("ShowAvatar");
-        }
-    }
-
-    [Binding]
-    public bool RawFilterEnabled {
-        get { return poseScaler.discardPointStep > 1; }
-        set {
-
-            poseScaler.discardPointStep = value ? 10 : 0;
-            OnPropertyChanged("RawFilterEnabled");
-            poseScaler.OnValidate();
-        }
-    }
-
-    [Binding]
-    public string SelectedFilterItem {
-        get {
-            return poseScaler.filterType.ToString();
-        }
-        set {
-            poseScaler.filterType = (FilterType)Enum.Parse(typeof(FilterType), value, true);
-
-            OnPropertyChanged("SelectedFilterItem");
-            poseScaler.OnValidate();
-        }
-    }
-
-    public string[] FilterOptions {
-        get {
-            return filterOptions;
-        }
-    }
-
-
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    public DMBTDemoManager dmManager;
-    public PoseScaler poseScaler;
-    public AvatarManager avatarManager;
-
-    private void OnPropertyChanged(string propertyName) {
-        if (PropertyChanged != null) {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        OnPropertyChanged("StepCount");
-        OnPropertyChanged("StretchingEnabled");
-        OnPropertyChanged("RawFilterEnabled");
-        OnPropertyChanged("KalmanDt");
-        OnPropertyChanged("SelectedFilterItem");
-        OnPropertyChanged("ScalingFilterSmoothStep");
-        OnPropertyChanged("ShowAvatar");
-        OnPropertyChanged("SelfieEnabled");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    */
+   
 
 }
