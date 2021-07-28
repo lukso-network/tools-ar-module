@@ -20,6 +20,7 @@ namespace Assets
         public bool gradEnabled;
         private readonly GradCalculator gradCalculator;
         public JointDefinition definition;
+        public float lengthScale = 1;
 
         public Joint(Transform tr, JointDefinition definition) {
             this.filter = definition?.filter;

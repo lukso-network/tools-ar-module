@@ -28,7 +28,7 @@ namespace Assets
         public float scaleMoveMultiplier = 0.001f;
 
 
-
+        public bool resizeBones = true;
         public bool enableRot;
         public bool enableMoveHips = true;
         public bool enableAttaching = true;

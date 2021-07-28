@@ -88,7 +88,7 @@ public class AvatarManager : MonoBehaviour
     public void UpdateSkeleton() {
         foreach (var avatar in avatars) {
             var pos = avatar.obj.transform.localPosition;
-            avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler);
+            avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler, skeletonManager.ikSettings.resizeBones);
             avatar.obj.transform.localPosition = pos;
         }
 

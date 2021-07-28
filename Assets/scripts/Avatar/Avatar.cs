@@ -183,22 +183,31 @@ namespace Assets
             joints[0].CopyRotationAndPosition(avatar.joints[0]);
         }
 
-        public void CopyToLocalFromGlobal(Avatar avatar, Vector3 scaleVector) {
+        public void CopyToLocalFromGlobal(Avatar avatar, Vector3 scaleVector, bool resizeBones) {
             if (avatar.joints.Count != joints.Count) {
                // Debug.LogWarning("Incorrect joints count on copy avatar");
                 //return;
             }
-            
+
+            Vector3 s;
             foreach (var entry in avatar.transformByName) {
                 Joint j;
                 if (transformByName.TryGetValue(entry.Key, out j)) {
                     j.CopyToLocalFromGlobal(entry.Value);
-                    j.transform.localScale = Vector3.Scale(j.transform.localScale, scaleVector);
+                    s = scaleVector;
+                    if (resizeBones) {
+                        s.y *= entry.Value.lengthScale;
+                    }
+                    j.transform.localScale = Vector3.Scale(j.transform.localScale, s);
                 }
             }
 
+            s = scaleVector;
+            if (resizeBones) {
+                s.y *= avatar.joints[0].lengthScale;
+            }
             joints[0].CopyToLocalFromGlobal(avatar.joints[0]);
-            joints[0].transform.localScale = Vector3.Scale(joints[0].transform.localScale, scaleVector);
+            joints[0].transform.localScale = Vector3.Scale(joints[0].transform.localScale, s);
 
             /*
             int i = 0;
@@ -484,7 +493,18 @@ namespace Assets
         }
 
         private void PullAttachJoints() {
+            //TODO
+            float []size = new float[skeleton.ScaleBones.Count];
 
+            int i = 0;
+            foreach (var bone in skeleton.ScaleBones) {
+                var j = skeleton.GetJoint(bone.fromIdx);
+                var c = skeleton.GetJoint(bone.toIdx);
+                size[i] = (j.transform.position - c.transform.position).magnitude;
+                ++i;
+            }
+
+            i = 0;
             foreach (var bone in skeleton.ScaleBones) { 
                 var j = skeleton.GetJoint(bone.fromIdx);
                 var c = skeleton.GetJoint(bone.toIdx);
@@ -498,10 +518,19 @@ namespace Assets
                 var v2 = (pt - j.transform.position).normalized;
                 var rot = Quaternion.FromToRotation(v1, v2);
                 j.transform.rotation = rot * j.transform.rotation;
-
+                
                 if (settings.enableAttaching) {
+                    var l2 = (j.transform.position - pt).magnitude;
+                    var s = j.transform.localScale;
+                    s.y *= l2 / size[i];
+
+                    jointByPointId[bone.fromIdx].lengthScale = l2 / size[i];
+                   // j.lenghtScale = l2 / size[i];
+
                     c.transform.position = pt;
                 }
+
+                ++i;
             }
           
         }
