@@ -17,12 +17,21 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public HelperDrawer helper;
     public DMBTDemoManager skeletonManager;
     public AvatarManager avatarManager;
+    public GltfGlbLoaderScript gltfLoader;
 
     [Binding]
     public void SelectVideo() {
 #if UNITY_EDITOR
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi,mov");
         player.LoadUrl(path);
+#endif
+    }
+
+    [Binding]
+    public void Load3DModel() {
+#if UNITY_EDITOR
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select model", "", "Gltf files,glb");
+        gltfLoader.LoadUrl(path);
 #endif
     }
 
