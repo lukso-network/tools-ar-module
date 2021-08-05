@@ -31,7 +31,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public void Load3DModel() {
 #if UNITY_EDITOR
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select model", "", "Gltf files,glb");
-        gltfLoader.LoadUrl(path);
+        avatarManager.LoadGltf(path);
 #endif
     }
 

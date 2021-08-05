@@ -13,6 +13,7 @@ namespace Assets
 
         public Vector3 initPosition;
         public Vector3 initLocalPosition;
+        public Vector3 initLossyScale;
 
         public JointFilter filter;
         public Joint parent;
@@ -33,6 +34,7 @@ namespace Assets
             this.transform = tr;
             this.initPosition = tr.position;
             this.initLocalPosition = tr.localPosition;
+            this.initLossyScale = tr.lossyScale;
         }
 
         public void Reset() {
@@ -102,8 +104,21 @@ namespace Assets
         internal void CopyToLocalFromGlobal(Joint joint) {
             transform.localPosition = joint.transform.position;
             transform.localRotation = joint.transform.rotation;
-            transform.localScale = joint.transform.lossyScale;
-            initPosition = joint.transform.position;
+
+
+            transform.localScale = new Vector3(initLossyScale.x * joint.transform.lossyScale.x / joint.initLossyScale.x,
+                initLossyScale.y * joint.transform.lossyScale.y / joint.initLossyScale.y,
+                initLossyScale.z * joint.transform.lossyScale.z / joint.initLossyScale.z);
+
+            //TODO
+
+
+            if (joint.transform.lossyScale.x < 50) {
+                //transform.localScale = joint.transform.lossyScale;
+            } else {
+                //transform.localScale = joint.transform.lossyScale;
+            }
+            //initPosition = joint.transform.position;
             // transform.rotation = joint.transform.rotation;
 
         }

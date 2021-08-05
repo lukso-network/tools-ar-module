@@ -12,6 +12,7 @@ public class AvatarManager : MonoBehaviour
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public DMBTDemoManager skeletonManager;
     public Material transparentMaterial;
+    public GltfGlbLoaderScript loader;
 
     public GameObject testSpawner;
     public GameObject modelRoot;
@@ -28,19 +29,34 @@ public class AvatarManager : MonoBehaviour
 
     }
 
+    public async void LoadGltf(string url) {
+    
+        var model = await loader.LoadUrl2(url);
+        if (model != null) {
+            RemoveAllModels();
+            AddModel(model);
+        }
+    }
+
+    public void RemoveAllModels() {
+        foreach (Transform child in modelRoot.transform) {
+            GameObject.Destroy(child.gameObject);
+        }
+
+
+        avatars = new List<Assets.Avatar>();
+
+    }
+
     public void LoadNextTestModel() {
         if (testSpawner.transform.childCount == 0) {
             return;
         }
 
-        foreach (Transform child in modelRoot.transform) {
-            GameObject.Destroy(child.gameObject);
-        }
+        RemoveAllModels();
 
         testModelIdx = (testModelIdx + 1) % testSpawner.transform.childCount;
 
-
-        avatars = new List<Assets.Avatar>();
 
         var testObj = testSpawner.transform.GetChild(testModelIdx);
         var md = testObj.GetComponent<ModelDescriptor>();
@@ -49,11 +65,9 @@ public class AvatarManager : MonoBehaviour
             foreach (Transform child in testObj.transform) {
                 var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
                 AddModel(cpy);
-
-                SplitModel(cpy);
+ 
             }
         }
-
     }
 
     private void SplitModel(GameObject model) {
@@ -71,10 +85,13 @@ public class AvatarManager : MonoBehaviour
 
 
     public void AddModel(GameObject obj) {
+        obj.transform.parent = modelRoot.transform;
         Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
         Utils.PreparePivots(obj);
         var controller = new Assets.Avatar(obj, null);
         avatars.Add(controller);
+        SplitModel(obj);
+        
     }
 
     public void ShowAvatar(bool value) {

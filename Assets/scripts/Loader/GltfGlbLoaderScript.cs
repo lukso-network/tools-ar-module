@@ -60,17 +60,20 @@ public class GltfGlbLoaderScript : MonoBehaviour
         }
     }
 
+
+
      void ResizeMeshToUnit(GameObject gameObject) {
          Debug.Log ("ResizeMeshToUnit");
         MeshFilter mf = gameObject.GetComponentInChildren<MeshFilter>();
-        if (mf == null) {
-            Debug.Log ("MeshFilter is null");
+        var skin = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+        if (mf == null && skin == null) {
+            Debug.Log ("MeshFilter and skinMesh are nulls");
             return;
         }
 
         Renderer renderer = gameObject.GetComponentInChildren<Renderer>();
 
-        Mesh mesh = mf.sharedMesh;
+
         Bounds bounds = renderer.bounds;
 
         Debug.Log (bounds);
@@ -85,13 +88,31 @@ public class GltfGlbLoaderScript : MonoBehaviour
             return;
         }
         
-        float scale = (1.0f / size) / 2;
-        gameObject.transform.localScale = new Vector3(scale, scale, scale);
+        //float scale = (1.0f / size) / 2;
+        //gameObject.transform.localScale = new Vector3(scale, scale, scale);
      }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+
+    public async Task<GameObject> LoadUrl2(String url) {
+        var gltf = new GltfImport();
+        var success = await gltf.Load(url);
+        GameObject model = null;
+        if (success) {
+            model = new GameObject("Model:" + url);
+
+            gltf.InstantiateGltf(model.transform);
+
+            ResizeMeshToUnit(model.transform.GetChild(0).gameObject);
+        } else {
+            Debug.LogError("Loading glTF failed! " + url);
+        }
+
+        return model;
     }
 }
