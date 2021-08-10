@@ -65,7 +65,6 @@ public class AvatarManager : MonoBehaviour
             foreach (Transform child in testObj.transform) {
                 var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
                 AddModel(cpy);
- 
             }
         }
     }
@@ -86,9 +85,21 @@ public class AvatarManager : MonoBehaviour
 
     public void AddModel(GameObject obj) {
         obj.transform.parent = modelRoot.transform;
+        skeletonManager.controller.RestoreSkeleton();
+
         Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
         Utils.PreparePivots(obj);
-        var controller = new Assets.Avatar(obj, null);
+        var controller = new Assets.Avatar(obj, skeletonManager.Skeleton);
+
+        float scale = skeletonManager.controller.GetRelativeBonesScale(controller);
+
+        Debug.Log($"{obj.transform.localScale.x},{obj.transform.localScale.y},{obj.transform.localScale.z}: {scale}");
+        obj.transform.localScale /= scale;
+
+        float scale2 = skeletonManager.controller.GetRelativeBonesScale(controller);
+        Debug.Log($"after:{obj.transform.localScale.x},{obj.transform.localScale.y},{obj.transform.localScale.z}: {scale2}");
+
+        controller.InitJoints();
         avatars.Add(controller);
         SplitModel(obj);
         

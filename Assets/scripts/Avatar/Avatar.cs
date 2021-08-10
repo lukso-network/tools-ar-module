@@ -72,7 +72,7 @@ namespace Assets
         private Joint[] jointByPointId;
         private bool avatarXDirected;
 
-        public List<Joint> Joints {get => joints; }
+        public List<Joint> Joints { get => joints; }
         public float GradientThreshold;
         public bool useOld;
         //TODO debugging only
@@ -109,7 +109,7 @@ namespace Assets
             return transformByName["Chest"];
         }
 
-        private void InitJoints() {
+        public void InitJoints() {
             joints = new List<Joint>();
             const int MAX_POINT_COUNT = 33;
             jointByPointId = new Joint[MAX_POINT_COUNT];
@@ -535,6 +535,10 @@ namespace Assets
           
         }
 
+        public void RestoreSkeleton() {
+            initalSkeletonTransform.CopyTo(this.joints);
+        }
+
 
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
 
@@ -583,18 +587,51 @@ namespace Assets
           
         }
 
-        private void ScaleHips() {
-            float l1,l2;
-            l1 = l2 = 0;
+        private float GetScaleBonesLength(Skeleton skeleton) {
+            float l1 = 0;
             foreach (var bone in skeleton.ScaleBones) {
                 int idx1 = bone.fromIdx;
                 int idx2 = bone.toIdx;
 
-                l1 += (skeleton.GetJoint(idx1).transform.position - skeleton.GetJoint(idx2).transform.position).magnitude;
-                l2 += (allTarget[idx1].Value - allTarget[idx2].Value).magnitude;
+                if (idx1 >= jointByPointId.Length || idx2 >= jointByPointId.Length) {
+                    continue;
+                }
+
+                l1 += (jointByPointId[idx1].transform.position - jointByPointId[idx2].transform.position).magnitude;
             }
+            return l1;
+        }
+
+        private float GetTargetBonesLength(Skeleton skeleton) {
+            float l1 = 0;
+            foreach (var bone in skeleton.ScaleBones) {
+                int idx1 = bone.fromIdx;
+                int idx2 = bone.toIdx;
+
+                if (idx1 >= jointByPointId.Length || idx2 >= jointByPointId.Length) {
+                    continue;
+                }
+
+                l1 += (allTarget[idx1].Value - allTarget[idx2].Value).magnitude;
+            }
+            return l1;
+        }
+
+        public float GetRelativeBonesScale(Avatar avatar) {
+            float l0 = 3.2842f;/// GetScaleBonesLength(skeleton);
+            l0 = GetScaleBonesLength(skeleton);
+            float l1 = avatar.GetScaleBonesLength(skeleton);
+
+            Debug.Log($"l0={l0}, l1={l1}");
+            return l1 / l0;
+
+        }
 
 
+        private void ScaleHips() {
+            float l1 = GetScaleBonesLength(skeleton);
+            float l2 = GetTargetBonesLength(skeleton);
+            
             float scale = l2 / l1;
             var hips = GetHips();
             hips.transform.localScale = hips.transform.localScale * scale;

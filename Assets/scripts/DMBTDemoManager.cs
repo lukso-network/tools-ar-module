@@ -168,6 +168,7 @@ namespace DeepMotion.DMBTDemo
         private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
         private FPSCounter counter = new FPSCounter();
+        public Skeleton Skeleton { get; private set; }
 
         //public GameObject[] JointBones { get; private set; }
 
@@ -193,7 +194,8 @@ namespace DeepMotion.DMBTDemo
 
             var obj = Instantiate(foundedAvatar.prefab, transform);
             Utils.PreparePivots(obj);
-            controller = new Assets.Avatar(obj, CreateSkeleton(obj));
+            Skeleton = CreateSkeleton(obj);
+            controller = new Assets.Avatar(obj, Skeleton);
             controller.settings = ikSettings;
             controller.SetIkSource();
 

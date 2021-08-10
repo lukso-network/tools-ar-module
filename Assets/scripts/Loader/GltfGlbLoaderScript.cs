@@ -88,8 +88,8 @@ public class GltfGlbLoaderScript : MonoBehaviour
             return;
         }
         
-        //float scale = (1.0f / size) / 2;
-        //gameObject.transform.localScale = new Vector3(scale, scale, scale);
+        float scale = (1.0f / size) / 2;
+        gameObject.transform.localScale = new Vector3(scale, scale, scale);
      }
 
     // Update is called once per frame
