@@ -618,11 +618,10 @@ namespace Assets
         }
 
         public float GetRelativeBonesScale(Avatar avatar) {
-            float l0 = 3.2842f;/// GetScaleBonesLength(skeleton);
+            float l0 = GetScaleBonesLength(skeleton);
             l0 = GetScaleBonesLength(skeleton);
             float l1 = avatar.GetScaleBonesLength(skeleton);
 
-            Debug.Log($"l0={l0}, l1={l1}");
             return l1 / l0;
 
         }

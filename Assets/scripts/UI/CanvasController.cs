@@ -17,7 +17,6 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public HelperDrawer helper;
     public DMBTDemoManager skeletonManager;
     public AvatarManager avatarManager;
-    public GltfGlbLoaderScript gltfLoader;
 
     [Binding]
     public void SelectVideo() {

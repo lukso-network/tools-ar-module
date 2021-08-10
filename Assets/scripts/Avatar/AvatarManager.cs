@@ -12,7 +12,6 @@ public class AvatarManager : MonoBehaviour
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public DMBTDemoManager skeletonManager;
     public Material transparentMaterial;
-    public GltfGlbLoaderScript loader;
 
     public GameObject testSpawner;
     public GameObject modelRoot;
@@ -29,9 +28,13 @@ public class AvatarManager : MonoBehaviour
 
     }
 
+    async void MessageFromAndroid(String message) {
+        LoadGltf(message);
+    }
+
     public async void LoadGltf(string url) {
     
-        var model = await loader.LoadUrl2(url);
+        var model = await GltfGlbLoader.LoadUrl(url);
         if (model != null) {
             RemoveAllModels();
             AddModel(model);
@@ -89,8 +92,8 @@ public class AvatarManager : MonoBehaviour
 
         Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
         Utils.PreparePivots(obj);
+       
         var controller = new Assets.Avatar(obj, skeletonManager.Skeleton);
-
         float scale = skeletonManager.controller.GetRelativeBonesScale(controller);
 
         Debug.Log($"{obj.transform.localScale.x},{obj.transform.localScale.y},{obj.transform.localScale.z}: {scale}");
