@@ -23,6 +23,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public void SelectVideo() {
 
         //GameObject.Find("ApiManager").GetComponent<Assets.scripts.Api.ApiManager>().ShowHelpers("false");
+       // GameObject.Find("ApiManager").GetComponent<Assets.scripts.Api.ApiManager>().SelectCamera("1");
 #if UNITY_EDITOR
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi,mov");
         player.LoadUrl(path);

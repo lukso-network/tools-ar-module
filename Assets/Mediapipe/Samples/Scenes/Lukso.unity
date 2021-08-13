@@ -2338,8 +2338,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avatarManager: {fileID: 548813479}
-  uiObject: {fileID: 271437888}
   canvasController: {fileID: 271437893}
+  sceneDirector: {fileID: 195599629}
 --- !u!1 &475013384
 GameObject:
   m_ObjectHideFlags: 0

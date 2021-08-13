@@ -19,6 +19,15 @@
       },
       "hash": "9b21e5887919814ccfea16a87bc6add11cfc42d2"
     },
+    "com.atteneder.ktx": {
+      "version": "https://github.com/atteneder/KtxUnity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "hash": "61ea6d054d1fe80ea5f7bcaf27d6c6723637cca3"
+    },
     "com.github.homuler.mediapipe": {
       "version": "file:com.github.homuler.mediapipe",
       "depth": 0,
