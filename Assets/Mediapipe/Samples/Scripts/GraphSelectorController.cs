@@ -22,7 +22,8 @@ public class GraphSelectorController : MonoBehaviour {
   private GameObject sceneDirector;
   private Dictionary<string, GameObject> graphs;
 
-  void Start() {
+
+    void Start() {
     sceneDirector = GameObject.Find("SceneDirector");
 
     var graphSelector = GetComponent<Dropdown>();

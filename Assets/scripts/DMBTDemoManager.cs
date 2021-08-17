@@ -193,11 +193,13 @@ namespace DeepMotion.DMBTDemo
             }
 
             var obj = Instantiate(foundedAvatar.prefab, transform);
+            obj.SetActive(false);
             Utils.PreparePivots(obj);
             Skeleton = CreateSkeleton(obj);
             controller = new Assets.Avatar(obj, Skeleton);
             controller.settings = ikSettings;
             controller.SetIkSource();
+
 
             // obj.SetActive(false);
 

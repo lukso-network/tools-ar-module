@@ -20,9 +20,9 @@ namespace Assets.scripts.Avatar
         public GameObject bonePrefab;
         public bool updateAutomatically = true;
 
-        private bool showBody = true;
-        private bool showSkeleton = true;
-        private bool showLandmarks = true;
+        public bool showBody = true;
+        public bool showSkeleton = false;
+        public bool showLandmarks = false;
         private List<GameObject> bodies = new List<GameObject>();
         private List<Joint> joints = new List<Joint>();
         private List<Joint[]> bones = new List<Joint[]>();
@@ -75,6 +75,10 @@ namespace Assets.scripts.Avatar
                     bodies.Add(t.gameObject);
                 }
             }
+
+            ShowLandmarks = showLandmarks;
+            ShowSkeleton = showSkeleton;
+            ShowBody = showBody;
 
         }
 

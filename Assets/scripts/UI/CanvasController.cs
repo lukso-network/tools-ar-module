@@ -34,7 +34,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public void Load3DModel() {
 #if UNITY_EDITOR
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select model", "", "Gltf files,glb");
-        avatarManager.LoadGltf(path);
+        avatarManager.LoadGltf(path, false);
 #endif
     }
 
@@ -100,7 +100,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         get { return skeletonManager.controller?.obj?.activeSelf ?? true; }
         set {
             skeletonManager.controller.obj.SetActive(value);
-             OnPropertyChanged("IsShowOrig");
+            OnPropertyChanged("IsShowOrig");
         }
     }
 
@@ -130,10 +130,12 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         OnPropertyChanged("ScaleDepth");
         OnPropertyChanged("SkinScaleX");
         OnPropertyChanged("SkinScaleZ");
+
+        
     }
 
     public void Update() {
-        OnPropertyChanged("RootScaleValue");
+        //OnPropertyChanged("RootScaleValue");
     }
 
     [Binding]

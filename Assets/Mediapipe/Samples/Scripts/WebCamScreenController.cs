@@ -20,6 +20,7 @@ public class WebCamScreenController : MonoBehaviour {
     private int scrWidth = 0;
 
     private int scrHeight = 0;
+    private Renderer renderer;
     public Vector2 ScreenSize { get; private set; }
 
     public Texture2D test;
@@ -45,6 +46,7 @@ public class WebCamScreenController : MonoBehaviour {
 
     }
     public void Start() {
+        renderer = GetComponent<Renderer>();
         //videoTexture = new Texture2D((intt)vp.clip.width, (int)vp.clip.height, TextureFormat.RGB24, false);
         videoTexture = new Texture2D(640, 480, TextureFormat.RGB24, false);
         vp.sendFrameReadyEvents = true;
@@ -170,6 +172,7 @@ public class WebCamScreenController : MonoBehaviour {
 
   public void DrawScreen(TextureFrame src) {
     if (!isWebCamReady) { return; }
+        renderer.enabled = true;
 
     // TODO: size assertion
     src.CopyTexture(outputTexture);

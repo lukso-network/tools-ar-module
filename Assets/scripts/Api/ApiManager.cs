@@ -15,11 +15,16 @@ namespace Assets.scripts.Api
         }
 
         public async void LoadModel(string url) {
-            avatarManager.LoadGltf(url);
+            avatarManager.LoadGltf(url, true);
+        }
+
+        public async void AppendModel(string url) {
+            avatarManager.LoadGltf(url, false);
         }
 
         public async void ShowUI(string boolStr) {
             canvasController.gameObject.SetActive(ToBool(boolStr));
+            canvasController.GetComponent<Canvas>().enabled = ToBool(boolStr);
         }
 
         public async void SelectCamera(string intStr) {

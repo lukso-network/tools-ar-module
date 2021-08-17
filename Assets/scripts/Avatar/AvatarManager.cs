@@ -16,6 +16,7 @@ public class AvatarManager : MonoBehaviour
     public GameObject testSpawner;
     public GameObject modelRoot;
     public Vector3 skinScaler = Vector3.one;
+    public WebCamScreenController cameraSurface;
 
     private int testModelIdx = -1;
 
@@ -28,15 +29,14 @@ public class AvatarManager : MonoBehaviour
 
     }
 
-    async void MessageFromAndroid(String message) {
-        LoadGltf(message);
-    }
-
-    public async void LoadGltf(string url) {
+    public async void LoadGltf(string url, bool replaceModel) {
     
         var model = await GltfGlbLoader.LoadUrl(url);
         if (model != null) {
-            RemoveAllModels();
+
+            if (replaceModel) {
+                RemoveAllModels();
+            }
             AddModel(model);
         }
     }
@@ -83,10 +83,21 @@ public class AvatarManager : MonoBehaviour
         foreach(Transform t in children){//model.transform.GetComponentInChildren<Transform>()) {
             t.transform.parent = root.transform;
         }
+
+        model.transform.position = Vector3.zero;
+        model.transform.localScale = Vector3.one;
+        model.transform.rotation = Quaternion.identity;
+
+        foreach (Transform t in children) {//model.transform.GetComponentInChildren<Transform>()) {
+          //  t.transform.parent = model.transform;
+        }
+
     }
 
 
     public void AddModel(GameObject obj) {
+
+
         obj.transform.parent = modelRoot.transform;
         skeletonManager.controller.RestoreSkeleton();
 
@@ -96,16 +107,11 @@ public class AvatarManager : MonoBehaviour
         var controller = new Assets.Avatar(obj, skeletonManager.Skeleton);
         float scale = skeletonManager.controller.GetRelativeBonesScale(controller);
 
-        Debug.Log($"{obj.transform.localScale.x},{obj.transform.localScale.y},{obj.transform.localScale.z}: {scale}");
         obj.transform.localScale /= scale;
-
-        float scale2 = skeletonManager.controller.GetRelativeBonesScale(controller);
-        Debug.Log($"after:{obj.transform.localScale.x},{obj.transform.localScale.y},{obj.transform.localScale.z}: {scale2}");
-
         controller.InitJoints();
         avatars.Add(controller);
         SplitModel(obj);
-        
+        obj.SetActive(false);
     }
 
     public void ShowAvatar(bool value) {
@@ -118,51 +124,10 @@ public class AvatarManager : MonoBehaviour
 
     public void UpdateSkeleton() {
         foreach (var avatar in avatars) {
+            avatar.obj.SetActive(true);
             var pos = avatar.obj.transform.localPosition;
             avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler, skeletonManager.ikSettings.resizeBones);
             avatar.obj.transform.localPosition = pos;
         }
-
-        UpdateTransparentBody();
     }
-
-    private void UpdateTransparentBody() {
-        /*
-        var image = skeletonManager.videoDisplay.GetComponent<RawImage>();
-        
-        if (image == null || image.texture == null) {
-            return;
-        }
-
-        bodyRenderer.material.mainTexture = image.texture;
-
-        if (Screen.width == scrWidth && Screen.height == scrHeight) {
-         //   return;
-        }
-        scrWidth = Screen.width;
-        scrHeight = Screen.height;
-
-        var rectTransform = skeletonManager.videoDisplay.GetComponent<RectTransform>();
-
-        float w1 = Screen.width;
-        float h1 = Screen.height;
-        float w2 = rectTransform.rect.width;
-        float h2 = rectTransform.rect.height;
-        float dx = rectTransform.offsetMin.x;
-        float dy = rectTransform.offsetMin.y;
-
-        Matrix4x4 mat = new Matrix4x4(new Vector4(w1 / w2, 0, 0, 0), new Vector4(0, h1 / h2, 0, 0), Vector3.zero, new Vector4(-dx / w2, -dy / h2, 0, 1));
-
-
-        float angle = 0;
-        if (image.texture is WebCamTexture) {
-            angle = ((WebCamTexture)image.texture).videoRotationAngle;
-        }
-        
-        var rot = Matrix4x4.Translate(new Vector3(0.5f, 0.5f, 0)) * Matrix4x4.Rotate(Quaternion.Euler(0, 0, angle)) * Matrix4x4.Translate(new Vector3(-0.5f, -0.5f, 0));
-        mat = rot * mat;
-        bodyRenderer.material.SetMatrix("_TextureMat", mat);
-        */
-    }
-
 }

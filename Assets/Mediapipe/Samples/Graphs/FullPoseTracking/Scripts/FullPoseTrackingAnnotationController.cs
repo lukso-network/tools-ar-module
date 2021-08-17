@@ -12,6 +12,9 @@ public class FullPoseTrackingAnnotationController : AnnotationController {
   void Awake() {
     poseLandmarkListAnnotation = Instantiate(poseLandmarkListPrefab);
     poseDetectionAnnotation = Instantiate(poseDetectionPrefab);
+
+        poseLandmarkListAnnotation.SetActive(false);
+        poseDetectionAnnotation.SetActive(false);
   }
 
   void OnDestroy() {
