@@ -99,8 +99,8 @@ public class AvatarManager : MonoBehaviour
         avatars.Add(controller);
         SplitModel(obj);
 
-        // remove from view
-        obj.transform.position = new Vector3(float.PositiveInfinity, 0, 0);
+        root.SetActive(false);
+
     }
 
     public void ShowAvatar(bool value) {
@@ -111,8 +111,17 @@ public class AvatarManager : MonoBehaviour
         return avatars.Any(a => a.obj.active);
     }
 
-    public void UpdateSkeleton() {
+    public void UpdateSkeleton(bool skeletonExist) {
+
+        if (!skeletonExist) {
+            foreach (var avatar in avatars) {
+                avatar.obj.SetActive(false);
+            }
+            return;
+        }
+
         foreach (var avatar in avatars) {
+            avatar.obj.SetActive(true);
             var pos = avatar.obj.transform.localPosition;
             avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler, skeletonManager.ikSettings.resizeBones);
             avatar.obj.transform.localPosition = pos;

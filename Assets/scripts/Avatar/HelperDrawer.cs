@@ -116,7 +116,7 @@ namespace Assets.scripts.Avatar
             }
         }
 
-        public void UpdateHelpers() {
+        public void UpdateHelpers(bool skeletonExist) {
             int idx = 0;
             foreach (var joint in joints) {
                 var obj = dotsRoot.transform.GetChild(idx);
@@ -147,7 +147,7 @@ namespace Assets.scripts.Avatar
             //TODO for debugging only
             // when paused mode is active
             if (updateAutomatically) {
-                UpdateHelpers();
+                UpdateHelpers(true);
             }
             
         }
