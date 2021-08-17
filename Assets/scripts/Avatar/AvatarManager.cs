@@ -73,45 +73,34 @@ public class AvatarManager : MonoBehaviour
     }
 
     private void SplitModel(GameObject model) {
-        //var root = model.transform.parent;
-        var root = new GameObject("LinearRoot:"+model.name);
-        root.transform.parent = model.transform.parent;
-
-        model.transform.parent = root.transform;
         List<Transform> children = new List<Transform>();
         Utils.GetAllChildrenDSF(model.transform, children);
         foreach(Transform t in children){//model.transform.GetComponentInChildren<Transform>()) {
-            t.transform.parent = root.transform;
+            t.transform.parent = model.transform.parent;
         }
-
-        model.transform.position = Vector3.zero;
-        model.transform.localScale = Vector3.one;
-        model.transform.rotation = Quaternion.identity;
-
-        foreach (Transform t in children) {//model.transform.GetComponentInChildren<Transform>()) {
-          //  t.transform.parent = model.transform;
-        }
-
     }
 
 
     public void AddModel(GameObject obj) {
+        var root = new GameObject("LinearRoot:" + obj.name);
+        root.transform.parent = modelRoot.transform;
 
-
-        obj.transform.parent = modelRoot.transform;
+        obj.transform.parent = root.transform;
         skeletonManager.controller.RestoreSkeleton();
 
         Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
         Utils.PreparePivots(obj);
        
-        var controller = new Assets.Avatar(obj, skeletonManager.Skeleton);
+        var controller = new Assets.Avatar(root, skeletonManager.Skeleton);
         float scale = skeletonManager.controller.GetRelativeBonesScale(controller);
 
         obj.transform.localScale /= scale;
         controller.InitJoints();
         avatars.Add(controller);
         SplitModel(obj);
-        obj.SetActive(false);
+
+        // remove from view
+        obj.transform.position = new Vector3(float.PositiveInfinity, 0, 0);
     }
 
     public void ShowAvatar(bool value) {
@@ -124,7 +113,6 @@ public class AvatarManager : MonoBehaviour
 
     public void UpdateSkeleton() {
         foreach (var avatar in avatars) {
-            avatar.obj.SetActive(true);
             var pos = avatar.obj.transform.localPosition;
             avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler, skeletonManager.ikSettings.resizeBones);
             avatar.obj.transform.localPosition = pos;
