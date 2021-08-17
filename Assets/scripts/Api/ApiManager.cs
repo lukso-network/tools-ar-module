@@ -14,6 +14,20 @@ namespace Assets.scripts.Api
 
         }
 
+        public void SetSkinScaleX(string floatValue) {
+            float value = ToFloat(floatValue);
+
+            var v = avatarManager.skinScaler;
+            avatarManager.skinScaler = new Vector3(value, v.y, value);
+        }
+
+        public void SetSkinScaleZ(string floatValue) {
+            float value = ToFloat(floatValue);
+
+            var v = avatarManager.skinScaler;
+            avatarManager.skinScaler = new Vector3(v.x, v.y, value);
+        }
+
         public async void LoadModel(string url) {
             avatarManager.LoadGltf(url, true);
         }
@@ -56,6 +70,15 @@ namespace Assets.scripts.Api
                 return int.Parse(intStr);
             } catch (Exception ex) {
                 Debug.LogError("Can't parse string to int:" + intStr);
+                return 0;
+            }
+        }
+
+        private float ToFloat(string floatStr) {
+            try {
+                return float.Parse(floatStr);
+            } catch (Exception ex) {
+                Debug.LogError("Can't parse string to float:" + floatStr);
                 return 0;
             }
         }
