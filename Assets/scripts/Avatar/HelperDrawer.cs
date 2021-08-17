@@ -20,9 +20,9 @@ namespace Assets.scripts.Avatar
         public GameObject bonePrefab;
         public bool updateAutomatically = true;
 
-        private bool showBody = true;
-        private bool showSkeleton = true;
-        private bool showLandmarks = true;
+        public bool showBody = true;
+        public bool showSkeleton = false;
+        public bool showLandmarks = false;
         private List<GameObject> bodies = new List<GameObject>();
         private List<Joint> joints = new List<Joint>();
         private List<Joint[]> bones = new List<Joint[]>();
@@ -76,6 +76,10 @@ namespace Assets.scripts.Avatar
                 }
             }
 
+            ShowLandmarks = showLandmarks;
+            ShowSkeleton = showSkeleton;
+            ShowBody = showBody;
+
         }
 
         public void Init(Assets.Avatar avatar) {
@@ -112,7 +116,7 @@ namespace Assets.scripts.Avatar
             }
         }
 
-        public void UpdateHelpers() {
+        public void UpdateHelpers(bool skeletonExist) {
             int idx = 0;
             foreach (var joint in joints) {
                 var obj = dotsRoot.transform.GetChild(idx);
@@ -143,7 +147,7 @@ namespace Assets.scripts.Avatar
             //TODO for debugging only
             // when paused mode is active
             if (updateAutomatically) {
-                UpdateHelpers();
+                UpdateHelpers(true);
             }
             
         }

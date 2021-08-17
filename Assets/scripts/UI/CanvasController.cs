@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityWeld.Binding;
 
@@ -20,9 +21,20 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public void SelectVideo() {
+
+        //GameObject.Find("ApiManager").GetComponent<Assets.scripts.Api.ApiManager>().ShowHelpers("false");
+       // GameObject.Find("ApiManager").GetComponent<Assets.scripts.Api.ApiManager>().SelectCamera("1");
 #if UNITY_EDITOR
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi,mov");
         player.LoadUrl(path);
+#endif
+    }
+
+    [Binding]
+    public void Load3DModel() {
+#if UNITY_EDITOR
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select model", "", "Gltf files,glb");
+        avatarManager.LoadGltf(path, false);
 #endif
     }
 
@@ -61,7 +73,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         get { return helper.ShowBody; }
         set {
             helper.ShowBody = value;
-            OnPropertyChanged("ShowBody");
+            OnPropertyChanged("IsShowBody");
         }
     }
 
@@ -70,7 +82,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         get { return helper.ShowSkeleton; }
         set {
             helper.ShowSkeleton = value;
-            OnPropertyChanged("ShowSkeleton");
+            OnPropertyChanged("IsShowSkeleton");
         }
     }
 
@@ -79,7 +91,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         get { return helper.ShowLandmarks; }
         set {
             helper.ShowLandmarks = value;
-            OnPropertyChanged("ShowLandmarks");
+            OnPropertyChanged("IsShowLandmarks");
         }
     }
 
@@ -88,7 +100,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         get { return skeletonManager.controller?.obj?.activeSelf ?? true; }
         set {
             skeletonManager.controller.obj.SetActive(value);
-             OnPropertyChanged("IsShowOrig");
+            OnPropertyChanged("IsShowOrig");
         }
     }
 
@@ -110,18 +122,20 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         player = FindObjectOfType<WebCamScreenController>();
         OnPropertyChanged("IsPaused");
         OnPropertyChanged("PlaybackSpeed");
-        OnPropertyChanged("ShowBody");
-        OnPropertyChanged("ShowSkeleton");
-        OnPropertyChanged("ShowLandmarks");
+        OnPropertyChanged("IsShowBody");
+        OnPropertyChanged("IsShowSkeleton");
+        OnPropertyChanged("IsShowLandmarks");
         OnPropertyChanged("IsShowOrig");
         OnPropertyChanged("RootScaleValue");
         OnPropertyChanged("ScaleDepth");
         OnPropertyChanged("SkinScaleX");
         OnPropertyChanged("SkinScaleZ");
+
+        
     }
 
     public void Update() {
-        OnPropertyChanged("RootScaleValue");
+        //OnPropertyChanged("RootScaleValue");
     }
 
     [Binding]

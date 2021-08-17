@@ -22,7 +22,7 @@ namespace Assets.scripts.Avatar
 
         public void DisplayChanges(int step) {
             if (step == stepToDisplay) {
-                helper.UpdateHelpers();
+                helper.UpdateHelpers(true);
             }
         }
 

@@ -163,11 +163,12 @@ namespace DeepMotion.DMBTDemo
         [Range(0,2)]
         public float scaleDepth = 0.5f;
 
-        public delegate void OnNewPoseHandler();
+        public delegate void OnNewPoseHandler(bool skeletonExist);
         public event OnNewPoseHandler newPoseEvent;
         private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
         private FPSCounter counter = new FPSCounter();
+        public Skeleton Skeleton { get; private set; }
 
         //public GameObject[] JointBones { get; private set; }
 
@@ -192,10 +193,13 @@ namespace DeepMotion.DMBTDemo
             }
 
             var obj = Instantiate(foundedAvatar.prefab, transform);
+            obj.SetActive(false);
             Utils.PreparePivots(obj);
-            controller = new Assets.Avatar(obj, CreateSkeleton(obj));
+            Skeleton = CreateSkeleton(obj);
+            controller = new Assets.Avatar(obj, Skeleton);
             controller.settings = ikSettings;
             controller.SetIkSource();
+
 
             // obj.SetActive(false);
 
@@ -249,6 +253,12 @@ namespace DeepMotion.DMBTDemo
 
         internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
             if (!enabled) {
+                newPoseEvent(false);
+                return;
+            }
+
+            if (landmarkList.Landmark.Count == 0) {
+                newPoseEvent(false);
                 return;
             }
 
@@ -269,7 +279,7 @@ namespace DeepMotion.DMBTDemo
 
             display.LogValue($"FPS:{fps:0.0}", dt, 0, 0, 0, 0);
 
-            newPoseEvent();
+            newPoseEvent(true);
 
         }
 
