@@ -102,11 +102,18 @@ namespace Assets
             gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
         }
 
-        public Joint GetHips() {
+       /* public Joint GetHips() {
             return transformByName["Hips"];
         }
         public Joint GetChest() {
             return transformByName["Chest"];
+        }*/
+
+        public Joint GetHips() {
+            return transformByName["CC_Base_Hip"];
+        }
+        public Joint GetChest() {
+            return transformByName["CC_Base_Spine01"];
         }
 
         public void InitJoints() {
