@@ -7,6 +7,7 @@ using DeepMotion.DMBTDemo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Joint = Assets.Joint;
 
@@ -45,10 +46,10 @@ public class Skeleton
     }
 
     public List<JointDefinition> joints = new List<JointDefinition>();
-    private GameObject[] jointBones;
     private int[] keyPointsIds;
 
     public List<Bone> ScaleBones;
+    private Dictionary<Point, string> boneNameByPoint = new Dictionary<Point, string>();
 
     public enum Point:int
     {
@@ -102,32 +103,40 @@ public class Skeleton
         return joints.Where(x => x.point.ToString().Equals(name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
     }
 
-    public bool HasKeyPoint(int id) {
-        return jointBones[id] != null;
+
+    internal static bool CompareNodeByNames(string objName, string rexExp) {
+        //objName = Utils.ReplaceSpace(objName.ToLower());
+        objName = objName.ToLower();
+        return Regex.Match(objName, rexExp).Success;
     }
 
-
     internal bool Init(GameObject obj, int[,] scaleBones, SkeletonSet.Skeleton skeletonDescrs) {
-        jointBones = new GameObject[JOINT_COUNT];
         var children = obj.GetComponentsInChildren<Transform>();
 
         List<int> ids = new List<int>();
         
         
         foreach(var skelPoint in skeletonDescrs.description.Where(x => x.node.Length > 0)) {
+
+            var type = (Point)Enum.Parse(typeof(Point), skelPoint.type, true);
             var j = GetByPoint(skelPoint.type);
             if (j == null) {
                 Debug.LogError("Cant find joint by type specified in skeleton descriptor:" + skelPoint.type);
                 return false;
             }
 
+            var boneObject = Array.Find(children, c => CompareNodeByNames(c.gameObject.name, skelPoint.node))?.gameObject;
+            if (boneObject != null) {
+                boneNameByPoint[type] = boneObject.name;
+            }
+
             if (j.pointId >= 0) {
-                var node = Array.Find(children, c => c.gameObject.name == j.name)?.gameObject;
-                if (node == null) {
-                    Debug.LogError("Cant find node:" + j.name);
+                if (boneObject == null) {
+                    Debug.LogError("Cant find node:" + skelPoint.node);
                     return false;
                 }
-                this.jointBones[j.pointId] = Array.Find(children, c => Utils.CompareNodeByName(c.gameObject.name, j.name))?.gameObject;
+                j.name = boneObject.name;
+              //  this.jointBones[j.pointId] = Array.Find(children, c => Utils.CompareNodeByName(c.gameObject.name, j.name))?.gameObject;
                 ids.Add(j.pointId);
             }
         }
@@ -157,15 +166,34 @@ public class Skeleton
         return true;
     }
 
+    public string GetBoneName(Point point) {
+        try {
+            return boneNameByPoint[point];
+        } catch (Exception e) {
+            return boneNameByPoint[point];
+        }
+    }
+
     // returns only points which corresponds to joint bone
     internal Vector3?[] FilterKeyPoints(Vector3?[] target) {
         return keyPointsIds.Where(id => id < target.Length).Select(id => target[id]).ToArray();
     }
 
     // returns only joints used for attaching points to skeleton
-    internal GameObject[] GetKeyBones() {
-        return keyPointsIds.Select(id => jointBones[id]).ToArray();
+    // internal GameObject[] GetKeyBones() {
+    //  return keyPointsIds.Select(id => jointBones[id]).ToArray();
+    //}
+
+  //  internal GameObject[] GetKeyBones(GameObject[] bones) {
+     //   return keyPointsIds.Select(id => bones[id]).ToArray();
+   // }
+
+    
+    internal int[] GetkeyPointIds() {
+        return keyPointsIds;
     }
+
+    /*
 
     public GameObject GetLeftHips() {
         return jointBones[23];
@@ -173,15 +201,15 @@ public class Skeleton
 
     public GameObject GetRightHips() {
         return jointBones[24];
-    }
+    }*/
 
-    public GameObject GetJoint(int idx) {
-        return jointBones[idx];
-    }
+ //   public GameObject GetJoint(int idx) {
+    //    return jointBones[idx];
+ //   }
 
-    public GameObject GetJoint(Point pointType) {
-        return jointBones[(int)pointType];
-    }
+//    public GameObject GetJoint(Point pointType) {
+  //      return jointBones[(int)pointType];
+   // }
 
 }
 
@@ -459,18 +487,12 @@ namespace DeepMotion.DMBTDemo
             return skeleton;
         }
 
-
-        private static bool CompareNodeNames(string objName, string rexExp) {
-            objName = Utils.ReplaceSpace(objName.ToLower());
-            return Regex.Match(objName, rexExp).Success;
-        }
-
         private static bool IsSkeletonAppliable(SkeletonSet.Skeleton skeleton, Transform[] nodes) {
             List<int> ids = new List<int>();
             foreach (var j in skeleton.description) {
                 if (j.id >= 0 && j.node.Length > 0) {
 
-                    var candidateNodes = Array.FindAll(nodes.ToArray(), c => CompareNodeNames(c.gameObject.name, j.node));
+                    var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node));
                     if (candidateNodes.Length != 1) {
                         return false;
                     }
