@@ -312,31 +312,37 @@ namespace DeepMotion.DMBTDemo
 
         private void Init() {
 
-            var foundedAvatar = Array.Find(avatars, x => x.id == avatarType);
-            if (foundedAvatar == null) {
-                Debug.LogError("Could not found avatar by id");
+            try {
+
+                var foundedAvatar = Array.Find(avatars, x => x.id == avatarType);
+                if (foundedAvatar == null) {
+                    Debug.LogError("Could not found avatar by id");
+                }
+
+                var obj = Instantiate(foundedAvatar.prefab, transform);
+                obj.SetActive(false);
+                Utils.PreparePivots(obj);
+                Skeleton = CreateSkeleton(obj);
+                controller = new Assets.Avatar(obj, Skeleton);
+                controller.settings = ikSettings;
+                controller.SetIkSource();
+
+
+                // obj.SetActive(false);
+
+                poseScaler = GetComponent<PoseScaler>();
+
+                poseScaler.Init();
+
+                obj = Instantiate(foundedAvatar.prefab, transform);
+                obj.name = "Initial debug copy";
+                obj.SetActive(false);
+                Utils.PreparePivots(obj);
+                initialAvatar = new Assets.Avatar(obj, CreateSkeleton(obj));
+            } catch (Exception ex) {
+                Debug.LogError("DMBTManage failed");
+                Debug.LogException(ex);
             }
-
-            var obj = Instantiate(foundedAvatar.prefab, transform);
-            obj.SetActive(false);
-            Utils.PreparePivots(obj);
-            Skeleton = CreateSkeleton(obj);
-            controller = new Assets.Avatar(obj, Skeleton);
-            controller.settings = ikSettings;
-            controller.SetIkSource();
-
-
-            // obj.SetActive(false);
-
-            poseScaler = GetComponent<PoseScaler>();
-            
-            poseScaler.Init();
-
-            obj = Instantiate(foundedAvatar.prefab, transform);
-            obj.name = "Initial debug copy";
-            obj.SetActive(false);
-            Utils.PreparePivots(obj);
-            initialAvatar = new Assets.Avatar(obj, CreateSkeleton(obj));
 
         }
 
@@ -382,27 +388,33 @@ namespace DeepMotion.DMBTDemo
                 return;
             }
 
-            if (landmarkList.Landmark.Count == 0) {
-                newPoseEvent(false);
-                return;
+            try {
+
+                if (landmarkList.Landmark.Count == 0) {
+                    newPoseEvent(false);
+                    return;
+                }
+
+                var fps = counter.UpdateFps();
+
+                var scale = transform.localScale;
+                scale.y = scaleDepth;
+                transform.localScale = scale;
+
+                var points = TransformPoints(transform, landmarkList, flipped);
+                //TODO
+                var ps = points.Select(x => new Vector3?(x)).ToArray();
+                controller.SetIkTarget(ps);
+
+                var t = Time.realtimeSinceStartup;
+                controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
+                var dt = Time.realtimeSinceStartup - t;
+
+                display.LogValue($"FPS:{fps:0.0}", dt, 0, 0, 0, 0);
+            } catch (Exception ex) {
+                Debug.LogError("DMBTManage new pose failed");
+                Debug.LogException(ex);
             }
-
-            var fps = counter.UpdateFps();
-
-            var scale = transform.localScale;
-            scale.y = scaleDepth;
-            transform.localScale = scale;
-
-            var points = TransformPoints(transform, landmarkList, flipped);
-            //TODO
-            var ps = points.Select(x => new Vector3?(x)).ToArray();
-            controller.SetIkTarget(ps);
-
-            var t = Time.realtimeSinceStartup;
-            controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
-            var dt = Time.realtimeSinceStartup - t;
-
-            display.LogValue($"FPS:{fps:0.0}", dt, 0, 0, 0, 0);
 
             newPoseEvent(true);
 
@@ -494,6 +506,9 @@ namespace DeepMotion.DMBTDemo
 
                     var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node));
                     if (candidateNodes.Length != 1) {
+                        if (candidateNodes.Length > 1) {
+                            Debug.LogError("Too much similar nodes found for node" + j.node + ". Returned:"  +  String.Join(",", candidateNodes.Select(x => x.gameObject.name)));
+                        }
                         return false;
                     }
                 }
