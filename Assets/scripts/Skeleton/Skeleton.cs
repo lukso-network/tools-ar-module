@@ -1,4 +1,5 @@
-﻿using Assets.Demo.Scripts;
+﻿using Assets;
+using Assets.Demo.Scripts;
 using DeepMotion.DMBTDemo;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,17 @@ public partial class Skeleton
         }
     }
 
+    public string Name { get; private set; }
     public List<JointDefinition> joints = new List<JointDefinition>();
     private int[] keyPointsIds;
 
     public List<Bone> ScaleBones;
     private Dictionary<Point, string> boneNameByPoint = new Dictionary<Point, string>();
+
+
+    public Skeleton(string name) {
+        Name = name;
+    }
 
     public JointDefinition GetByName(string name) {
         // used in initialization. Performance is not the matter
@@ -61,6 +68,7 @@ public partial class Skeleton
             var boneObject = Array.Find(children, c => CompareNodeByNames(c.gameObject.name, skelPoint.node))?.gameObject;
             if (boneObject != null) {
                 boneNameByPoint[type] = boneObject.name;
+                j.name = boneObject.name;
             }
 
             if (j.pointId >= 0) {
@@ -68,7 +76,7 @@ public partial class Skeleton
                     Debug.LogError("Cant find node:" + skelPoint.node);
                     return false;
                 }
-                j.name = boneObject.name;
+              
               //  this.jointBones[j.pointId] = Array.Find(children, c => Utils.CompareNodeByName(c.gameObject.name, j.name))?.gameObject;
                 ids.Add(j.pointId);
             }

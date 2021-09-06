@@ -219,6 +219,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2061862106}
   - {fileID: 780931512}
   - {fileID: 548813478}
   - {fileID: 61076295}
@@ -671,7 +672,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 16752264}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &61076296
 MonoBehaviour:
@@ -2439,7 +2440,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 16752264}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &458808354
 MonoBehaviour:
@@ -2850,7 +2851,7 @@ Transform:
   - {fileID: 1816447041}
   - {fileID: 1026950035}
   m_Father: {fileID: 16752264}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &548813479
 MonoBehaviour:
@@ -2864,7 +2865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1545120d2c72145a28f9a064c87124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonManager: {fileID: 780931513}
+  skeletonManager: {fileID: 2061862107}
+  posManager: {fileID: 780931513}
   transparentMaterial: {fileID: 2100000, guid: dc1c27249d33e8d478fcbeccd09d4f8a, type: 2}
   testSpawner: {fileID: 1816447040}
   modelRoot: {fileID: 1026950034}
@@ -3058,7 +3060,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 16752264}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &576423393
 MonoBehaviour:
@@ -3532,7 +3534,7 @@ GameObject:
   - component: {fileID: 780931513}
   - component: {fileID: 780931514}
   m_Layer: 0
-  m_Name: SkeletonManager
+  m_Name: PoseManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3550,7 +3552,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 16752264}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &780931513
 MonoBehaviour:
@@ -3607,6 +3609,7 @@ MonoBehaviour:
     sigma: 0.1
     dt: 22
     filterType: 1
+  skeletonManager: {fileID: 2061862107}
   scaleDepth: 0.69
 --- !u!114 &780931514
 MonoBehaviour:
@@ -9800,6 +9803,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2050340280}
   m_CullTransparentMesh: 1
+--- !u!1 &2061862105
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2061862106}
+  - component: {fileID: 2061862107}
+  m_Layer: 0
+  m_Name: SkeletonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2061862106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061862105}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 16752264}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2061862107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061862105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ea7681c6b1aa5468d5f977e206bb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ikSettings:
+    gradientCalcStep: 1
+    gradientMoveStep: 1
+    rotationMoveMultiplier: 1
+    posMoveMultiplier: 0.05
+    stretchingMoveMultiplier: 0.05
+    scaleMoveMultiplier: 0.05
+    resizeBones: 1
+    enableRot: 1
+    enableMoveHips: 1
+    enableAttaching: 1
+    chestOnly: 1
+    levelChangeThreshold: 0.0005
+    gradStepScale: 0.5
+    gradStepMin: 1
+    stepCount: 10
+    gradientThreshold: 0
+    stretchingEnabled: 1
+    useConstraints: 1
+  posFilter:
+    sigma: 0.10000000149011612
+    dt: 22
+    filterType: 1
 --- !u!1 &2086675390
 GameObject:
   m_ObjectHideFlags: 0

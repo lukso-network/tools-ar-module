@@ -1,4 +1,5 @@
-﻿namespace DeepMotion.DMBTDemo
+﻿
+namespace Assets
 {
     using UnityEngine;
 

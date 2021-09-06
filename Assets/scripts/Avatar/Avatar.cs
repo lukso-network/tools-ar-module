@@ -59,6 +59,7 @@ namespace Assets
         private List<Joint> calculatedJoints;
 
         private Skeleton skeleton;
+        public Skeleton Skeleton => skeleton;
 
         private Vector3?[] ikTarget;
         private Vector3?[] allTarget;
@@ -133,6 +134,10 @@ namespace Assets
                 if (j.definition != null && j.definition.pointId > 0) {
                     jointByPointId[j.definition.pointId] = j;
                 }
+            }
+
+            if (jointByPointId.All(x => x == null)) {
+                Debug.LogError("Null joints");
             }
 
             /*

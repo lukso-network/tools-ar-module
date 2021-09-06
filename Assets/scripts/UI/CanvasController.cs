@@ -97,16 +97,16 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public bool IsShowOrig {
-        get { return skeletonManager.controller?.obj?.activeSelf ?? true; }
+        get { return false; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
         set {
-            skeletonManager.controller.obj.SetActive(value);
+            //skeletonManager.controller.obj.SetActive(value);
             OnPropertyChanged("IsShowOrig");
         }
     }
 
     [Binding]
     public float RootScaleValue {
-        get { return skeletonManager.controller.GetHips().transform.localScale.x; }
+        get { return 1; }// return skeletonManager.controller.GetHips().transform.localScale.x; }
         set {
         }
     }

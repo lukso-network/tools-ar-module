@@ -374,7 +374,7 @@ namespace Assets.PoseEstimator
 
         public void Init() {
             manager = GetComponentInParent<DMBTDemoManager>();
-            avatar = manager.GetAvatar();
+         //   avatar = manager.GetAvatar();
             //this.jointBones = manager.JointBones;
             initialScale = avatar.transform.localScale;
             initialPosition = avatar.transform.position;

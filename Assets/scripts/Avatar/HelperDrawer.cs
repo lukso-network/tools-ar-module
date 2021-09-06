@@ -40,9 +40,9 @@ namespace Assets.scripts.Avatar
         public bool ShowSkeleton {
             get => showSkeleton;
             set {
-                showSkeleton = value;
-                dotsRoot.SetActive(showSkeleton);
-                bonesRoot.SetActive(showSkeleton);
+               // showSkeleton = value;
+              //  dotsRoot.SetActive(showSkeleton);
+              //  bonesRoot.SetActive(showSkeleton);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Assets.scripts.Avatar
         // Use this for initialization
         void Start() {
             skeletonManager = FindObjectOfType<DMBTDemoManager>();
-            Init(skeletonManager.controller);
+            //Init(skeletonManager.controller);
 
             if (updateAutomatically) {
                 skeletonManager.newPoseEvent += UpdateHelpers;

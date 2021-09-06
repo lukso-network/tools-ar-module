@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Demo.Scripts;
+using Assets;
 
 public class AvatarManager : MonoBehaviour
 {
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
-    public DMBTDemoManager skeletonManager;
+    public SkeletonManager skeletonManager;
+    public DMBTDemoManager posManager;
     public Material transparentMaterial;
 
     public GameObject testSpawner;
@@ -23,7 +25,7 @@ public class AvatarManager : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
 
-        skeletonManager.newPoseEvent += UpdateSkeleton;
+        posManager.newPoseEvent += UpdateSkeleton;
 
         LoadNextTestModel();
 
@@ -63,13 +65,12 @@ public class AvatarManager : MonoBehaviour
 
         var testObj = testSpawner.transform.GetChild(testModelIdx);
         var md = testObj.GetComponent<ModelDescriptor>();
-        
-        if( md.type == skeletonManager.avatarType) {
-            foreach (Transform child in testObj.transform) {
-                var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
-                AddModel(cpy);
-            }
+
+        foreach (Transform child in testObj.transform) {
+            var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
+            AddModel(cpy);
         }
+        
     }
 
     private void SplitModel(GameObject model) {
@@ -86,17 +87,23 @@ public class AvatarManager : MonoBehaviour
         root.transform.parent = modelRoot.transform;
 
         obj.transform.parent = root.transform;
-        skeletonManager.controller.RestoreSkeleton();
+        //skeletonManager.controller.RestoreSkeleton();
 
-        Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
-        Utils.PreparePivots(obj);
-       
-        var controller = new Assets.Avatar(root, skeletonManager.Skeleton);
-        float scale = skeletonManager.controller.GetRelativeBonesScale(controller);
+        //Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
+        // Utils.PreparePivots(obj);
+
+
+        var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj);
+        controllerAvatar.RestoreSkeleton();
+
+        var curController = new Assets.Avatar(root, controllerAvatar.Skeleton);
+        float scale = controllerAvatar.GetRelativeBonesScale(curController);
 
         obj.transform.localScale /= scale;
-        controller.InitJoints();
-        avatars.Add(controller);
+
+        //TODO check it. 
+        curController.InitJoints();
+        avatars.Add(curController);
         SplitModel(obj);
 
         root.SetActive(false);
@@ -123,8 +130,12 @@ public class AvatarManager : MonoBehaviour
         foreach (var avatar in avatars) {
             avatar.obj.SetActive(true);
             var pos = avatar.obj.transform.localPosition;
-            avatar.CopyToLocalFromGlobal(skeletonManager.controller, skinScaler, skeletonManager.ikSettings.resizeBones);
-            avatar.obj.transform.localPosition = pos;
+
+            var controller = skeletonManager.GetController(avatar.Skeleton);
+            if (controller != null) {
+                avatar.CopyToLocalFromGlobal(controller, skinScaler, skeletonManager.ikSettings.resizeBones);
+                avatar.obj.transform.localPosition = pos;
+            }
         }
     }
 }
