@@ -27,7 +27,7 @@ public class AvatarManager : MonoBehaviour
 
         posManager.newPoseEvent += UpdateSkeleton;
 
-        LoadNextTestModel();
+      //  LoadNextTestModel();
 
     }
 

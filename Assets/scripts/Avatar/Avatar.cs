@@ -168,7 +168,7 @@ namespace Assets
 
             initalSkeletonTransform.CopyFrom(this.joints);
 
-            avatarXDirected = GetHips().transform.localEulerAngles.x < 45;
+            avatarXDirected = false;// GetHips().transform.localEulerAngles.x < 45;
 
         }
 
