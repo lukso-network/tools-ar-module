@@ -52,6 +52,7 @@ namespace Assets
             }
 
             obj = Instantiate(obj, transform);
+            obj.name = skeletonDescription.name + ": " + obj.name;
             obj.SetActive(false);
             var skeleton = InitNewSkeleton(skeletonDescription, obj);
             var controller = new Avatar(obj, skeleton);
@@ -79,6 +80,15 @@ namespace Assets
             }
             Debug.LogError("Could not find supported skeleton");
             return null;
+        }
+
+        internal void RemoveNotInList(string[] usedSkeletonTypes) {
+            foreach (var skeleton in contollerAvatars.Keys.ToArray()) {
+                if (!usedSkeletonTypes.Contains(skeleton)) {
+                    Destroy(contollerAvatars[skeleton].obj);
+                    contollerAvatars.Remove(skeleton);
+                }
+            }
         }
 
         /*

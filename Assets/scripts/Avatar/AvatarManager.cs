@@ -94,6 +94,9 @@ public class AvatarManager : MonoBehaviour
 
 
         var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj);
+        if (controllerAvatar == null) {
+            return;
+        }
         controllerAvatar.RestoreSkeleton();
 
         var curController = new Assets.Avatar(root, controllerAvatar.Skeleton);
@@ -108,6 +111,7 @@ public class AvatarManager : MonoBehaviour
 
         root.SetActive(false);
 
+        CleanUpUnusedSkeletons();
     }
 
     public void ShowAvatar(bool value) {
@@ -116,6 +120,11 @@ public class AvatarManager : MonoBehaviour
 
     public bool IsAvatarsVisible() {
         return avatars.Any(a => a.obj.active);
+    }
+
+    private void CleanUpUnusedSkeletons() {
+        var usedSkeletonTypes = avatars.Select(a => a.Skeleton.Name).Distinct().ToArray();
+        skeletonManager.RemoveNotInList(usedSkeletonTypes);
     }
 
     public void UpdateSkeleton(bool skeletonExist) {

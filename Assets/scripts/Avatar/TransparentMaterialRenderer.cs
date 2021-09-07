@@ -11,7 +11,9 @@ namespace Assets.scripts.Avatar
         // Use this for initialization
         void Start() {
             webScreenPlane = FindObjectOfType<WebCamScreenController>();
-            webScreenPlane.newFrameRendered += OnNewFrameRendered;
+            if (webScreenPlane != null) {
+                webScreenPlane.newFrameRendered += OnNewFrameRendered;
+            }
 
             //TODO
             renderer = transform.parent.GetComponentInChildren<Renderer>();
@@ -19,7 +21,9 @@ namespace Assets.scripts.Avatar
         }
 
         void OnDestroy() {
-            webScreenPlane.newFrameRendered -= OnNewFrameRendered;
+            if (webScreenPlane != null) {
+                webScreenPlane.newFrameRendered -= OnNewFrameRendered;
+            }
         }
 
         private void OnNewFrameRendered(Texture2D texture) {
