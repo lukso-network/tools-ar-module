@@ -121,7 +121,11 @@ namespace Assets
             joints = new List<Joint>();
             const int MAX_POINT_COUNT = 33;
             jointByPointId = new Joint[MAX_POINT_COUNT];
+            int idx = 0;
             foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
+                if (idx++ == 0) {
+                    continue;
+                }
                 var j = new Joint(t, skeleton?.GetByName(t.gameObject.name));
                 joints.Add(j);
 
