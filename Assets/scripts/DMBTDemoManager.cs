@@ -61,16 +61,8 @@ namespace DeepMotion.DMBTDemo
             public GameObject prefab;
         }
 
-        public string avatarType = "body";
         public AvatarDescription[] avatars = new AvatarDescription[0];
-
-        //[HideInInspector]
-        //public Assets.Avatar controller;
-
-//        private Assets.Avatar initialAvatar;
-
         public StatisticDisplay display;
-        private PoseScaler poseScaler;
         public IkSettings ikSettings;
         public FilterSettings scaleFilter;
         public FilterSettings posFilter;

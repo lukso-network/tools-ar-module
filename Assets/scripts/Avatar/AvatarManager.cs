@@ -76,7 +76,7 @@ public class AvatarManager : MonoBehaviour
     private void SplitModel(GameObject model) {
         List<Transform> children = new List<Transform>();
         Utils.GetAllChildrenDSF(model.transform, children);
-        foreach(Transform t in children){//model.transform.GetComponentInChildren<Transform>()) {
+        foreach(Transform t in children){
             t.transform.parent = model.transform.parent;
         }
     }
@@ -87,11 +87,6 @@ public class AvatarManager : MonoBehaviour
         root.transform.parent = modelRoot.transform;
 
         obj.transform.parent = root.transform;
-        //skeletonManager.controller.RestoreSkeleton();
-
-        //Utils.AddMissedJoints(skeletonManager.controller.obj, obj);
-        // Utils.PreparePivots(obj);
-
 
         var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj);
         if (controllerAvatar == null) {

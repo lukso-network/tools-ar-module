@@ -102,14 +102,6 @@ namespace Assets
 
             gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
         }
-
-       /* public Joint GetHips() {
-            return transformByName["Hips"];
-        }
-        public Joint GetChest() {
-            return transformByName["Chest"];
-        }*/
-
         public Joint GetHips() {
             return transformByName[skeleton.GetBoneName(Skeleton.Point.HIPS)];
         }
@@ -144,34 +136,10 @@ namespace Assets
                 Debug.LogError("Null joints");
             }
 
-            /*
-
-            foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
-
-                var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
-
-                var obj = t;
-                while (true) {
-                    obj = obj.parent;
-                    if (obj == null) {
-                        break;
-                    } else {
-                        Joint parentJoint;
-                        if (transformByName.TryGetValue(Utils.ReplaceSpace(obj.gameObject.name), out parentJoint) && parentJoint.definition != null) {// && parentJoint.definition.pointId >= 0) {
-                            
-                            if (parentJoint.definition.pointId == -28 || parentJoint.definition.pointId == -27) {
-                                continue;
-                            }
-                            joint.parent = parentJoint;
-                            break;
-                        }
-                    }
-                }
-            }
-            */
-
+         
             initalSkeletonTransform.CopyFrom(this.joints);
 
+            //TODO Investigate this
             avatarXDirected = false;// GetHips().transform.localEulerAngles.x < 45;
 
         }

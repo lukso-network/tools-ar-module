@@ -81,19 +81,7 @@ public partial class Skeleton
                 ids.Add(j.pointId);
             }
         }
-        
-        /*
-        foreach (var j in joints) {
-            if (j.pointId >= 0) {
-                var node = Array.Find(children, c => c.gameObject.name == j.name)?.gameObject;
-                if (node == null) {
-                    Debug.LogError("Cant find node:" + j.name);
-                    return false;
-                }
-                this.jointBones[j.pointId] = Array.Find(children, c => Utils.CompareNodeByName(c.gameObject.name, j.name))?.gameObject;
-                ids.Add(j.pointId);
-            }
-        }*/
+ 
         ids.Sort();
         this.keyPointsIds = ids.ToArray();
 
@@ -119,37 +107,9 @@ public partial class Skeleton
     internal Vector3?[] FilterKeyPoints(Vector3?[] target) {
         return keyPointsIds.Where(id => id < target.Length).Select(id => target[id]).ToArray();
     }
-
-    // returns only joints used for attaching points to skeleton
-    // internal GameObject[] GetKeyBones() {
-    //  return keyPointsIds.Select(id => jointBones[id]).ToArray();
-    //}
-
-  //  internal GameObject[] GetKeyBones(GameObject[] bones) {
-     //   return keyPointsIds.Select(id => bones[id]).ToArray();
-   // }
-
     
     internal int[] GetkeyPointIds() {
         return keyPointsIds;
     }
-
-    /*
-
-    public GameObject GetLeftHips() {
-        return jointBones[23];
-    }
-
-    public GameObject GetRightHips() {
-        return jointBones[24];
-    }*/
-
- //   public GameObject GetJoint(int idx) {
-    //    return jointBones[idx];
- //   }
-
-//    public GameObject GetJoint(Point pointType) {
-  //      return jointBones[(int)pointType];
-   // }
 
 }
