@@ -10,8 +10,8 @@ namespace Assets.scripts.Avatar
 {
     public class HelperDrawer : MonoBehaviour
     {
-        private DMBTDemoManager skeletonManager;
         private Assets.Avatar avatar;
+        private SkeletonManager skeletonManager;
 
         private GameObject dotsRoot;
         private GameObject bonesRoot;
@@ -60,11 +60,15 @@ namespace Assets.scripts.Avatar
 
         // Use this for initialization
         void Start() {
-            skeletonManager = FindObjectOfType<DMBTDemoManager>();
-            //Init(skeletonManager.controller);
+            skeletonManager = FindObjectOfType<SkeletonManager>();
+        }
+
+        private void InitAvatar() { 
+            var poseManager = FindObjectOfType<DMBTDemoManager>();
+            Init(skeletonManager.GetAnyAvatar());
 
             if (updateAutomatically) {
-                skeletonManager.newPoseEvent += UpdateHelpers;
+                poseManager.newPoseEvent += UpdateHelpers;
             }
 
             //bodies.Add(skeletonManager.transform.GetChild(0).gameObject);
@@ -144,6 +148,10 @@ namespace Assets.scripts.Avatar
 
         // Update is called once per frame
         void Update() {
+
+            if (avatar == null && skeletonManager.HasAnyAvatar()) {
+                InitAvatar();
+            }
             //TODO for debugging only
             // when paused mode is active
             if (updateAutomatically) {

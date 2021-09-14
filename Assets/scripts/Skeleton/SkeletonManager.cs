@@ -30,6 +30,10 @@ namespace Assets
         void Update() {
 
         }
+        void OnValidate() {
+            posFilter.SetModified();
+        }
+
 
         private void Init() {
             var jsonDescr = Resources.Load<TextAsset>("skeletons").text;
@@ -91,32 +95,6 @@ namespace Assets
             }
         }
 
-        /*
-        private Skeleton CreateSkeleton(GameObject obj) {
-
-            var jsonDescr = Resources.Load<TextAsset>("skeletons").text;
-            var supportedSkeletons = SkeletonSet.CreateFromJSON(jsonDescr);
-            var children = obj.GetComponentsInChildren<Transform>();
-            var scalesBones = new int[,] { { 11, 13 }, { 13, 15 }, { 12, 14 }, { 14, 16 }, { 23, 25 }, { 25, 29 }, { 24, 26 }, { 26, 30 } };
-
-            var skeleton = CreateDefaultSkeletonStructure();
-            foreach (var descr in supportedSkeletons.skeletons) {
-                if (IsSkeletonAppliable(descr, children)) {
-
-                    skeleton.Init(obj, scalesBones, descr);
-                    return skeleton;
-                    //foreach (var j in descr.description) {
-                    //var definition = skeleton.GetByPoint(j.type);
-                    //if (definition != null) {
-                    //definition.
-                    //}
-                    //}
-                }
-            }
-            Debug.LogError("Could not find supported skeleton");
-            return skeleton;
-        }
-        */
 
         internal Avatar GetController(Skeleton skeleton) {
             Avatar res;
@@ -144,6 +122,13 @@ namespace Assets
             return true;
         }
 
+        internal bool HasAnyAvatar() {
+            return contollerAvatars.Count > 0;
+        }
+
+        internal Avatar GetAnyAvatar() {
+            return contollerAvatars.Values.FirstOrDefault();
+        }
 
         private Skeleton CreateDefaultSkeletoStructure(string name) {
             var skeleton = new Skeleton(name);
@@ -224,11 +209,11 @@ namespace Assets
             return skeleton;
         }
 
-        internal void UpdatePose(Vector3?[] ps, float gradientCalcStep, float gradientMoveStep, int stepCount) {
+        internal void UpdatePose(Vector3?[] ps) {
            
             foreach(var controller in contollerAvatars.Values) {
                 controller.SetIkTarget(ps);
-                controller.Update(gradientCalcStep, gradientMoveStep, stepCount);
+                controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
             }
         }
     }

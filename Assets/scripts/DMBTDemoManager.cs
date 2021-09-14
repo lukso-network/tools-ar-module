@@ -61,11 +61,8 @@ namespace DeepMotion.DMBTDemo
             public GameObject prefab;
         }
 
-        public AvatarDescription[] avatars = new AvatarDescription[0];
         public StatisticDisplay display;
-        public IkSettings ikSettings;
         public FilterSettings scaleFilter;
-        public FilterSettings posFilter;
         public SkeletonManager skeletonManager;
 
         [Range(0,2)]
@@ -79,7 +76,6 @@ namespace DeepMotion.DMBTDemo
 
         void OnValidate() {
             scaleFilter.SetModified();
-            posFilter.SetModified();
         }
 
         void Start() {
@@ -183,7 +179,7 @@ namespace DeepMotion.DMBTDemo
                 var ps = points.Select(x => new Vector3?(x)).ToArray();
 
                 var t = Time.realtimeSinceStartup;
-                skeletonManager.UpdatePose(ps, ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
+                skeletonManager.UpdatePose(ps);
                 //controller.SetIkTarget(ps);
                 //controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
                 var dt = Time.realtimeSinceStartup - t;
