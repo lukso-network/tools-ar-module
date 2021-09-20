@@ -20,6 +20,8 @@ public class AvatarManager : MonoBehaviour
     public Vector3 skinScaler = Vector3.one;
     public WebCamScreenController cameraSurface;
 
+    private bool skeletonJustAppeared = true;
+
     private int testModelIdx = -1;
 
     // Start is called before the first frame update
@@ -104,7 +106,7 @@ public class AvatarManager : MonoBehaviour
         avatars.Add(curController);
         SplitModel(obj);
 
-        root.SetActive(false);
+        root.SetActive(true);
 
         CleanUpUnusedSkeletons();
     }
@@ -128,11 +130,19 @@ public class AvatarManager : MonoBehaviour
             foreach (var avatar in avatars) {
                 avatar.obj.SetActive(false);
             }
+            skeletonJustAppeared = true;
             return;
         }
 
+        if (skeletonJustAppeared) {
+            foreach (var avatar in avatars) {
+                avatar.obj.SetActive(true);
+            }
+            skeletonJustAppeared = false;
+        }
+         
         foreach (var avatar in avatars) {
-            avatar.obj.SetActive(true);
+
             var pos = avatar.obj.transform.localPosition;
 
             var controller = skeletonManager.GetController(avatar.Skeleton);

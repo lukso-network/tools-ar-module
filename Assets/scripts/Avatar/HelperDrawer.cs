@@ -58,9 +58,11 @@ namespace Assets.scripts.Avatar
         public bool ShowSkeleton {
             get => showSkeleton;
             set {
-               // showSkeleton = value;
-              //  dotsRoot.SetActive(showSkeleton);
-              //  bonesRoot.SetActive(showSkeleton);
+                showSkeleton = value;
+                if (dotsRoot != null) {
+                    dotsRoot.SetActive(showSkeleton);
+                    bonesRoot.SetActive(showSkeleton);
+                }
             }
         }
 
@@ -79,15 +81,16 @@ namespace Assets.scripts.Avatar
         // Use this for initialization
         void Start() {
             skeletonManager = FindObjectOfType<SkeletonManager>();
+
+            if (updateAutomatically) {
+                var poseManager = FindObjectOfType<DMBTDemoManager>();
+                poseManager.newPoseEvent += UpdateHelpers;
+            }
         }
 
         private void InitAvatar() { 
-            var poseManager = FindObjectOfType<DMBTDemoManager>();
+            
             Init(skeletonManager.GetAnyAvatar());
-
-            if (updateAutomatically) {
-                poseManager.newPoseEvent += UpdateHelpers;
-            }
 
             //bodies.Add(skeletonManager.transform.GetChild(0).gameObject);
 
@@ -106,10 +109,11 @@ namespace Assets.scripts.Avatar
 
         public void Init(Assets.Avatar avatar) {
             this.avatar = avatar;
-            while(transform.childCount !=0) {
-                GameObject.DestroyImmediate(transform.GetChild(0));
-            }
 
+            foreach(Transform t in transform) {
+                GameObject.Destroy(t.gameObject);
+            }
+            
             CreateHelpers();
         }
 
@@ -128,7 +132,7 @@ namespace Assets.scripts.Avatar
 
                 var obj = GameObject.Instantiate(dotPrefab, dotsRoot.transform);
                 obj.name = joint.transform.name;
-
+                bones.Clear();
                 var nextPivot = joint.parent;
                 if (nextPivot != null && joint.transform.gameObject.name != "Hips") {
                     bones.Add(new Joint[] { joint, nextPivot });
@@ -159,6 +163,9 @@ namespace Assets.scripts.Avatar
 
             if (avatar.Destroyed) {
                 avatar = null;
+                foreach (Transform t in transform) {
+                    GameObject.Destroy(t.gameObject);
+                }
                 return;
             }
 
