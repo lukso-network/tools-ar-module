@@ -64,6 +64,8 @@ namespace Assets
         private Vector3?[] ikTarget;
         private Vector3?[] allTarget;
 
+        public bool Destroyed{get; set;}
+
 
         private Transform[] affectedSource;
         private Vector3[] affectedTarget;
@@ -102,11 +104,18 @@ namespace Assets
 
             gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
         }
-        public Joint GetHips() {
-            return transformByName[skeleton.GetBoneName(Skeleton.Point.HIPS)];
+        private Joint GetHips() {
+            return GetJointByPoint(Skeleton.Point.HIPS);
         }
-        public Joint GetChest() {
-            return transformByName[skeleton.GetBoneName(Skeleton.Point.CHEST)];
+        private Joint GetChest() {
+            return GetJointByPoint(Skeleton.Point.CHEST);
+        }
+
+        public Joint GetSpine() {
+            return GetJointByPoint(Skeleton.Point.SPINE);
+        }
+        private Joint GetJointByPoint(Skeleton.Point point) {
+            return transformByName[skeleton.GetBoneName(point)];
         }
 
         public void InitJoints() {
@@ -569,9 +578,10 @@ namespace Assets
 
             var chest = GetChest();
             var hips = GetHips();
+            var spine = GetSpine();
 
             foreach(var j in calculatedJoints) {
-                if (settings.chestOnly && (j != chest)) {// && j != hips)) {
+                if (settings.chestOnly && (j != chest) && (j != hips)){// && (j !=hips)){// {// && j != hips)) {
                     continue;
                 }
                 if (j.definition.AffectedPoints != null) {

@@ -90,6 +90,7 @@ namespace Assets
             foreach (var skeleton in contollerAvatars.Keys.ToArray()) {
                 if (!usedSkeletonTypes.Contains(skeleton)) {
                     Destroy(contollerAvatars[skeleton].obj);
+                    contollerAvatars[skeleton].Destroyed = true;
                     contollerAvatars.Remove(skeleton);
                 }
             }
