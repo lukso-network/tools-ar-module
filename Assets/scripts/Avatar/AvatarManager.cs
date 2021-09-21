@@ -78,12 +78,17 @@ public class AvatarManager : MonoBehaviour
     private void SplitModel(GameObject model) {
         List<Transform> children = new List<Transform>();
         Utils.GetAllChildrenDSF(model.transform, children);
-        foreach(Transform t in children){
+        foreach (Transform t in children) {
             t.transform.parent = model.transform.parent;
+            var skin = t.gameObject.GetComponent<SkinnedMeshRenderer>();
+            if (skin != null) {
+                // its required because skinned mesh renderer can have incorrect bounds
+                skin.updateWhenOffscreen = true;
+            }
         }
+
     }
-
-
+    
     public void AddModel(GameObject obj) {
         var root = new GameObject("LinearRoot:" + obj.name);
         root.transform.parent = modelRoot.transform;
@@ -127,6 +132,7 @@ public class AvatarManager : MonoBehaviour
     public void UpdateSkeleton(bool skeletonExist) {
 
         if (!skeletonExist) {
+
             foreach (var avatar in avatars) {
                 avatar.obj.SetActive(false);
             }
