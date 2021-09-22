@@ -180,6 +180,8 @@ namespace Assets
             //TODO Investigate this
             avatarXDirected = false;// GetHips().transform.localEulerAngles.x < 45;
 
+            Debug.LogError("avagtar x directed:" + GetHips().transform.localEulerAngles);
+
         }
 
         public void CopyRotationFromAvatar(Avatar avatar) {
@@ -479,13 +481,19 @@ namespace Assets
             var dir = ((leftArm + rightArm) / 2 - center).normalized;
 
             hips.transform.position = center + dir * hipLen * 0.2f;
-
-            if (avatarXDirected) {
-                hips.transform.rotation = Quaternion.LookRotation(dir, (right - left).normalized);
+            
+            var forward = Vector3.Cross((right - left).normalized, dir);
+            var q1 = Quaternion.FromToRotation(dir, Vector3.up);
+            forward = q1 * forward;
+            
+            if (Vector3.Dot(forward, Vector3.forward) < -0.99f) {
+                var q2 = Quaternion.AngleAxis(180, Vector3.up);
+                hips.transform.rotation = q2 * q1 * hips.transform.rotation;// q2 *  q1;
             } else {
-                var forward = Vector3.Cross((right - left).normalized, dir);
-                hips.transform.rotation = Quaternion.LookRotation(forward, dir);
+                var q2 = Quaternion.FromToRotation(q1 * forward, Vector3.forward);
+                hips.transform.rotation = q2 * q1 * hips.transform.rotation;// q2 *  q1;
             }
+          
         }
 
         public void UpdateFast(float gradStep, float moveStep, int steps) {
@@ -570,11 +578,12 @@ namespace Assets
 
 
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
-
             initalSkeletonTransform.CopyTo(this.joints);
 
             MoveHipsToCenter();
             ScaleHips();
+
+          //  return;
 
             var chest = GetChest();
             var hips = GetHips();

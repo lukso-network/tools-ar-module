@@ -106,15 +106,27 @@ namespace Assets
         }
 
         private static bool IsSkeletonAppliable(SkeletonSet.Skeleton skeleton, Transform[] nodes) {
-            List<int> ids = new List<int>();
+            HashSet<Transform> usedTransforms = new HashSet<Transform>();
             foreach (var j in skeleton.description) {
-                if (j.id >= 0 && j.node.Length > 0) {
+                if (j.node.Length > 0) {
 
                     var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node));
-                    if (candidateNodes.Length != 1) {
+
+                    if (candidateNodes.Length == 1) {
+                        if (usedTransforms.Contains(candidateNodes[0])) {
+                            Debug.LogError($"Found transform is already assigned to another node: node={j.node}, transform: {candidateNodes[0].name}");
+                            return false;
+                        }
+                        usedTransforms.Add(candidateNodes[0]);
+
+                    } else  {
+                        // incorrect case
                         if (candidateNodes.Length > 1) {
                             Debug.LogError("Too much similar nodes found for node" + j.node + ". Returned:" + String.Join(",", candidateNodes.Select(x => x.gameObject.name)));
+                        } else {
+                            Debug.LogError($"Can't find {j.node} for skeleton {skeleton.name}");
                         }
+
                         return false;
                     }
                 }
