@@ -1,6 +1,7 @@
 ﻿using Assets;
 using Assets.Demo.Scripts;
 using Assets.scripts.Avatar;
+using DeepMotion.DMBTDemo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,6 @@ namespace Assets
         private Transform[] ikSource;
         private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();
         private Joint[] jointByPointId;
-        private bool avatarXDirected;
 
         public List<Joint> Joints { get => joints; }
         public float GradientThreshold;
@@ -176,12 +176,6 @@ namespace Assets
 
 
             initalSkeletonTransform.CopyFrom(this.joints);
-
-            //TODO Investigate this
-            avatarXDirected = false;// GetHips().transform.localEulerAngles.x < 45;
-
-            Debug.LogError("avagtar x directed:" + GetHips().transform.localEulerAngles);
-
         }
 
         public void CopyRotationFromAvatar(Avatar avatar) {
@@ -477,23 +471,24 @@ namespace Assets
 
             var center = (left + right) / 2;
             var hipLen = (left - right).magnitude;
+            var updir = ((leftArm + rightArm) / 2 - center).normalized;
 
-            var dir = ((leftArm + rightArm) / 2 - center).normalized;
+            hips.transform.position = center + updir * hipLen * 0.2f;
+            
+            var forward = Vector3.Cross((right - left).normalized, updir);
+            var modelForward = Vector3.forward;
+            var modelUp = Vector3.up;
 
-            hips.transform.position = center + dir * hipLen * 0.2f;
-            
-            var forward = Vector3.Cross((right - left).normalized, dir);
-            var q1 = Quaternion.FromToRotation(dir, Vector3.up);
-            forward = q1 * forward;
-            
-            if (Vector3.Dot(forward, Vector3.forward) < -0.99f) {
-                var q2 = Quaternion.AngleAxis(180, Vector3.up);
-                hips.transform.rotation = q2 * q1 * hips.transform.rotation;// q2 *  q1;
+            var q1 = Quaternion.FromToRotation(modelUp, updir);
+            var newForward = q1 * modelForward;
+
+            Quaternion q2;
+            if (Vector3.Dot(forward, newForward) < -0.95f) {
+                q2 = Quaternion.AngleAxis(180, updir);
             } else {
-                var q2 = Quaternion.FromToRotation(q1 * forward, Vector3.forward);
-                hips.transform.rotation = q2 * q1 * hips.transform.rotation;// q2 *  q1;
+                q2 = Quaternion.FromToRotation(newForward, forward);
             }
-          
+            hips.transform.rotation = q2 * q1 * hips.transform.rotation;
         }
 
         public void UpdateFast(float gradStep, float moveStep, int steps) {
@@ -582,8 +577,7 @@ namespace Assets
 
             MoveHipsToCenter();
             ScaleHips();
-
-          //  return;
+            
 
             var chest = GetChest();
             var hips = GetHips();
