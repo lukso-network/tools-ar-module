@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Assets.Demo.Scripts;
 using Assets;
+using Assets.scripts.Avatar;
 
 public class AvatarManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class AvatarManager : MonoBehaviour
 
     public GameObject testSpawner;
     public GameObject modelRoot;
+    public Transform transpBodyRoot;
     public Vector3 skinScaler = Vector3.one;
     public WebCamScreenController cameraSurface;
 
@@ -97,8 +99,10 @@ public class AvatarManager : MonoBehaviour
 
         var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj);
         if (controllerAvatar == null) {
+            GameObject.Destroy(obj);
             return;
         }
+
         controllerAvatar.RestoreSkeleton();
 
         var curController = new Assets.Avatar(root, controllerAvatar.Skeleton);
@@ -114,6 +118,29 @@ public class AvatarManager : MonoBehaviour
         root.SetActive(true);
 
         CleanUpUnusedSkeletons();
+
+        if (!IsTransparent(obj)) {
+            AddTransparentBody(controllerAvatar);
+        }
+    }
+
+    private bool IsTransparent(GameObject obj) {
+        return obj.GetComponentInChildren<TransparentMaterialRenderer>() != null;
+    }
+
+    private void AddTransparentBody(Assets.Avatar controllerAvatar) {
+        var name = controllerAvatar.Skeleton.Name;
+
+        if (avatars.Find(x => x.obj.name.Contains(name)) != null) {
+            return;
+        }
+
+        var body = transpBodyRoot.Find(name);
+        if (body == null) {
+            return;
+        }
+
+        AddModel(GameObject.Instantiate(body.gameObject));
     }
 
     public void ShowAvatar(bool value) {
