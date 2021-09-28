@@ -2,6 +2,7 @@
 {
     public enum Point:int
     {
+        DUMMY = -4,
         CHEST = -3,
         SPINE = -2,
         HIPS = -1,

@@ -20,6 +20,7 @@ namespace Assets
                 public string type;
                 public int id;
                 public string node;
+                public bool allowMultiple;
 
             }
 

@@ -22,6 +22,9 @@ public class AvatarManager : MonoBehaviour
     public Vector3 skinScaler = Vector3.one;
     public WebCamScreenController cameraSurface;
 
+    [Range(-0.01f,0.01f)]
+    public float transparentBodyShrinkAmount = 0.04f;
+
     private bool skeletonJustAppeared = true;
 
     private int testModelIdx = -1;
@@ -41,19 +44,23 @@ public class AvatarManager : MonoBehaviour
         if (model != null) {
 
             if (replaceModel) {
-                RemoveAllModels();
+                RemoveAllModels(false);
             }
             AddModel(model);
         }
     }
 
-    public void RemoveAllModels() {
+    public void RemoveAllModels(bool clearUnused) {
         foreach (Transform child in modelRoot.transform) {
             GameObject.Destroy(child.gameObject);
         }
 
 
         avatars = new List<Assets.Avatar>();
+
+        if (clearUnused) {
+            CleanUpUnusedSkeletons();
+        }
 
     }
 
@@ -62,7 +69,7 @@ public class AvatarManager : MonoBehaviour
             return;
         }
 
-        RemoveAllModels();
+        RemoveAllModels(false);
 
         testModelIdx = (testModelIdx + 1) % testSpawner.transform.childCount;
 
@@ -120,7 +127,7 @@ public class AvatarManager : MonoBehaviour
         CleanUpUnusedSkeletons();
 
         if (!IsTransparent(obj)) {
-            AddTransparentBody(controllerAvatar);
+            AddTransparentBody(root, controllerAvatar);
         }
     }
 
@@ -128,19 +135,31 @@ public class AvatarManager : MonoBehaviour
         return obj.GetComponentInChildren<TransparentMaterialRenderer>() != null;
     }
 
-    private void AddTransparentBody(Assets.Avatar controllerAvatar) {
+    private void AddTransparentBody(GameObject obj, Assets.Avatar controllerAvatar) {
         var name = controllerAvatar.Skeleton.Name;
+        var transp_name = $"{name}_transparent";
 
-        if (avatars.Find(x => x.obj.name.Contains(name)) != null) {
+        if (avatars.Find(x => x.obj.name.Contains(transp_name)) != null) {
             return;
         }
 
-        var body = transpBodyRoot.Find(name);
+        //TODO temporary way to find male or female
+        bool female = false;
+        foreach(Transform t in obj.transform) {
+            if (t.name.ToLower().Contains("alice")) {
+                female = true;
+                break;
+            }
+        }
+
+        var body = transpBodyRoot.Find(female? (name + "_female"):name);
         if (body == null) {
             return;
         }
 
-        AddModel(GameObject.Instantiate(body.gameObject));
+        var transpObj = GameObject.Instantiate(body.gameObject);
+        transpObj.name = transp_name;
+        AddModel(transpObj);
     }
 
     public void ShowAvatar(bool value) {

@@ -40,7 +40,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public void RemveAll() {
-        avatarManager.RemoveAllModels();
+        avatarManager.RemoveAllModels(true);
     }
 
     [Binding]

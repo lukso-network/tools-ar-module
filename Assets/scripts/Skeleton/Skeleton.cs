@@ -57,8 +57,12 @@ public partial class Skeleton
         
         
         foreach(var skelPoint in skeletonDescrs.description.Where(x => x.node.Length > 0)) {
-
             var type = (Point)Enum.Parse(typeof(Point), skelPoint.type, true);
+            if (type == Point.DUMMY) {
+                continue;
+            }
+
+
             var j = GetByPoint(skelPoint.type);
             if (j == null) {
                 Debug.LogError("Cant find joint by type specified in skeleton descriptor:" + skelPoint.type);
