@@ -2974,7 +2974,7 @@ MonoBehaviour:
   transpBodyRoot: {fileID: 134327756}
   skinScaler: {x: 1, y: 1, z: 1}
   cameraSurface: {fileID: 0}
-  transparentBodyShrinkAmount: 0
+  transparentBodyShrinkAmount: 0.0001
 --- !u!1 &561833429
 GameObject:
   m_ObjectHideFlags: 0
