@@ -74,7 +74,7 @@ Shader "Unlit/ScreenSpaceShader"
                 float4x4 m = _TextureMat;
                 float2 uv = mul(m, float4(screenPosition.x, screenPosition.y, 0, 1)).xy;
 
-                col = tex2D(_MainTex, uv);// *0.7f;
+                col = tex2D(_MainTex, uv) ;
                 //col = float4(1, 1, 1, 1);
   //              col = (i.scrPos + float4(0, 0, 0, 10));
     
