@@ -1,6 +1,7 @@
 ﻿using Assets;
 using Assets.Demo.Scripts;
 using Assets.scripts.Avatar;
+using DeepMotion.DMBTDemo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,9 +60,12 @@ namespace Assets
         private List<Joint> calculatedJoints;
 
         private Skeleton skeleton;
+        public Skeleton Skeleton => skeleton;
 
         private Vector3?[] ikTarget;
         private Vector3?[] allTarget;
+
+        public bool Destroyed{get; set;}
 
 
         private Transform[] affectedSource;
@@ -70,7 +74,6 @@ namespace Assets
         private Transform[] ikSource;
         private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();
         private Joint[] jointByPointId;
-        private bool avatarXDirected;
 
         public List<Joint> Joints { get => joints; }
         public float GradientThreshold;
@@ -101,19 +104,29 @@ namespace Assets
 
             gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
         }
-
-        public Joint GetHips() {
-            return transformByName["Hips"];
+        private Joint GetHips() {
+            return GetJointByPoint(Skeleton.Point.HIPS);
         }
-        public Joint GetChest() {
-            return transformByName["Chest"];
+        private Joint GetChest() {
+            return GetJointByPoint(Skeleton.Point.CHEST);
+        }
+
+        public Joint GetSpine() {
+            return GetJointByPoint(Skeleton.Point.SPINE);
+        }
+        private Joint GetJointByPoint(Skeleton.Point point) {
+            return transformByName[skeleton.GetBoneName(point)];
         }
 
         public void InitJoints() {
             joints = new List<Joint>();
             const int MAX_POINT_COUNT = 33;
             jointByPointId = new Joint[MAX_POINT_COUNT];
+            int idx = 0;
             foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
+                if (idx++ == 0) {
+                    continue;
+                }
                 var j = new Joint(t, skeleton?.GetByName(t.gameObject.name));
                 joints.Add(j);
 
@@ -128,8 +141,16 @@ namespace Assets
                 }
             }
 
+            if (jointByPointId.All(x => x == null)) {
+                Debug.LogError("Null joints");
+            }
+
+            /*
             foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
 
+                if (!transformByName.ContainsKey(Utils.ReplaceSpace(t.gameObject.name))) {
+                    continue;
+                }
                 var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
 
                 var obj = t;
@@ -140,7 +161,7 @@ namespace Assets
                     } else {
                         Joint parentJoint;
                         if (transformByName.TryGetValue(Utils.ReplaceSpace(obj.gameObject.name), out parentJoint) && parentJoint.definition != null) {// && parentJoint.definition.pointId >= 0) {
-                            
+
                             if (parentJoint.definition.pointId == -28 || parentJoint.definition.pointId == -27) {
                                 continue;
                             }
@@ -151,10 +172,10 @@ namespace Assets
                 }
             }
 
+            */
+
+
             initalSkeletonTransform.CopyFrom(this.joints);
-
-            avatarXDirected = GetHips().transform.localEulerAngles.x < 45;
-
         }
 
         public void CopyRotationFromAvatar(Avatar avatar) {
@@ -242,7 +263,7 @@ namespace Assets
         }
 
         public void SetIkSource() {
-            this.ikSource = skeleton.GetKeyBones().Select(x => x.transform).ToArray();
+            this.ikSource = skeleton.GetkeyPointIds().Select(id => jointByPointId[id].transform).ToArray();
 
             this.joints.ForEach(x => x.gradEnabled = x.definition?.gradCalculator != null);
             //this.joints.ForEach(x => x.gradEnabled = x.transform.name == "Hips");
@@ -450,17 +471,24 @@ namespace Assets
 
             var center = (left + right) / 2;
             var hipLen = (left - right).magnitude;
+            var updir = ((leftArm + rightArm) / 2 - center).normalized;
 
-            var dir = ((leftArm + rightArm) / 2 - center).normalized;
+            hips.transform.position = center + updir * hipLen * 0.2f;
+            
+            var forward = Vector3.Cross((right - left).normalized, updir);
+            var modelForward = Vector3.forward;
+            var modelUp = Vector3.up;
 
-            hips.transform.position = center + dir * hipLen * 0.2f;
+            var q1 = Quaternion.FromToRotation(modelUp, updir);
+            var newForward = q1 * modelForward;
 
-            if (avatarXDirected) {
-                hips.transform.rotation = Quaternion.LookRotation(dir, (right - left).normalized);
+            Quaternion q2;
+            if (Vector3.Dot(forward, newForward) < -0.95f) {
+                q2 = Quaternion.AngleAxis(180, updir);
             } else {
-                var forward = Vector3.Cross((right - left).normalized, dir);
-                hips.transform.rotation = Quaternion.LookRotation(forward, dir);
+                q2 = Quaternion.FromToRotation(newForward, forward);
             }
+            hips.transform.rotation = q2 * q1 * hips.transform.rotation;
         }
 
         public void UpdateFast(float gradStep, float moveStep, int steps) {
@@ -492,22 +520,26 @@ namespace Assets
             }
         }
 
+        private GameObject GetJoint(int point) {
+            return jointByPointId[(int)point].transform.gameObject;
+        }
+
         private void PullAttachJoints() {
             //TODO
             float []size = new float[skeleton.ScaleBones.Count];
 
             int i = 0;
             foreach (var bone in skeleton.ScaleBones) {
-                var j = skeleton.GetJoint(bone.fromIdx);
-                var c = skeleton.GetJoint(bone.toIdx);
+                var j = GetJoint(bone.fromIdx);
+                var c = GetJoint(bone.toIdx);
                 size[i] = (j.transform.position - c.transform.position).magnitude;
                 ++i;
             }
 
             i = 0;
             foreach (var bone in skeleton.ScaleBones) { 
-                var j = skeleton.GetJoint(bone.fromIdx);
-                var c = skeleton.GetJoint(bone.toIdx);
+                var j = GetJoint(bone.fromIdx);
+                var c = GetJoint(bone.toIdx);
                 if (settings.enableAttaching) {
                     // set parent position first
                     j.transform.position = allTarget[bone.fromIdx].Value; ;
@@ -541,23 +573,24 @@ namespace Assets
 
 
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
-
             initalSkeletonTransform.CopyTo(this.joints);
 
             MoveHipsToCenter();
             ScaleHips();
+            
 
             var chest = GetChest();
             var hips = GetHips();
+            var spine = GetSpine();
 
             foreach(var j in calculatedJoints) {
-                if (settings.chestOnly && (j != chest)) {// && j != hips)) {
+                if (settings.chestOnly && (j != chest) && (j != hips)){// && (j !=hips)){// {// && j != hips)) {
                     continue;
                 }
                 if (j.definition.AffectedPoints != null) {
                     var enabledJoints = new List<Joint>() { j };
                     affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
-                    affectedSource = (from z in j.definition.AffectedPoints select skeleton.GetJoint(z).transform).ToArray();
+                    affectedSource = (from z in j.definition.AffectedPoints select GetJoint(z).transform).ToArray();
 
                     foreach (var p in parameters) {
                         p.calculated = false;

@@ -17,7 +17,7 @@ build/
 *.dylib
 *.so
 *.framework/
-
+!\Assets\Editor\UnityWeld\
 bazel-*
 
 Assets/StreamingAssets*

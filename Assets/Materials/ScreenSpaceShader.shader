@@ -4,15 +4,22 @@ Shader "Unlit/ScreenSpaceShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Aspect("Texture aspect", Float) = 1 
+        _ShrinkSize("Shrink", Range(-1, 1)) = 0.05
+        _OffsetFactor("Offset factor", Range(-1, 1)) = 0
+        _OffsetUnits("Offset units", Range(-1, 1)) = 0
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
+           Offset[_OffsetFactor],[_OffsetUnits]
+        //Offset -1, 1
 
          Pass
         {
+
             CGPROGRAM
+
             #pragma vertex vert
             #pragma fragment frag
             // make fog work
@@ -24,6 +31,7 @@ Shader "Unlit/ScreenSpaceShader"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                float3 normal : NORMAL;
             };
 
             struct v2f
@@ -39,45 +47,37 @@ Shader "Unlit/ScreenSpaceShader"
             float _Aspect;
             float4x4 _TextureMat;
             float4x4 _TextureRotation;
+            float _ShrinkSize;
 
 
             v2f vert(appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-               // o.uv = mul(_TextureRotation, float4(v.uv, 0, 1)).xy;
-                UNITY_TRANSFER_FOG(o,o.vertex);
 
+
+                float4 worldPos = UnityObjectToClipPos(v.vertex + v.normal * _ShrinkSize);
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
+                o.vertex = worldPos;
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                
                 o.scrPos = ComputeScreenPos(o.vertex);
+                //o.scrPos = float4(worldNormal.x, worldNormal.y, worldNormal.z, 1);
                 return o;
             }
 
             fixed4 frag(v2f i) : SV_Target
             {
                 float2 screenPosition = (i.scrPos.xy / i.scrPos.w);
-
-               // screenPosition = (i.vertex.xy / i.vertex.w);
-                // sample the texture
-               // fixed4 col = tex2D(_MainTex, i.uv);
                 float c = screenPosition.y;
                 fixed4 col = float4(screenPosition.x, screenPosition.y,0, 1);
 
                 float4x4 m = _TextureMat;
                 float2 uv = mul(m, float4(screenPosition.x, screenPosition.y, 0, 1)).xy;
-                //float4 tc = mul(m, float4(screenPosition.x, screenPosition.y, 0, 1));
-                //float2 uv = mul(_TextureRotation, tc).xy;
-                //uv = tc.xy;
-             //  uv = float2(1-tc.y, tc.x);
 
-              //  uv -= float2(0.5f, 0.5f);
-             //   uv = float2(-uv.y, uv.x);
-              //  uv += float2(0.5f, 0.5f);
-
-
-                col = tex2D(_MainTex, uv);// *0.7f;
-                // apply fog
-              //  UNITY_APPLY_FOG(i.fogCoord, col);
+                col = tex2D(_MainTex, uv) ;
+                //col = float4(1, 1, 1, 1);
+  //              col = (i.scrPos + float4(0, 0, 0, 10));
+    
                 return col;
             }
             ENDCG

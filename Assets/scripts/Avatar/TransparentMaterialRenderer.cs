@@ -7,11 +7,16 @@ namespace Assets.scripts.Avatar
     {
         private WebCamScreenController webScreenPlane;
         private Renderer renderer;
+        private AvatarManager avatarManager;
 
         // Use this for initialization
         void Start() {
+
+            avatarManager = FindObjectOfType<AvatarManager>();
             webScreenPlane = FindObjectOfType<WebCamScreenController>();
-            webScreenPlane.newFrameRendered += OnNewFrameRendered;
+            if (webScreenPlane != null) {
+                webScreenPlane.newFrameRendered += OnNewFrameRendered;
+            }
 
             //TODO
             renderer = transform.parent.GetComponentInChildren<Renderer>();
@@ -19,7 +24,9 @@ namespace Assets.scripts.Avatar
         }
 
         void OnDestroy() {
-            webScreenPlane.newFrameRendered -= OnNewFrameRendered;
+            if (webScreenPlane != null) {
+                webScreenPlane.newFrameRendered -= OnNewFrameRendered;
+            }
         }
 
         private void OnNewFrameRendered(Texture2D texture) {
@@ -48,6 +55,9 @@ namespace Assets.scripts.Avatar
 
             renderer.material.mainTexture = texture;
             renderer.material.SetMatrix("_TextureMat", mat);
+
+            float rootScale = renderer.transform.lossyScale.x;
+            renderer.material.SetFloat("_ShrinkSize", avatarManager.transparentBodyShrinkAmount/rootScale);
 
 
         }
