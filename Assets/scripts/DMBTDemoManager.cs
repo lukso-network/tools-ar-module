@@ -156,7 +156,7 @@ namespace DeepMotion.DMBTDemo
         }
 
         internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
-            if (!enabled) {
+            if (!enabled || landmarkList == null) {
                 newPoseEvent(false);
                 return;
             }

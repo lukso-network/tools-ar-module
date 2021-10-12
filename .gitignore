@@ -19,6 +19,7 @@ build/
 *.framework/
 !\Assets\Editor\UnityWeld\
 bazel-*
+*.apk
 
 Assets/StreamingAssets*
 
@@ -27,4 +28,3 @@ Packages/com.github.homuler.mediapipe/Runtime/Resources/*
 Packages/com.github.homuler.mediapipe/Runtime/Resources/object_detection_3d.bytes.meta
 Packages/com.github.homuler.mediapipe/Runtime/Plugins/Protobuf*
 Packages/com.github.homuler.mediapipe/Runtime/Scripts/Protobuf/**/*.cs
-/*.apk

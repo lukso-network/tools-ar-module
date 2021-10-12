@@ -20,9 +20,17 @@ public class FullPoseTrackingGraph : DemoGraph {
   private OutputStreamPoller<Detection> poseDetectionStreamPoller;
   private DetectionPacket poseDetectionPacket;
 
+  private const string faceLandmarksStream = "face_landmarks";
+  private OutputStreamPoller<NormalizedLandmarkList> faceLandmarksStreamPoller;
+  private NormalizedLandmarkListPacket faceLandmarksPacket;
+
   private const string poseLandmarksPresenceStream = "pose_landmarks_presence";
   private OutputStreamPoller<bool> poseLandmarksPresenceStreamPoller;
   private BoolPacket poseLandmarksPresencePacket;
+
+  private const string faceLandmarksPresenceStream = "face_landmarks_presence";
+  private OutputStreamPoller<bool> faceLandmarksPresenceStreamPoller;
+  private BoolPacket faceLandmarksPresencePacket;
 
   private const string poseDetectionPresenceStream = "pose_detection_presence";
   private OutputStreamPoller<bool> poseDetectionPresenceStreamPoller;
@@ -45,7 +53,14 @@ public class FullPoseTrackingGraph : DemoGraph {
     poseDetectionPresenceStreamPoller = graph.AddOutputStreamPoller<bool>(poseDetectionPresenceStream).Value();
     poseDetectionPresencePacket = new BoolPacket();
 
+    faceLandmarksStreamPoller = graph.AddOutputStreamPoller<NormalizedLandmarkList>(faceLandmarksStream).Value();
+    faceLandmarksPacket = new NormalizedLandmarkListPacket();
+    
+    faceLandmarksPresenceStreamPoller = graph.AddOutputStreamPoller<bool>(faceLandmarksPresenceStream).Value();
+    faceLandmarksPresencePacket = new BoolPacket();
+
     sidePacket = new SidePacket();
+    sidePacket.Emplace("enable_iris_detection", new BoolPacket(false));
     sidePacket.Emplace("model_complexity", new IntPacket((int)modelComplexity));
     sidePacket.Emplace("smooth_landmarks", new BoolPacket(smoothLandmarks));
 
@@ -60,19 +75,29 @@ public class FullPoseTrackingGraph : DemoGraph {
   }
 
   private FullPoseTrackingValue FetchNextPoseTrackingValue() {
-    if (!FetchNextPoseLandmarksPresence()) {
-      return new FullPoseTrackingValue();
+    var isFaceLandmarksPresent = FetchNextFaceLandmarksPresence();
+        var faceLandmarks = isFaceLandmarksPresent ? FetchNextFaceLandmarks() : new NormalizedLandmarkList();
+        if (!FetchNextPoseLandmarksPresence()) {
+      return new FullPoseTrackingValue(null, null, faceLandmarks);
     }
 
     var poseLandmarks = FetchNextPoseLandmarks();
 
     if (!FetchNextPoseDetectionPresence()) {
-      return new FullPoseTrackingValue(poseLandmarks);
+      return new FullPoseTrackingValue(poseLandmarks, null, faceLandmarks);
     }
 
     var poseDetection = FetchNextPoseDetection();
 
-    return new FullPoseTrackingValue(poseLandmarks, poseDetection);
+    return new FullPoseTrackingValue(poseLandmarks, poseDetection, faceLandmarks);
+  }
+
+    private NormalizedLandmarkList FetchNextFaceLandmarks() {
+        return FetchNext(faceLandmarksStreamPoller, faceLandmarksPacket, faceLandmarksStream);
+    }
+
+    private bool FetchNextFaceLandmarksPresence() {
+    return FetchNext(faceLandmarksPresenceStreamPoller, faceLandmarksPresencePacket, faceLandmarksPresenceStream);
   }
 
   private NormalizedLandmarkList FetchNextPoseLandmarks() {
@@ -93,15 +118,27 @@ public class FullPoseTrackingGraph : DemoGraph {
 
   private void RenderAnnotation(WebCamScreenController screenController, FullPoseTrackingValue value) {
     // NOTE: input image is flipped
-    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, !IsFlipped());
+    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, value.FaceLandmark, !IsFlipped());
 
     skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, !IsFlipped());
   }
 
   protected override void PrepareDependentAssets() {
-    PrepareDependentAsset("pose_detection.bytes");
+    //PrepareDependentAsset("pose_detection.bytes");
+    //PrepareDependentAsset("face_detection_front.bytes");
+    //PrepareDependentAsset("face_landmark.bytes");
 
-    if (modelComplexity == ModelComplexity.Lite) {
+        PrepareDependentAsset("face_detection_front.bytes");
+        PrepareDependentAsset("face_landmark.bytes");
+        PrepareDependentAsset("iris_landmark.bytes");
+        PrepareDependentAsset("hand_landmark.bytes");
+        PrepareDependentAsset("hand_recrop.bytes");
+        PrepareDependentAsset("handedness.txt");
+        PrepareDependentAsset("palm_detection.bytes");
+        PrepareDependentAsset("pose_detection.bytes");
+
+
+        if (modelComplexity == ModelComplexity.Lite) {
       PrepareDependentAsset("pose_landmark_lite.bytes");
     } else if (modelComplexity == ModelComplexity.Full) {
       PrepareDependentAsset("pose_landmark_full.bytes");
