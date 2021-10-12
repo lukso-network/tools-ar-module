@@ -8,6 +8,8 @@ namespace Assets.scripts.Avatar
         private WebCamScreenController webScreenPlane;
         private Renderer renderer;
         private AvatarManager avatarManager;
+        private Material oldMaterial;
+        private Material newMaterial;
 
         // Use this for initialization
         void Start() {
@@ -20,7 +22,9 @@ namespace Assets.scripts.Avatar
 
             //TODO
             renderer = transform.parent.GetComponentInChildren<Renderer>();
-            renderer.material = FindObjectOfType<AvatarManager>().transparentMaterial;
+            oldMaterial = renderer.material;
+            newMaterial = FindObjectOfType<AvatarManager>().transparentMaterial;
+            renderer.material = newMaterial;
         }
 
         void OnDestroy() {
@@ -30,9 +34,13 @@ namespace Assets.scripts.Avatar
         }
 
         private void OnNewFrameRendered(Texture2D texture) {
-            if (!gameObject.activeSelf) {
+            if (!gameObject.activeSelf || !enabled) {
+                renderer.material = oldMaterial;
                 return;
             }
+            renderer.material = newMaterial;
+
+            //TODO start it only one time
             texture.wrapMode = TextureWrapMode.Clamp;
 
             float w = webScreenPlane.ScreenSize.x;

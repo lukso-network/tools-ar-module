@@ -101,13 +101,24 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     }
 
     [Binding]
-    public bool IsShowOrig {
-        get { return false; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+    public bool IsShowTransparent {
+        get { return avatarManager.ShowTransparentBody; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
         set {
-            //skeletonManager.controller.obj.SetActive(value);
-            OnPropertyChanged("IsShowOrig");
+            avatarManager.ShowTransparentBody = value;
+            OnPropertyChanged("IsShowTransparent");
         }
     }
+
+
+    [Binding]
+    public bool IsShowFaceTransparent {
+        get { return skeletonManager.ShowTransparentFace; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+        set {
+            skeletonManager.ShowTransparentFace = value;
+            OnPropertyChanged("IsShowFaceTransparent");
+        }
+    }
+
 
     [Binding]
     public float RootScaleValue {
@@ -130,7 +141,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         OnPropertyChanged("IsShowBody");
         OnPropertyChanged("IsShowSkeleton");
         OnPropertyChanged("IsShowLandmarks");
-        OnPropertyChanged("IsShowOrig");
+        OnPropertyChanged("IsShowTransparent");
+        OnPropertyChanged("IsShowFaceTransparent");
         OnPropertyChanged("RootScaleValue");
         OnPropertyChanged("ScaleDepth");
         OnPropertyChanged("SkinScaleX");

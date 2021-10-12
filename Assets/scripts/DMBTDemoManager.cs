@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Joint = Assets.Joint;
+using Assets.scripts.Avatar;
 
 
 public class FPSCounter 
@@ -55,8 +56,7 @@ namespace DeepMotion.DMBTDemo
 
 
         [Serializable]
-        public class AvatarDescription
-        {
+        public class AvatarDescription {
             public string id;
             public GameObject prefab;
         }
@@ -65,11 +65,12 @@ namespace DeepMotion.DMBTDemo
         public FilterSettings scaleFilter;
         public SkeletonManager skeletonManager;
         public GameObject facePrefab;
+        public GameObject hat;
 
         private GameObject face;
         private Mesh faceMesh;
 
-        [Range(0,2)]
+        [Range(0, 2)]
         public float scaleDepth = 0.5f;
 
         public delegate void OnNewPoseHandler(bool skeletonExist);
@@ -77,15 +78,17 @@ namespace DeepMotion.DMBTDemo
         private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
         private FPSCounter counter = new FPSCounter();
+        public bool ShowTransparentFace {
+            get =>face.GetComponent<TransparentMaterialRenderer>().enabled;
+            set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
+            }
 
         void OnValidate() {
             scaleFilter.SetModified();
         }
 
         void Start() {
-            face = Instantiate(facePrefab);
-            faceMesh = face.GetComponent<MeshFilter>().mesh;
-            faceMesh.RecalculateNormals();
+            InitFace();
             Init();
         }
 
@@ -162,55 +165,82 @@ namespace DeepMotion.DMBTDemo
             return points;
         }
 
-        private void UpdateFace(Transform transform, NormalizedLandmarkList faceLandmarks, bool flipped) {
-            if (faceLandmarks.Landmark.Count == 0) {
+
+        private float defaultFaceSize;
+        private float faceGeomCoef;
+        private void InitFace() {
+            face = Instantiate(facePrefab, transform);
+            face.AddComponent<TransparentMaterialRenderer>();
+            faceMesh = face.GetComponent<MeshFilter>().mesh;
+            faceMesh.RecalculateNormals();
+
+            var points = faceMesh.vertices;
+
+            var t = points[10];
+            var b = points[152];
+            var r = points[234];
+            var l = points[454];
+            defaultFaceSize = ((t - b).magnitude + (l - r).magnitude) / 2;
+
+            var nose = points[4];
+            var c0 = (r + l) / 2;
+            var d1 = nose - c0;
+            var d2 = (l - r);
+
+            faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
+        }
+        private void UpdateFace(Vector3 [] points) {
+            //TOFO
+            if (points.Length == 0) {
+                face.SetActive(false);
                 return;
             }
-            var scale = transform.localScale;
-            scale.y = scaleDepth;
-            transform.localScale = scale;
+            face.SetActive(true);
+       
+            
+            var t = points[10];
+            var b = points[152];
+            var r = points[234];
+            var l = points[454];
 
-            var points = TransformPoints(transform, faceLandmarks, flipped);
-            faceMesh.vertices = points;
-/*
-            var meshFilter = face.GetComponent<MeshFilter>();
-            var mesh = meshFilter.sharedMesh;
-            List<Vector3> vertices = new List<Vector3>();
-            mesh.GetVertices(vertices);
-            var cv = mesh.vertices;
+            var nose = points[4];
+            var c0 = (r + l) / 2;
+            var d1 = nose - c0;
+            var d2 = (l - r);
 
-
-
-            int c = vertices.Count;
-
-             mesh = meshFilter.mesh;
-             vertices = new List<Vector3>();
-            mesh.GetVertices(vertices);
-             cv = mesh.vertices;
-;
+            var k2 = (d1.x * d1.x + d1.y * d1.y - faceGeomCoef * (d2.x * d2.x + d2.y * d2.y)) / (faceGeomCoef * d2.z * d2.z - d1.z * d1.z);
+            var k = k2 > 0 ? Mathf.Sqrt(k2) : 1;
+            points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
 
 
-             c = vertices.Count;
-*/
+            t = points[10];
+            b = points[152];
+            r = points[234];
+            l = points[454];
 
 
+            var center = (t + b + r + l) / 4;
+
+            var scale = ((t - b).magnitude + (l - r).magnitude) / 2 / defaultFaceSize;
+            faceMesh.vertices = points;// points.Select(x => x - center).ToList();
+            var up = (t - b).normalized;
+            var left = (l - r).normalized;
+            var front = Vector3.Cross(left, up);
+
+            //face.transform.rotation = Quaternion.LookRotation(front, up);
+            //Quaternion.FromToRotation(Vector3.left, Vector3.v2) * Quaternion.FromToRotation()
+            hat.transform.localScale = new Vector3(scale, scale, scale);
+            hat.transform.rotation = Quaternion.LookRotation(front, up);
+            hat.transform.localPosition = center;
         }
 
         internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
-            if (!enabled || landmarkList == null) {
+            if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
                 return;
             }
 
-            UpdateFace(transform, faceLandmarks, flipped);
-
             try {
-
-                if (landmarkList.Landmark.Count == 0) {
-                    newPoseEvent(false);
-                    return;
-                }
-
                 var fps = counter.UpdateFps();
 
                 var scale = transform.localScale;
@@ -218,6 +248,8 @@ namespace DeepMotion.DMBTDemo
                 transform.localScale = scale;
 
                 var points = TransformPoints(transform, landmarkList, flipped);
+                var facePoints = TransformPoints(transform, faceLandmarks, flipped);
+                UpdateFace(facePoints);
                 //TODO
                 var ps = points.Select(x => new Vector3?(x)).ToArray();
 
