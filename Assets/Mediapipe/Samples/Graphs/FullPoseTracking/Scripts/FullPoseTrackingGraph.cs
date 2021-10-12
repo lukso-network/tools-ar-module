@@ -76,8 +76,8 @@ public class FullPoseTrackingGraph : DemoGraph {
 
   private FullPoseTrackingValue FetchNextPoseTrackingValue() {
     var isFaceLandmarksPresent = FetchNextFaceLandmarksPresence();
-        var faceLandmarks = isFaceLandmarksPresent ? FetchNextFaceLandmarks() : new NormalizedLandmarkList();
-        if (!FetchNextPoseLandmarksPresence()) {
+    var faceLandmarks = isFaceLandmarksPresent ? FetchNextFaceLandmarks() : new NormalizedLandmarkList();
+    if (!FetchNextPoseLandmarksPresence()) {
       return new FullPoseTrackingValue(null, null, faceLandmarks);
     }
 
@@ -124,11 +124,11 @@ public class FullPoseTrackingGraph : DemoGraph {
   }
 
   protected override void PrepareDependentAssets() {
-    //PrepareDependentAsset("pose_detection.bytes");
-    //PrepareDependentAsset("face_detection_front.bytes");
-    //PrepareDependentAsset("face_landmark.bytes");
+    PrepareDependentAsset("pose_detection.bytes");
+    PrepareDependentAsset("face_detection_front.bytes");
+    PrepareDependentAsset("face_landmark.bytes");
 
-        PrepareDependentAsset("face_detection_front.bytes");
+      /*  PrepareDependentAsset("face_detection_front.bytes");
         PrepareDependentAsset("face_landmark.bytes");
         PrepareDependentAsset("iris_landmark.bytes");
         PrepareDependentAsset("hand_landmark.bytes");
@@ -136,7 +136,7 @@ public class FullPoseTrackingGraph : DemoGraph {
         PrepareDependentAsset("handedness.txt");
         PrepareDependentAsset("palm_detection.bytes");
         PrepareDependentAsset("pose_detection.bytes");
-
+      */
 
         if (modelComplexity == ModelComplexity.Lite) {
       PrepareDependentAsset("pose_landmark_lite.bytes");

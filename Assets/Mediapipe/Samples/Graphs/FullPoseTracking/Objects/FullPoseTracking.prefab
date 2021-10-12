@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gpuConfig: {fileID: 0}
-  cpuConfig: {fileID: 4900000, guid: f2993ca7d6993b3488e9752ae570d4f7, type: 3}
+  cpuConfig: {fileID: 4900000, guid: f5825ec1868bc944285ce83f9e761a04, type: 3}
   androidConfig: {fileID: 4900000, guid: e10182a1aab1407409250e0bceb2d4c7, type: 3}
   androidFrontConfig: {fileID: 4900000, guid: a8b652cfe4b3d034dbfbaa80197e65ec, type: 3}
   modelComplexity: 1
@@ -64,7 +64,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poseLandmarkListPrefab: {fileID: 7166525400038315749, guid: 69cf28587972333cca1eb4c1a1ec7e6d,
     type: 3}
-  poseDetectionPrefab: {fileID: 1405412484651109527, guid: 3779864e7ead10e31b03fc362f4746de,
-    type: 3}
+  poseDetectionPrefab: {fileID: 0}
   faceLandmarksPrefab: {fileID: 2250723881323860951, guid: 570a388dca04100b8b491a9bc4ef1d51,
     type: 3}

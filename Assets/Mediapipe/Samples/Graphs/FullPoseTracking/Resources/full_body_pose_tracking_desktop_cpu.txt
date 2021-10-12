@@ -25,8 +25,11 @@ input_stream: "input_video"
 
 output_stream: "pose_landmarks"
 output_stream: "pose_detection"
+output_stream: "face_landmarks"
+
 output_stream: "pose_landmarks_presence"
 output_stream: "pose_detection_presence"
+output_stream: "face_landmarks_presence"
 
 # Throttles the images flowing downstream for flow control. It passes through
 # the very first incoming image unaltered, and waits for downstream nodes
@@ -60,13 +63,13 @@ node: {
   }
 }
 
-# Subgraph that detects poses and corresponding landmarks.
 node {
-  calculator: "PoseLandmarkCpu"
+  calculator: "HolisticLandmarkCpu"
   input_stream: "IMAGE:transformed_input_video"
-  output_stream: "LANDMARKS:pose_landmarks"
-  output_stream: "DETECTION:pose_detection"
-  output_stream: "ROI_FROM_LANDMARKS:roi_from_landmarks"
+  output_stream: "POSE_LANDMARKS:pose_landmarks"
+  output_stream: "POSE_DETECTION:pose_detection"
+  output_stream: "FACE_LANDMARKS:face_landmarks"
+
 }
 
 node {
@@ -80,3 +83,10 @@ node {
   input_stream: "PACKET:pose_detection"
   output_stream: "PRESENCE:pose_detection_presence"
 }
+
+node {
+  calculator: "PacketPresenceCalculator"
+  input_stream: "PACKET:face_landmarks"
+  output_stream: "PRESENCE:face_landmarks_presence"
+}
+
