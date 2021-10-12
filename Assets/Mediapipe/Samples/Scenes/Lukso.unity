@@ -3613,7 +3613,6 @@ GameObject:
   m_Component:
   - component: {fileID: 780931512}
   - component: {fileID: 780931513}
-  - component: {fileID: 780931514}
   m_Layer: 0
   m_Name: PoseManager
   m_TagString: Untagged
@@ -3653,19 +3652,9 @@ MonoBehaviour:
     dt: 1
     filterType: 1
   skeletonManager: {fileID: 2061862107}
+  facePrefab: {fileID: 900957405125252039, guid: 36bb10cff6c6d754c973f737ae1fc7bf,
+    type: 3}
   scaleDepth: 2
---- !u!114 &780931514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780931511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1cdcf6e4a47aa948abc303ad77ab314, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &832877925
 GameObject:
   m_ObjectHideFlags: 0

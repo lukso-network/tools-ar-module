@@ -120,7 +120,7 @@ public class FullPoseTrackingGraph : DemoGraph {
     // NOTE: input image is flipped
     GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, value.FaceLandmark, !IsFlipped());
 
-    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, !IsFlipped());
+    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, value.FaceLandmark, !IsFlipped());
   }
 
   protected override void PrepareDependentAssets() {

@@ -64,6 +64,10 @@ namespace DeepMotion.DMBTDemo
         public StatisticDisplay display;
         public FilterSettings scaleFilter;
         public SkeletonManager skeletonManager;
+        public GameObject facePrefab;
+
+        private GameObject face;
+        private Mesh faceMesh;
 
         [Range(0,2)]
         public float scaleDepth = 0.5f;
@@ -79,6 +83,9 @@ namespace DeepMotion.DMBTDemo
         }
 
         void Start() {
+            face = Instantiate(facePrefab);
+            faceMesh = face.GetComponent<MeshFilter>().mesh;
+            faceMesh.RecalculateNormals();
             Init();
         }
 
@@ -155,11 +162,47 @@ namespace DeepMotion.DMBTDemo
             return points;
         }
 
-        internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
+        private void UpdateFace(Transform transform, NormalizedLandmarkList faceLandmarks, bool flipped) {
+            if (faceLandmarks.Landmark.Count == 0) {
+                return;
+            }
+            var scale = transform.localScale;
+            scale.y = scaleDepth;
+            transform.localScale = scale;
+
+            var points = TransformPoints(transform, faceLandmarks, flipped);
+            faceMesh.vertices = points;
+/*
+            var meshFilter = face.GetComponent<MeshFilter>();
+            var mesh = meshFilter.sharedMesh;
+            List<Vector3> vertices = new List<Vector3>();
+            mesh.GetVertices(vertices);
+            var cv = mesh.vertices;
+
+
+
+            int c = vertices.Count;
+
+             mesh = meshFilter.mesh;
+             vertices = new List<Vector3>();
+            mesh.GetVertices(vertices);
+             cv = mesh.vertices;
+;
+
+
+             c = vertices.Count;
+*/
+
+
+        }
+
+        internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
             if (!enabled || landmarkList == null) {
                 newPoseEvent(false);
                 return;
             }
+
+            UpdateFace(transform, faceLandmarks, flipped);
 
             try {
 
