@@ -137,7 +137,10 @@ namespace DeepMotion.DMBTDemo
             var relX = (isFlipped ? -1 : 1) * (x - 0.5f);
             var relY = 0.5f - y;
 
-            return Vector3.Scale(new Vector3(relX, relY, z), ScaleVector(screenTransform)) + screenTransform.position;
+            //return Vector3.Scale(new Vector3(relX, relY, z), ScaleVector(screenTransform)) + screenTransform.position;
+            var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
+            pos3d += (Camera.main.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y;
+            return pos3d;
         }
 
         private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
