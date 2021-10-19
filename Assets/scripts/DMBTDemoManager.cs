@@ -178,9 +178,10 @@ namespace DeepMotion.DMBTDemo
 
             var t = points[10];
             var b = points[152];
-            var r = points[234];
-            var l = points[454];
-            defaultFaceSize = ((t - b).magnitude + (l - r).magnitude) / 2;
+            var r = points[33];
+            var l = points[263];
+            defaultFaceSize = ((t - b).magnitude * (l - r).magnitude);
+         //   defaultFaceSize = ((l - r).magnitude);
 
             var nose = points[4];
             var c0 = (r + l) / 2;
@@ -200,8 +201,8 @@ namespace DeepMotion.DMBTDemo
             
             var t = points[10];
             var b = points[152];
-            var r = points[234];
-            var l = points[454];
+            var r = points[33];
+            var l = points[263];
 
             var nose = points[4];
             var c0 = (r + l) / 2;
@@ -210,19 +211,22 @@ namespace DeepMotion.DMBTDemo
 
             var k2 = (d1.x * d1.x + d1.y * d1.y - faceGeomCoef * (d2.x * d2.x + d2.y * d2.y)) / (faceGeomCoef * d2.z * d2.z - d1.z * d1.z);
             var k = k2 > 0 ? Mathf.Sqrt(k2) : 1;
-            points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
 
+            faceMesh.vertices = points;
+            points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
+            
 
             t = points[10];
             b = points[152];
-            r = points[234];
-            l = points[454];
+            r = points[33];
+            l = points[263];
 
 
             var center = (t + b + r + l) / 4;
 
-            var scale = ((t - b).magnitude + (l - r).magnitude) / 2 / defaultFaceSize;
-            faceMesh.vertices = points;// points.Select(x => x - center).ToList();
+            var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude)  / defaultFaceSize);
+            //var scale =  (l - r).magnitude / defaultFaceSize;
+            //faceMesh.vertices = points;// points.Select(x => x - center).ToList();
             var up = (t - b).normalized;
             var left = (l - r).normalized;
             var front = Vector3.Cross(left, up);
