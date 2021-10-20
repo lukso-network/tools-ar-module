@@ -87,7 +87,7 @@ node {
     [type.googleapis.com/mediapipe.LandmarksSmoothingCalculatorOptions] {
       velocity_filter: {
         window_size: 5
-        velocity_scale: 4.0
+        velocity_scale: 5.0
       }
     }
   }
@@ -101,8 +101,8 @@ node {
   node_options: {
     [type.googleapis.com/mediapipe.LandmarksSmoothingCalculatorOptions] {
       velocity_filter: {
-        window_size: 5
-        velocity_scale: 4.0
+        window_size: 20
+        velocity_scale: 5.0
       }
     }
   }

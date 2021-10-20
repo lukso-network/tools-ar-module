@@ -133,28 +133,55 @@ namespace DeepMotion.DMBTDemo
             return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.z, transform.localScale.y);
         }
 
-        protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, float x, float y, float z, bool isFlipped) {
+        protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, float x, float y, float z, bool isFlipped, float perspectiveScale) {
             var relX = (isFlipped ? -1 : 1) * (x - 0.5f);
             var relY = 0.5f - y;
 
             //return Vector3.Scale(new Vector3(relX, relY, z), ScaleVector(screenTransform)) + screenTransform.position;
             var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
-            pos3d += (Camera.main.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y;
+            pos3d += (Camera.main.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
             return pos3d;
         }
 
-        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped) {
+        private Vector3 ToVector3(NormalizedLandmark landmark) {
+            return new Vector3(landmark.X, landmark.Y, landmark.Z);
+        }
+
+        private float GetSpineSize(NormalizedLandmarkList landmarklist) {
+
+            var left = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_HIP]);
+            var right = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_HIP]);
+
+            var leftArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_SHOULDER]);
+            var rightArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_SHOULDER]);
+
+            //probably Vector2 needed
+            var l = ((left + right) / 2 - (leftArm + rightArm) / 2).magnitude;
+
+            return l;
+        }
+
+        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped, float spineSize = -1) {
+            if (spineSize < 0) {
+                spineSize = 1;
+            }
             int count = landmarkList.Landmark.Count;
 
             var points = new Vector3[count];
-
+            var minV = new Vector3(100, 100, 100);
+            var maxV = new Vector3(-100, -100, -100);
             for (int i = 0; i < count; ++i) {
                 var landmark = landmarkList.Landmark[i];
 
-                var p = GetPositionFromNormalizedPoint(transform, landmark.X, landmark.Y, landmark.Z, flipped);
+                var l = new Vector3(landmark.X, landmark.Y, landmark.Z);
+                minV = Vector3.Min(minV, l);
+                maxV = Vector3.Max(maxV, l);
+                var p = GetPositionFromNormalizedPoint(transform, landmark.X, landmark.Y, landmark.Z, flipped, 1);
                // p.x *= 3;
                 points[i] = p;
             }
+
+            Debug.Log("spine:" + spineSize);
 
             if (flipped) {
                 var fPoints = new Vector3[count];
@@ -216,7 +243,7 @@ namespace DeepMotion.DMBTDemo
             var k = k2 > 0 ? Mathf.Sqrt(k2) : 1;
 
             faceMesh.vertices = points;
-            points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
+          //  points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
             
 
             t = points[10];
@@ -226,7 +253,7 @@ namespace DeepMotion.DMBTDemo
 
 
             var center = (t + b + r + l) / 4;
-
+            Debug.Log("Magn:" + (t - b).magnitude + " " + (l - r).magnitude);
             var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude)  / defaultFaceSize);
             //var scale =  (l - r).magnitude / defaultFaceSize;
             //faceMesh.vertices = points;// points.Select(x => x - center).ToList();
@@ -254,8 +281,10 @@ namespace DeepMotion.DMBTDemo
                 scale.y = scaleDepth;
                 transform.localScale = scale;
 
-                var points = TransformPoints(transform, landmarkList, flipped);
-                var facePoints = TransformPoints(transform, faceLandmarks, flipped);
+                var spineSize = GetSpineSize(landmarkList);
+
+                var points = TransformPoints(transform, landmarkList, flipped, spineSize);
+                var facePoints = TransformPoints(transform, faceLandmarks, flipped, 3);
                 UpdateFace(facePoints);
                 //TODO
                 var ps = points.Select(x => new Vector3?(x)).ToArray();
