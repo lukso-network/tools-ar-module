@@ -68,10 +68,10 @@ public class FullPoseTrackingGraph : DemoGraph {
   }
 
   public override void RenderOutput(WebCamScreenController screenController, TextureFrame textureFrame) {
-    var poseTrackingValue = FetchNextPoseTrackingValue();
-    RenderAnnotation(screenController, poseTrackingValue);
+        var poseTrackingValue = FetchNextPoseTrackingValue();
+        RenderAnnotation(screenController, poseTrackingValue);
 
-    screenController.DrawScreen(textureFrame);
+        screenController.DrawScreen(textureFrame);
   }
 
   private FullPoseTrackingValue FetchNextPoseTrackingValue() {
@@ -117,10 +117,10 @@ public class FullPoseTrackingGraph : DemoGraph {
   }
 
   private void RenderAnnotation(WebCamScreenController screenController, FullPoseTrackingValue value) {
-    // NOTE: input image is flipped
-    GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, value.FaceLandmark, !IsFlipped());
+        // NOTE: input image is flipped
+        skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, value.FaceLandmark, !IsFlipped());
+        GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, value.FaceLandmark, !IsFlipped());
 
-    skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, value.FaceLandmark, !IsFlipped());
   }
 
   protected override void PrepareDependentAssets() {

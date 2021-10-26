@@ -133,14 +133,46 @@ namespace DeepMotion.DMBTDemo
             return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.z, transform.localScale.y);
         }
 
-        protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, float x, float y, float z, bool isFlipped, float perspectiveScale) {
-            var relX = (isFlipped ? -1 : 1) * (x - 0.5f);
-            var relY = 0.5f - y;
+        protected Vector3 GetPositionFromNormalizedPoint(Transform screenTransform, Vector3 v, bool isFlipped, float zShift, float perspectiveScale) {
+            var relX = (isFlipped ? -1 : 1) * (v.x - 0.5f);
+            var relY = 0.5f - v.y;
 
             //return Vector3.Scale(new Vector3(relX, relY, z), ScaleVector(screenTransform)) + screenTransform.position;
             var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
-            pos3d += (Camera.main.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
+            pos3d += (Camera.main.transform.position - pos3d).normalized * (-(v.z+zShift)) * screenTransform.localScale.y * perspectiveScale;
             return pos3d;
+        }
+
+        private float CalculateZShift(Transform screenTransform, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, float perspectiveScale) {
+
+            if (faceLandmarks.Landmark.Count == 0) {
+                return 0;
+            }
+            var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
+
+            var l = skeletonPoints[(int)Skeleton.Point.LEFT_SHOULDER];
+            var r = skeletonPoints[(int)Skeleton.Point.RIGHT_SHOULDER];
+            var lh = skeletonPoints[(int)Skeleton.Point.LEFT_HIP];
+            var rh = skeletonPoints[(int)Skeleton.Point.RIGHT_HIP];
+
+            var rlDir = (l - r).normalized;
+            var upDir = ((l + r) / 2 - (lh + rh) / 2).normalized;
+            var len = (l - r).magnitude;
+
+            var nosePose = (l + r) / 2 + len * upDir * 0.5f + Vector3.Cross(upDir, rlDir) * len * 0.2f;
+
+            var to = nosePose;
+            //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
+            //pos3d += (Camera.main.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
+
+            var pos3d = screenTransform.position;
+            float delta = -(to.z - pos3d.z) / (Camera.main.transform.position - pos3d).normalized.z / (screenTransform.localScale.y * perspectiveScale) - from.z;
+
+
+            var testP = GetPositionFromNormalizedPoint(screenTransform, from, false, delta, perspectiveScale);
+
+            Debug.Log((testP - to).z);
+            return delta;
         }
 
         private Vector3 ToVector3(NormalizedLandmark landmark) {
@@ -161,7 +193,11 @@ namespace DeepMotion.DMBTDemo
             return l;
         }
 
-        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped, float spineSize = -1) {
+        private Vector3 LandmarkToVector(NormalizedLandmark lnd) {
+            return new Vector3(lnd.X, lnd.Y, lnd.Z);
+        }
+
+        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped, float zShift = 0, float spineSize = -1) {
             if (spineSize < 0) {
                 spineSize = 1;
             }
@@ -176,7 +212,7 @@ namespace DeepMotion.DMBTDemo
                 var l = new Vector3(landmark.X, landmark.Y, landmark.Z);
                 minV = Vector3.Min(minV, l);
                 maxV = Vector3.Max(maxV, l);
-                var p = GetPositionFromNormalizedPoint(transform, landmark.X, landmark.Y, landmark.Z, flipped, 1);
+                var p = GetPositionFromNormalizedPoint(transform, LandmarkToVector(landmark), flipped, zShift, spineSize);
                // p.x *= 3;
                 points[i] = p;
             }
@@ -220,6 +256,8 @@ namespace DeepMotion.DMBTDemo
 
             faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
         }
+
+
         private void UpdateFace(Vector3 [] points) {
             //TOFO
             if (points.Length == 0) {
@@ -229,27 +267,27 @@ namespace DeepMotion.DMBTDemo
             face.SetActive(true);
        
             
-            var t = points[10];
-            var b = points[152];
-            var r = points[33];
-            var l = points[263];
+            //var t = points[10];
+            //var b = points[152];
+           // var r = points[33];
+            //var l = points[263];
 
-            var nose = points[4];
-            var c0 = (r + l) / 2;
-            var d1 = nose - c0;
-            var d2 = (l - r);
+            //var nose = points[4];
+            //var c0 = (r + l) / 2;
+            //var d1 = nose - c0;
+            //var d2 = (l - r);
 
-            var k2 = (d1.x * d1.x + d1.y * d1.y - faceGeomCoef * (d2.x * d2.x + d2.y * d2.y)) / (faceGeomCoef * d2.z * d2.z - d1.z * d1.z);
-            var k = k2 > 0 ? Mathf.Sqrt(k2) : 1;
+            //var k2 = (d1.x * d1.x + d1.y * d1.y - faceGeomCoef * (d2.x * d2.x + d2.y * d2.y)) / (faceGeomCoef * d2.z * d2.z - d1.z * d1.z);
+            //var k = k2 > 0 ? Mathf.Sqrt(k2) : 1;
 
             faceMesh.vertices = points;
           //  points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
             
 
-            t = points[10];
-            b = points[152];
-            r = points[33];
-            l = points[263];
+            var t = points[10];
+            var b = points[152];
+            var r = points[33];
+            var l = points[263];
 
 
             var center = (t + b + r + l) / 4;
@@ -268,6 +306,9 @@ namespace DeepMotion.DMBTDemo
             hat.transform.localPosition = center;
         }
 
+
+       //private void CalculateFaceShift(Vector3[] bodyPoints, )
+
         internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
@@ -283,8 +324,12 @@ namespace DeepMotion.DMBTDemo
 
                 var spineSize = GetSpineSize(landmarkList);
 
-                var points = TransformPoints(transform, landmarkList, flipped, spineSize);
-                var facePoints = TransformPoints(transform, faceLandmarks, flipped, 3);
+                var points = TransformPoints(transform, landmarkList, flipped, 0, spineSize);
+
+
+                var faceNoseShift = CalculateZShift(transform, points, faceLandmarks, 1);
+
+                var facePoints = TransformPoints(transform, faceLandmarks, flipped, faceNoseShift, 1);
                 UpdateFace(facePoints);
                 //TODO
                 var ps = points.Select(x => new Vector3?(x)).ToArray();
