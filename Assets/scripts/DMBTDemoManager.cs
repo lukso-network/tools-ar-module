@@ -213,12 +213,10 @@ namespace DeepMotion.DMBTDemo
                 minV = Vector3.Min(minV, l);
                 maxV = Vector3.Max(maxV, l);
                 var p = GetPositionFromNormalizedPoint(transform, LandmarkToVector(landmark), flipped, zShift, spineSize);
-               // p.x *= 3;
                 points[i] = p;
             }
 
-            Debug.Log("spine:" + spineSize);
-
+            Debug.Log("min/max:" + minV.z + " " + maxV.z);
             if (flipped) {
                 var fPoints = new Vector3[count];
                 int maxSize = Math.Min(count, FLIP_POINTS.Length);
@@ -247,7 +245,6 @@ namespace DeepMotion.DMBTDemo
             var r = points[33];
             var l = points[263];
             defaultFaceSize = ((t - b).magnitude * (l - r).magnitude);
-         //   defaultFaceSize = ((l - r).magnitude);
 
             var nose = points[4];
             var c0 = (r + l) / 2;
@@ -261,55 +258,35 @@ namespace DeepMotion.DMBTDemo
         private void UpdateFace(Vector3 [] points) {
             //TOFO
             if (points.Length == 0) {
-                face.SetActive(false);
                 return;
             }
-            face.SetActive(true);
-       
-            
-            //var t = points[10];
-            //var b = points[152];
-           // var r = points[33];
-            //var l = points[263];
-
-            //var nose = points[4];
-            //var c0 = (r + l) / 2;
-            //var d1 = nose - c0;
-            //var d2 = (l - r);
-
-            //var k2 = (d1.x * d1.x + d1.y * d1.y - faceGeomCoef * (d2.x * d2.x + d2.y * d2.y)) / (faceGeomCoef * d2.z * d2.z - d1.z * d1.z);
-            //var k = k2 > 0 ? Mathf.Sqrt(k2) : 1;
 
             faceMesh.vertices = points;
-          //  points = points.Select(p => new Vector3(p.x, p.y, p.z * k)).ToArray();
-            
 
+            var nose = points[4];
             var t = points[10];
             var b = points[152];
             var r = points[33];
             var l = points[263];
 
-
             var center = (t + b + r + l) / 4;
-            Debug.Log("Magn:" + (t - b).magnitude + " " + (l - r).magnitude);
+           // Debug.Log("Magn:" + (t - b).magnitude + " " + (l - r).magnitude);
             var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude)  / defaultFaceSize);
-            //var scale =  (l - r).magnitude / defaultFaceSize;
-            //faceMesh.vertices = points;// points.Select(x => x - center).ToList();
+
             var up = (t - b).normalized;
             var left = (l - r).normalized;
             var front = Vector3.Cross(left, up);
 
-            //face.transform.rotation = Quaternion.LookRotation(front, up);
-            //Quaternion.FromToRotation(Vector3.left, Vector3.v2) * Quaternion.FromToRotation()
             hat.transform.localScale = new Vector3(scale, scale, scale);
             hat.transform.rotation = Quaternion.LookRotation(front, up);
-            hat.transform.localPosition = center;
+            hat.transform.localPosition = nose;
         }
 
 
-       //private void CalculateFaceShift(Vector3[] bodyPoints, )
-
         internal void OnNewPose(Transform transform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+
+            face.SetActive(faceLandmarks.Landmark.Count > 0);
+
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
                 return;
@@ -323,21 +300,21 @@ namespace DeepMotion.DMBTDemo
                 transform.localScale = scale;
 
                 var spineSize = GetSpineSize(landmarkList);
+                var points = TransformPoints(transform, landmarkList, flipped, 0, 1);
 
-                var points = TransformPoints(transform, landmarkList, flipped, 0, spineSize);
 
-
-                var faceNoseShift = CalculateZShift(transform, points, faceLandmarks, 1);
-
-                var facePoints = TransformPoints(transform, faceLandmarks, flipped, faceNoseShift, 1);
+                foreach(var l in faceLandmarks.Landmark) {
+                    //l.Z -= 0.3f;
+                }
+                float faceScale = 2;
+                var faceNoseShift = CalculateZShift(transform, points, faceLandmarks, faceScale);
+                var facePoints = TransformPoints(transform, faceLandmarks, flipped, faceNoseShift, faceScale);
                 UpdateFace(facePoints);
                 //TODO
                 var ps = points.Select(x => new Vector3?(x)).ToArray();
 
                 var t = Time.realtimeSinceStartup;
                 skeletonManager.UpdatePose(ps);
-                //controller.SetIkTarget(ps);
-                //controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
                 var dt = Time.realtimeSinceStartup - t;
 
                 display.LogValue($"FPS:{fps:0.0}", dt, 0, 0, 0, 0);
