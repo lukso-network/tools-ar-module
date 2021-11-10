@@ -12,21 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Copied from mediapipe/graphs/pose_tracking/pose_tracking_gpu.pbtxt
+# Copied from mediapipe/graphs/holistic_tracking/holistic_tracking_gpu.pbtxt
 #
 # CHANGES:
 #   - Add ImageTransformationCalculator and rotate the input
-#   - Remove PoseRendererGpu
-#   - Add PacketPresenceCalculators
+#   - Remove AnnotationOverlayCalculator
+#   - Detect iris landmarks
+#   - Add PacketPresenceCalculator
 
-# MediaPipe graph that performs upper-body pose tracking with TensorFlow Lite on GPU.
+# Tracks and renders pose + hands + face landmarks.
 
+# GPU buffer. (GpuBuffer)
 input_stream: "input_video"
+
+# (boolean)
+
 
 output_stream: "pose_landmarks"
 output_stream: "pose_detection"
+output_stream: "face_landmarks"
+
 output_stream: "pose_landmarks_presence"
 output_stream: "pose_detection_presence"
+output_stream: "face_landmarks_presence"
 
 # Throttles the images flowing downstream for flow control. It passes through
 # the very first incoming image unaltered, and waits for downstream nodes
@@ -47,8 +55,18 @@ node {
     back_edge: true
   }
   output_stream: "throttled_input_video"
+  node_options: {
+    [type.googleapis.com/mediapipe.FlowLimiterCalculatorOptions] {
+      max_in_flight: 1
+      max_in_queue: 1
+      # Timeout is disabled (set to 0) as first frame processing can take more
+      # than 1 second.
+      in_flight_timeout: 0
+    }
+  }
 }
 
+# Flip vertically because the input image is aligned from top-left to bottom-right.
 node: {
   calculator: "ImageTransformationCalculator"
   input_stream: "IMAGE_GPU:throttled_input_video"
@@ -60,14 +78,53 @@ node: {
   }
 }
 
-# Subgraph that detects poses and corresponding landmarks.
 node {
-  calculator: "PoseLandmarkGpu"
-  input_stream: "IMAGE:transformed_input_video"
-  output_stream: "LANDMARKS:pose_landmarks"
-  output_stream: "DETECTION:pose_detection"
-  output_stream: "ROI_FROM_LANDMARKS:roi_from_landmarks"
+  calculator: "ImagePropertiesCalculator"
+  input_stream: "IMAGE_GPU:transformed_input_video"
+  output_stream: "SIZE:image_size"
 }
+
+
+node {
+  calculator: "HolisticLandmarkGpu"
+  input_stream: "IMAGE:transformed_input_video"
+  output_stream: "POSE_LANDMARKS:pose_landmarks_raw"
+  output_stream: "POSE_DETECTION:pose_detection"
+  output_stream: "FACE_LANDMARKS:face_landmarks_raw"
+
+}
+
+node {
+  calculator: "LandmarksSmoothingCalculator"
+  input_stream: "NORM_LANDMARKS:face_landmarks_raw"
+  input_stream: "IMAGE_SIZE:image_size"
+  output_stream: "NORM_FILTERED_LANDMARKS:face_landmarks"
+  node_options: {
+    [type.googleapis.com/mediapipe.LandmarksSmoothingCalculatorOptions] {
+      velocity_filter: {
+        window_size: 5
+        velocity_scale: 5.0
+      }
+    }
+  }
+}
+
+node {
+  calculator: "LandmarksSmoothingCalculator"
+  input_stream: "NORM_LANDMARKS:pose_landmarks_raw"
+  input_stream: "IMAGE_SIZE:image_size"
+  output_stream: "NORM_FILTERED_LANDMARKS:pose_landmarks"
+  node_options: {
+    [type.googleapis.com/mediapipe.LandmarksSmoothingCalculatorOptions] {
+      velocity_filter: {
+        window_size: 20
+        velocity_scale: 5.0
+      }
+    }
+  }
+}
+
+
 
 node {
   calculator: "PacketPresenceCalculator"
@@ -75,8 +132,16 @@ node {
   output_stream: "PRESENCE:pose_landmarks_presence"
 }
 
+
 node {
   calculator: "PacketPresenceCalculator"
   input_stream: "PACKET:pose_detection"
   output_stream: "PRESENCE:pose_detection_presence"
 }
+
+node {
+  calculator: "PacketPresenceCalculator"
+  input_stream: "PACKET:face_landmarks"
+  output_stream: "PRESENCE:face_landmarks_presence"
+}
+
