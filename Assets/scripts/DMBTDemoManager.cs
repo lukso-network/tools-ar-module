@@ -255,7 +255,7 @@ namespace DeepMotion.DMBTDemo
             scale /= 2.8f;
             var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
 
-            //TODO make it faste 
+            //TODO make it faster
             if (flipped) {
                 var fPoints = new Vector3[points.Length];
                 int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
@@ -307,6 +307,9 @@ namespace DeepMotion.DMBTDemo
             var up = (t - b).normalized;
             var left = (l - r).normalized;
             var front = Vector3.Cross(left, up);
+            if (flipped) {
+                front = -front;
+            }
 
             hat.transform.localScale = new Vector3(scale, scale, scale);
             hat.transform.rotation = Quaternion.LookRotation(front, up);
@@ -315,7 +318,6 @@ namespace DeepMotion.DMBTDemo
 
 
         internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
-
             face.SetActive(faceLandmarks.Landmark.Count > 0);
 
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
