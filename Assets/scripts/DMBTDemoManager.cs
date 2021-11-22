@@ -249,7 +249,10 @@ namespace DeepMotion.DMBTDemo
             faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
         }
 
+        private float [] times = new float[] { 0, 0, 0, 0, 0 };
+
  		private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
+            var t0 = Time.realtimeSinceStartup;
             var spineSize = GetSpineSize(landmarkList);
             float scale = Camera.main.aspect > 1 ? Camera.main.aspect * Camera.main.aspect : 1;
             scale /= 2.8f;
@@ -271,8 +274,12 @@ namespace DeepMotion.DMBTDemo
             skeletonManager.UpdatePose(ps);
             var dt = Time.realtimeSinceStartup - t;
 
-            var fps = counter.UpdateFps();
-            display.LogValue($"FPS:{fps:0.0}", dt, 0, 0, 0, 0);
+
+
+            times[0] = dt;
+            times[1] = t - t0;
+
+
             return points;
         }
 
@@ -319,11 +326,15 @@ namespace DeepMotion.DMBTDemo
 
         internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
             face.SetActive(faceLandmarks.Landmark.Count > 0);
+            var t = Time.realtimeSinceStartup;
+            float t2 = 0;
+            float t3 = 0;
 
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
                 return;
             }
+            var t1 = Time.realtimeSinceStartup;
 
             try {
                 var scale = screenTransform.localScale;
@@ -331,7 +342,9 @@ namespace DeepMotion.DMBTDemo
                 screenTransform.localScale = scale;
 
                 var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
+                t2 = Time.realtimeSinceStartup;
                 UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+                t3 = Time.realtimeSinceStartup;
 
             } catch (Exception ex) {
                 Debug.LogError("DMBTManage new pose failed");
@@ -339,6 +352,8 @@ namespace DeepMotion.DMBTDemo
             }
 
             newPoseEvent(true);
+            var fps = counter.UpdateFps();
+            display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1-t, t2-t1, t3-t2);
 
         }
 

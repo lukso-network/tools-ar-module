@@ -50,6 +50,16 @@ node {
     back_edge: true
   }
   output_stream: "throttled_input_video"
+
+    node_options: {
+    [type.googleapis.com/mediapipe.FlowLimiterCalculatorOptions] {
+      max_in_flight: 1
+      max_in_queue: 1
+      # Timeout is disabled (set to 0) as first frame processing can take more
+      # than 1 second.
+      in_flight_timeout: 0
+    }
+  }
 }
 
 node: {
@@ -69,13 +79,34 @@ node {
   output_stream: "SIZE:image_size"
 }
 
-node {
-  calculator: "HolisticLandmarkCpu"
-  input_stream: "IMAGE:transformed_input_video"
-  output_stream: "POSE_LANDMARKS:pose_landmarks_raw"
-  output_stream: "POSE_DETECTION:pose_detection"
-  output_stream: "FACE_LANDMARKS:face_landmarks_raw"
 
+node {
+  calculator: "PoseLandmarkCpu"
+  input_stream: "IMAGE:transformed_input_video"
+  input_side_packet: "MODEL_COMPLEXITY:model_complexity"
+  input_side_packet: "SMOOTH_LANDMARKS:smooth_landmarks"
+  output_stream: "LANDMARKS:pose_landmarks_raw"
+  #output_stream: "WORLD_LANDMARKS:pose_world_landmarks"
+  #output_stream: "ROI_FROM_LANDMARKS:pose_landmarks_roi"
+  output_stream: "DETECTION:pose_detection"
+}
+
+node {
+  calculator: "SplitNormalizedLandmarkListCalculator"
+  input_stream: "pose_landmarks"
+  output_stream: "face_landmarks_from_pose"
+  options: {
+    [mediapipe.SplitVectorCalculatorOptions.ext] {
+      ranges: { begin: 0 end: 11 }
+    }
+  }
+}
+
+node {
+  calculator: "FaceLandmarksFromPoseCpu"
+  input_stream: "IMAGE:transformed_input_video"
+  input_stream: "FACE_LANDMARKS_FROM_POSE:face_landmarks_from_pose"
+  output_stream: "FACE_LANDMARKS:face_landmarks_raw"
 }
 
 node {
@@ -107,6 +138,7 @@ node {
     }
   }
 }
+
 
 node {
   calculator: "PacketPresenceCalculator"

@@ -60,7 +60,7 @@ public class FullPoseTrackingGraph : DemoGraph {
     faceLandmarksPresencePacket = new BoolPacket();
 
     sidePacket = new SidePacket();
-    sidePacket.Emplace("enable_iris_detection", new BoolPacket(false));
+    //sidePacket.Emplace("enable_iris_detection", new BoolPacket(false));
     sidePacket.Emplace("model_complexity", new IntPacket((int)modelComplexity));
     sidePacket.Emplace("smooth_landmarks", new BoolPacket(smoothLandmarks));
 
