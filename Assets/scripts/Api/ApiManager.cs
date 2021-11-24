@@ -58,7 +58,7 @@ namespace Assets.scripts.Api
             var show = ToBool(boolStr);
             canvasController.IsShowLandmarks = show;
             canvasController.IsShowSkeleton = show;
-            canvasController.IsShowOrig = show;
+            //canvasController.IsShowTransparent = show;
         }
 
         private bool ToBool(string boolStr) {

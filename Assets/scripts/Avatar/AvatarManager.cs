@@ -21,6 +21,7 @@ public class AvatarManager : MonoBehaviour
     public Transform transpBodyRoot;
     public Vector3 skinScaler = Vector3.one;
     public WebCamScreenController cameraSurface;
+    public bool ShowTransparentBody;
 
     [Range(-0.01f,0.01f)]
     public float transparentBodyShrinkAmount = 0.04f;
@@ -175,6 +176,15 @@ public class AvatarManager : MonoBehaviour
         skeletonManager.RemoveNotInList(usedSkeletonTypes);
     }
 
+    private void UpdateTransparentBody() {
+        foreach (var avatar in avatars) {
+
+            if (IsTransparent(avatar.obj)) {
+                avatar.obj.SetActive(ShowTransparentBody);
+            }
+
+        }
+    }
     public void UpdateSkeleton(bool skeletonExist) {
 
         if (!skeletonExist) {
@@ -192,6 +202,8 @@ public class AvatarManager : MonoBehaviour
             }
             skeletonJustAppeared = false;
         }
+
+        UpdateTransparentBody();
          
         foreach (var avatar in avatars) {
 

@@ -14,7 +14,7 @@ Shader "Unlit/ScreenSpaceShader"
         LOD 100
            Offset[_OffsetFactor],[_OffsetUnits]
         //Offset -1, 1
-
+        Cull Off
          Pass
         {
 
