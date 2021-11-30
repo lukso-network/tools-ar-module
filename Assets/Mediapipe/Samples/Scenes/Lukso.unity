@@ -4073,6 +4073,7 @@ MonoBehaviour:
   facePrefab: {fileID: 900957405125252039, guid: 36bb10cff6c6d754c973f737ae1fc7bf,
     type: 3}
   hat: {fileID: 843617380}
+  lightSource: {fileID: 1909744803}
   scaleDepth: 2
 --- !u!1 &832877925
 GameObject:

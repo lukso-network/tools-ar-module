@@ -69,6 +69,9 @@ namespace DeepMotion.DMBTDemo
 
         private GameObject face;
         private Mesh faceMesh;
+        private Vector3[] faceNormals;
+        private Matrix4x4 lightMatrix;
+        public Light lightSource;
 
         [Range(0, 2)]
         public float scaleDepth = 0.5f;
@@ -233,6 +236,8 @@ namespace DeepMotion.DMBTDemo
             faceMesh = face.GetComponent<MeshFilter>().mesh;
             faceMesh.RecalculateNormals();
 
+            faceNormals = faceMesh.normals;
+            InitLeastSqrMatrix();
             var points = faceMesh.vertices;
 
             var t = points[10];
@@ -247,6 +252,22 @@ namespace DeepMotion.DMBTDemo
             var d2 = (l - r);
 
             faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
+        }
+
+        private void InitLeastSqrMatrix() {
+            for (int i = 0; i < 4; ++i) {
+                for (int j = i; j < 4; ++j) {
+                    float s = 0;
+                    foreach(var p in faceNormals) {
+                        var n1 = i < 3 ? p[i] : 1;
+                        var n2 = j < 3 ? p[j] : 1;
+                        s += n1 * n2;
+                    }
+                    lightMatrix[i, j] = lightMatrix[j, i] = s;
+                }
+            }
+
+            lightMatrix = lightMatrix.inverse;
         }
 
         private float [] times = new float[] { 0, 0, 0, 0, 0 };
@@ -324,7 +345,7 @@ namespace DeepMotion.DMBTDemo
         }
 
 
-        internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+        internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
             face.SetActive(faceLandmarks.Landmark.Count > 0);
             var t = Time.realtimeSinceStartup;
             float t2 = 0;
@@ -332,6 +353,9 @@ namespace DeepMotion.DMBTDemo
 
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
+
+                var fps0 = counter.UpdateFps();
+                display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0,0,0);
                 return;
             }
             var t1 = Time.realtimeSinceStartup;
@@ -344,6 +368,9 @@ namespace DeepMotion.DMBTDemo
                 var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
                 t2 = Time.realtimeSinceStartup;
                 UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+
+                CalculateLight(faceLandmarks, texture);
+
                 t3 = Time.realtimeSinceStartup;
 
             } catch (Exception ex) {
@@ -357,6 +384,38 @@ namespace DeepMotion.DMBTDemo
 
         }
 
+        private void CalculateLight(NormalizedLandmarkList faceLandmarks, Texture2D texture) {
+            int count = faceLandmarks.Landmark.Count;
+
+            int w = texture.width;
+            int h = texture.height;
+
+            
+            Vector4 b = Vector4.zero;
+            for (int i = 0; i < count; ++i) {
+                var p = faceLandmarks.Landmark[i];
+                var x = (int)Mathf.Clamp((1-p.X) * w, 0, w - 0.1f);
+                var y = (int)Mathf.Clamp((1-p.Y) * h, 0, h - 0.1f);
+
+                var c = texture.GetPixel(x, y);
+                texture.SetPixel(x, y, new Color(1, 0, 0, 1));
+                float intencity = (c[0] + c[1] + c[2]) / 3;
+                var n = faceNormals[i];
+                b.x += n.x * intencity;
+                b.y += n.y * intencity;
+                b.z += n.z * intencity;
+                b.w += intencity;
+            }
+
+            texture.Apply();
+
+            var res = lightMatrix * b;
+
+            Debug.Log("dir:" + res.x + " " + res.y + " " + res.z + " " + res.w);
+
+            Vector3 dir = new Vector3(res.x, res.y, res.z).normalized;
+            lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
+        }
 
         internal void ResetAvatar() {
  //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);

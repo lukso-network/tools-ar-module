@@ -69,6 +69,7 @@ public class FullPoseTrackingGraph : DemoGraph {
 
   public override void RenderOutput(WebCamScreenController screenController, TextureFrame textureFrame) {
         var poseTrackingValue = FetchNextPoseTrackingValue();
+        skeletonManager.OnNewPose(screenController.transform, poseTrackingValue.PoseLandmarkList, poseTrackingValue.FaceLandmark, !IsFlipped(), textureFrame.GetTexture());
         RenderAnnotation(screenController, poseTrackingValue);
 
         screenController.DrawScreen(textureFrame);
@@ -118,7 +119,6 @@ public class FullPoseTrackingGraph : DemoGraph {
 
   private void RenderAnnotation(WebCamScreenController screenController, FullPoseTrackingValue value) {
         // NOTE: input image is flipped
-        skeletonManager.OnNewPose(screenController.transform, value.PoseLandmarkList, value.FaceLandmark, !IsFlipped());
         GetComponent<FullPoseTrackingAnnotationController>().Draw(screenController.transform, value.PoseLandmarkList, value.PoseDetection, value.FaceLandmark, !IsFlipped());
 
   }
