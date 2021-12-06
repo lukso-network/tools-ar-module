@@ -71,6 +71,7 @@ namespace DeepMotion.DMBTDemo
         private Mesh faceMesh;
         private Vector3[] faceNormals;
         private Matrix4x4 lightMatrix;
+        private Quaternion faceDirection = Quaternion.identity;
         public Light lightSource;
 
         [Range(0, 2)]
@@ -339,8 +340,9 @@ namespace DeepMotion.DMBTDemo
                 front = -front;
             }
 
+            faceDirection = Quaternion.LookRotation(front, up);
             hat.transform.localScale = new Vector3(scale, scale, scale);
-            hat.transform.rotation = Quaternion.LookRotation(front, up);
+            hat.transform.rotation = faceDirection;
             hat.transform.localPosition = nose;
         }
 
@@ -350,6 +352,7 @@ namespace DeepMotion.DMBTDemo
             var t = Time.realtimeSinceStartup;
             float t2 = 0;
             float t3 = 0;
+            float t4 = 0;
 
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
@@ -368,10 +371,10 @@ namespace DeepMotion.DMBTDemo
                 var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
                 t2 = Time.realtimeSinceStartup;
                 UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
-
-                CalculateLight(faceLandmarks, texture);
-
                 t3 = Time.realtimeSinceStartup;
+                CalculateLight(faceLandmarks, texture, flipped);
+
+                t4 = Time.realtimeSinceStartup;
 
             } catch (Exception ex) {
                 Debug.LogError("DMBTManage new pose failed");
@@ -380,11 +383,12 @@ namespace DeepMotion.DMBTDemo
 
             newPoseEvent(true);
             var fps = counter.UpdateFps();
-            display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1-t, t2-t1, t3-t2);
+            display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1-t, t2-t1, t3-t2, t4-t3);
 
         }
 
-        private void CalculateLight(NormalizedLandmarkList faceLandmarks, Texture2D texture) {
+        private void CalculateLight(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
+
             int count = faceLandmarks.Landmark.Count;
 
             int w = texture.width;
@@ -394,11 +398,11 @@ namespace DeepMotion.DMBTDemo
             Vector4 b = Vector4.zero;
             for (int i = 0; i < count; ++i) {
                 var p = faceLandmarks.Landmark[i];
-                var x = (int)Mathf.Clamp((1-p.X) * w, 0, w - 0.1f);
+                var x = (int)Mathf.Clamp((flipped ? p.X : (1-p.X)) * w, 0, w - 0.1f);
                 var y = (int)Mathf.Clamp((1-p.Y) * h, 0, h - 0.1f);
 
                 var c = texture.GetPixel(x, y);
-                texture.SetPixel(x, y, new Color(1, 0, 0, 1));
+              //  texture.SetPixel(x, y, new Color(1, 0, 0, 1));
                 float intencity = (c[0] + c[1] + c[2]) / 3;
                 var n = faceNormals[i];
                 b.x += n.x * intencity;
@@ -407,14 +411,17 @@ namespace DeepMotion.DMBTDemo
                 b.w += intencity;
             }
 
-            texture.Apply();
+           // texture.Apply();
 
             var res = lightMatrix * b;
 
-            Debug.Log("dir:" + res.x + " " + res.y + " " + res.z + " " + res.w);
+            //Debug.Log("dir:" + res.x + " " + res.y + " " + res.z + " " + res.w);
 
             Vector3 dir = new Vector3(res.x, res.y, res.z).normalized;
+            //dir = new Vector3(1, 0, -1);
+            dir = faceDirection* dir;
             lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
+
         }
 
         internal void ResetAvatar() {

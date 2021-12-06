@@ -49,7 +49,7 @@ public class StatisticDisplay : MonoBehaviour
 
                 String text = String.Join("\n", 
                     accumulatedValue.Select(x => x / count * 1000)
-                    .Zip(titles, (val, str)=> String.Format("{0}: {1:0.##}", str, val))
+                    .Zip(titles, (val, str)=> String.Format("{0}: {1:0.###}", str, val))
                     .ToArray());
 
                 //float valueToDisplay = accumulatedValue / count;
