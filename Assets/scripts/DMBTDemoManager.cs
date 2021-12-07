@@ -70,7 +70,12 @@ namespace DeepMotion.DMBTDemo
         private GameObject face;
         private Mesh faceMesh;
         private Vector3[] faceNormals;
+        private Vector3[] faceVertices;
+        private int [] posFaceIndices;
+        private int [] negFaceIndices;
         private Matrix4x4 lightMatrix;
+        private Matrix4x4 lightMatrixPositive;
+        private Matrix4x4 lightMatrixNegative;
         private Quaternion faceDirection = Quaternion.identity;
         public Light lightSource;
 
@@ -186,7 +191,7 @@ namespace DeepMotion.DMBTDemo
 
             var testP = GetPositionFromNormalizedPoint(scaleVector, from, false, delta, perspectiveScale, false);
 
-            Debug.Log((testP - to).z);
+            //Debug.Log((testP - to).z);
             return delta;
         }
 
@@ -238,6 +243,22 @@ namespace DeepMotion.DMBTDemo
             faceMesh.RecalculateNormals();
 
             faceNormals = faceMesh.normals;
+            faceVertices = faceMesh.vertices;
+
+
+            posFaceIndices = faceVertices.Select((x, i) => new { item = x, index = i }).Where(x => x.item.x > 0).Select(x => x.index).ToArray();
+            negFaceIndices = faceVertices.Select((x, i) => new { item = x, index = i }).Where(x => x.item.x <= 0).Select(x => x.index).ToArray();
+
+            /*List<int> v1 = new List<int>();
+            List<int> v2 = new List<int>();
+            for (int i = 0; i < faceVertices.Length; ++i) {
+                if (faceVertices[i].x > 0) {
+                    v1.Add(i);
+                } else {
+                    v2.Add(i);
+                }
+            }*/
+
             InitLeastSqrMatrix();
             var points = faceMesh.vertices;
 
@@ -256,6 +277,10 @@ namespace DeepMotion.DMBTDemo
         }
 
         private void InitLeastSqrMatrix() {
+            lightMatrixPositive = InitLeastSqrMatrix(true);
+            lightMatrixNegative = InitLeastSqrMatrix(false);
+
+            /*
             for (int i = 0; i < 4; ++i) {
                 for (int j = i; j < 4; ++j) {
                     float s = 0;
@@ -269,6 +294,28 @@ namespace DeepMotion.DMBTDemo
             }
 
             lightMatrix = lightMatrix.inverse;
+            */
+        }
+
+        private Matrix4x4 InitLeastSqrMatrix( bool positiveSide) {
+
+            var indices = positiveSide ? posFaceIndices : negFaceIndices;
+            Matrix4x4 mt = Matrix4x4.zero;
+            for (int i = 0; i < 4; ++i) {
+                for (int j = i; j < 4; ++j) {
+                    float s = 0;
+                    foreach(var k in indices) {
+                        var p = faceNormals[k];
+                        var n1 = i < 3 ? p[i] : 1;
+                        var n2 = j < 3 ? p[j] : 1;
+                        s += n1 * n2;
+                    }
+                    mt[i, j] = mt[j, i] = s;
+                }
+            }
+
+            mt = mt.inverse;
+            return mt;
         }
 
         private float [] times = new float[] { 0, 0, 0, 0, 0 };
@@ -388,40 +435,102 @@ namespace DeepMotion.DMBTDemo
         }
 
         private void CalculateLight(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
+            float posMeanIntencity, negMeanIntencity;
+            Vector4 positiveRes = SolveLightEquation(faceLandmarks, texture, flipped, true, out posMeanIntencity);
+            Vector4 negativeRes = SolveLightEquation(faceLandmarks, texture, flipped, false, out negMeanIntencity);
+            /*   int count = faceLandmarks.Landmark.Count;
 
+               int w = texture.width;
+               int h = texture.height;
+
+               Vector4 b = Vector4.zero;
+               for (int i = 0; i < count; ++i) {
+                   var p = faceLandmarks.Landmark[i];
+                   var x = (int)Mathf.Clamp((flipped ? p.X : (1-p.X)) * w, 0, w - 0.1f);
+                   var y = (int)Mathf.Clamp((1-p.Y) * h, 0, h - 0.1f);
+
+                   var c = texture.GetPixel(x, y);
+                 //  texture.SetPixel(x, y, new Color(1, 0, 0, 1));
+                   float intencity = (c[0] + c[1] + c[2]) / 3;
+                   var n = faceNormals[i];
+                   b.x += n.x * intencity;
+                   b.y += n.y * intencity;
+                   b.z += n.z * intencity;
+                   b.w += intencity;
+               }
+
+              // texture.Apply();
+
+               var res = lightMatrix * b;
+            */
+            //Debug.Log("dir:" + res.x + " " + res.y + " " + res.z + " " + res.w);
+
+           float alpha = posMeanIntencity / (posMeanIntencity + negMeanIntencity);
+           var faceDir = (faceDirection * (-Vector3.forward));
+           //var res = alpha > 0.5f ? positiveRes : negativeRes;
+
+            var res = positiveRes * alpha + (1 - alpha) * negativeRes;
+
+
+
+
+            var dir = new Vector3(res.x, res.y, res.z).normalized;
+            Debug.Log("Face dir:" + faceDir + " " + positiveRes + " " + negativeRes);
+            //dir = new Vector3(1, 0, -1);
+            dir = faceDirection* dir;
+            lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
+
+        }
+
+        private Vector4 SolveLightEquation(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped, bool positiveSide, out float meanIntencity) {
             int count = faceLandmarks.Landmark.Count;
 
             int w = texture.width;
             int h = texture.height;
 
-            
             Vector4 b = Vector4.zero;
-            for (int i = 0; i < count; ++i) {
+            int pointCount = 0;
+            float intSum = 0;
+            var indices = positiveSide ? posFaceIndices : negFaceIndices;
+            foreach (var i in indices) {
                 var p = faceLandmarks.Landmark[i];
-                var x = (int)Mathf.Clamp((flipped ? p.X : (1-p.X)) * w, 0, w - 0.1f);
-                var y = (int)Mathf.Clamp((1-p.Y) * h, 0, h - 0.1f);
+                var x = (int)Mathf.Clamp((flipped ? p.X : (1 - p.X)) * w, 0, w - 0.1f);
+                var y = (int)Mathf.Clamp((1 - p.Y) * h, 0, h - 0.1f);
 
                 var c = texture.GetPixel(x, y);
-              //  texture.SetPixel(x, y, new Color(1, 0, 0, 1));
+
+                //  texture.SetPixel(x, y, new Color(1, 0, 0, 1));
+
                 float intencity = (c[0] + c[1] + c[2]) / 3;
+                intSum += intencity;
                 var n = faceNormals[i];
+                pointCount++;
                 b.x += n.x * intencity;
                 b.y += n.y * intencity;
                 b.z += n.z * intencity;
                 b.w += intencity;
             }
+            // texture.Apply();
+            meanIntencity = intSum / pointCount;
+            var res = positiveSide ? (lightMatrixPositive * b) : (lightMatrixNegative * b);
 
-           // texture.Apply();
+            var lightDir = new Vector3(res.x, res.y, res.z);
 
-            var res = lightMatrix * b;
+            float scale = lightDir.magnitude;
+            lightDir /= scale;
+            res /= scale;
 
-            //Debug.Log("dir:" + res.x + " " + res.y + " " + res.z + " " + res.w);
+            int incorrectLightCount = 0;
+            foreach (var i in indices) {
+                if (Vector3.Dot(faceNormals[i], lightDir ) < 0) {
+                    incorrectLightCount++;
+                }
+            }
 
-            Vector3 dir = new Vector3(res.x, res.y, res.z).normalized;
-            //dir = new Vector3(1, 0, -1);
-            dir = faceDirection* dir;
-            lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
-
+            
+            Debug.Log("Intencity:" + meanIntencity + " " + positiveSide + " " + res + " neg:" + incorrectLightCount/(float)pointCount);
+            meanIntencity = 1 - incorrectLightCount / (float)pointCount;
+            return res;
         }
 
         internal void ResetAvatar() {
