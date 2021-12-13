@@ -446,7 +446,7 @@ namespace DeepMotion.DMBTDemo
 
             float posMeanIntencity, negMeanIntencity;
             Vector4 res = SolveLightEquation(faceLandmarks, texture, flipped, true, out posMeanIntencity);
-
+            RenderSettings.ambientLight = Vector4.one * Mathf.Clamp(res.w, 0, 0.3f);
             var dir = new Vector3(res.x, res.y, res.z).normalized;
             Debug.Log("Face dir:" + dir + " " );
             //dir = new Vector3(0, 0, -1);
