@@ -69,23 +69,20 @@ namespace DeepMotion.DMBTDemo
 
         private GameObject face;
         private Mesh faceMesh;
-        private Vector3[] faceNormals;
-        private Vector3[] faceVertices;
-        private int [] posFaceIndices;
-        private int [] negFaceIndices;
-        private Matrix4x4 lightMatrix;
-        private Matrix4x4 lightMatrixPositive;
-        private Matrix4x4 lightMatrixNegative;
+        public Mesh FaceMesh => faceMesh;
         private Quaternion faceDirection = Quaternion.identity;
-        private Vector4 lightParams = Vector3.zero;
-
-        public Light lightSource;
+        public Quaternion FaceDirection => faceDirection;
 
         [Range(0, 2)]
         public float scaleDepth = 0.5f;
 
         public delegate void OnNewPoseHandler(bool skeletonExist);
+
+        public delegate void OnNewFaceHandler(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped);
+
         public event OnNewPoseHandler newPoseEvent;
+        public event OnNewFaceHandler newFaceEvent;
+
         private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
         private FPSCounter counter = new FPSCounter();
@@ -234,7 +231,7 @@ namespace DeepMotion.DMBTDemo
             
             return points;
         }
-
+           
 
         private float defaultFaceSize;
         private float faceGeomCoef;
@@ -244,24 +241,6 @@ namespace DeepMotion.DMBTDemo
             faceMesh = face.GetComponent<MeshFilter>().mesh;
             faceMesh.RecalculateNormals();
 
-            faceNormals = faceMesh.normals;
-            faceVertices = faceMesh.vertices;
-
-
-            posFaceIndices = faceVertices.Select((x, i) => new { item = x, index = i }).Where(x => x.item.x > 0).Select(x => x.index).ToArray();
-            negFaceIndices = faceVertices.Select((x, i) => new { item = x, index = i }).Where(x => x.item.x <= 0).Select(x => x.index).ToArray();
-
-            /*List<int> v1 = new List<int>();
-            List<int> v2 = new List<int>();
-            for (int i = 0; i < faceVertices.Length; ++i) {
-                if (faceVertices[i].x > 0) {
-                    v1.Add(i);
-                } else {
-                    v2.Add(i);
-                }
-            }*/
-
-            InitLeastSqrMatrix();
             var points = faceMesh.vertices;
 
             var t = points[10];
@@ -278,85 +257,7 @@ namespace DeepMotion.DMBTDemo
             faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
         }
 
-        private void InitLeastSqrMatrix() {
-            faceNormalsProduct = PrepareFaceNormals(faceNormals);
-            lightMatrixPositive = InitLeastSqrMatrix(posFaceIndices);
-            lightMatrixNegative = InitLeastSqrMatrix(negFaceIndices);
-
-            /*
-            for (int i = 0; i < 4; ++i) {
-                for (int j = i; j < 4; ++j) {
-                    float s = 0;
-                    foreach(var p in faceNormals) {
-                        var n1 = i < 3 ? p[i] : 1;
-                        var n2 = j < 3 ? p[j] : 1;
-                        s += n1 * n2;
-                    }
-                    lightMatrix[i, j] = lightMatrix[j, i] = s;
-                }
-            }
-
-            lightMatrix = lightMatrix.inverse;
-            */
-        }
-
-        private Matrix4x4 InitLeastSqrMatrix(int []indices) {
-           /* Matrix4x4 mt = Matrix4x4.zero;
-            for (int i = 0; i < 4; ++i) {
-                for (int j = i; j < 4; ++j) {
-                    float s = 0;
-                    foreach(var k in indices) {
-                        var p = faceNormals[k];
-                        var n1 = i < 3 ? p[i] : 1;
-                        var n2 = j < 3 ? p[j] : 1;
-                        s += n1 * n2;
-                    }
-                    mt[i, j] = mt[j, i] = s;
-
-
-                    var vals = faceNormalsProduct[i, j];
-                    var r = indices.Sum(i => vals[i]);
-
-                    if (Mathf.Abs(r-s) > 0.0001f) {
-                        Debug.Log("!");
-                    }
-                }
-            }
-
-            mt = mt.inverse;
-            return mt;
-            */
-
-            var mt = Matrix4x4.zero;
-            for (int i = 0; i < 4; ++i) {
-                for (int j = i; j < 4; ++j) {
-                    var vals = faceNormalsProduct[i,j];
-                    mt[i,j]=mt[j,i] = indices.Sum(i => vals[i]);
-                }
-            }
-
-            mt = mt.inverse;
-            return mt;
-        }
-
-        float[,][] faceNormalsProduct;
-        private float[,][] PrepareFaceNormals(Vector3 [] faceNormals) {
-            float[,][] mat = new float[4, 4][];
-            for (int i = 0; i < 4; ++i) {
-                for (int j = i; j < 4; ++j) {
-                    mat[i, j] = new float[faceNormals.Length];
-                    for (int k = 0; k < faceNormals.Length; ++k) {
-                        var p = faceNormals[k];
-                        var n1 = i < 3 ? p[i] : 1;
-                        var n2 = j < 3 ? p[j] : 1;
-
-                        mat[i,j][k] = n1 * n2;
-                    }
-                }
-            }
-
-            return mat;
-        }
+     
 
         private float [] times = new float[] { 0, 0, 0, 0, 0 };
 
@@ -461,7 +362,8 @@ namespace DeepMotion.DMBTDemo
                 
                 UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
                 t3 = Time.realtimeSinceStartup;
-                CalculateLight(faceLandmarks, texture, flipped);
+
+                newFaceEvent(faceLandmarks, texture, flipped);
 
                 t4 = Time.realtimeSinceStartup;
 
@@ -479,86 +381,7 @@ namespace DeepMotion.DMBTDemo
 
         }
 
-        private void CalculateLight(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
-            if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
-                return;
-            }
-
-
-            Vector4 res = SolveLightEquation(faceLandmarks, texture, flipped);
-            RenderSettings.ambientLight = Vector4.one * Mathf.Clamp(res.w, 0, 0.3f);
-            var dir = new Vector3(res.x, res.y, res.z).normalized;
-           // Debug.Log("Face dir:" + dir + " " );
-            //dir = new Vector3(0, 0, -1);
-
-            dir = faceDirection* dir;
-            lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
-
-        }
-
-
-        private Vector4 CreateBVector(int[] indices, float[] intencities, bool checkDirection = false) {
-            Vector4 b = Vector4.zero;
-            foreach(var k in indices) {
-                var intencity = intencities[k];
-
-                var n = faceNormals[k];
-                b.x += n.x * intencity;
-                b.y += n.y * intencity;
-                b.z += n.z * intencity;
-                b.w += intencity;
-            }
-            return b;
-        }
-
-
-        private Vector4 SolveLightEquation(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
-            float[] intencities = GetIntencities(faceLandmarks, texture, flipped);
-           
-            const float MIN_INTENCITY = 0.1f;
-            var indices = intencities
-                        .Where(x => x > MIN_INTENCITY)
-                        .Select((x, i) => i)
-                        .ToArray();
-
-            var mt = InitLeastSqrMatrix(indices);
-            var bvector = CreateBVector(indices, intencities);
-            return mt * bvector;
-
-        }
-
-        private float[] GetIntencities(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
-            int w = texture.width;
-            int h = texture.height;
-            var localForwardDir = Quaternion.Inverse(faceDirection) * (-Vector3.forward);
-            const float MIN_COS = 0.3f;
-            //TODO
-            float[] intencities = new float[faceVertices.Length];
-            for (int i = 0; i < faceVertices.Length; ++i) {
-                float intencity = 0;
-
-                if ( Vector3.Dot(faceNormals[i], localForwardDir) > MIN_COS) {
-                    var p = faceLandmarks.Landmark[i];
-                    var x = (int)Mathf.Clamp((flipped ? p.X : (1 - p.X)) * w, 2, w - 2f);
-                    var y = (int)Mathf.Clamp((1 - p.Y) * h, 1, h - 2f);
-
-                    var c = texture.GetPixel(x, y) + texture.GetPixel(x - 2, y) + texture.GetPixel(x + 2, y) + texture.GetPixel(x, y - 2) + texture.GetPixel(x, y + 2);
-                    intencity = (c[0] + c[1] + c[2]) / 3 / 5;
-                }
-
-                /*
-                if (i % 3 == 0) {
-                    texture.SetPixel(x, y, new Color(1, 0, 0, 1));
-                }*/
-
-
-                intencities[i] = intencity;
-            }
-         //  texture.Apply();
-
-            return intencities;
-        }
-
+      
         internal void ResetAvatar() {
  //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);
         }
