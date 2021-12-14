@@ -35,6 +35,9 @@ public class WebCamScreenController : MonoBehaviour {
     protected Texture2D videoTexture;
     public VideoPlayer vp;
 
+    public float GetVideoAngle() {
+        return webCamTexture?.videoRotationAngle ?? 0;
+    }
 
     public delegate void OnNewFrameRendered(Texture2D texture);
     public event OnNewFrameRendered newFrameRendered;
@@ -249,7 +252,6 @@ public class WebCamScreenController : MonoBehaviour {
         actualFrameHeight = height;
         int refHeight = 4;
         transform.localScale = new Vector3((float)width / height * refHeight, 1, refHeight);
-
 
         Quaternion rot = Quaternion.Euler(0, 0, angle);
         Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one );

@@ -9,6 +9,7 @@ namespace Assets.scripts
     public class LightManager : MonoBehaviour
     {
 
+        public WebCamScreenController webCamController;
         public Light lightSource;
 
         private Vector3[] faceNormals;
@@ -80,11 +81,10 @@ namespace Assets.scripts
             Vector4 res = SolveLightEquation(faceLandmarks, texture, flipped);
             RenderSettings.ambientLight = Vector4.one * Mathf.Clamp(res.w, 0, 0.3f);
             var dir = new Vector3(res.x, res.y, res.z).normalized;
-            // Debug.Log("Face dir:" + dir + " " );
+
             //dir = new Vector3(0, 0, -1);
 
             dir = dmtManager.FaceDirection * dir;
-
             dir = FilterDir(dir);
             lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
 
@@ -131,38 +131,56 @@ namespace Assets.scripts
         }
 
         private float[] GetIntencities(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
+
+            float angle = webCamController.GetVideoAngle();
+
             int w = texture.width;
             int h = texture.height;
+
             var localForwardDir = Quaternion.Inverse(dmtManager.FaceDirection) * (-Vector3.forward);
 
             var fakeLightDir = Quaternion.Inverse(dmtManager.FaceDirection) * new Vector3(0, 1.0f,-1.0f).normalized;
             const float MIN_COS = 0.3f;
             //TODO
+            float[,] tr = null;
+            if (angle == 0) {
+                if (flipped) {
+                    tr = new float[,] { { 1, 0, 0 }, { 0, -1, 1 }};
+                } else {
+                    tr = new float[,] { {-1, 0, 1 }, { 0, -1, 1 } };
+                }
+            } else if (angle == 270) {
+                tr = new float[,] { { 0, -1, 1 }, { 1, 0, 0 } };
+            } else if (angle == 90) {
+                tr = new float[,] { { 0, 1, 0 }, { -1, 0, 1 } };
+
+            }
+
             float[] intencities = new float[faceVertices.Length];
             for (int i = 0; i < faceVertices.Length; ++i) {
                 float intencity = 0;
 
                 if (Vector3.Dot(faceNormals[i], localForwardDir) > MIN_COS) {
                     var p = faceLandmarks.Landmark[i];
-                    var x = (int)Mathf.Clamp((flipped ? p.X : (1 - p.X)) * w, 2, w - 2f);
-                    var y = (int)Mathf.Clamp((1 - p.Y) * h, 1, h - 2f);
+                    var x = (int) (w * (tr[0, 0] * p.X + tr[0, 1] * p.Y + tr[0, 2]));
+                    var y = (int) (h * (tr[1, 0] * p.X + tr[1, 1] * p.Y + tr[1, 2]));
+                    //    x = (int)Mathf.Clamp((flipped ? p.X : (1 - p.X)) * w, 2, w - 2f);
+                    //  y = (int)Mathf.Clamp((1 - p.Y) * h, 1, h - 2f);
+                    x = (int)Mathf.Clamp(x, 2, w - 2f);
+                    y = (int)Mathf.Clamp(y, 2, h - 2f);
 
                     //var c = texture.GetPixel(x, y) + texture.GetPixel(x - 2, y) + texture.GetPixel(x + 2, y) + texture.GetPixel(x, y - 2) + texture.GetPixel(x, y + 2);
                     var c = texture.GetPixel(x, y);
 
                     intencity = (c[0] + c[1] + c[2]) / 3;// /5;
                     intencity  += Mathf.Max(Vector3.Dot(faceNormals[i], fakeLightDir)) * 0.07f;
+                    //texture.SetPixel(x, y, new Color(1, 1, 1, 1));
                 }
-
-                /*
-                if (i % 3 == 0) {
-                    texture.SetPixel(x, y, new Color(1, 0, 0, 1));
-                }*/
 
 
                 intencities[i] = intencity;
             }
-            //  texture.Apply();
+           // texture.Apply();
 
             return intencities;
         }
