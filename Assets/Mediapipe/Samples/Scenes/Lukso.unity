@@ -2695,6 +2695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightSource: {fileID: 1909744803}
+  filterScale: 0.364
 --- !u!1 &394984864
 GameObject:
   m_ObjectHideFlags: 0
