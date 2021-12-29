@@ -178,7 +178,8 @@ public class SceneDirector : MonoBehaviour {
     graph.StartRun(webCamScreenController.GetScreen()).AssertOk();
 
     while (true) {
-      yield return new WaitForEndOfFrame();
+            var t = Time.realtimeSinceStartup;
+            yield return new WaitForEndOfFrame();
 
       var nextFrameRequest = webCamScreenController.RequestNextFrame();
       yield return nextFrameRequest;
@@ -186,7 +187,11 @@ public class SceneDirector : MonoBehaviour {
       var nextFrame = nextFrameRequest.textureFrame;
 
       graph.PushInput(nextFrame).AssertOk();
-      graph.RenderOutput(webCamScreenController, nextFrame);
+    
+        graph.RenderOutput(webCamScreenController, nextFrame);
+            t = Time.realtimeSinceStartup - t;
+
+            //Debug.Log(t);
     }
   }
 

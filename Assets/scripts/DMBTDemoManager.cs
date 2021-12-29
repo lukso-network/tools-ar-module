@@ -69,12 +69,20 @@ namespace DeepMotion.DMBTDemo
 
         private GameObject face;
         private Mesh faceMesh;
+        public Mesh FaceMesh => faceMesh;
+        private Quaternion faceDirection = Quaternion.identity;
+        public Quaternion FaceDirection => faceDirection;
 
         [Range(0, 2)]
         public float scaleDepth = 0.5f;
 
         public delegate void OnNewPoseHandler(bool skeletonExist);
+
+        public delegate void OnNewFaceHandler(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped);
+
         public event OnNewPoseHandler newPoseEvent;
+        public event OnNewFaceHandler newFaceEvent;
+
         private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
         private FPSCounter counter = new FPSCounter();
@@ -182,7 +190,7 @@ namespace DeepMotion.DMBTDemo
 
             var testP = GetPositionFromNormalizedPoint(scaleVector, from, false, delta, perspectiveScale, false);
 
-            Debug.Log((testP - to).z);
+            //Debug.Log((testP - to).z);
             return delta;
         }
 
@@ -223,7 +231,7 @@ namespace DeepMotion.DMBTDemo
             
             return points;
         }
-
+           
 
         private float defaultFaceSize;
         private float faceGeomCoef;
@@ -248,6 +256,8 @@ namespace DeepMotion.DMBTDemo
 
             faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
         }
+
+     
 
         private float [] times = new float[] { 0, 0, 0, 0, 0 };
 
@@ -318,22 +328,28 @@ namespace DeepMotion.DMBTDemo
                 front = -front;
             }
 
+            faceDirection = Quaternion.LookRotation(front, up);
             hat.transform.localScale = new Vector3(scale, scale, scale);
-            hat.transform.rotation = Quaternion.LookRotation(front, up);
+            hat.transform.rotation = faceDirection;
             hat.transform.localPosition = nose;
         }
 
 
-        internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+        internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
             face.SetActive(faceLandmarks.Landmark.Count > 0);
             var t = Time.realtimeSinceStartup;
             float t2 = 0;
             float t3 = 0;
+            float t4 = 0;
 
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
+
+                var fps0 = counter.UpdateFps();
+                display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0,0,0);
                 return;
             }
+
             var t1 = Time.realtimeSinceStartup;
 
             try {
@@ -343,8 +359,16 @@ namespace DeepMotion.DMBTDemo
 
                 var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
                 t2 = Time.realtimeSinceStartup;
+                
                 UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
                 t3 = Time.realtimeSinceStartup;
+
+                newFaceEvent(faceLandmarks, texture, flipped);
+
+                t4 = Time.realtimeSinceStartup;
+
+
+              //  Debug.Log("light:" + (t4 - t3));
 
             } catch (Exception ex) {
                 Debug.LogError("DMBTManage new pose failed");
@@ -353,11 +377,11 @@ namespace DeepMotion.DMBTDemo
 
             newPoseEvent(true);
             var fps = counter.UpdateFps();
-            display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1-t, t2-t1, t3-t2);
+            display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1-t, t2-t1, t3-t2, t4-t3);
 
         }
 
-
+      
         internal void ResetAvatar() {
  //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);
         }

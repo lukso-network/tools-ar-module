@@ -31,9 +31,9 @@ public class TextureFrame {
   }
 
   public void CopyTextureFrom(WebCamTexture src) {
-    // TODO: Convert format on GPU
-    texture.SetPixels32(src.GetPixels32());
-    texture.Apply();
+        // TODO: Convert format on GPU
+        texture.SetPixels32(src.GetPixels32());
+        texture.Apply();
   }
 
     public void CopyTextureFrom(Texture2D src) {

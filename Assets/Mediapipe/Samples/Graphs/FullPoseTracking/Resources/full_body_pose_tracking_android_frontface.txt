@@ -57,8 +57,8 @@ node {
   output_stream: "throttled_input_video"
   node_options: {
     [type.googleapis.com/mediapipe.FlowLimiterCalculatorOptions] {
-      max_in_flight: 1
-      max_in_queue: 1
+      max_in_flight: 2
+      max_in_queue: 2
       # Timeout is disabled (set to 0) as first frame processing can take more
       # than 1 second.
       in_flight_timeout: 0
