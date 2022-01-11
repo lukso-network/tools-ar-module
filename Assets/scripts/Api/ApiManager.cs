@@ -61,12 +61,6 @@ namespace Assets.scripts.Api
             //canvasController.IsShowTransparent = show;
         }
 
-        public async void ShowFaceMask(string boolStr) {
-            var show = ToBool(boolStr);
-            var isTransp = !show;
-            canvasController.IsShowFaceTransparent = isTransp;
-        }
-
         private bool ToBool(string boolStr) {
             return boolStr == "true";
         }
