@@ -41,7 +41,7 @@ namespace Mediapipe.Unity
       Logger.minLogLevel = Logger.LogLevel.Debug;
 
       Logger.LogInfo(_TAG, "Starting console window...");
-      Instantiate(_consolePrefab, _screen.transform);
+      Instantiate(_consolePrefab);//, _screen.transform);
       yield return new WaitForEndOfFrame();
 
       Logger.LogInfo(_TAG, "Setting global flags...");
@@ -106,7 +106,8 @@ namespace Mediapipe.Unity
       isFinished = true;
 
       Logger.LogInfo(_TAG, "Loading the first scene...");
-      var sceneLoadReq = SceneManager.LoadSceneAsync(1);
+      //var sceneLoadReq = SceneManager.LoadSceneAsync(1);
+      var sceneLoadReq = SceneManager.LoadSceneAsync("LuksoTest");
       yield return new WaitUntil(() => sceneLoadReq.isDone);
     }
 

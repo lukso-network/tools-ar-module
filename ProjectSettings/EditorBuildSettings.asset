@@ -48,4 +48,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Mediapipe/Samples/Scenes/MediaPipe Video/MediaPipe Video.unity
     guid: 16062faf4cda54140b781b925351b119
+  - enabled: 1
+    path: Assets/LuksoTest.unity
+    guid: 08c23fdbdb7f0ac4c99e0db83a54292f
   m_configObjects: {}
