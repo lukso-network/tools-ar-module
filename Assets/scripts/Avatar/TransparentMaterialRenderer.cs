@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.scripts.Avatar
 {
     public class TransparentMaterialRenderer : MonoBehaviour
     {
-        private WebCamScreenController webScreenPlane;
+      //TODOLK  private WebCamScreenController webScreenPlane;
         private Renderer renderer;
         private AvatarManager avatarManager;
         private Material oldMaterial;
@@ -15,10 +15,10 @@ namespace Assets.scripts.Avatar
         void Start() {
 
             avatarManager = FindObjectOfType<AvatarManager>();
-            webScreenPlane = FindObjectOfType<WebCamScreenController>();
-            if (webScreenPlane != null) {
-                webScreenPlane.newFrameRendered += OnNewFrameRendered;
-            }
+        //TODOLK    webScreenPlane = FindObjectOfType<WebCamScreenController>();
+          //TODOLK  if (webScreenPlane != null) {
+            //TODOLK    webScreenPlane.newFrameRendered += OnNewFrameRendered;
+            //TODOLK
 
             //TODO
             renderer = transform.parent.GetComponentInChildren<Renderer>();
@@ -28,9 +28,9 @@ namespace Assets.scripts.Avatar
         }
 
         void OnDestroy() {
-            if (webScreenPlane != null) {
-                webScreenPlane.newFrameRendered -= OnNewFrameRendered;
-            }
+     //TODOLK       if (webScreenPlane != null) {
+       //TODOLK         webScreenPlane.newFrameRendered -= OnNewFrameRendered;
+         //TODOLK   }
         }
 
         private void OnNewFrameRendered(Texture2D texture) {
@@ -43,17 +43,17 @@ namespace Assets.scripts.Avatar
             //TODO start it only one time
             texture.wrapMode = TextureWrapMode.Clamp;
 
-            float w = webScreenPlane.ScreenSize.x;
-            float h = webScreenPlane.ScreenSize.y;
+      float w = 0//TODOLK webScreenPlane.ScreenSize.x;
+      float h = 0;//TODOLK// webScreenPlane.ScreenSize.y;
             var mat = new Matrix4x4(new Vector4(1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4((w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
-            //var mat = new Matrix4x4(new Vector4(-1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4(1-(w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
-            //mat = mat * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, 90), Vector3.one);
+      //var mat = new Matrix4x4(new Vector4(-1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4(1-(w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
+      //mat = mat * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, 90), Vector3.one);
 
-            Quaternion rot = Quaternion.Euler(0, 0, webScreenPlane.VideoAngle);
+            Quaternion rot;//TODOLK = Quaternion.Euler(0, 0, webScreenPlane.VideoAngle);
             // Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, webScreenPlane.IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one);
 
 
-            Matrix4x4 m = Matrix4x4.Translate(new Vector3(0.5f, 0.5f, 0)) * Matrix4x4.Rotate(rot) * Matrix4x4.Scale(webScreenPlane.IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one) *  Matrix4x4.Translate(new Vector3(-0.5f, -0.5f, 0));
+            Matrix4x4 m;//TODOLK = Matrix4x4.Translate(new Vector3(0.5f, 0.5f, 0)) * Matrix4x4.Rotate(rot) * Matrix4x4.Scale(webScreenPlane.IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one) *  Matrix4x4.Translate(new Vector3(-0.5f, -0.5f, 0));
 
             //   m[3 * 4 + 0] = 1;
 #if !UNITY_EDITOR

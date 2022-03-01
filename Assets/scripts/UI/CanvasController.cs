@@ -14,7 +14,7 @@ using UnityWeld.Binding;
 public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 {
 
-    private WebCamScreenController player;
+ //TODOLK   private WebCamScreenController player;
     public event PropertyChangedEventHandler PropertyChanged;
     public HelperDrawer helper;
     public DMBTDemoManager skeletonManager;
@@ -28,7 +28,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
        // GameObject.Find("ApiManager").GetComponent<Assets.scripts.Api.ApiManager>().SelectCamera("1");
 #if UNITY_EDITOR
         string path = UnityEditor.EditorUtility.OpenFilePanel("Select Video", "", "Video files,mp4,avi,mov");
-        player.LoadUrl(path);
+      //TODOLK  player.LoadUrl(path);
 #endif
     }
 
@@ -52,7 +52,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public void ResetClothSize() {
-        sizeManager.ResetSize();
+    //TODOLK    sizeManager.ResetSize();
     }
 
     [Binding]
@@ -74,7 +74,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     }
 
-    [Binding]
+  //TODOLK
+/*  [Binding]
     public bool IsPaused {
         get { return player == null ? false : player.isPaused; }
         set {
@@ -83,7 +84,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
                 OnPropertyChanged("IsPaused");
             }
         }
-    }
+    }*/
 
     [Binding]
     public bool IsShowBody {
@@ -147,7 +148,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     }
 
     void Start() {
-        player = FindObjectOfType<WebCamScreenController>();
+        //TODOLK player = FindObjectOfType<WebCamScreenController>();
         OnPropertyChanged("IsPaused");
         OnPropertyChanged("PlaybackSpeed");
         OnPropertyChanged("IsShowBody");
@@ -167,6 +168,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         //OnPropertyChanged("RootScaleValue");
     }
 
+ //TODOLK  /*
     [Binding]
     public float PlaybackSpeed {
 
@@ -178,7 +180,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
             }
         }
 
-    }
+    }*/
 
     [Binding]
     public float ScaleDepth {

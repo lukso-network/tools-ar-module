@@ -1,10 +1,11 @@
-﻿using DeepMotion.DMBTDemo;
+using DeepMotion.DMBTDemo;
 using Mediapipe;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Skeleton = Lukso.Skeleton;
 
 namespace Assets.scripts.Avatar
 {
@@ -71,10 +72,10 @@ namespace Assets.scripts.Avatar
             get => showLandmarks;
             set {
                 showLandmarks = value;
-                var annotations = FindObjectsOfType<AnnotationController>(true);
-                foreach(var obj in annotations) {
-                    obj.gameObject.SetActive(showLandmarks);
-                }
+                //TODOLKvar annotations = FindObjectsOfType<AnnotationController>(true);
+                //TODOLKforeach(var obj in annotations) {
+                    //TODOLKobj.gameObject.SetActive(showLandmarks);
+                //TODOLK}
             }
         }
 

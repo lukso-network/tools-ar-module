@@ -1,4 +1,4 @@
-﻿using Assets;
+using Assets;
 using Assets.Demo.Scripts;
 using Assets.scripts.Avatar;
 using DeepMotion.DMBTDemo;
@@ -9,7 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static Skeleton;
+using static Lukso.Skeleton;
+//using Skeleton = Lukso.Skeleton;
 using Joint = Assets.Joint;
 
 namespace Assets

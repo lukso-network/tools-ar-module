@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using Assets.Demo.Scripts;
 using Assets;
 using Assets.scripts.Avatar;
+using Skeleton = Lukso.Skeleton;
 
 public class AvatarManager : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class AvatarManager : MonoBehaviour
     public GameObject modelRoot;
     public Transform transpBodyRoot;
     public Vector3 skinScaler = Vector3.one;
-    public WebCamScreenController cameraSurface;
+    //TODOLK public WebCamScreenController cameraSurface;
     public bool ShowTransparentBody;
     public string avatarLayerMask;
 

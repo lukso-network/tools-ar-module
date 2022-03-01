@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets;
@@ -6,9 +6,9 @@ using System;
 using System.Linq;
 using DeepMotion.DMBTDemo;
 using Assets.PoseEstimator;
-using static Skeleton;
 using Lukso;
 using static Lukso.ClothAttachementDefinition;
+using static Lukso.Skeleton;
 
 namespace Assets
 {

@@ -1,17 +1,24 @@
-﻿
-
-using Assets;
-using Assets.Demo.Scripts;
-using Assets.PoseEstimator;
-using DeepMotion.DMBTDemo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using Joint = Assets.Joint;
 using Assets.scripts.Avatar;
-
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+using System.IO;
+using System;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
+//using Newtonsoft.Json.Linq;
+using System.Linq;
+using Assets.Demo.Scripts;
+using Assets.PoseEstimator;
+using System.ComponentModel;
+using UnityWeld.Binding;
+using Assets;
+using Mediapipe;
+using System.Text.RegularExpressions;
+using Lukso;
+using Skeleton = Lukso.Skeleton;
 
 public class FPSCounter 
 {
@@ -34,22 +41,7 @@ public class FPSCounter
 
 namespace DeepMotion.DMBTDemo
 {
-    using System.Collections;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using System.IO;
-    using System;
-    using System.Runtime.InteropServices;
-    using System.Collections.Generic;
-    //using Newtonsoft.Json.Linq;
-    using System.Linq;
-    using Assets.Demo.Scripts;
-    using Assets.PoseEstimator;
-    using System.ComponentModel;
-    using UnityWeld.Binding;
-    using Assets;
-    using Mediapipe;
-    using System.Text.RegularExpressions;
+
 
     [Binding]
     public class DMBTDemoManager : MonoBehaviour {

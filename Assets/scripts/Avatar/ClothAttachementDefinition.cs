@@ -1,7 +1,8 @@
-﻿
+
 using Assets;
 using System.Collections.Generic;
-using static Skeleton;
+using static Lukso.Skeleton;
+
 
 namespace Lukso {
 

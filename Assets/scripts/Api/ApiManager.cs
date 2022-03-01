@@ -1,4 +1,4 @@
-﻿using Lukso;
+using Lukso;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace Assets.scripts.Api
     {
         public AvatarManager avatarManager;
         public CanvasController canvasController;
-        public SceneDirector sceneDirector;
+     //TODOLK   public SceneDirector sceneDirector;
         public SizeManager sizeManager;
         // Use this for initialization
         void Start() {
@@ -51,7 +51,7 @@ namespace Assets.scripts.Api
                 Debug.LogError($"Camera does not exist:{camIdx} is requested");
                 return;
             }
-            sceneDirector.ChangeWebCamDevice(devices[camIdx]);
+//TODOLK//           sceneDirector.ChangeWebCamDevice(devices[camIdx]);
 
             //canvasController.gameObject.SetActive(ToBool(boolStr));
         }
@@ -64,7 +64,7 @@ namespace Assets.scripts.Api
         }
 
         public async void CalculateSize() {
-            sizeManager.CalculateSize();
+ //TODOLK           sizeManager.CalculateSize();
         }
 
         private bool ToBool(string boolStr) {
