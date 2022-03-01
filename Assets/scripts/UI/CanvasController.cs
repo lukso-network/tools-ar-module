@@ -168,7 +168,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
         //OnPropertyChanged("RootScaleValue");
     }
 
- //TODOLK  /*
+ //TODOLK 
+ /*
     [Binding]
     public float PlaybackSpeed {
 
