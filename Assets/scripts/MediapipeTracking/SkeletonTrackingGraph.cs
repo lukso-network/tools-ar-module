@@ -4,8 +4,10 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using DeepMotion.DMBTDemo;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Mediapipe.Unity.SkeletonTracking
@@ -28,6 +30,9 @@ namespace Mediapipe.Unity.SkeletonTracking
     public UnityEvent<LandmarkList> OnSkeletonWorldLandmarksOutput = new UnityEvent<LandmarkList>();
     public UnityEvent<NormalizedRect> OnRoiFromLandmarksOutput = new UnityEvent<NormalizedRect>();
 #pragma warning restore IDE1006
+
+    [SerializeField]
+    private DMBTDemoManager skeletonManager;
 
     private const string _InputStreamName = "input_video";
     private const string _SkeletonDetectionStreamName = "skeleton_detection";
@@ -90,6 +95,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
       if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
 
+      skeletonManager.OnNewPose(transform, skeletonLandmarks, new NormalizedLandmarkList(), false, null);
       return r1 || r2 || r3 || r4;
     }
 
