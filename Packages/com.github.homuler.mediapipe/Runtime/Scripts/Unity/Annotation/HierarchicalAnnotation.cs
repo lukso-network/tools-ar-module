@@ -68,8 +68,14 @@ namespace Mediapipe.Unity
       return true;
     }
 
-    public virtual bool isMirrored { get; set; }
-    public virtual RotationAngle rotationAngle { get; set; } = RotationAngle.Rotation0;
+    public virtual bool isMirrored { 
+      get; 
+      set; 
+    }
+    public virtual RotationAngle rotationAngle { 
+      get; 
+      set; 
+    } = RotationAngle.Rotation0;
 
     protected TAnnotation InstantiateChild<TAnnotation>(GameObject prefab) where TAnnotation : HierarchicalAnnotation
     {

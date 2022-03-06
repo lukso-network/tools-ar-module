@@ -137,7 +137,7 @@ namespace DeepMotion.DMBTDemo
         }
 
         protected Vector3 ScaleVector(Transform transform) {
-            return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.z, transform.localScale.y);
+            return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.y, transform.localScale.z);
         }
 
         protected Vector3 GetFacePointForRotation(Vector3 scaleVector, NormalizedLandmark landmark, bool isFlipped, float scale) {

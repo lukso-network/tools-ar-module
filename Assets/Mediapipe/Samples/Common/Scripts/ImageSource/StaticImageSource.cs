@@ -113,8 +113,9 @@ namespace Mediapipe.Unity
     private void InitializeOutputTexture(Texture src)
     {
       _outputTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
-
       Texture resizedTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+      //_outputTexture = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false);
+      //Texture resizedTexture = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false);
       // TODO: assert ConvertTexture finishes successfully
       var _ = Graphics.ConvertTexture(src, resizedTexture);
 

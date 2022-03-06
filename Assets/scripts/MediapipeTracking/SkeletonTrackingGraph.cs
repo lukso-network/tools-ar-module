@@ -5,6 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 using DeepMotion.DMBTDemo;
+using Lukso;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,14 +32,18 @@ namespace Mediapipe.Unity.SkeletonTracking
     public UnityEvent<NormalizedRect> OnRoiFromLandmarksOutput = new UnityEvent<NormalizedRect>();
 #pragma warning restore IDE1006
 
-    [SerializeField]
-    private DMBTDemoManager skeletonManager;
+    [SerializeField] private DMBTDemoManager skeletonManager;
+    [SerializeField] private Transform screenPlane;
+    [SerializeField] private Camera3DController cameraController;
 
     private const string _InputStreamName = "input_video";
     private const string _SkeletonDetectionStreamName = "skeleton_detection";
     private const string _SkeletonLandmarksStreamName = "skeleton_landmarks";
     private const string _SkeletonWorldLandmarksStreamName = "skeleton_world_landmarks";
     private const string _RoiFromLandmarksStreamName = "roi_from_landmarks";
+    
+    private ImageSource imageSource;
+    
 
     private OutputStream<DetectionPacket, Detection> _skeletonDetectionStream;
     private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _skeletonLandmarksStream;
@@ -47,6 +52,7 @@ namespace Mediapipe.Unity.SkeletonTracking
 
     public override void StartRun(ImageSource imageSource)
     {
+      this.imageSource = imageSource;
       if (runningMode.IsSynchronous())
       {
         _skeletonDetectionStream.StartPolling().AssertOk();
@@ -80,6 +86,13 @@ namespace Mediapipe.Unity.SkeletonTracking
     public void AddTextureFrameToInputStream(TextureFrame textureFrame)
     {
       AddTextureFrameToInputStream(_InputStreamName, textureFrame);
+
+      Update3DCamera(textureFrame);
+    }
+
+    private void Update3DCamera(TextureFrame textureFrame) {
+      
+      cameraController.UpdateCamera(textureFrame, rotation, imageSource);
     }
 
     public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks, bool allowBlock = true)
@@ -95,7 +108,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
       if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
 
-      skeletonManager.OnNewPose(transform, skeletonLandmarks, new NormalizedLandmarkList(), false, null);
+      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), true, null);
       return r1 || r2 || r3 || r4;
     }
 

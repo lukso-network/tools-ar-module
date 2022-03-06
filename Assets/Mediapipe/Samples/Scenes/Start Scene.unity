@@ -231,13 +231,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd7955705ab46c72b9124bb116a2dca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _availableSources: []
+  _availableSources:
+  - {fileID: 2800000, guid: 710c490613e58c44a80d968e9e5c61e3, type: 3}
+  - {fileID: 2800000, guid: 8a2d721f732caee408ec95fa4cc4970f, type: 3}
   _defaultAvailableResolutions:
+  - width: 720
+    height: 1280
+    frameRate: 0
   - width: 512
     height: 512
-    frameRate: 0
-  - width: 640
-    height: 480
     frameRate: 0
   - width: 1280
     height: 720
