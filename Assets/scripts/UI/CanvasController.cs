@@ -109,17 +109,22 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
   }
 
-  //TODOLK
-  /*  [Binding]
+    [Binding]
       public bool IsPaused {
-          get { return player == null ? false : player.isPaused; }
+          get { return !ImageSourceProvider.ImageSource.isPlaying; }
           set {
-              if (player != null) {
-                  player.isPaused = value;
-                  OnPropertyChanged("IsPaused");
+              if (!ImageSourceProvider.ImageSource.isPlaying == value) {
+                return;
               }
-          }
-      }*/
+
+              if (value) {
+                 ImageSourceProvider.ImageSource.Pause();
+              } else {
+                StartCoroutine(ImageSourceProvider.ImageSource.Resume());
+              }
+            OnPropertyChanged("IsPaused");
+    }
+    }
 
   [Binding]
   public bool IsShowBody {
