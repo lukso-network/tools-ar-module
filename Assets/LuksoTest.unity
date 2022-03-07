@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 37994846}
   - component: {fileID: 37994848}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: RoomCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1067,7 +1067,6 @@ GameObject:
   - component: {fileID: 114348007}
   - component: {fileID: 114348010}
   - component: {fileID: 114348009}
-  - component: {fileID: 114348008}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -1089,20 +1088,6 @@ Transform:
   m_Father: {fileID: 1805115134}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &114348008
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 114348006}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &114348009
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1110,7 +1095,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 114348006}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2739,6 +2724,7 @@ MonoBehaviour:
   skeletonManager: {fileID: 780931513}
   avatarManager: {fileID: 548813479}
   sizeManager: {fileID: 1755837388}
+  screenCamera: {fileID: 0}
 --- !u!1 &273507914
 GameObject:
   m_ObjectHideFlags: 0
@@ -5733,6 +5719,7 @@ MonoBehaviour:
   facePrefab: {fileID: 900957405125252039, guid: 36bb10cff6c6d754c973f737ae1fc7bf,
     type: 3}
   hat: {fileID: 843617380}
+  screenCamera: {fileID: 985747844}
   scaleDepth: 2
 --- !u!1 &832877925
 GameObject:
@@ -7107,7 +7094,7 @@ GameObject:
   - component: {fileID: 985747844}
   - component: {fileID: 985747843}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Skeleton Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7130,7 +7117,7 @@ Camera:
   m_GameObject: {fileID: 985747842}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -7149,7 +7136,7 @@ Camera:
   field of view: 50
   orthographic: 0
   orthographic size: 5
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 439
@@ -9212,7 +9199,7 @@ GameObject:
   - component: {fileID: 1264297880}
   - component: {fileID: 1264297879}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MP Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13121,7 +13108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1805115134}
   m_Layer: 0
-  m_Name: Oayer
+  m_Name: ScreenPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

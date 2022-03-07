@@ -13,6 +13,8 @@ namespace Lukso
         private GameObject selected;
         private GameObject duplicate;
 
+        [SerializeField] private Camera screenCamera; 
+
 
         public void ProcessUI() {
             if (Input.GetMouseButtonDown(0)) {
@@ -20,7 +22,7 @@ namespace Lukso
                 if (selected == null) {
 
                     RaycastHit hit;
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    Ray ray = screenCamera.ScreenPointToRay(Input.mousePosition);
 
                     if (Physics.Raycast(ray, out hit, LayerMask.NameToLayer("joint"))) {
                         Transform objectHit = hit.transform;

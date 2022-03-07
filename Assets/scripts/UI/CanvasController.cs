@@ -21,7 +21,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     public AvatarManager avatarManager;
     public SizeManager sizeManager;
 
-    [Binding]
+  [SerializeField] private Camera screenCamera;
+
+  [Binding]
     public void SelectVideo() {
 
         //GameObject.Find("ApiManager").GetComponent<Assets.scripts.Api.ApiManager>().ShowHelpers("false");
@@ -68,9 +70,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
     public void Rotate90() {
-        var angles = Camera.main.transform.eulerAngles;
+        var angles = screenCamera.transform.eulerAngles;
         angles.z += 90;
-        Camera.main.transform.eulerAngles = angles;
+        screenCamera.transform.eulerAngles = angles;
 
     }
 

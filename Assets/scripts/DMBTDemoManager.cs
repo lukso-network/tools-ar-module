@@ -58,6 +58,8 @@ namespace DeepMotion.DMBTDemo
         public SkeletonManager skeletonManager;
         public GameObject facePrefab;
         public GameObject hat;
+      
+        [SerializeField] private Camera screenCamera;
 
         private GameObject face;
         private Mesh faceMesh;
@@ -152,7 +154,7 @@ namespace DeepMotion.DMBTDemo
             var relY = 0.5f - v.y;
 
             var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);// + screenTransform.position;
-            var dir = (Camera.main.transform.position - pos3d).normalized;
+            var dir = (screenCamera.transform.position - pos3d).normalized;
             // dir /= Math.Abs(dir.z);
             pos3d += dir * (-(v.z + zShift)) * scaleVector.z * perspectiveScale;
             return pos3d;
@@ -179,12 +181,12 @@ namespace DeepMotion.DMBTDemo
 
             var to = nosePose;
             //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
-            //pos3d += (Camera.main.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
+            //pos3d += (screenCamera.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
 
             var relX = (isFlipped ? -1 : 1) * (from.x - 0.5f);
             var relY = 0.5f - from.y;
             var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);
-            float delta = -(to.z - pos3d.z) / (Camera.main.transform.position - pos3d).normalized.z / (scaleVector.z * perspectiveScale) - from.z;
+            float delta = -(to.z - pos3d.z) / (screenCamera.transform.position - pos3d).normalized.z / (scaleVector.z * perspectiveScale) - from.z;
 
 
             //var testP = GetPositionFromNormalizedPoint(scaleVector, from, false, delta, perspectiveScale, false);
@@ -267,7 +269,7 @@ namespace DeepMotion.DMBTDemo
  		private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
             var t0 = Time.realtimeSinceStartup;
             var spineSize = GetSpineSize(landmarkList);
-            float scale = Camera.main.aspect > 1 ? Camera.main.aspect * Camera.main.aspect : 1;
+            float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
             scale /= 2.8f;
             var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
 
@@ -298,7 +300,7 @@ namespace DeepMotion.DMBTDemo
 
         private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3 [] skelPoints) {
 
-            float faceScale = Camera.main.aspect > 1 ? Camera.main.aspect * Camera.main.aspect : 1;
+            float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
             var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
         
            //faceMesh.vertices = points;
