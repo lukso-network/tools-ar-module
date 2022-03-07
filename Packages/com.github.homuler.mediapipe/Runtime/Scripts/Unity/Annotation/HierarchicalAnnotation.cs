@@ -82,6 +82,7 @@ namespace Mediapipe.Unity
       var annotation = Instantiate(prefab, transform).GetComponent<TAnnotation>();
       annotation.isMirrored = isMirrored;
       annotation.rotationAngle = rotationAngle;
+      annotation.gameObject.layer = gameObject.layer;
       return annotation;
     }
 

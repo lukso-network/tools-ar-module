@@ -104,6 +104,7 @@ namespace Mediapipe.Unity
       var annotation = base.InstantiateChild(isActive);
       annotation.SetColor(_color);
       annotation.SetRadius(_radius);
+      annotation.gameObject.layer = gameObject.layer;
       return annotation;
     }
 
