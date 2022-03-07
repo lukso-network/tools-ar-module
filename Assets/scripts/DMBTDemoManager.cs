@@ -368,7 +368,7 @@ namespace DeepMotion.DMBTDemo
 
             try {
                 var scale = screenTransform.localScale;
-                scale.y = scaleDepth;
+                scale.z = scaleDepth;
                 screenTransform.localScale = scale;
 
                 var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
