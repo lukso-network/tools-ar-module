@@ -1,4 +1,5 @@
 using Lukso;
+using Mediapipe.Unity;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -11,8 +12,9 @@ namespace Assets.scripts.Api
         public CanvasController canvasController;
      //TODOLK   public SceneDirector sceneDirector;
         public SizeManager sizeManager;
-        // Use this for initialization
-        void Start() {
+        [SerializeField] private Solution solution;
+    // Use this for initialization
+    void Start() {
 
         }
 
@@ -45,16 +47,19 @@ namespace Assets.scripts.Api
 
         public async void SelectCamera(string intStr) {
             int camIdx = ToInt(intStr);
-            var devices = WebCamTexture.devices;
+
+
+            var devices = ImageSourceProvider.ImageSource.sourceCandidateNames;
 
             if (camIdx >= devices.Length) {
                 Debug.LogError($"Camera does not exist:{camIdx} is requested");
                 return;
             }
-//TODOLK//           sceneDirector.ChangeWebCamDevice(devices[camIdx]);
 
-            //canvasController.gameObject.SetActive(ToBool(boolStr));
-        }
+            ImageSourceProvider.ImageSource.SelectSource(camIdx);
+
+      //canvasController.gameObject.SetActive(ToBool(boolStr));
+    }
 
         public async void ShowHelpers(string boolStr) {
             var show = ToBool(boolStr);

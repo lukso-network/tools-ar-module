@@ -2724,7 +2724,8 @@ MonoBehaviour:
   skeletonManager: {fileID: 780931513}
   avatarManager: {fileID: 548813479}
   sizeManager: {fileID: 1755837388}
-  screenCamera: {fileID: 0}
+  screenCamera: {fileID: 985747844}
+  solution: {fileID: 188083187}
 --- !u!1 &273507914
 GameObject:
   m_ObjectHideFlags: 0
@@ -5481,7 +5482,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _solution
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 188083187}
     - target: {fileID: 8571076843237194837, guid: 140d1d2c406167c50819d89f86d9092e,
         type: 3}
       propertyPath: m_Layer
@@ -9014,9 +9015,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: WebCamDevice Selection
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -9068,9 +9067,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1208954758}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a97f41aaeeed0101afd4eaacb6b9735, type: 3}
+  m_Script: {fileID: 822021643, guid: 90c6e8373f4379f4394fb23d9672a76e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewModelSelectionPropertyName: CanvasController.SelectedCamera
+  viewModelOptionsPropertyName: CanvasController.CameraSource
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  selectionViewModelToUIAdapter: 
+  selectionUIToViewModelAdapter: 
+  optionsAdapter: 
 --- !u!1 &1223870913
 GameObject:
   m_ObjectHideFlags: 0
@@ -15243,7 +15249,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: WebCamDevice Selection
+  m_Text: 
 --- !u!222 &2121214995
 CanvasRenderer:
   m_ObjectHideFlags: 0
