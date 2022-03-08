@@ -118,7 +118,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       }*/
       
 
-      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), true, null);
+      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), !ImageSourceProvider.ImageSource.isHorizontallyFlipped, null);
       return r1 || r2 || r3 || r4;
     }
 
