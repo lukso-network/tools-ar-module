@@ -23,40 +23,33 @@ namespace Mediapipe.Unity.SelfieSegmentation.UI
 
     private bool _isChanged;
 
-    private void Start()
-    {
+    private void Start() {
       _solution = GameObject.Find("Solution").GetComponent<SelfieSegmentationSolution>();
       InitializeContents();
     }
 
-    public override void Exit()
-    {
+    public override void Exit() {
       GetModal().CloseAndResume(_isChanged);
     }
 
-    public void SwitchRunningMode()
-    {
+    public void SwitchRunningMode() {
       _solution.runningMode = (RunningMode)_runningModeInput.value;
       _isChanged = true;
     }
 
-    public void SetTimeoutMillisec()
-    {
-      if (int.TryParse(_timeoutMillisecInput.text, out var value))
-      {
+    public void SetTimeoutMillisec() {
+      if (int.TryParse(_timeoutMillisecInput.text, out var value)) {
         _solution.timeoutMillisec = value;
         _isChanged = true;
       }
     }
 
-    private void InitializeContents()
-    {
+    private void InitializeContents() {
       InitializeRunningMode();
       InitializeTimeoutMillisec();
     }
 
-    private void InitializeRunningMode()
-    {
+    private void InitializeRunningMode() {
       _runningModeInput = gameObject.transform.Find(_RunningModePath).gameObject.GetComponent<Dropdown>();
       _runningModeInput.ClearOptions();
 
@@ -66,16 +59,14 @@ namespace Mediapipe.Unity.SelfieSegmentation.UI
       var currentRunningMode = _solution.runningMode;
       var defaultValue = options.FindIndex(option => option == currentRunningMode.ToString());
 
-      if (defaultValue >= 0)
-      {
+      if (defaultValue >= 0) {
         _runningModeInput.value = defaultValue;
       }
 
       _runningModeInput.onValueChanged.AddListener(delegate { SwitchRunningMode(); });
     }
 
-    private void InitializeTimeoutMillisec()
-    {
+    private void InitializeTimeoutMillisec() {
       _timeoutMillisecInput = gameObject.transform.Find(_TimeoutMillisecPath).gameObject.GetComponent<InputField>();
       _timeoutMillisecInput.text = _solution.timeoutMillisec.ToString();
       _timeoutMillisecInput.onValueChanged.AddListener(delegate { SetTimeoutMillisec(); });

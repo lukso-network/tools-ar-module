@@ -51,4 +51,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/LuksoTest.unity
     guid: 08c23fdbdb7f0ac4c99e0db83a54292f
+  - enabled: 1
+    path: Assets/Mediapipe/Samples/Scenes/Selfie/selfie segmentation 1.unity
+    guid: a28cfcd64f5d0b0478e5fa7c4c5c7536
   m_configObjects: {}
