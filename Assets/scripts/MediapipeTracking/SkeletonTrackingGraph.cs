@@ -107,6 +107,16 @@ namespace Mediapipe.Unity.SkeletonTracking
       if (r2) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
       if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
       if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
+      /*
+      var tempList = new NormalizedLandmarkList();
+      for(int i = 0; i < skeletonWorldLandmarks.Landmark.Count; ++i) {
+        var n = new NormalizedLandmark();
+        n.X = skeletonWorldLandmarks.Landmark[i].X;
+        n.Y = skeletonWorldLandmarks.Landmark[i].Y;
+        n.Z = skeletonWorldLandmarks.Landmark[i].Z;
+        tempList.Landmark.Add(n);
+      }*/
+      
 
       skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), true, null);
       return r1 || r2 || r3 || r4;
