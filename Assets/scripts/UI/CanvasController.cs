@@ -3,6 +3,7 @@ using Assets.scripts.Avatar;
 using DeepMotion.DMBTDemo;
 using Lukso;
 using Mediapipe.Unity;
+using Mediapipe.Unity.SelfieSegmentation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
   [SerializeField] private Camera screenCamera;
   [SerializeField] private Solution solution;
+  [SerializeField] private SelfieSegmentationCreator segmentation;
 
 
 
@@ -88,6 +90,11 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   [Binding]
   public void ResetClothSize() {
     //TODOLK    sizeManager.ResetSize();
+  }
+
+  [Binding]
+  public void CaptureSegmentation() {
+    segmentation.CaptureSegmentation();
   }
 
   [Binding]

@@ -49,10 +49,23 @@ namespace Mediapipe.Unity.SelfieSegmentation
       _coroutine = StartCoroutine(Test());
     }
 
-    private IEnumerator Test() {
+    private IEnumerator Test() { 
+      yield break;
       while (true) {
         yield return ProcesImage(true);
       }
     } 
+    
+    public void CaptureSegmentation() {
+      StartCoroutine(CaptureSegmentationCoroutine());
+    }
+
+    private IEnumerator CaptureSegmentationCoroutine() {
+      yield return ProcesImage(true);
+
+      //while (true) {
+        //yield return ProcesImage(true);
+      //}
+    }
   }
 }
