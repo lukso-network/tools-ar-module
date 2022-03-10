@@ -149,7 +149,7 @@ namespace Mediapipe.Unity
       OnPrepared();
   }
 
-    public IEnumerator ProcesImage(bool waitEndOfFrame) {
+    public IEnumerator ProcessImage(bool waitEndOfFrame) {
       var imageSource = ImageSourceProvider.ImageSource;
       if (isPaused) {
         yield break;
@@ -172,6 +172,19 @@ namespace Mediapipe.Unity
         yield return WaitForNextValue();
       }
 
+    }
+
+    public void ProcessImageSync() {
+      var imageSource = ImageSourceProvider.ImageSource;
+
+      if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
+        return;
+      }
+
+      // Copy current image to TextureFrame
+      ReadFromImageSource(imageSource, textureFrame);
+      AddTextureFrameToInputStream(textureFrame);
+      RenderCurrentFrame(textureFrame);
     }
   }
 }
