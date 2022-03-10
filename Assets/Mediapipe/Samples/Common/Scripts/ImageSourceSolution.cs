@@ -15,55 +15,51 @@ namespace Mediapipe.Unity
     [SerializeField] protected T graphRunner;
     [SerializeField] protected TextureFramePool textureFramePool;
 
-    private Coroutine _coroutine;
+    protected Coroutine _coroutine;
 
     public RunningMode runningMode;
 
-    public long timeoutMillisec
-    {
+    public long timeoutMillisec {
       get => graphRunner.timeoutMillisec;
       set => graphRunner.timeoutMillisec = value;
     }
 
-    public override void Play()
-    {
-      if (_coroutine != null)
-      {
+    public override void Play() {
+      if (_coroutine != null) {
         Stop();
       }
       base.Play();
       _coroutine = StartCoroutine(Run());
     }
 
-    public override void Pause()
-    {
+    protected void PlayPredecessor() {
+      base.Play();
+    }
+
+    public override void Pause() {
       base.Pause();
       ImageSourceProvider.ImageSource.Pause();
     }
 
-    public override void Resume()
-    {
+    public override void Resume() {
       base.Resume();
       var _ = StartCoroutine(ImageSourceProvider.ImageSource.Resume());
     }
 
-    public override void Stop()
-    {
+    public override void Stop() {
       base.Stop();
       StopCoroutine(_coroutine);
       ImageSourceProvider.ImageSource.Stop();
       graphRunner.Stop();
     }
 
-    private IEnumerator Run()
-    {
+    protected IEnumerator Run() {
       var graphInitRequest = graphRunner.WaitForInit(runningMode);
       var imageSource = ImageSourceProvider.ImageSource;
 
       yield return imageSource.Play();
 
-      if (!imageSource.isPrepared)
-      {
+      if (!imageSource.isPrepared) {
         Logger.LogError(TAG, "Failed to start ImageSource, exiting...");
         yield break;
       }
@@ -74,8 +70,7 @@ namespace Mediapipe.Unity
       SetupScreen(imageSource);
 
       yield return graphInitRequest;
-      if (graphInitRequest.isError)
-      {
+      if (graphInitRequest.isError) {
         Logger.LogError(TAG, graphInitRequest.error);
         yield break;
       }
@@ -85,15 +80,12 @@ namespace Mediapipe.Unity
 
       var waitWhilePausing = new WaitWhile(() => isPaused);
 
-      while (true)
-      {
-        if (isPaused)
-        {
+      while (true) {
+        if (isPaused) {
           yield return waitWhilePausing;
         }
 
-        if (!textureFramePool.TryGetTextureFrame(out var textureFrame))
-        {
+        if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
           yield return new WaitForEndOfFrame();
           continue;
         }
@@ -103,22 +95,19 @@ namespace Mediapipe.Unity
         AddTextureFrameToInputStream(textureFrame);
         yield return new WaitForEndOfFrame();
 
-        if (runningMode.IsSynchronous())
-        {
+        if (runningMode.IsSynchronous()) {
           RenderCurrentFrame(textureFrame);
           yield return WaitForNextValue();
         }
       }
     }
 
-    protected virtual void SetupScreen(ImageSource imageSource)
-    {
+    protected virtual void SetupScreen(ImageSource imageSource) {
       // NOTE: The screen will be resized later, keeping the aspect ratio.
       screen.Initialize(imageSource);
     }
 
-    protected virtual void RenderCurrentFrame(TextureFrame textureFrame)
-    {
+    protected virtual void RenderCurrentFrame(TextureFrame textureFrame) {
       screen.ReadSync(textureFrame);
     }
 
@@ -127,5 +116,62 @@ namespace Mediapipe.Unity
     protected abstract void AddTextureFrameToInputStream(TextureFrame textureFrame);
 
     protected abstract IEnumerator WaitForNextValue();
+    protected virtual void OnPrepared() { }
+
+
+
+    protected IEnumerator PrepareCustomRun() {
+      var graphInitRequest = graphRunner.WaitForInit(runningMode);
+      var imageSource = ImageSourceProvider.ImageSource;
+
+      yield return imageSource.Play();
+
+      if (!imageSource.isPrepared) {
+        Logger.LogError(TAG, "Failed to start ImageSource, exiting...");
+        yield break;
+      }
+
+      // Use RGBA32 as the input format.
+      // TODO: When using GpuBuffer, MediaPipe assumes that the input format is BGRA, so the following code must be fixed.
+      textureFramePool.ResizeTexture(imageSource.textureWidth, imageSource.textureHeight, TextureFormat.RGBA32);
+      SetupScreen(imageSource);
+
+      yield return graphInitRequest;
+      if (graphInitRequest.isError) {
+        Logger.LogError(TAG, graphInitRequest.error);
+        yield break;
+      }
+
+      graphRunner.StartRun(imageSource);
+      OnStartRun();
+
+
+      OnPrepared();
+  }
+
+    public IEnumerator ProcesImage(bool waitEndOfFrame) {
+      var imageSource = ImageSourceProvider.ImageSource;
+      if (isPaused) {
+        yield break;
+      }
+
+      if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
+        yield return new WaitForEndOfFrame();
+        yield break;
+      }
+
+      // Copy current image to TextureFrame
+      ReadFromImageSource(imageSource, textureFrame);
+      AddTextureFrameToInputStream(textureFrame);
+      if (waitEndOfFrame) {
+        yield return new WaitForEndOfFrame();
+      }
+
+      if (runningMode.IsSynchronous()) {
+        RenderCurrentFrame(textureFrame);
+        yield return WaitForNextValue();
+      }
+
+    }
   }
 }
