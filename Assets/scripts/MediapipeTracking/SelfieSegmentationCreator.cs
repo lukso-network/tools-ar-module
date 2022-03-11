@@ -31,9 +31,15 @@ namespace Mediapipe.Unity.SelfieSegmentation
       }
     }
 
+    protected override void WaitForNextValueSync() {
+      if (runningMode == RunningMode.Sync) {
+        var _ = graphRunner.TryGetNext(out var _, true);
+      }
+    }
+
     public override void Play() {
 
-      var startNormally = true;
+      var startNormally = false;
       if (startNormally) {
         base.Play();
       } else {

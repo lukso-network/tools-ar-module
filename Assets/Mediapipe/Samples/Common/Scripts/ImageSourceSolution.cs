@@ -116,6 +116,7 @@ namespace Mediapipe.Unity
     protected abstract void AddTextureFrameToInputStream(TextureFrame textureFrame);
 
     protected abstract IEnumerator WaitForNextValue();
+    protected virtual void WaitForNextValueSync() { }
     protected virtual void OnPrepared() { }
 
 
@@ -185,6 +186,7 @@ namespace Mediapipe.Unity
       ReadFromImageSource(imageSource, textureFrame);
       AddTextureFrameToInputStream(textureFrame);
       RenderCurrentFrame(textureFrame);
+      WaitForNextValueSync();
     }
   }
 }
