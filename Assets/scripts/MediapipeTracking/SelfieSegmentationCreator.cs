@@ -33,7 +33,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
 
     public override void Play() {
 
-      var startNormally = false;
+      var startNormally = true;
       if (startNormally) {
         base.Play();
       } else {
