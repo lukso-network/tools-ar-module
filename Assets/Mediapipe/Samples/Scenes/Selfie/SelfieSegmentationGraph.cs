@@ -44,12 +44,14 @@ namespace Mediapipe.Unity.SelfieSegmentation
       AddTextureFrameToInputStream(_InputStreamName, textureFrame);
     }
 
-    public bool TryGetNext(out ImageFrame SelfieMask, bool allowBlock = true) {
-      if (TryGetNext(_selfieMaskStream, out SelfieMask, allowBlock, GetCurrentTimestampMicrosec())) {
-        OnSelfieMaskOutput.Invoke(SelfieMask);
-        return true;
+    public ImageFrame TryGetNext(out ImageFrame selfieMask, bool allowBlock = true, bool notifyListener = true) {
+      if (TryGetNext(_selfieMaskStream, out selfieMask, allowBlock, GetCurrentTimestampMicrosec())) {
+        if (notifyListener) {
+          OnSelfieMaskOutput.Invoke(selfieMask);
+        }
+        return selfieMask;
       }
-      return false;
+      return null;
     }
 
     [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]

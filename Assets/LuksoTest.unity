@@ -1197,7 +1197,10 @@ MonoBehaviour:
   graphRunner: {fileID: 82176631}
   textureFramePool: {fileID: 82176633}
   runningMode: 2
-  _SelfieMaskAnnotationController: {fileID: 1401345059}
+  _selfieMaskAnnotationController: {fileID: 1401345059}
+  maskWidth: 256
+  maskHeight: 256
+  tempSelfieImage: {fileID: 1491910832}
 --- !u!114 &94906326 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6270109224637163471, guid: 32a5918b68dec0d42bc28ac0b057489f,
@@ -7824,7 +7827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1029208548
 Transform:
   m_ObjectHideFlags: 0
@@ -13058,6 +13061,7 @@ MonoBehaviour:
   clothCamera: {fileID: 974677400}
   selfieClothShader: {fileID: 4800000, guid: e633379d7a6018344ae56604684aa4d1, type: 3}
   poseManager: {fileID: 780931513}
+  selfieSegmentation: {fileID: 0}
   avatarManager: {fileID: 548813479}
   iouShader: {fileID: 7200000, guid: 7f4384993faa9444bbf2e8af00c978d7, type: 3}
   skeletonManager: {fileID: 2061862107}

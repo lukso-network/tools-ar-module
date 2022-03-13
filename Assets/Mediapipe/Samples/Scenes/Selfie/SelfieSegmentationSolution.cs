@@ -27,7 +27,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
       if (runningMode == RunningMode.Sync) {
         var _ = graphRunner.TryGetNext(out var _, true);
       } else if (runningMode == RunningMode.NonBlockingSync) {
-        yield return new WaitUntil(() => graphRunner.TryGetNext(out var _, false));
+        yield return new WaitUntil(() => graphRunner.TryGetNext(out var _, false) != null);
       }
     }
   }

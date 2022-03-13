@@ -6,17 +6,26 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Mediapipe.Unity.SelfieSegmentation
 {
   public class SelfieSegmentationCreator : ImageSourceSolution<SelfieSegmentationGraph>
   {
-    [SerializeField] private SelfieMaskAnnotationController _SelfieMaskAnnotationController;
+    [SerializeField] private SelfieMaskAnnotationController _selfieMaskAnnotationController;
+    [SerializeField] private int maskWidth = 256;
+    [SerializeField] private int maskHeight = 256;
+    [SerializeField] private RawImage tempSelfieImage;
+
+    private Texture2D maskTexture;
 
     protected override void OnStartRun() {
-      graphRunner.OnSelfieMaskOutput.AddListener(_SelfieMaskAnnotationController.DrawLater);
-      SetupAnnotationController(_SelfieMaskAnnotationController, ImageSourceProvider.ImageSource);
-      _SelfieMaskAnnotationController.InitScreen();
+
+      maskTexture = new Texture2D(maskWidth, maskHeight);
+      tempSelfieImage.texture = maskTexture;
+      graphRunner.OnSelfieMaskOutput.AddListener(_selfieMaskAnnotationController.DrawLater);
+      SetupAnnotationController(_selfieMaskAnnotationController, ImageSourceProvider.ImageSource);
+      _selfieMaskAnnotationController.InitScreen();
     }
 
     protected override void AddTextureFrameToInputStream(TextureFrame textureFrame) {
@@ -27,7 +36,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
       if (runningMode == RunningMode.Sync) {
         var _ = graphRunner.TryGetNext(out var _, true);
       } else if (runningMode == RunningMode.NonBlockingSync) {
-        yield return new WaitUntil(() => graphRunner.TryGetNext(out var _, false));
+        yield return new WaitUntil(() => graphRunner.TryGetNext(out var _, false) != null);
       }
     }
 
@@ -64,6 +73,8 @@ namespace Mediapipe.Unity.SelfieSegmentation
     
     public void CaptureSegmentation() {
       ProcessImageSync();
+
+     // CaptureSelfieToTexture();
       //StartCoroutine(CaptureSegmentationCoroutine());
     }
 
@@ -73,6 +84,27 @@ namespace Mediapipe.Unity.SelfieSegmentation
       //while (true) {
         //yield return ProcesImage(true);
       //}
+    }
+
+    public Texture2D CaptureSelfieToTexture() {
+      var imageSource = ImageSourceProvider.ImageSource;
+
+      if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
+        return null;
+      }
+
+      ReadFromImageSource(imageSource, textureFrame);
+      AddTextureFrameToInputStream(textureFrame);
+      RenderCurrentFrame(textureFrame);
+
+      var mask = graphRunner.TryGetNext(out var _, true, false);
+      if (mask != null) {
+        //maskTexture.LoadRawTextureData(mask.GetPixels32());
+        maskTexture.SetPixels32(mask.GetPixels32());
+      }
+
+      return null;
+
     }
   }
 }

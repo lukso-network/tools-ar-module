@@ -1,6 +1,8 @@
-﻿using Assets;
+using Assets;
 using DeepMotion.DMBTDemo;
 using Mediapipe;
+using Mediapipe.Unity;
+using Mediapipe.Unity.SelfieSegmentation;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -58,7 +60,8 @@ namespace Lukso
     [SerializeField] Camera clothCamera;
     [SerializeField] Shader selfieClothShader;
     [SerializeField] DMBTDemoManager poseManager;
-    [SerializeField] SelfieSegmentation selfieSegmentation;
+    //[SerializeField] SelfieSegmentation selfieSegmentation;
+    [SerializeField] SelfieSegmentationCreator selfieSegmentation;
     [SerializeField] AvatarManager avatarManager;
     [SerializeField] ComputeShader iouShader;
     [SerializeField] SkeletonManager skeletonManager;
@@ -66,23 +69,19 @@ namespace Lukso
     private ComputeBuffer iouBuffer;
     private int iouKernerlHandle;
 
-    private WebCamScreenController player;
-
     private ManualSizing manualSizing = new ManualSizing();
     private bool calculateionInProgres = false;
 
 
     // Use this for initialization
     void Start() {
-      player = FindObjectOfType<WebCamScreenController>();
       clothCamera.SetReplacementShader(selfieClothShader, null);
       poseManager.newPoseEvent += UpdateSegmentation;
 
       //clothCamera.enabled = false;
 
-
       InitComputeShader();
-      selfieSegmentation.SetClothTexture(clothCamera.targetTexture);
+      SetClothTexture(clothCamera.targetTexture);
     }
 
     private void InitComputeShader() {
@@ -91,10 +90,13 @@ namespace Lukso
       iouShader.SetBuffer(iouKernerlHandle, "sum_buffer", iouBuffer);
     }
 
+    private void SetClothTexture(Texture texture) {
+      //selfieSegmentation.SetClothTexture(texture);
+    }
 
     private void UpdateSegmentation(bool hasSkeleton) {
       //TODO debugging - called on every pose event
-      selfieSegmentation.CaptureSegmentation(poseManager.GetLastFrame());
+      //selfieSegmentation.CaptureSegmentation(poseManager.GetLastFrame());
     }
 
     void Update() {
@@ -168,8 +170,10 @@ namespace Lukso
 
 
       calculateionInProgres = true;
-      var isPaused = player.isPaused;
-      player.isPaused = true;
+      var imageSource = ImageSourceProvider.ImageSource;
+
+      var isPaused = !imageSource.isPlaying;
+      imageSource.Pause();
       poseManager.PauseProcessing(true);
 
       avatarManager.SetSkinRecalulation(true);
@@ -183,7 +187,7 @@ namespace Lukso
       InitClothCamera(); //yield return new WaitForEndOfFrame(); // use at the same time
 
 
-      var mask = selfieSegmentation.CaptureSegmentation(poseManager.GetLastFrame());
+      var mask = selfieSegmentation.CaptureSelfieToTexture();
 
 
       var avatar = skeletonManager.GetClothController();
@@ -196,7 +200,7 @@ namespace Lukso
         clothCamera.Render();
         // RenderTexture.active = old;
 
-        selfieSegmentation.SetClothTexture(clothCamera.targetTexture);
+        SetClothTexture(clothCamera.targetTexture);
 
         // minus as we find maximum ior
         var ior = CalculateIOR(mask, clothCamera.targetTexture);
@@ -204,9 +208,11 @@ namespace Lukso
         return -ior;
       });
 
-      yield return new WaitForSeconds(1);
+      //yield return new WaitForSeconds(1);
       poseManager.PauseProcessing(false);
-      player.isPaused = isPaused;
+      if (!isPaused) {
+        imageSource.Resume();
+      }
       avatarManager.SetSkinRecalulation(false);
       calculateionInProgres = false;
     }
@@ -214,6 +220,8 @@ namespace Lukso
     private void InitClothCamera() {
       var mc = Camera.main;
       clothCamera.transform.position = mc.transform.position;
+      
+      /*
       var s = player.transform.lossyScale * 10;
       var p = player.transform.position;
       var d = p.z - clothCamera.transform.position.z;
@@ -221,6 +229,7 @@ namespace Lukso
       var aspect = s.x / s.z;
       clothCamera.aspect = aspect;
       clothCamera.fieldOfView = fov;
+      */
     }
 
 
