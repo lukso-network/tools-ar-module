@@ -1,4 +1,4 @@
-using Assets;
+﻿using Assets;
 using DeepMotion.DMBTDemo;
 using Mediapipe;
 using System;
@@ -13,8 +13,6 @@ namespace Lukso
         private GameObject selected;
         private GameObject duplicate;
 
-        [SerializeField] private Camera screenCamera; 
-
 
         public void ProcessUI() {
             if (Input.GetMouseButtonDown(0)) {
@@ -22,7 +20,7 @@ namespace Lukso
                 if (selected == null) {
 
                     RaycastHit hit;
-                    Ray ray = screenCamera.ScreenPointToRay(Input.mousePosition);
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
                     if (Physics.Raycast(ray, out hit, LayerMask.NameToLayer("joint"))) {
                         Transform objectHit = hit.transform;
@@ -59,10 +57,259 @@ namespace Lukso
         [SerializeField] Camera clothCamera;
         [SerializeField] Shader selfieClothShader;
         [SerializeField] DMBTDemoManager poseManager;
-   //     [SerializeField] SelfieSegmentation selfieSegmentation;
+        [SerializeField] SelfieSegmentation selfieSegmentation;
         [SerializeField] AvatarManager avatarManager;
         [SerializeField] ComputeShader iouShader;
         [SerializeField] SkeletonManager skeletonManager;
+
+        private ComputeBuffer iouBuffer;
+        private int iouKernerlHandle;
+
+        private WebCamScreenController player;
+
+        private ManualSizing manualSizing = new ManualSizing();
+        private bool calculateionInProgres = false;
+
+
+        // Use this for initialization
+        void Start() {
+            player = FindObjectOfType<WebCamScreenController>();
+            clothCamera.SetReplacementShader(selfieClothShader, null);
+            poseManager.newPoseEvent += UpdateSegmentation;
+
+            //clothCamera.enabled = false;
+
+
+            InitComputeShader();
+            selfieSegmentation.SetClothTexture(clothCamera.targetTexture);
+        }
+
+        private void InitComputeShader() {
+            iouBuffer = new ComputeBuffer(4, sizeof(uint));
+            iouKernerlHandle = iouShader.FindKernel("IOU");
+            iouShader.SetBuffer(iouKernerlHandle, "sum_buffer", iouBuffer);
+        }
+
+
+        private void UpdateSegmentation(bool hasSkeleton) {
+            //TODO debugging - called on every pose event
+            selfieSegmentation.CaptureSegmentation(poseManager.GetLastFrame());
+        }
+
+        void Update() {
+            //TODO for debug only
+            //    UpdateCamera();
+            //    clothCamera.Render();
+            manualSizing.ProcessUI();
+
+
+            //TODO Debug
+
+
+            //i//f (Time.frameCount < 200) {
+               // InitClothCamera();
+            //}
+            InitClothCamera();
+            //clothCamera.Render();
+
+            // UpdateCamera();
+        }
+
+      /*  private void UpdateCamera() {
+            var mc = Camera.main;
+
+            clothCamera.transform.position = mc.transform.position;
+            clothCamera.fieldOfView = mc.fieldOfView;
+
+         //   CalculateIOR(selfieSegmentation.GetMask(), clothCamera.targetTexture); 
+        }*/
+
+       // private void PlayVideo(bool play) {
+            //player.isPaused = !play;
+        //    poseManager.PauseProcessing(!play);
+       // }
+
+        public void ResetSize() {
+            skeletonManager.GetClothController().ResetClothSize();
+        }
+
+        public void CalculateSize() {
+            if (calculateionInProgres) {
+                calculateionInProgres = false;
+                return;
+            }
+
+
+            // 1 Pause video
+            // 2 get mask
+            // 3 draw outfit
+            // 4 compare mask
+            // 5 tune parameters
+            // 6 Goto 3
+            // 7 Resume video
+
+              //StartCoroutine(CalculateSizeCoroutine());
+            //
+
+            StartCoroutine(FindBestSize());
+        }
+
+        private IEnumerator FindBestSize() {
+
+            /*
+            for(int k = 0; k < 200; ++k) {
+                var a = skeletonManager.GetClothController();
+                a.DebugChange();
+                yield return new WaitForEndOfFrame();
+            }
+            yield break;
+            */
+            
+
+            calculateionInProgres = true;
+            var isPaused = player.isPaused;
+            player.isPaused = true;
+            poseManager.PauseProcessing(true);
+
+            avatarManager.SetSkinRecalulation(true);
+
+
+            //!!! Very strange problem
+            // if InitClothCamera is used then /yield return new WaitForEndOfFrame(); should be used too
+            // in the other case if can give an incorrect calculations
+            
+            
+            InitClothCamera(); //yield return new WaitForEndOfFrame(); // use at the same time
+
+
+            var mask = selfieSegmentation.CaptureSegmentation(poseManager.GetLastFrame());
+
+
+            var avatar = skeletonManager.GetClothController();
+            
+            yield return avatar.FindBestCloth(() => {
+                avatar.ApplyClothShift(true);
+                avatarManager.UpdateSkeleton(true);
+               // var old = clothCamera.targetTexture;
+               // RenderTexture.active = clothCamera.targetTexture;
+                clothCamera.Render();
+               // RenderTexture.active = old;
+
+                selfieSegmentation.SetClothTexture(clothCamera.targetTexture);
+
+                // minus as we find maximum ior
+                var ior = CalculateIOR(mask, clothCamera.targetTexture);
+                //Debug.Log("Ior:" + ior);
+                return -ior;
+            });
+         
+            yield return new WaitForSeconds(1);
+            poseManager.PauseProcessing(false);
+            player.isPaused = isPaused;
+            avatarManager.SetSkinRecalulation(false);
+            calculateionInProgres = false;
+        }
+
+        private void InitClothCamera() {
+            var mc = Camera.main;
+            clothCamera.transform.position = mc.transform.position;
+            var s = player.transform.lossyScale * 10;
+            var p = player.transform.position;
+            var d = p.z - clothCamera.transform.position.z;
+            var fov = Mathf.Rad2Deg * (Mathf.Atan(s.z / d/2))*2;
+            var aspect = s.x / s.z;
+            clothCamera.aspect = aspect;
+            clothCamera.fieldOfView = fov;
+        }
+
+
+        private float CalculateIOR(Texture mask, RenderTexture targetTexture) {
+            /*
+            var old = RenderTexture.active;
+            RenderTexture.active = (RenderTexture)mask;
+
+
+            Texture2D tex0 = new Texture2D(targetTexture.width, targetTexture.height);
+            tex0.ReadPixels(new UnityEngine.Rect(0, 0, tex0.width, tex0.height), 0, 0);
+            tex0.Apply();
+            var colors1 = tex0.GetPixels32();
+
+            RenderTexture.active = targetTexture;
+
+
+            Texture2D tex = new Texture2D(targetTexture.width, targetTexture.height);
+            tex.ReadPixels(new UnityEngine.Rect(0, 0, tex.width, tex.height), 0, 0);
+            var colors2 = tex.GetPixels32();
+            tex.Apply();
+
+            RenderTexture.active = old;
+
+            int count1 = 0;
+            int count2 = 0;
+            int countOr = 0;
+            int countAnd = 0;
+            var s = new float[4];
+            for (int y = 0; y < 144; ++y) {
+                for (int x = 0; x < 256; ++x) {
+                    var c1 = tex0.GetPixel(255-x, y);
+                    var c2 = tex.GetPixel(x, y);
+
+                    var b1 = c1.r >= 0.5f;
+                    var b2 = c2.r > 0;
+
+                    s[(b2 ? 2 : 0) + (b1 ? 1 : 0)] += 1;
+                    if (b1) {
+                        count1 += 1;
+                    }
+
+                    if (b2) {
+                        count2 += 1;
+                    }
+
+                    if (b1 && b2) {
+                        countAnd++;
+                    }
+
+                    if (b1 || b2) {
+                        countOr++;
+                    }
+
+                }
+            }
+
+
+            //Debug.Log("CPU:" + countAnd + " " + countOr + " " + (countAnd / (countOr + 0.01f))+" val:" + count1 + " " + count2 + " " );
+            Debug.Log("CPU:" + (countAnd / (countOr + 0.01f)) + " " + s[0] + " " + s[1] + " " + s[2] + " " + s[3] + " "  );
+            */
+            
+
+            var data = new uint[4];
+            iouBuffer.SetData(data);
+            iouShader.SetTexture(iouKernerlHandle, "image", mask);
+            iouShader.SetTexture(iouKernerlHandle, "image2", targetTexture);
+
+
+            //TODO
+            int w = 256;
+            int h = 144;
+            iouShader.Dispatch(iouKernerlHandle, w / 8, h / 8, 1);
+
+            iouBuffer.GetData(data);
+
+            uint and = data[3];
+            uint onTexture = data[2];
+            uint onMask = data[1];
+
+            float ior = and / (and + onTexture*skeletonManager.ikSettings.clothPenalty + onMask + 0.001f);
+
+           // Debug.Log("Shader:"+ior + " " + data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
+
+            // Debug.Log("Shader:" + ior + " def:" + and / (and + onTexture + onMask + 0.001f));
+            //float ior = data[0] / (float)(data[1] + 0.01f);
+            //Debug.Log("Shader:"+data[0] + " " + data[1] + " " + ior + " val: " + data[2] + " " + data[3]);
+            return ior;
+        }
+
 
     }
 }
