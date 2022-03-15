@@ -1,4 +1,5 @@
 using Assets.PoseEstimator;
+using Assets.scripts.Api;
 using Assets.scripts.Avatar;
 using DeepMotion.DMBTDemo;
 using Lukso;
@@ -25,8 +26,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
 
   [SerializeField] private Camera screenCamera;
-  [SerializeField] private Solution solution;
   [SerializeField] private SelfieSegmentationCreator segmentation;
+  [SerializeField] private ApiManager apiManager;
 
 
 
@@ -39,13 +40,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
       if (ImageSourceProvider.ImageSource.sourceName == value) {
         return; // No change.
       }
-
       var sources = CameraSource;
       int idx = Array.IndexOf(sources, value);
-      if (idx >= 0) {
-        ImageSourceProvider.ImageSource.SelectSource(idx);
-        solution.Play();
-      }
+      apiManager.SelectCamera("" + idx);
 
       OnPropertyChanged("SelectedCamera");
     }

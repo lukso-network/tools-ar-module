@@ -1112,7 +1112,7 @@ GameObject:
   - component: {fileID: 82176631}
   - component: {fileID: 82176635}
   m_Layer: 0
-  m_Name: Solution (1)
+  m_Name: SegmentationCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1179,7 +1179,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &82176635
 MonoBehaviour:
@@ -1888,6 +1888,7 @@ MonoBehaviour:
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
   _skeletonWorldLandmarksAnnotationController: {fileID: 1936307555}
   _roiFromLandmarksAnnotationController: {fileID: 1889892133}
+  selfieCreator: {fileID: 82176635}
 --- !u!114 &188083188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2919,8 +2920,8 @@ MonoBehaviour:
   avatarManager: {fileID: 548813479}
   sizeManager: {fileID: 1755837388}
   screenCamera: {fileID: 985747844}
-  solution: {fileID: 188083187}
   segmentation: {fileID: 82176635}
+  apiManager: {fileID: 458808354}
 --- !u!1 &273507914
 GameObject:
   m_ObjectHideFlags: 0
@@ -4000,7 +4001,7 @@ MonoBehaviour:
   avatarManager: {fileID: 548813479}
   canvasController: {fileID: 271437893}
   sizeManager: {fileID: 1755837388}
-  solution: {fileID: 0}
+  solution: {fileID: 188083187}
 --- !u!1 &475013384
 GameObject:
   m_ObjectHideFlags: 0
@@ -12188,7 +12189,7 @@ RectTransform:
   - {fileID: 1615732980}
   - {fileID: 1123101825}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -12433,7 +12434,7 @@ Transform:
   - {fileID: 1357560975}
   - {fileID: 1158763520}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1661079079
 PrefabInstance:
@@ -15287,7 +15288,7 @@ Transform:
   - {fileID: 622281478}
   - {fileID: 16752264}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2050340280
 GameObject:

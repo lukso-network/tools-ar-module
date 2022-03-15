@@ -4,6 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using Mediapipe.Unity.SelfieSegmentation;
 using System.Collections;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Mediapipe.Unity.SkeletonTracking
     [SerializeField] private PoseLandmarkListAnnotationController _skeletonLandmarksAnnotationController;
     [SerializeField] private PoseWorldLandmarkListAnnotationController _skeletonWorldLandmarksAnnotationController;
     [SerializeField] private NormalizedRectAnnotationController _roiFromLandmarksAnnotationController;
+    [SerializeField] private SelfieSegmentationCreator selfieCreator;
 
 
     public SkeletonTrackingGraph.ModelComplexity modelComplexity
@@ -28,6 +30,11 @@ namespace Mediapipe.Unity.SkeletonTracking
     {
       get => graphRunner.smoothLandmarks;
       set => graphRunner.smoothLandmarks = value;
+    }
+
+    public override void Play() {
+      base.Play();
+      selfieCreator.Play();
     }
 
     protected override void SetupScreen(ImageSource imageSource)

@@ -119,8 +119,8 @@ namespace Lukso
 
       // UpdateCamera();
 
-      var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
-      Debug.Log(v);
+     // var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
+    //  Debug.Log(v);
     }
 
     /*  private void UpdateCamera() {
@@ -242,6 +242,9 @@ namespace Lukso
 
 
     private float CalculateIOR(Texture mask, RenderTexture targetTexture) {
+      if (mask == null || targetTexture == null) {
+        return 0;
+      }
       /*
       var old = RenderTexture.active;
       RenderTexture.active = (RenderTexture)mask;
