@@ -56,7 +56,7 @@ namespace Lukso
 
   public class SizeManager : MonoBehaviour
   {
-
+     
     [SerializeField] Camera clothCamera;
     [SerializeField] Shader selfieClothShader;
     [SerializeField] DMBTDemoManager poseManager;
@@ -65,6 +65,8 @@ namespace Lukso
     [SerializeField] AvatarManager avatarManager;
     [SerializeField] ComputeShader iouShader;
     [SerializeField] SkeletonManager skeletonManager;
+    [SerializeField] private GameObject screenPlane;
+    [SerializeField] private Camera skeletonCamera;
 
     private ComputeBuffer iouBuffer;
     private int iouKernerlHandle;
@@ -103,7 +105,7 @@ namespace Lukso
       //TODO for debug only
       //    UpdateCamera();
       //    clothCamera.Render();
-      manualSizing.ProcessUI();
+     // manualSizing.ProcessUI();
 
 
       //TODO Debug
@@ -116,6 +118,9 @@ namespace Lukso
       //clothCamera.Render();
 
       // UpdateCamera();
+
+      var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
+      Debug.Log(v);
     }
 
     /*  private void UpdateCamera() {
@@ -167,7 +172,10 @@ namespace Lukso
       }
       yield break;
       */
-
+      var mask = selfieSegmentation.CaptureSelfieToTexture();
+      if (mask == null) {
+        yield break;
+      }
 
       calculateionInProgres = true;
       var imageSource = ImageSourceProvider.ImageSource;
@@ -187,7 +195,7 @@ namespace Lukso
       InitClothCamera(); //yield return new WaitForEndOfFrame(); // use at the same time
 
 
-      var mask = selfieSegmentation.CaptureSelfieToTexture();
+      
 
 
       var avatar = skeletonManager.GetClothController();
@@ -204,32 +212,32 @@ namespace Lukso
 
         // minus as we find maximum ior
         var ior = CalculateIOR(mask, clothCamera.targetTexture);
-        //Debug.Log("Ior:" + ior);
+        Debug.Log("Ior:" + ior);
         return -ior;
       });
 
       //yield return new WaitForSeconds(1);
       poseManager.PauseProcessing(false);
       if (!isPaused) {
-        imageSource.Resume();
+        StartCoroutine(imageSource.Resume());
       }
       avatarManager.SetSkinRecalulation(false);
       calculateionInProgres = false;
     }
 
     private void InitClothCamera() {
-      var mc = Camera.main;
+      var mc = skeletonCamera;
       clothCamera.transform.position = mc.transform.position;
       
-      /*
-      var s = player.transform.lossyScale * 10;
-      var p = player.transform.position;
+      
+      var s = screenPlane.transform.lossyScale;
+      var p = screenPlane.transform.position;
       var d = p.z - clothCamera.transform.position.z;
-      var fov = Mathf.Rad2Deg * (Mathf.Atan(s.z / d / 2)) * 2;
-      var aspect = s.x / s.z;
+      var fov = Mathf.Rad2Deg * (Mathf.Atan(s.y / d / 2)) * 2;
+      var aspect = s.x / s.y;
       clothCamera.aspect = aspect;
       clothCamera.fieldOfView = fov;
-      */
+      
     }
 
 

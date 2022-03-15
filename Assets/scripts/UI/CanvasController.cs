@@ -89,7 +89,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
   [Binding]
   public void ResetClothSize() {
-    //TODOLK    sizeManager.ResetSize();
+      sizeManager.ResetSize();
   }
 
   [Binding]

@@ -100,7 +100,6 @@ namespace Mediapipe.Unity.SelfieSegmentation
 
       ReadFromImageSource(imageSource, textureFrame);
       AddTextureFrameToInputStream(textureFrame);
-      RenderCurrentFrame(textureFrame);
 
       var mask = graphRunner.TryGetNext(out var _, true, false);
       if (mask != null) {
@@ -108,10 +107,15 @@ namespace Mediapipe.Unity.SelfieSegmentation
         //maskTexture.SetPixels32(mask.GetPixels32());
 
         ConvertMask(mask);
+        return maskTexture;
       }
 
       return null;
 
+    }
+
+    public Texture2D GetLastMask() {
+      return maskTexture;
     }
 
     private void ConvertMask(ImageFrame mask) {
@@ -130,16 +134,11 @@ namespace Mediapipe.Unity.SelfieSegmentation
             var p2 = ptr;
             for (var i = 0; i < count; ++i) {
               byte v = (byte)(*p2 * 255);
-              /**p1++ = 255;
-              *p1++ = 255;
+              *p1++ = v;
+              *p1++ = v;
               *p1++ = v;
               *p1++ = 255;
-              **/
-              p1[0] = v;
-              p1[1] = v;
-              p1[2] = v;
-              p1[3] = 255;
-              p1 += 4;
+              
               ++p2;
             }
           }
@@ -149,8 +148,6 @@ namespace Mediapipe.Unity.SelfieSegmentation
       maskTexture.LoadRawTextureData(maskRGBA);
       maskTexture.Apply();
       tempSelfieImage.texture = maskTexture;
-
-
     }
   }
 }

@@ -69,7 +69,7 @@ namespace Assets.scripts.Api
         }
 
         public async void CalculateSize() {
- //TODOLK           sizeManager.CalculateSize();
+            sizeManager.CalculateSize();
         }
 
         private bool ToBool(string boolStr) {
