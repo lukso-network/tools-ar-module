@@ -116,9 +116,12 @@ namespace Mediapipe.Unity.SkeletonTracking
         n.Z = skeletonWorldLandmarks.Landmark[i].Z;
         tempList.Landmark.Add(n);
       }*/
-      
 
-      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), !ImageSourceProvider.ImageSource.isHorizontallyFlipped, null);
+      //TODO check on different phones
+      var imageSource = ImageSourceProvider.ImageSource;
+      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
+
+      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), mirrored, null);
       return r1 || r2 || r3 || r4;
     }
 

@@ -32,11 +32,6 @@ namespace Mediapipe.Unity.SkeletonTracking
       set => graphRunner.smoothLandmarks = value;
     }
 
-    public override void Play() {
-      base.Play();
-      selfieCreator.Play();
-    }
-
     protected override void SetupScreen(ImageSource imageSource)
     {
       base.SetupScreen(imageSource);
@@ -55,6 +50,11 @@ namespace Mediapipe.Unity.SkeletonTracking
       SetupAnnotationController(_skeletonLandmarksAnnotationController, imageSource);
       SetupAnnotationController(_skeletonWorldLandmarksAnnotationController, imageSource);
       SetupAnnotationController(_roiFromLandmarksAnnotationController, imageSource);
+    }
+
+    internal void StartTracking() {
+      base.Play();
+      selfieCreator.Play();
     }
 
     protected override void AddTextureFrameToInputStream(TextureFrame textureFrame)

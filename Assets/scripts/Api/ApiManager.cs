@@ -1,5 +1,6 @@
 using Lukso;
 using Mediapipe.Unity;
+using Mediapipe.Unity.SkeletonTracking;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Assets.scripts.Api
         public CanvasController canvasController;
      //TODOLK   public SceneDirector sceneDirector;
         public SizeManager sizeManager;
-        [SerializeField] private Solution solution;
+        [SerializeField] private SkeletonTrackingSolution solution;
     // Use this for initialization
     void Start() {
 
@@ -56,7 +57,7 @@ namespace Assets.scripts.Api
           }
 
           ImageSourceProvider.ImageSource.SelectSource(camIdx);
-          solution.Play();
+          solution.StartTracking();
       }
 
 

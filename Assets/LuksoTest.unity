@@ -1888,7 +1888,7 @@ MonoBehaviour:
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
   _skeletonWorldLandmarksAnnotationController: {fileID: 1936307555}
   _roiFromLandmarksAnnotationController: {fileID: 1889892133}
-  selfieCreator: {fileID: 0}
+  selfieCreator: {fileID: 82176635}
 --- !u!114 &188083188
 MonoBehaviour:
   m_ObjectHideFlags: 0
