@@ -59,6 +59,7 @@ namespace Lukso
      
     [SerializeField] Camera clothCamera;
     [SerializeField] Shader selfieClothShader;
+    [SerializeField] Shader maskShader;
     [SerializeField] DMBTDemoManager poseManager;
     //[SerializeField] SelfieSegmentation selfieSegmentation;
     [SerializeField] SelfieSegmentationCreator selfieSegmentation;
@@ -67,23 +68,32 @@ namespace Lukso
     [SerializeField] SkeletonManager skeletonManager;
     [SerializeField] private GameObject screenPlane;
     [SerializeField] private Camera skeletonCamera;
+    [SerializeField] UnityEngine.UI.RawImage outputUI = null;
 
     private ComputeBuffer iouBuffer;
     private int iouKernerlHandle;
 
     private ManualSizing manualSizing = new ManualSizing();
     private bool calculateionInProgres = false;
-
+    private Material maskMaterial;
+    private RenderTexture renderedMask;
 
     // Use this for initialization
     void Start() {
       clothCamera.SetReplacementShader(selfieClothShader, null);
       poseManager.newPoseEvent += UpdateSegmentation;
+      maskMaterial = new Material(maskShader);
+      renderedMask = new RenderTexture(256, 256, 16);
 
       //clothCamera.enabled = false;
 
       InitComputeShader();
       SetClothTexture(clothCamera.targetTexture);
+    }
+
+    void OnDestroy() {
+      Destroy(maskMaterial);
+      Destroy(renderedMask);
     }
 
     private void InitComputeShader() {
@@ -119,8 +129,25 @@ namespace Lukso
 
       // UpdateCamera();
 
-     // var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
-    //  Debug.Log(v);
+      // var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
+      //  Debug.Log(v);
+
+      CaptureSegmentation();
+
+    }
+
+    private void CaptureSegmentation() {
+      var mask = selfieSegmentation.CaptureSelfieToTexture();
+      if (mask == null) {
+        return;
+      }
+
+      clothCamera.Render();
+      maskMaterial.SetTexture("_MaskTexture", mask);
+      maskMaterial.SetTexture("_ClothTexture", clothCamera.targetTexture);
+      Graphics.Blit(null, renderedMask, maskMaterial);
+      //Graphics.Blit(null, null, maskMaterial);
+      outputUI.texture = renderedMask;
     }
 
     /*  private void UpdateCamera() {
@@ -312,7 +339,7 @@ namespace Lukso
 
       //TODO
       int w = 256;
-      int h = 144;
+      int h = 256;
       iouShader.Dispatch(iouKernerlHandle, w / 8, h / 8, 1);
 
       iouBuffer.GetData(data);

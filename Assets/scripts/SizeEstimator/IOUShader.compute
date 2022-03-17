@@ -13,7 +13,7 @@ void IOU (uint3 id : SV_DispatchThreadID)
 {
     //TODO
     float u = id.x / 256.0;
-    float v = id.y / 144.0;
+    float v = id.y / 256.0;
     float2 uv = float2 (1-u, 1-v);
     float2 uv2 = float2 (u, v);
 

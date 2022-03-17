@@ -1200,7 +1200,6 @@ MonoBehaviour:
   _selfieMaskAnnotationController: {fileID: 1401345059}
   maskWidth: 256
   maskHeight: 256
-  tempSelfieImage: {fileID: 1491910832}
 --- !u!114 &94906326 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6270109224637163471, guid: 32a5918b68dec0d42bc28ac0b057489f,
@@ -11261,10 +11260,10 @@ MonoBehaviour:
   m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
-    x: 1
+    x: 0
     y: 0
-    width: -1
-    height: -1
+    width: 1
+    height: 1
 --- !u!114 &1491910833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13060,6 +13059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clothCamera: {fileID: 974677400}
   selfieClothShader: {fileID: 4800000, guid: e633379d7a6018344ae56604684aa4d1, type: 3}
+  maskShader: {fileID: 4800000, guid: bad23ee2d6137c64499834e0a9745e6c, type: 3}
   poseManager: {fileID: 780931513}
   selfieSegmentation: {fileID: 82176635}
   avatarManager: {fileID: 548813479}
@@ -13067,6 +13067,7 @@ MonoBehaviour:
   skeletonManager: {fileID: 2061862107}
   screenPlane: {fileID: 114348006}
   skeletonCamera: {fileID: 985747844}
+  outputUI: {fileID: 1491910832}
 --- !u!1 &1770147786
 GameObject:
   m_ObjectHideFlags: 0
@@ -14775,7 +14776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2028575068
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14792,7 +14793,7 @@ RectTransform:
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}

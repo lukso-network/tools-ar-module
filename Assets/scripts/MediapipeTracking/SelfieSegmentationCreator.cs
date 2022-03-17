@@ -15,15 +15,14 @@ namespace Mediapipe.Unity.SelfieSegmentation
     [SerializeField] private SelfieMaskAnnotationController _selfieMaskAnnotationController;
     [SerializeField] private int maskWidth = 256;
     [SerializeField] private int maskHeight = 256;
-    [SerializeField] private RawImage tempSelfieImage;
-
+    
     private Texture2D maskTexture;
     private byte[] maskRGBA;
+    private bool initied;
 
     protected override void OnStartRun() {
 
       maskTexture = new Texture2D(maskWidth, maskHeight, TextureFormat.RGBA32, false);
-      tempSelfieImage.texture = maskTexture;
       maskRGBA = new byte[maskHeight * maskWidth*4];
 
       graphRunner.OnSelfieMaskOutput.AddListener(_selfieMaskAnnotationController.DrawLater);
@@ -65,10 +64,11 @@ namespace Mediapipe.Unity.SelfieSegmentation
 
     protected override void OnPrepared() {
       _coroutine = StartCoroutine(Test());
+      initied = true;
     }
 
     private IEnumerator Test() { 
-      //yield break;
+      yield break;
       while (true) {
         CaptureSelfieToTexture();
         yield return new WaitForEndOfFrame();
@@ -92,6 +92,9 @@ namespace Mediapipe.Unity.SelfieSegmentation
     }
 
     public Texture2D CaptureSelfieToTexture() {
+      if (!initied) {
+        return null;
+      }
       var imageSource = ImageSourceProvider.ImageSource;
 
       if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
@@ -147,7 +150,6 @@ namespace Mediapipe.Unity.SelfieSegmentation
       }
       maskTexture.LoadRawTextureData(maskRGBA);
       maskTexture.Apply();
-      tempSelfieImage.texture = maskTexture;
     }
   }
 }
