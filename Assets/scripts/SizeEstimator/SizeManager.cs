@@ -129,8 +129,8 @@ namespace Lukso
 
       // UpdateCamera();
 
-      // var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
-      //  Debug.Log(v);
+      var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
+      Debug.Log(v);
 
       CaptureSegmentation();
 

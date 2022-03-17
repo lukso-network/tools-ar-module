@@ -85,8 +85,10 @@ namespace Mediapipe.Unity.SelfieSegmentation
 
       SetImageTransformationOptions(sidePacket, imageSource);
       var outputRotation = imageSource.isHorizontallyFlipped ? imageSource.rotation.Reverse() : imageSource.rotation;
-      sidePacket.Emplace("output_rotation", new IntPacket((int)outputRotation));
-
+      sidePacket.Emplace("output_rotation", new IntPacket(180));
+   //   sidePacket.Emplace("input_rotation", new IntPacket((int)outputRotation));
+     // sidePacket.Emplace("input_horizontally_flipped", new BoolPacket(false));
+      //sidePacket.Emplace("input_vertically_flipped", new BoolPacket(false));
       return sidePacket;
     }
   }
