@@ -209,6 +209,8 @@ namespace Mediapipe.Unity.SkeletonTracking
     {
       return new List<WaitForResult> {
         WaitForAsset("pose_detection.bytes"),
+        WaitForAsset("face_landmark.bytes"),
+        WaitForAsset("face_detection_short_range.bytes"),
         WaitForSkeletonLandmarkModel(),
       };
     }

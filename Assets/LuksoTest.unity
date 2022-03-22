@@ -1901,10 +1901,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cpuConfig: {fileID: 4900000, guid: 543ef0a186cae534c9a957bef418bd20, type: 3}
-  _gpuConfig: {fileID: 4900000, guid: f623c2a90b4a09c4bad69916ff3c8c80, type: 3}
-  _openGlEsConfig: {fileID: 4900000, guid: ea3bab6201d9889459bff73f7afdfe3c, type: 3}
+  _gpuConfig: {fileID: 0}
+  _openGlEsConfig: {fileID: 4900000, guid: e61127ee3a7d34b439336a84201c83ef, type: 3}
   _timeoutMicrosec: 50000
-  modelComplexity: 1
+  modelComplexity: 0
   smoothLandmarks: 1
   OnSkeletonDetectionOutput:
     m_PersistentCalls:
