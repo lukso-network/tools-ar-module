@@ -36,11 +36,21 @@ namespace Mediapipe.Unity.SkeletonTracking
     [SerializeField] private Transform screenPlane;
     [SerializeField] private Camera3DController cameraController;
 
+
+    //private const string poseLandmarksStream = "pose_landmarks";
+   // private const string poseDetectionStream = "pose_detection";
+  ///  private const string faceLandmarksStream = "face_landmarks";
+   // private const string poseLandmarksPresenceStream = "pose_landmarks_presence";
+  //  private const string faceLandmarksPresenceStream = "face_landmarks_presence";
+   // private const string poseDetectionPresenceStream = "pose_detection_presence";
+
+
+
     private const string _InputStreamName = "input_video";
-    private const string _SkeletonDetectionStreamName = "skeleton_detection";
-    private const string _SkeletonLandmarksStreamName = "skeleton_landmarks";
-    private const string _SkeletonWorldLandmarksStreamName = "skeleton_world_landmarks";
-    private const string _RoiFromLandmarksStreamName = "roi_from_landmarks";
+    private const string poseDetectionStream = "pose_detection";
+    private const string poseLandmarksStream = "pose_landmarks";
+  //  private const string _SkeletonWorldLandmarksStreamName1 = "skeleton_world_landmarks";
+   // private const string _RoiFromLandmarksStreamName = "roi_from_landmarks";
     
     private ImageSource imageSource;
     
@@ -48,7 +58,7 @@ namespace Mediapipe.Unity.SkeletonTracking
     private OutputStream<DetectionPacket, Detection> _skeletonDetectionStream;
     private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _skeletonLandmarksStream;
     private OutputStream<LandmarkListPacket, LandmarkList> _skeletonWorldLandmarksStream;
-    private OutputStream<NormalizedRectPacket, NormalizedRect> _roiFromLandmarksStream;
+   // private OutputStream<NormalizedRectPacket, NormalizedRect> _roiFromLandmarksStream;
 
     public override void StartRun(ImageSource imageSource)
     {
@@ -57,15 +67,15 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         _skeletonDetectionStream.StartPolling().AssertOk();
         _skeletonLandmarksStream.StartPolling().AssertOk();
-        _skeletonWorldLandmarksStream.StartPolling().AssertOk();
-        _roiFromLandmarksStream.StartPolling().AssertOk();
+       // _skeletonWorldLandmarksStream.StartPolling().AssertOk();
+      //  _roiFromLandmarksStream.StartPolling().AssertOk();
       }
       else
       {
         _skeletonDetectionStream.AddListener(SkeletonDetectionCallback).AssertOk();
         _skeletonLandmarksStream.AddListener(SkeletonLandmarksCallback).AssertOk();
-        _skeletonWorldLandmarksStream.AddListener(SkeletonWorldLandmarksCallback).AssertOk();
-        _roiFromLandmarksStream.AddListener(RoiFromLandmarksCallback).AssertOk();
+     //   _skeletonWorldLandmarksStream.AddListener(SkeletonWorldLandmarksCallback).AssertOk();
+       // _roiFromLandmarksStream.AddListener(RoiFromLandmarksCallback).AssertOk();
       }
       StartRun(BuildSidePacket(imageSource));
     }
@@ -80,7 +90,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       _skeletonDetectionStream = null;
       _skeletonLandmarksStream = null;
       _skeletonWorldLandmarksStream = null;
-      _roiFromLandmarksStream = null;
+     // _roiFromLandmarksStream = null;
     }
 
     public void AddTextureFrameToInputStream(TextureFrame textureFrame)
@@ -100,13 +110,21 @@ namespace Mediapipe.Unity.SkeletonTracking
       var currentTimestampMicrosec = GetCurrentTimestampMicrosec();
       var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
       var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
-      var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
-      var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
+      // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
+      // var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
+
+
+      skeletonWorldLandmarks = null;
+      roiFromLandmarks = null;
+
+      if (skeletonLandmarks == null) {
+        return false;
+      }
 
       if (r1) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
       if (r2) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
-      if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
-      if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
+    //  if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
+    //  if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
       /*
       var tempList = new NormalizedLandmarkList();
       for(int i = 0; i < skeletonWorldLandmarks.Landmark.Count; ++i) {
@@ -117,12 +135,14 @@ namespace Mediapipe.Unity.SkeletonTracking
         tempList.Landmark.Add(n);
       }*/
 
+
+
       //TODO check on different phones
       var imageSource = ImageSourceProvider.ImageSource;
       var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
       skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), mirrored, null);
-      return r1 || r2 || r3 || r4;
+      return r1 || r2;// || r3;//|| r4;
     }
 
     [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]
@@ -177,10 +197,10 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         using (var packet = new NormalizedRectPacket(ptr, false))
         {
-          if (skeletonTrackingGraph._roiFromLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec))
-          {
-            skeletonTrackingGraph.OnRoiFromLandmarksOutput.Invoke(value);
-          }
+       //   if (skeletonTrackingGraph._roiFromLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec))
+        //  {
+       //     skeletonTrackingGraph.OnRoiFromLandmarksOutput.Invoke(value);
+       //   }
         }
       }).mpPtr;
     }
@@ -197,17 +217,17 @@ namespace Mediapipe.Unity.SkeletonTracking
     {
       if (runningMode == RunningMode.NonBlockingSync)
       {
-        _skeletonDetectionStream = new OutputStream<DetectionPacket, Detection>(calculatorGraph, _SkeletonDetectionStreamName, config.AddPacketPresenceCalculator(_SkeletonDetectionStreamName));
-        _skeletonLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, _SkeletonLandmarksStreamName, config.AddPacketPresenceCalculator(_SkeletonLandmarksStreamName));
-        _skeletonWorldLandmarksStream = new OutputStream<LandmarkListPacket, LandmarkList>(calculatorGraph, _SkeletonWorldLandmarksStreamName, config.AddPacketPresenceCalculator(_SkeletonWorldLandmarksStreamName));
-        _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, config.AddPacketPresenceCalculator(_RoiFromLandmarksStreamName));
+        _skeletonDetectionStream = new OutputStream<DetectionPacket, Detection>(calculatorGraph, poseDetectionStream, config.AddPacketPresenceCalculator(poseDetectionStream));
+        _skeletonLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, poseLandmarksStream, config.AddPacketPresenceCalculator(poseLandmarksStream));
+        //_skeletonWorldLandmarksStream = new OutputStream<LandmarkListPacket, LandmarkList>(calculatorGraph, _SkeletonWorldLandmarksStreamName, config.AddPacketPresenceCalculator(_SkeletonWorldLandmarksStreamName));
+      //  _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, config.AddPacketPresenceCalculator//(_RoiFromLandmarksStreamName));
       }
       else
       {
-        _skeletonDetectionStream = new OutputStream<DetectionPacket, Detection>(calculatorGraph, _SkeletonDetectionStreamName, true);
-        _skeletonLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, _SkeletonLandmarksStreamName, true);
-        _skeletonWorldLandmarksStream = new OutputStream<LandmarkListPacket, LandmarkList>(calculatorGraph, _SkeletonWorldLandmarksStreamName, true);
-        _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, true);
+        _skeletonDetectionStream = new OutputStream<DetectionPacket, Detection>(calculatorGraph, poseDetectionStream, true);
+        _skeletonLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, poseLandmarksStream, true);
+      //  _skeletonWorldLandmarksStream = new OutputStream<LandmarkListPacket, LandmarkList>(calculatorGraph, _SkeletonWorldLandmarksStreamName, true);
+      //  _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, true);
       }
       return calculatorGraph.Initialize(config);
     }
