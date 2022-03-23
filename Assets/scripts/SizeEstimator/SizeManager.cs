@@ -80,10 +80,11 @@ namespace Lukso
 
     // Use this for initialization
     void Start() {
+      clothCamera.targetTexture = new RenderTexture(256, 256, 0);
       clothCamera.SetReplacementShader(selfieClothShader, null);
       poseManager.newPoseEvent += UpdateSegmentation;
       maskMaterial = new Material(maskShader);
-      renderedMask = new RenderTexture(256, 256, 16);
+      renderedMask = new RenderTexture(256, 256,0);
 
       //clothCamera.enabled = false;
 
@@ -112,23 +113,9 @@ namespace Lukso
     }
 
     void Update() {
-      //TODO for debug only
-      //    UpdateCamera();
-      //    clothCamera.Render();
-     // manualSizing.ProcessUI();
 
-
-      //TODO Debug
-
-
-      //i//f (Time.frameCount < 200) {
-      // InitClothCamera();
-      //}
+      return;
       InitClothCamera();
-      //clothCamera.Render();
-
-      // UpdateCamera();
-
       var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
       Debug.Log(v);
 
@@ -143,6 +130,7 @@ namespace Lukso
       }
 
       clothCamera.Render();
+      return;
       maskMaterial.SetTexture("_MaskTexture", mask);
       maskMaterial.SetTexture("_ClothTexture", clothCamera.targetTexture);
       Graphics.Blit(null, renderedMask, maskMaterial);
