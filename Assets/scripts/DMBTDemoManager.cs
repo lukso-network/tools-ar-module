@@ -81,6 +81,7 @@ namespace DeepMotion.DMBTDemo
 
     private Texture2D lastFrame;
     private bool paused = false;
+    private Vector3[] skeletonPoints;
 
     public Texture2D GetLastFrame() {
       return lastFrame;
@@ -229,6 +230,8 @@ namespace DeepMotion.DMBTDemo
       }
       int count = landmarkList.Landmark.Count;
       var scaleVector = ScaleVector(transform);
+
+      //TODOLK - memory 
       var points = new Vector3[count];
       for (int i = 0; i < count; ++i) {
         var landmark = landmarkList.Landmark[i];
@@ -270,6 +273,12 @@ namespace DeepMotion.DMBTDemo
     private float[] times = new float[] { 0, 0, 0, 0, 0 };
 
     private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
+
+      if (landmarkList == null) {
+
+        return null;
+      }
+
       var t0 = Time.realtimeSinceStartup;
       var spineSize = GetSpineSize(landmarkList);
       float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
@@ -288,6 +297,7 @@ namespace DeepMotion.DMBTDemo
 
       //TODO make it faster
       if (flipped) {
+        //TODOLK
         var fPoints = new Vector3[points.Length];
         int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
         for (int i = 0; i < maxSize; ++i) {
@@ -307,12 +317,13 @@ namespace DeepMotion.DMBTDemo
       times[0] = dt;
       times[1] = t - t0;
 
-
       return points;
     }
 
     private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
-
+      if (faceLandmarks == null) {
+        return;
+      }
       float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
       var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
 
@@ -407,6 +418,90 @@ namespace DeepMotion.DMBTDemo
       }
 
       newPoseEvent(true);
+      var fps = counter.UpdateFps();
+      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
+
+    }
+
+    internal void OnNewPose2(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
+      if (paused) {
+        return;
+      }
+
+      if (!enabled) {
+        return;
+      }
+
+      lastFrame = texture;
+
+      //TODO
+      if (landmarkList == null && faceLandmarks == null) {
+        face.SetActive(false);
+        //face.SetActive(faceLandmarks != null && faceLandmarks.Landmark.Count > 0);
+      } else if (faceLandmarks != null) {
+        face.SetActive(true);
+      }
+
+
+      var t = Time.realtimeSinceStartup;
+      float t2 = 0;
+      float t3 = 0;
+      float t4 = 0;
+
+      /*
+            if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
+                newPoseEvent(false);
+
+                var fps0 = counter.UpdateFps();
+                display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0,0,0);
+                return;
+            }
+      */
+
+      var t1 = Time.realtimeSinceStartup;
+
+      try {
+        var scale = screenTransform.localScale;
+        scale.z = scaleDepth;
+        screenTransform.localScale = scale;
+
+        var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
+        if (skelPoints == null) {
+          skelPoints = this.skeletonPoints;
+        } else {
+          this.skeletonPoints = skelPoints;
+        }
+        if (skelPoints == null) {
+          return;
+        }
+
+
+        t2 = Time.realtimeSinceStartup;
+
+        if (faceLandmarks != null) {
+          UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+          t3 = Time.realtimeSinceStartup;
+
+          newFaceEvent(faceLandmarks, texture, flipped);
+        }
+
+
+
+        t4 = Time.realtimeSinceStartup;
+
+
+        //  Debug.Log("light:" + (t4 - t3));
+
+      } catch (Exception ex) {
+        Debug.LogError("DMBTManage new pose failed");
+        Debug.LogException(ex);
+      }
+
+      if (landmarkList != null) {
+        newPoseEvent(true);
+      } else {
+
+      }
       var fps = counter.UpdateFps();
       display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
 
