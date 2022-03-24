@@ -123,12 +123,13 @@ namespace Mediapipe.Unity.SkeletonTracking
     {
       var currentTimestampMicrosec = GetCurrentTimestampMicrosec();
       var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
-      var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
       var r3 = TryGetNext(_faceLandmarksStream, out faceLandmarks, allowBlock, currentTimestampMicrosec);
+      var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
+
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
-
+   //   Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
 
       skeletonWorldLandmarks = null;
       roiFromLandmarks = null;

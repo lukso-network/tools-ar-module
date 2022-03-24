@@ -11,7 +11,6 @@ namespace Assets.scripts.Api
     {
         public AvatarManager avatarManager;
         public CanvasController canvasController;
-     //TODOLK   public SceneDirector sceneDirector;
         public SizeManager sizeManager;
         [SerializeField] private SkeletonTrackingSolution solution;
     // Use this for initialization

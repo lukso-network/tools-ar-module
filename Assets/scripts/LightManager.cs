@@ -1,5 +1,6 @@
 using DeepMotion.DMBTDemo;
 using Mediapipe;
+using Mediapipe.Unity;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -9,7 +10,6 @@ namespace Assets.scripts
     public class LightManager : MonoBehaviour
     {
 
-        //TODOLKpublic WebCamScreenController webCamController;
         public Light lightSource;
 
         private Vector3[] faceNormals;
@@ -151,7 +151,8 @@ void Start() {
 
         private float[] GetIntencities(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
 
-      float angle = 0; //TODOLK webCamController.GetVideoAngle();
+            var im = ImageSourceProvider.ImageSource;
+            var angle = (int)(im.isFrontFacing ? im.rotation : im.rotation.Reverse());
 
             int w = texture.width;
             int h = texture.height;

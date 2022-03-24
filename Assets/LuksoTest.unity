@@ -1960,6 +1960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc32f09dd6b44c74ea99a8b5c6cad424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ScreenSize: {x: 0, y: 0}
   camera: {fileID: 985747844}
   screenPlane: {fileID: 114348006}
 --- !u!1 &195599628

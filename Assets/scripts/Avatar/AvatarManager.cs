@@ -21,7 +21,6 @@ public class AvatarManager : MonoBehaviour
     public GameObject modelRoot;
     public Transform transpBodyRoot;
     public Vector3 skinScaler = Vector3.one;
-    //TODOLK public WebCamScreenController cameraSurface;
     public bool ShowTransparentBody;
     public string avatarLayerMask;
 
