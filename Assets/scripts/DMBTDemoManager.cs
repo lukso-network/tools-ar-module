@@ -20,259 +20,261 @@ using System.Text.RegularExpressions;
 using Lukso;
 using Skeleton = Lukso.Skeleton;
 
-public class FPSCounter 
+public class FPSCounter
 {
-    const float fpsMeasurePeriod = 0.5f;
-    private int counter = 0;
-    private float lastTime = 0;
-    private float fps;
+  const float fpsMeasurePeriod = 0.5f;
+  private int counter = 0;
+  private float lastTime = 0;
+  private float fps;
 
-    public float UpdateFps() {
-        counter++;
-        float t = Time.realtimeSinceStartup;
-        if (t > lastTime + fpsMeasurePeriod) {
-            fps = counter / (t - lastTime);
-            counter = 0;
-            lastTime = t;
-        }
-        return fps;
+  public float UpdateFps() {
+    counter++;
+    float t = Time.realtimeSinceStartup;
+    if (t > lastTime + fpsMeasurePeriod) {
+      fps = counter / (t - lastTime);
+      counter = 0;
+      lastTime = t;
     }
+    return fps;
+  }
 }
 
 namespace DeepMotion.DMBTDemo
 {
 
 
-    [Binding]
-    public class DMBTDemoManager : MonoBehaviour {
+  [Binding]
+  public class DMBTDemoManager : MonoBehaviour
+  {
 
 
-        [Serializable]
-        public class AvatarDescription {
-            public string id;
-            public GameObject prefab;
-        }
+    [Serializable]
+    public class AvatarDescription
+    {
+      public string id;
+      public GameObject prefab;
+    }
 
-        public StatisticDisplay display;
-        public FilterSettings scaleFilter;
-        public SkeletonManager skeletonManager;
-        public GameObject facePrefab;
-        public GameObject hat;
-      
-        [SerializeField] private Camera screenCamera;
+    public StatisticDisplay display;
+    public FilterSettings scaleFilter;
+    public SkeletonManager skeletonManager;
+    public GameObject facePrefab;
+    public GameObject hat;
 
-        private GameObject face;
-        private Mesh faceMesh;
-        public Mesh FaceMesh => faceMesh;
-        private Quaternion faceDirection = Quaternion.identity;
-        public Quaternion FaceDirection => faceDirection;
+    [SerializeField] private Camera screenCamera;
 
-        [Range(0, 2)]
-        public float scaleDepth = 0.5f;
+    private GameObject face;
+    private Mesh faceMesh;
+    public Mesh FaceMesh => faceMesh;
+    private Quaternion faceDirection = Quaternion.identity;
+    public Quaternion FaceDirection => faceDirection;
 
-        public delegate void OnNewPoseHandler(bool skeletonExist);
+    [Range(0, 2)]
+    public float scaleDepth = 0.5f;
 
-        public delegate void OnNewFaceHandler(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped);
+    public delegate void OnNewPoseHandler(bool skeletonExist);
 
-        public event OnNewPoseHandler newPoseEvent;
-        public event OnNewFaceHandler newFaceEvent;
+    public delegate void OnNewFaceHandler(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped);
 
-        private Texture2D lastFrame;
-        private bool paused = false;
+    public event OnNewPoseHandler newPoseEvent;
+    public event OnNewFaceHandler newFaceEvent;
 
-        public Texture2D GetLastFrame() {
-            return lastFrame;
-        }
+    private Texture2D lastFrame;
+    private bool paused = false;
 
-        private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
+    public Texture2D GetLastFrame() {
+      return lastFrame;
+    }
 
-        private FPSCounter counter = new FPSCounter();
-        public bool ShowTransparentFace {
-            get =>face.GetComponent<TransparentMaterialRenderer>().enabled;
-            set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
-            }
+    private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
-        void OnValidate() {
-            scaleFilter.SetModified();
-        }
+    private FPSCounter counter = new FPSCounter();
+    public bool ShowTransparentFace {
+      get => face.GetComponent<TransparentMaterialRenderer>().enabled;
+      set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
+    }
 
-        void Start() {
-            InitFace();
-            Init();
-        }
+    void OnValidate() {
+      scaleFilter.SetModified();
+    }
 
-        private void Init() {
+    void Start() {
+      InitFace();
+      Init();
+    }
 
-            try {
+    private void Init() {
 
-           /*     var foundedAvatar = Array.Find(avatars, x => x.id == avatarType);
-                if (foundedAvatar == null) {
-                    Debug.LogError("Could not found avatar by id");
-                }
+      try {
 
-                var obj = Instantiate(foundedAvatar.prefab, transform);
-                obj.SetActive(false);
-                Utils.PreparePivots(obj);
-                /*Skeleton = CreateSkeleton(obj);
-                controller = new Assets.Avatar(obj, Skeleton);
-                controller.settings = ikSettings;
-                controller.SetIkSource();*/
+        /*     var foundedAvatar = Array.Find(avatars, x => x.id == avatarType);
+             if (foundedAvatar == null) {
+                 Debug.LogError("Could not found avatar by id");
+             }
 
-
-                // obj.SetActive(false);
-
-                /*poseScaler = GetComponent<PoseScaler>();
-
-                poseScaler.Init();
-
-                obj = Instantiate(foundedAvatar.prefab, transform);
-                obj.name = "Initial debug copy";
-                obj.SetActive(false);
-                Utils.PreparePivots(obj);
-                initialAvatar = new Assets.Avatar(obj, CreateSkeleton(obj));
-                */
-            } catch (Exception ex) {
-                Debug.LogError("DMBTManage failed");
-                Debug.LogException(ex);
-            }
-
-        }
-
-        protected Vector3 ScaleVector(Transform transform) {
-            return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.y, transform.localScale.z);
-        }
-
-        protected Vector3 GetFacePointForRotation(Vector3 scaleVector, NormalizedLandmark landmark, bool isFlipped, float scale) {
-            var v = ToVector3(landmark);
-            var relX = (isFlipped ? -1 : 1) * (v.x - 0.5f);
-            var relY = 0.5f - v.y;
-            return Vector3.Scale(new Vector3(relX, relY, v.z), scaleVector);
-        }
-
-        protected Vector3 GetPositionFromNormalizedPoint(Vector3 scaleVector, Vector3 v, bool isFlipped, float zShift, float perspectiveScale, bool inZDirection = false) {
-            var relX = (isFlipped ? -1 : 1) * (v.x - 0.5f);
-            var relY = 0.5f - v.y;
-
-            var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);// + screenTransform.position;
-            var dir = (screenCamera.transform.position - pos3d).normalized;
-            // dir /= Math.Abs(dir.z);
-            pos3d += dir * (-(v.z + zShift)) * scaleVector.z * perspectiveScale;
-            return pos3d;
-        }
-
-        private float CalculateZShift(Transform screenTransform, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, bool isFlipped, float perspectiveScale) {
-
-            if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
-                return 0;
-            }
-            var scaleVector = ScaleVector(screenTransform);
-            var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
-
-            var l = skeletonPoints[(int)Skeleton.Point.LEFT_SHOULDER];
-            var r = skeletonPoints[(int)Skeleton.Point.RIGHT_SHOULDER];
-            var lh = skeletonPoints[(int)Skeleton.Point.LEFT_HIP];
-            var rh = skeletonPoints[(int)Skeleton.Point.RIGHT_HIP];
-
-            var rlDir = (l - r).normalized;
-            var upDir = ((l + r) / 2 - (lh + rh) / 2).normalized;
-            var len = (l - r).magnitude;
-
-            var nosePose = (l + r) / 2 + len * upDir * 0.5f + Vector3.Cross(upDir, rlDir) * len * 0.2f;
-
-            var to = nosePose;
-            //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
-            //pos3d += (screenCamera.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
-
-            var relX = (isFlipped ? -1 : 1) * (from.x - 0.5f);
-            var relY = 0.5f - from.y;
-            var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);
-            float delta = -(to.z - pos3d.z) / (screenCamera.transform.position - pos3d).normalized.z / (scaleVector.z * perspectiveScale) - from.z;
+             var obj = Instantiate(foundedAvatar.prefab, transform);
+             obj.SetActive(false);
+             Utils.PreparePivots(obj);
+             /*Skeleton = CreateSkeleton(obj);
+             controller = new Assets.Avatar(obj, Skeleton);
+             controller.settings = ikSettings;
+             controller.SetIkSource();*/
 
 
-            //var testP = GetPositionFromNormalizedPoint(scaleVector, from, false, delta, perspectiveScale, false);
+        // obj.SetActive(false);
 
-            //Debug.Log((testP - to).z);
-            return delta;
-        }
+        /*poseScaler = GetComponent<PoseScaler>();
 
-        private Vector3 ToVector3(NormalizedLandmark landmark) {
-            return new Vector3(landmark.X, landmark.Y, landmark.Z);
-        }
+        poseScaler.Init();
 
-        private float GetSpineSize(NormalizedLandmarkList landmarklist) {
+        obj = Instantiate(foundedAvatar.prefab, transform);
+        obj.name = "Initial debug copy";
+        obj.SetActive(false);
+        Utils.PreparePivots(obj);
+        initialAvatar = new Assets.Avatar(obj, CreateSkeleton(obj));
+        */
+      } catch (Exception ex) {
+        Debug.LogError("DMBTManage failed");
+        Debug.LogException(ex);
+      }
 
-            var left = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_HIP]);
-            var right = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_HIP]);
+    }
 
-            var leftArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_SHOULDER]);
-            var rightArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_SHOULDER]);
+    protected Vector3 ScaleVector(Transform transform) {
+      return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.y, transform.localScale.z);
+    }
 
-            //probably Vector2 needed
-            var l = ((left + right) / 2 - (leftArm + rightArm) / 2).magnitude;
+    protected Vector3 GetFacePointForRotation(Vector3 scaleVector, NormalizedLandmark landmark, bool isFlipped, float scale) {
+      var v = ToVector3(landmark);
+      var relX = (isFlipped ? -1 : 1) * (v.x - 0.5f);
+      var relY = 0.5f - v.y;
+      return Vector3.Scale(new Vector3(relX, relY, v.z), scaleVector);
+    }
 
-            return l;
-        }
+    protected Vector3 GetPositionFromNormalizedPoint(Vector3 scaleVector, Vector3 v, bool isFlipped, float zShift, float perspectiveScale, bool inZDirection = false) {
+      var relX = (isFlipped ? -1 : 1) * (v.x - 0.5f);
+      var relY = 0.5f - v.y;
 
-        private Vector3 LandmarkToVector(NormalizedLandmark lnd) {
-            return new Vector3(lnd.X, lnd.Y, lnd.Z);
-        }
+      var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);// + screenTransform.position;
+      var dir = (screenCamera.transform.position - pos3d).normalized;
+      // dir /= Math.Abs(dir.z);
+      pos3d += dir * (-(v.z + zShift)) * scaleVector.z * perspectiveScale;
+      return pos3d;
+    }
 
-        public void PauseProcessing(bool pause) {
-            this.paused = pause;
-        }
+    private float CalculateZShift(Transform screenTransform, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, bool isFlipped, float perspectiveScale) {
 
-        private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped, float zShift = 0, float spineSize = -1) {
-            if (spineSize < 0) {
-                spineSize = 1;
-            }
-            int count = landmarkList.Landmark.Count;
-            var scaleVector = ScaleVector(transform);
-            var points = new Vector3[count];
-            for (int i = 0; i < count; ++i) {
-                var landmark = landmarkList.Landmark[i];
-                var p = GetPositionFromNormalizedPoint(scaleVector, LandmarkToVector(landmark), flipped, zShift, spineSize);
-                points[i] = p;
-            }
-            
-            return points;
-        }
-           
+      if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
+        return 0;
+      }
+      var scaleVector = ScaleVector(screenTransform);
+      var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
 
-        private float defaultFaceSize;
-        private float faceGeomCoef;
-        private void InitFace() {
-            face = Instantiate(facePrefab, transform);
-            face.SetActive(false);
-            face.AddComponent<TransparentMaterialRenderer>();
-            faceMesh = face.GetComponent<MeshFilter>().mesh;
-            faceMesh.RecalculateNormals();
+      var l = skeletonPoints[(int)Skeleton.Point.LEFT_SHOULDER];
+      var r = skeletonPoints[(int)Skeleton.Point.RIGHT_SHOULDER];
+      var lh = skeletonPoints[(int)Skeleton.Point.LEFT_HIP];
+      var rh = skeletonPoints[(int)Skeleton.Point.RIGHT_HIP];
 
-            var points = faceMesh.vertices;
+      var rlDir = (l - r).normalized;
+      var upDir = ((l + r) / 2 - (lh + rh) / 2).normalized;
+      var len = (l - r).magnitude;
 
-            var t = points[10];
-            var b = points[152];
-            var r = points[33];
-            var l = points[263];
-            defaultFaceSize = ((t - b).magnitude * (l - r).magnitude);
+      var nosePose = (l + r) / 2 + len * upDir * 0.5f + Vector3.Cross(upDir, rlDir) * len * 0.2f;
 
-            var nose = points[4];
-            var c0 = (r + l) / 2;
-            var d1 = nose - c0;
-            var d2 = (l - r);
+      var to = nosePose;
+      //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
+      //pos3d += (screenCamera.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
 
-            faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
-        }
+      var relX = (isFlipped ? -1 : 1) * (from.x - 0.5f);
+      var relY = 0.5f - from.y;
+      var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);
+      float delta = -(to.z - pos3d.z) / (screenCamera.transform.position - pos3d).normalized.z / (scaleVector.z * perspectiveScale) - from.z;
 
-     
 
-        private float [] times = new float[] { 0, 0, 0, 0, 0 };
+      //var testP = GetPositionFromNormalizedPoint(scaleVector, from, false, delta, perspectiveScale, false);
 
- 		private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
-            var t0 = Time.realtimeSinceStartup;
-            var spineSize = GetSpineSize(landmarkList);
-            float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
-            scale /= 2.8f;
-            var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
+      //Debug.Log((testP - to).z);
+      return delta;
+    }
+
+    private Vector3 ToVector3(NormalizedLandmark landmark) {
+      return new Vector3(landmark.X, landmark.Y, landmark.Z);
+    }
+
+    private float GetSpineSize(NormalizedLandmarkList landmarklist) {
+
+      var left = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_HIP]);
+      var right = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_HIP]);
+
+      var leftArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_SHOULDER]);
+      var rightArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_SHOULDER]);
+
+      //probably Vector2 needed
+      var l = ((left + right) / 2 - (leftArm + rightArm) / 2).magnitude;
+
+      return l;
+    }
+
+    private Vector3 LandmarkToVector(NormalizedLandmark lnd) {
+      return new Vector3(lnd.X, lnd.Y, lnd.Z);
+    }
+
+    public void PauseProcessing(bool pause) {
+      this.paused = pause;
+    }
+
+    private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped, float zShift = 0, float spineSize = -1) {
+      if (spineSize < 0) {
+        spineSize = 1;
+      }
+      int count = landmarkList.Landmark.Count;
+      var scaleVector = ScaleVector(transform);
+      var points = new Vector3[count];
+      for (int i = 0; i < count; ++i) {
+        var landmark = landmarkList.Landmark[i];
+        var p = GetPositionFromNormalizedPoint(scaleVector, LandmarkToVector(landmark), flipped, zShift, spineSize);
+        points[i] = p;
+      }
+
+      return points;
+    }
+
+
+    private float defaultFaceSize;
+    private float faceGeomCoef;
+    private void InitFace() {
+      face = Instantiate(facePrefab, transform);
+      face.SetActive(false);
+      face.AddComponent<TransparentMaterialRenderer>();
+      faceMesh = face.GetComponent<MeshFilter>().mesh;
+      faceMesh.RecalculateNormals();
+
+      var points = faceMesh.vertices;
+
+      var t = points[10];
+      var b = points[152];
+      var r = points[33];
+      var l = points[263];
+      defaultFaceSize = ((t - b).magnitude * (l - r).magnitude);
+
+      var nose = points[4];
+      var c0 = (r + l) / 2;
+      var d1 = nose - c0;
+      var d2 = (l - r);
+
+      faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
+    }
+
+
+
+    private float[] times = new float[] { 0, 0, 0, 0, 0 };
+
+    private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
+      var t0 = Time.realtimeSinceStartup;
+      var spineSize = GetSpineSize(landmarkList);
+      float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
+      scale /= 2.8f;
+      var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
       /*
       var min = new Vector3(1000, 1000, 100);
       var max = new Vector3(-1000, -1000, -100);
@@ -284,137 +286,137 @@ namespace DeepMotion.DMBTDemo
       Debug.Log("" + min + " " + max);
       */
 
-            //TODO make it faster
-            if (flipped) {
-                var fPoints = new Vector3[points.Length];
-                int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
-                for (int i = 0; i < maxSize; ++i) {
-                    fPoints[i] = points[FLIP_POINTS[i]];
-                }
-                points = fPoints;
-            }
-
-            var ps = points.Select(x => new Vector3?(x)).ToArray();
-
-            var t = Time.realtimeSinceStartup;
-            skeletonManager.UpdatePose(ps);
-            var dt = Time.realtimeSinceStartup - t;
-
-
-
-            times[0] = dt;
-            times[1] = t - t0;
-
-
-            return points;
+      //TODO make it faster
+      if (flipped) {
+        var fPoints = new Vector3[points.Length];
+        int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
+        for (int i = 0; i < maxSize; ++i) {
+          fPoints[i] = points[FLIP_POINTS[i]];
         }
+        points = fPoints;
+      }
 
-        private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3 [] skelPoints) {
+      var ps = points.Select(x => new Vector3?(x)).ToArray();
 
-            float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
-            var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
-        
-           //faceMesh.vertices = points;
-            //TOFO
-
-
-            var points = TransformPoints(screenTransform, faceLandmarks, flipped, faceNoseShift, faceScale);
-            if (points.Length == 0) {
-                return;
-            }
-
-            faceMesh.vertices = points;
-
-            var nose = points[4];
-            var t = points[10];
-            var b = points[152];
-            var r = points[33];
-            var l = points[263];
-
-            //Debug.Log("face:" + (l - r) * 100 + " " + (nose - (l + r) / 2)*100);
-
-            var center = (t + b + r + l) / 4;
-           // Debug.Log("Magn:" + (t - b).magnitude + " " + (l - r).magnitude);
-            var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude)  / defaultFaceSize);
-
-            var up = (t - b).normalized;
-            var left = (l - r).normalized;
-            var front = Vector3.Cross(left, up);
-            if (flipped) {
-                front = -front;
-            }
-
-            faceDirection = Quaternion.LookRotation(front, up);
-            hat.transform.localScale = new Vector3(scale, scale, scale);
-            hat.transform.rotation = faceDirection;
-            hat.transform.localPosition = nose;
-        }
+      var t = Time.realtimeSinceStartup;
+      skeletonManager.UpdatePose(ps);
+      var dt = Time.realtimeSinceStartup - t;
 
 
-        internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
-            if (paused) {
-                return;
-            }
 
-            if (!enabled) {
-                return;
-            }
-
-            if (faceLandmarks == null) {
-              faceLandmarks = new NormalizedLandmarkList();
-            }
-
-            lastFrame = texture;
-            face.SetActive(faceLandmarks != null && faceLandmarks.Landmark.Count > 0);
-            var t = Time.realtimeSinceStartup;
-            float t2 = 0;
-            float t3 = 0;
-            float t4 = 0;
-
-            if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
-                newPoseEvent(false);
-
-                var fps0 = counter.UpdateFps();
-                display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0,0,0);
-                return;
-            }
-
-            var t1 = Time.realtimeSinceStartup;
-
-            try {
-                var scale = screenTransform.localScale;
-                scale.z = scaleDepth;
-                screenTransform.localScale = scale;
-
-                var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
-                t2 = Time.realtimeSinceStartup;
-                
-                UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
-                t3 = Time.realtimeSinceStartup;
-
-                newFaceEvent(faceLandmarks, texture, flipped);
-
-                t4 = Time.realtimeSinceStartup;
+      times[0] = dt;
+      times[1] = t - t0;
 
 
-              //  Debug.Log("light:" + (t4 - t3));
+      return points;
+    }
 
-            } catch (Exception ex) {
-                Debug.LogError("DMBTManage new pose failed");
-                Debug.LogException(ex);
-            }
+    private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
 
-            newPoseEvent(true);
-            var fps = counter.UpdateFps();
-            display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1-t, t2-t1, t3-t2, t4-t3);
+      float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
+      var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
 
-        }
+      //faceMesh.vertices = points;
+      //TOFO
 
-      
-        internal void ResetAvatar() {
- //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);
-        }
 
+      var points = TransformPoints(screenTransform, faceLandmarks, flipped, faceNoseShift, faceScale);
+      if (points.Length == 0) {
+        return;
+      }
+
+      faceMesh.vertices = points;
+
+      var nose = points[4];
+      var t = points[10];
+      var b = points[152];
+      var r = points[33];
+      var l = points[263];
+
+      //Debug.Log("face:" + (l - r) * 100 + " " + (nose - (l + r) / 2)*100);
+
+      var center = (t + b + r + l) / 4;
+      // Debug.Log("Magn:" + (t - b).magnitude + " " + (l - r).magnitude);
+      var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude) / defaultFaceSize);
+
+      var up = (t - b).normalized;
+      var left = (l - r).normalized;
+      var front = Vector3.Cross(left, up);
+      if (flipped) {
+        front = -front;
+      }
+
+      faceDirection = Quaternion.LookRotation(front, up);
+      hat.transform.localScale = new Vector3(scale, scale, scale);
+      hat.transform.rotation = faceDirection;
+      hat.transform.localPosition = nose;
+    }
+
+
+    internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
+      if (paused) {
+        return;
+      }
+
+      if (!enabled) {
+        return;
+      }
+
+      if (faceLandmarks == null) {
+        faceLandmarks = new NormalizedLandmarkList();
+      }
+
+      lastFrame = texture;
+      face.SetActive(faceLandmarks != null && faceLandmarks.Landmark.Count > 0);
+      var t = Time.realtimeSinceStartup;
+      float t2 = 0;
+      float t3 = 0;
+      float t4 = 0;
+
+      if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
+        newPoseEvent(false);
+
+        var fps0 = counter.UpdateFps();
+        display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0, 0, 0);
+        return;
+      }
+
+      var t1 = Time.realtimeSinceStartup;
+
+      try {
+        var scale = screenTransform.localScale;
+        scale.z = scaleDepth;
+        screenTransform.localScale = scale;
+
+        var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
+        t2 = Time.realtimeSinceStartup;
+
+        UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+        t3 = Time.realtimeSinceStartup;
+
+        newFaceEvent(faceLandmarks, texture, flipped);
+
+        t4 = Time.realtimeSinceStartup;
+
+
+        //  Debug.Log("light:" + (t4 - t3));
+
+      } catch (Exception ex) {
+        Debug.LogError("DMBTManage new pose failed");
+        Debug.LogException(ex);
+      }
+
+      newPoseEvent(true);
+      var fps = counter.UpdateFps();
+      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
 
     }
+
+
+    internal void ResetAvatar() {
+      //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);
+    }
+
+
+  }
 }
