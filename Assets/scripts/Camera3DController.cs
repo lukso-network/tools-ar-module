@@ -11,6 +11,7 @@ namespace Lukso
     private int width = -1;
     private int height = -1;
     private RotationAngle rotation = RotationAngle.Rotation0;
+    public Vector2 ScreenSize;
 
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject screenPlane;
@@ -64,7 +65,6 @@ namespace Lukso
       float dist = 0;
       var tg = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad / 2);
 
-      Vector2 ScreenSize;
       if (texAspect < camera.aspect) {
         dist = screenPlane.transform.localScale.y / tg / 2;
         ScreenSize = new Vector2(texAspect / camera.aspect, 1);

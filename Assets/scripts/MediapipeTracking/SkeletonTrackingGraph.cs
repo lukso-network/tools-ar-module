@@ -36,27 +36,31 @@ namespace Mediapipe.Unity.SkeletonTracking
     [SerializeField] private Transform screenPlane;
     [SerializeField] private Camera3DController cameraController;
 
+    public delegate void OnNewFrameRendered(Texture2D texture);
+    public event OnNewFrameRendered newFrameRendered;
 
     //private const string poseLandmarksStream = "pose_landmarks";
-   // private const string poseDetectionStream = "pose_detection";
-  ///  private const string faceLandmarksStream = "face_landmarks";
-   // private const string poseLandmarksPresenceStream = "pose_landmarks_presence";
-  //  private const string faceLandmarksPresenceStream = "face_landmarks_presence";
-   // private const string poseDetectionPresenceStream = "pose_detection_presence";
+    // private const string poseDetectionStream = "pose_detection";
+    ///  private const string faceLandmarksStream = "face_landmarks";
+    // private const string poseLandmarksPresenceStream = "pose_landmarks_presence";
+    //  private const string faceLandmarksPresenceStream = "face_landmarks_presence";
+    // private const string poseDetectionPresenceStream = "pose_detection_presence";
 
 
-
+    private Texture2D lastTexture;
     private const string _InputStreamName = "input_video";
     private const string poseDetectionStream = "pose_detection";
     private const string poseLandmarksStream = "pose_landmarks";
-  //  private const string _SkeletonWorldLandmarksStreamName1 = "skeleton_world_landmarks";
-   // private const string _RoiFromLandmarksStreamName = "roi_from_landmarks";
-    
+    private const string faceLandmarksStream = "face_landmarks";
+    //  private const string _SkeletonWorldLandmarksStreamName1 = "skeleton_world_landmarks";
+    // private const string _RoiFromLandmarksStreamName = "roi_from_landmarks";
+
     private ImageSource imageSource;
     
 
     private OutputStream<DetectionPacket, Detection> _skeletonDetectionStream;
     private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _skeletonLandmarksStream;
+    private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _faceLandmarksStream;
     private OutputStream<LandmarkListPacket, LandmarkList> _skeletonWorldLandmarksStream;
    // private OutputStream<NormalizedRectPacket, NormalizedRect> _roiFromLandmarksStream;
 
@@ -67,6 +71,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         _skeletonDetectionStream.StartPolling().AssertOk();
         _skeletonLandmarksStream.StartPolling().AssertOk();
+        _faceLandmarksStream.StartPolling().AssertOk();
        // _skeletonWorldLandmarksStream.StartPolling().AssertOk();
       //  _roiFromLandmarksStream.StartPolling().AssertOk();
       }
@@ -74,6 +79,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         _skeletonDetectionStream.AddListener(SkeletonDetectionCallback).AssertOk();
         _skeletonLandmarksStream.AddListener(SkeletonLandmarksCallback).AssertOk();
+
      //   _skeletonWorldLandmarksStream.AddListener(SkeletonWorldLandmarksCallback).AssertOk();
        // _roiFromLandmarksStream.AddListener(RoiFromLandmarksCallback).AssertOk();
       }
@@ -89,6 +95,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       OnRoiFromLandmarksOutput.RemoveAllListeners();
       _skeletonDetectionStream = null;
       _skeletonLandmarksStream = null;
+      _faceLandmarksStream = null;
       _skeletonWorldLandmarksStream = null;
      // _roiFromLandmarksStream = null;
     }
@@ -98,6 +105,11 @@ namespace Mediapipe.Unity.SkeletonTracking
       AddTextureFrameToInputStream(_InputStreamName, textureFrame);
 
       Update3DCamera(textureFrame);
+      lastTexture = textureFrame.Texture;
+
+      if (newFrameRendered != null) {
+        newFrameRendered(lastTexture);
+      }
     }
 
     private void Update3DCamera(TextureFrame textureFrame) {
@@ -105,11 +117,15 @@ namespace Mediapipe.Unity.SkeletonTracking
       cameraController.UpdateCamera(textureFrame, rotation, imageSource);
     }
 
-    public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks, bool allowBlock = true)
+    public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks,
+      out NormalizedLandmarkList faceLandmarks,
+      bool allowBlock = true)
     {
       var currentTimestampMicrosec = GetCurrentTimestampMicrosec();
       var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
       var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
+      var r3 = TryGetNext(_faceLandmarksStream, out faceLandmarks, allowBlock, currentTimestampMicrosec);
+      // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
 
@@ -141,7 +157,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       var imageSource = ImageSourceProvider.ImageSource;
       var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
-      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, new NormalizedLandmarkList(), mirrored, null);
+      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
       return r1 || r2;// || r3;//|| r4;
     }
 
@@ -228,6 +244,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         _skeletonDetectionStream = new OutputStream<DetectionPacket, Detection>(calculatorGraph, poseDetectionStream, true);
         _skeletonLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, poseLandmarksStream, true);
+        _faceLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, faceLandmarksStream, true);
       //  _skeletonWorldLandmarksStream = new OutputStream<LandmarkListPacket, LandmarkList>(calculatorGraph, _SkeletonWorldLandmarksStreamName, true);
       //  _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, true);
       }

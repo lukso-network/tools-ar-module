@@ -86,6 +86,8 @@ namespace Mediapipe.Unity
       RegisterInstance(this);
     }
 
+    public Texture2D Texture => _texture;
+
     public TextureFrame(int width, int height, TextureFormat format) : this(new Texture2D(width, height, format, false)) { }
     public TextureFrame(int width, int height) : this(width, height, TextureFormat.RGBA32) { }
 

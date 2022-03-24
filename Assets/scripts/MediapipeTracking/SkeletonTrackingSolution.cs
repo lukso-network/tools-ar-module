@@ -66,11 +66,11 @@ namespace Mediapipe.Unity.SkeletonTracking
     {
       if (runningMode == RunningMode.Sync)
       {
-        var _ = graphRunner.TryGetNext(out var _, out var _, out var _, out var _, true);
+        var _ = graphRunner.TryGetNext(out var _, out var _, out var _, out var _, out var _, true);
       }
       else if (runningMode == RunningMode.NonBlockingSync)
       {
-        yield return new WaitUntil(() => graphRunner.TryGetNext(out var _, out var _, out var _, out var _, false));
+        yield return new WaitUntil(() => graphRunner.TryGetNext(out var _, out var _, out var _, out var _, out var _, false));
       }
     }
   }

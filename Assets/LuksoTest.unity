@@ -6037,7 +6037,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &843617381
 Transform:
   m_ObjectHideFlags: 0
@@ -13069,8 +13069,6 @@ MonoBehaviour:
   screenPlane: {fileID: 114348006}
   skeletonCamera: {fileID: 985747844}
   outputUI: {fileID: 1491910832}
-  maskMaterial: {fileID: 0}
-  renderedMask: {fileID: 0}
 --- !u!1 &1770147786
 GameObject:
   m_ObjectHideFlags: 0

@@ -162,7 +162,7 @@ namespace DeepMotion.DMBTDemo
 
         private float CalculateZShift(Transform screenTransform, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, bool isFlipped, float perspectiveScale) {
 
-            if (faceLandmarks.Landmark.Count == 0) {
+            if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
                 return 0;
             }
             var scaleVector = ScaleVector(screenTransform);
@@ -242,6 +242,7 @@ namespace DeepMotion.DMBTDemo
         private float faceGeomCoef;
         private void InitFace() {
             face = Instantiate(facePrefab, transform);
+            face.SetActive(false);
             face.AddComponent<TransparentMaterialRenderer>();
             faceMesh = face.GetComponent<MeshFilter>().mesh;
             faceMesh.RecalculateNormals();
@@ -272,6 +273,16 @@ namespace DeepMotion.DMBTDemo
             float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
             scale /= 2.8f;
             var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
+      /*
+      var min = new Vector3(1000, 1000, 100);
+      var max = new Vector3(-1000, -1000, -100);
+      foreach(var p in points) {
+        min = Vector3.Min(min, p);
+        max = Vector3.Max(max, p);
+      }
+
+      Debug.Log("" + min + " " + max);
+      */
 
             //TODO make it faster
             if (flipped) {
@@ -349,8 +360,12 @@ namespace DeepMotion.DMBTDemo
                 return;
             }
 
+            if (faceLandmarks == null) {
+              faceLandmarks = new NormalizedLandmarkList();
+            }
+
             lastFrame = texture;
-            face.SetActive(faceLandmarks.Landmark.Count > 0);
+            face.SetActive(faceLandmarks != null && faceLandmarks.Landmark.Count > 0);
             var t = Time.realtimeSinceStartup;
             float t2 = 0;
             float t3 = 0;
