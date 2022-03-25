@@ -53,7 +53,15 @@ public class FPSCounter
   private float lastTime = 0;
   private float fps;
 
-  public float UpdateFps() {
+  private float []times;
+  private int idx = 0;
+
+  public FPSCounter(int periods = 30) {
+    times = new float[periods];
+  }
+
+
+  public float UpdateFps2() {
     counter++;
     float t = Time.realtimeSinceStartup;
     if (t > lastTime + fpsMeasurePeriod) {
@@ -61,6 +69,17 @@ public class FPSCounter
       counter = 0;
       lastTime = t;
     }
+    return fps;
+  }
+
+  public float UpdateFps() {
+    var t = Time.realtimeSinceStartup;
+    var tprev = times[idx];
+    times[idx] = t;
+
+    idx = (idx + 1) % times.Length;
+
+    fps = times.Length / (t - tprev);
     return fps;
   }
 }
@@ -603,7 +622,7 @@ namespace DeepMotion.DMBTDemo
 
       newPoseEvent(true);
       var fps = counter.UpdateFps();
-      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
+      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3, Time.realtimeSinceStartup - t);
 
     }
 
