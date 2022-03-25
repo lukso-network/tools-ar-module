@@ -13,6 +13,8 @@ using UnityEngine.Events;
 
 namespace Mediapipe.Unity.SkeletonTracking
 {
+
+
   public class SkeletonTrackingGraph : GraphRunner
   {
     public enum ModelComplexity
@@ -21,6 +23,10 @@ namespace Mediapipe.Unity.SkeletonTracking
       Full = 1,
       Heavy = 2,
     }
+
+    private NormalizedLandmarkList lastSkeletonLandmarkds = null;
+    private NormalizedLandmarkList lastFaceLandmarkds = null;
+
 
     public ModelComplexity modelComplexity = ModelComplexity.Full;
     public bool smoothLandmarks = true;
@@ -118,13 +124,20 @@ namespace Mediapipe.Unity.SkeletonTracking
       cameraController.UpdateCamera(textureFrame, rotation, imageSource);
     }
 
+    public void LateUpdate() {
+      var imageSource = ImageSourceProvider.ImageSource;
+      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
+
+      skeletonManager.OnNewPose3(screenPlane, lastSkeletonLandmarkds, lastFaceLandmarkds, mirrored, lastTexture);
+    }
+
     public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks,
       out NormalizedLandmarkList faceLandmarks,
       bool allowBlock = true)
     {
 
       var currentTimestampMicrosec = GetCurrentTimestampMicrosec();
-      var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
+    //  var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
       var r3 = TryGetNext(_faceLandmarksStream, out faceLandmarks, allowBlock, currentTimestampMicrosec);
       var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
 
@@ -134,13 +147,16 @@ namespace Mediapipe.Unity.SkeletonTracking
       Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
 
       skeletonWorldLandmarks = null;
+      skeletonDetection = null;
       roiFromLandmarks = null;
 
+      lastFaceLandmarkds = faceLandmarks;
+      lastSkeletonLandmarkds = skeletonLandmarks;
       if (skeletonLandmarks == null) {
-     //   return false;
+        return false;
       }
 
-      if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
+    //  if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
       if (r2 && skeletonLandmarks != null) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
     //  if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
     //  if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
@@ -157,11 +173,11 @@ namespace Mediapipe.Unity.SkeletonTracking
 
 
       //TODO check on different phones
-      var imageSource = ImageSourceProvider.ImageSource;
-      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
+    //  var imageSource = ImageSourceProvider.ImageSource;
+//      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
-      skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
-      return r1 || r2;// || r3;//|| r4;
+  //    skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
+      return  r2;// || r3;//|| r4;
     }
 
     [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]
@@ -189,6 +205,7 @@ namespace Mediapipe.Unity.SkeletonTracking
           if (skeletonTrackingGraph._skeletonLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec))
           {
             skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
+            skeletonTrackingGraph.lastSkeletonLandmarkds = value;
           }
         }
       }).mpPtr;
@@ -200,6 +217,7 @@ namespace Mediapipe.Unity.SkeletonTracking
         using (var packet = new NormalizedLandmarkListPacket(ptr, false)) {
           if (skeletonTrackingGraph._skeletonLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec)) {
             //skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
+            skeletonTrackingGraph.lastFaceLandmarkds = value;
           }
         }
       }).mpPtr;

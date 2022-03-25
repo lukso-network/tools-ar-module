@@ -20,6 +20,32 @@ using System.Text.RegularExpressions;
 using Lukso;
 using Skeleton = Lukso.Skeleton;
 
+
+struct Landmarks
+{
+  public NormalizedLandmarkList lastLandmarks { get; private set; }
+  public long lastValidTime { get; private set; }
+
+  public void Set(NormalizedLandmarkList landmarks) {
+    if (landmarks != null) {
+      lastLandmarks = landmarks;
+      lastValidTime = time();
+    }
+  }
+
+  public NormalizedLandmarkList GetActualIfValid(long durationMS) {
+    return IsValid(durationMS) ? lastLandmarks : null;
+  }
+
+  public bool IsValid(long durationMs) {
+    return time() - lastValidTime < durationMs;
+  }
+
+  private long time() {
+    return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+  }
+}
+
 public class FPSCounter
 {
   const float fpsMeasurePeriod = 0.5f;
@@ -82,6 +108,9 @@ namespace DeepMotion.DMBTDemo
     private Texture2D lastFrame;
     private bool paused = false;
     private Vector3[] skeletonPoints;
+
+    private Landmarks skeletonLandmarks;
+    private Landmarks faceLandmarks;
 
     public Texture2D GetLastFrame() {
       return lastFrame;
@@ -507,6 +536,76 @@ namespace DeepMotion.DMBTDemo
 
     }
 
+
+
+
+    internal void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
+      lastFrame = texture;
+      if (paused) {
+        return;
+      }
+
+      if (!enabled) {
+        return;
+      }
+
+      this.skeletonLandmarks.Set(landmarkList);
+      this.faceLandmarks.Set(faceLandmarks);
+
+      const long VALID_DURATION = 2000; //2 sec
+      landmarkList = this.skeletonLandmarks.GetActualIfValid(VALID_DURATION);
+      faceLandmarks = this.faceLandmarks.GetActualIfValid(VALID_DURATION);
+
+      OnNewPose3(screenTransform, landmarkList, faceLandmarks, flipped);
+    }
+
+    private void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+        
+      
+      face.SetActive(faceLandmarks != null);
+      var t = Time.realtimeSinceStartup;
+      float t2 = 0;
+      float t3 = 0;
+      float t4 = 0;
+
+      if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
+        newPoseEvent(false);
+
+        var fps0 = counter.UpdateFps();
+        display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0, 0, 0);
+        return;
+      }
+
+      var t1 = Time.realtimeSinceStartup;
+
+      try {
+        var scale = screenTransform.localScale;
+        scale.z = scaleDepth;
+        screenTransform.localScale = scale;
+
+        var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
+        t2 = Time.realtimeSinceStartup;
+
+        UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+        t3 = Time.realtimeSinceStartup;
+
+        newFaceEvent(faceLandmarks, lastFrame, flipped);
+
+        t4 = Time.realtimeSinceStartup;
+
+
+        //  Debug.Log("light:" + (t4 - t3));
+
+      } catch (Exception ex) {
+        Debug.LogError("DMBTManage new pose failed");
+        Debug.LogException(ex);
+      }
+
+      newPoseEvent(true);
+      var fps = counter.UpdateFps();
+      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
+
+    }
 
     internal void ResetAvatar() {
       //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);

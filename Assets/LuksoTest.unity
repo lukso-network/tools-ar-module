@@ -1881,7 +1881,7 @@ MonoBehaviour:
   screen: {fileID: 1889892132}
   graphRunner: {fileID: 188083188}
   textureFramePool: {fileID: 188083189}
-  runningMode: 2
+  runningMode: 0
   _worldAnnotationArea: {fileID: 1936307554}
   _skeletonDetectionAnnotationController: {fileID: 1889892130}
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
