@@ -79,6 +79,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         _skeletonDetectionStream.AddListener(SkeletonDetectionCallback).AssertOk();
         _skeletonLandmarksStream.AddListener(SkeletonLandmarksCallback).AssertOk();
+        _faceLandmarksStream.AddListener(FaceLandmarksCallback).AssertOk();
 
      //   _skeletonWorldLandmarksStream.AddListener(SkeletonWorldLandmarksCallback).AssertOk();
        // _roiFromLandmarksStream.AddListener(RoiFromLandmarksCallback).AssertOk();
@@ -121,6 +122,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       out NormalizedLandmarkList faceLandmarks,
       bool allowBlock = true)
     {
+
       var currentTimestampMicrosec = GetCurrentTimestampMicrosec();
       var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
       var r3 = TryGetNext(_faceLandmarksStream, out faceLandmarks, allowBlock, currentTimestampMicrosec);
@@ -129,17 +131,17 @@ namespace Mediapipe.Unity.SkeletonTracking
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
-   //   Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
+      Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
 
       skeletonWorldLandmarks = null;
       roiFromLandmarks = null;
 
       if (skeletonLandmarks == null) {
-        return false;
+     //   return false;
       }
 
-      if (r1) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
-      if (r2) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
+      if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
+      if (r2 && skeletonLandmarks != null) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
     //  if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
     //  if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
       /*
@@ -193,6 +195,18 @@ namespace Mediapipe.Unity.SkeletonTracking
     }
 
     [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]
+    private static IntPtr FaceLandmarksCallback(IntPtr graphPtr, IntPtr packetPtr) {
+      return InvokeIfGraphRunnerFound<SkeletonTrackingGraph>(graphPtr, packetPtr, (skeletonTrackingGraph, ptr) => {
+        using (var packet = new NormalizedLandmarkListPacket(ptr, false)) {
+          if (skeletonTrackingGraph._skeletonLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec)) {
+            //skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
+          }
+        }
+      }).mpPtr;
+    }
+
+
+    [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]
     private static IntPtr SkeletonWorldLandmarksCallback(IntPtr graphPtr, IntPtr packetPtr)
     {
       return InvokeIfGraphRunnerFound<SkeletonTrackingGraph>(graphPtr, packetPtr, (skeletonTrackingGraph, ptr) =>
@@ -238,8 +252,9 @@ namespace Mediapipe.Unity.SkeletonTracking
       {
         _skeletonDetectionStream = new OutputStream<DetectionPacket, Detection>(calculatorGraph, poseDetectionStream, config.AddPacketPresenceCalculator(poseDetectionStream));
         _skeletonLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, poseLandmarksStream, config.AddPacketPresenceCalculator(poseLandmarksStream));
+        _faceLandmarksStream = new OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList>(calculatorGraph, faceLandmarksStream, config.AddPacketPresenceCalculator(faceLandmarksStream));
         //_skeletonWorldLandmarksStream = new OutputStream<LandmarkListPacket, LandmarkList>(calculatorGraph, _SkeletonWorldLandmarksStreamName, config.AddPacketPresenceCalculator(_SkeletonWorldLandmarksStreamName));
-      //  _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, config.AddPacketPresenceCalculator//(_RoiFromLandmarksStreamName));
+        //  _roiFromLandmarksStream = new OutputStream<NormalizedRectPacket, NormalizedRect>(calculatorGraph, _RoiFromLandmarksStreamName, config.AddPacketPresenceCalculator//(_RoiFromLandmarksStreamName));
       }
       else
       {
