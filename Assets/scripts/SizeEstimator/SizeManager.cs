@@ -153,7 +153,7 @@ namespace Lukso
     // }
 
     public void ResetSize() {
-      skeletonManager.GetClothController().ResetClothSize();
+      skeletonManager.GetClothController()?.ResetClothSize();
     }
 
     public void CalculateSize() {

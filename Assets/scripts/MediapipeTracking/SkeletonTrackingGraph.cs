@@ -126,9 +126,14 @@ namespace Mediapipe.Unity.SkeletonTracking
 
     public void LateUpdate() {
       var imageSource = ImageSourceProvider.ImageSource;
+      if (imageSource == null) {
+        return;
+      }
       var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
       skeletonManager.OnNewPose3(screenPlane, lastSkeletonLandmarkds, lastFaceLandmarkds, mirrored, lastTexture);
+      lastSkeletonLandmarkds = null;
+      lastFaceLandmarkds = null;
     }
 
     public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks,
@@ -153,7 +158,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       lastFaceLandmarkds = faceLandmarks;
       lastSkeletonLandmarkds = skeletonLandmarks;
       if (skeletonLandmarks == null) {
-        return false;
+     //  return false;
       }
 
     //  if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
@@ -177,7 +182,7 @@ namespace Mediapipe.Unity.SkeletonTracking
 //      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
   //    skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
-      return  r2;// || r3;//|| r4;
+      return  r2||r3;// || r3;//|| r4;
     }
 
     [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]

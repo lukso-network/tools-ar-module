@@ -130,6 +130,8 @@ namespace DeepMotion.DMBTDemo
 
     private Landmarks skeletonLandmarks;
     private Landmarks faceLandmarks;
+    private Vector3[] cachedSkeleton;
+
 
     public Texture2D GetLastFrame() {
       return lastFrame;
@@ -139,7 +141,7 @@ namespace DeepMotion.DMBTDemo
 
     private FPSCounter counter = new FPSCounter();
     public bool ShowTransparentFace {
-      get => face.GetComponent<TransparentMaterialRenderer>().enabled;
+      get => face?.GetComponent<TransparentMaterialRenderer>().enabled ?? true;
       set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
     }
 
@@ -568,6 +570,13 @@ namespace DeepMotion.DMBTDemo
         return;
       }
 
+      OnNewPose3(screenTransform, landmarkList, faceLandmarks, flipped);
+    }
+
+    private void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+
+      bool skelModified = landmarkList != null;
+      bool faceModified = faceLandmarks != null;
       this.skeletonLandmarks.Set(landmarkList);
       this.faceLandmarks.Set(faceLandmarks);
 
@@ -575,12 +584,6 @@ namespace DeepMotion.DMBTDemo
       landmarkList = this.skeletonLandmarks.GetActualIfValid(VALID_DURATION);
       faceLandmarks = this.faceLandmarks.GetActualIfValid(VALID_DURATION);
 
-      OnNewPose3(screenTransform, landmarkList, faceLandmarks, flipped);
-    }
-
-    private void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
-        
-      
       face.SetActive(faceLandmarks != null);
       var t = Time.realtimeSinceStartup;
       float t2 = 0;
@@ -602,13 +605,18 @@ namespace DeepMotion.DMBTDemo
         scale.z = scaleDepth;
         screenTransform.localScale = scale;
 
-        var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
+        var skelPoints = skelModified ? UpdateSkeleton(screenTransform, landmarkList, flipped) : cachedSkeleton;
+        cachedSkeleton = skelPoints;
         t2 = Time.realtimeSinceStartup;
 
-        UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+        if (faceModified || skelModified) {
+          UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+        }
         t3 = Time.realtimeSinceStartup;
 
-        newFaceEvent(faceLandmarks, lastFrame, flipped);
+        if (faceModified || skelModified) {
+          newFaceEvent(faceLandmarks, lastFrame, flipped);
+        }
 
         t4 = Time.realtimeSinceStartup;
 

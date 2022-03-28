@@ -1881,7 +1881,7 @@ MonoBehaviour:
   screen: {fileID: 1889892132}
   graphRunner: {fileID: 188083188}
   textureFramePool: {fileID: 188083189}
-  runningMode: 0
+  runningMode: 2
   _worldAnnotationArea: {fileID: 1936307554}
   _skeletonDetectionAnnotationController: {fileID: 1889892130}
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
@@ -5841,7 +5841,7 @@ MonoBehaviour:
     type: 3}
   hat: {fileID: 843617380}
   screenCamera: {fileID: 985747844}
-  scaleDepth: 2
+  scaleDepth: 0.716
 --- !u!1 &832877925
 GameObject:
   m_ObjectHideFlags: 0
@@ -7488,6 +7488,7 @@ MonoBehaviour:
   - grad
   - move
   - light
+  - total
 --- !u!114 &1007728892
 MonoBehaviour:
   m_ObjectHideFlags: 0
