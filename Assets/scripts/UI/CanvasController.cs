@@ -34,10 +34,10 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   [Binding]
   public string SelectedCamera {
     get {
-      return ImageSourceProvider.ImageSource.sourceName;
+      return ImageSourceProvider.ImageSource?.sourceName ?? "";
     }
     set {
-      if (ImageSourceProvider.ImageSource.sourceName == value) {
+      if (ImageSourceProvider.ImageSource?.sourceName == value) {
         return; // No change.
       }
       var sources = CameraSource;
@@ -62,7 +62,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   [Binding]
   public string[] CameraSource {
     get {
-      return ImageSourceProvider.ImageSource.sourceCandidateNames;
+      return ImageSourceProvider.ImageSource == null ? new string[] { } : ImageSourceProvider.ImageSource.sourceCandidateNames;
     }
   }
 
@@ -115,16 +115,17 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     [Binding]
       public bool IsPaused {
-          get { return !ImageSourceProvider.ImageSource.isPlaying; }
+          get { return !ImageSourceProvider.ImageSource?.isPlaying ?? false; }
           set {
-              if (!ImageSourceProvider.ImageSource.isPlaying == value) {
+              var source = ImageSourceProvider.ImageSource;
+              if (source == null || !source.isPlaying == value) {
                 return;
               }
 
               if (value) {
-                 ImageSourceProvider.ImageSource.Pause();
+                 source.Pause();
               } else {
-                StartCoroutine(ImageSourceProvider.ImageSource.Resume());
+                StartCoroutine(source.Resume());
               }
             OnPropertyChanged("IsPaused");
     }
@@ -213,19 +214,14 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   }
 
   //TODOLK 
-  /*
-     [Binding]
-     public float PlaybackSpeed {
+  [Binding]
+  public float PlaybackSpeed {
 
-         get { return player == null ? 0 : player.vp.playbackSpeed; }
-         set {
-             if (player != null) {
-                 player.vp.playbackSpeed = value;
-                 OnPropertyChanged("PlaybackSpeed");
-             }
-         }
+      get { return 0; }
+      set {
+      }
 
-     }*/
+  }
 
   [Binding]
   public float ScaleDepth {
