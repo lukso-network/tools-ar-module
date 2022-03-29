@@ -30,8 +30,8 @@ namespace Assets.scripts
         private readonly float[][,] rotTransform = new float[][,] { 
             new float[,] { { 1, 0, 0 }, { 0, -1, 1 }}, 
             new float[,] { { -1, 0, 1 }, { 0, -1, 1 } },
-            new float[,] { { 0, -1, 1 }, { 1, 0, 0 } },
-            new float[,] { { 0, 1, 0 }, { -1, 0, 1 } } 
+            new float[,] { { 0, -1, 1 }, { -1, 0, 1 } },
+            new float[,] { { 0, 1, 0 }, { 1, 0, 0 } } 
         };
 
 
@@ -152,7 +152,7 @@ void Start() {
         private float[] GetIntencities(NormalizedLandmarkList faceLandmarks, Texture2D texture, bool flipped) {
 
             var im = ImageSourceProvider.ImageSource;
-            var angle = (int)(im.isFrontFacing ? im.rotation : im.rotation.Reverse());
+            var angle = (int)im.rotation;
 
             int w = texture.width;
             int h = texture.height;
@@ -161,7 +161,9 @@ void Start() {
 
             var fakeLightDir = Quaternion.Inverse(dmtManager.FaceDirection) * new Vector3(0, 1.0f,-1.0f).normalized;
             const float MIN_COS = 0.3f;
-            //TODO
+      //TODO
+
+      
             float[,] tr = null;
             if (angle == 0) {
                 if (flipped) {
@@ -193,13 +195,19 @@ void Start() {
 
                     intencity = (c[0] + c[1] + c[2]) / 3;// /5;
                     intencity  += Mathf.Max(Vector3.Dot(faceNormals[i], fakeLightDir)) * 0.07f;
-                    //texture.SetPixel(x, y, new Color(1, 1, 1, 1));
+
+          /*
+                    for (int r = 0; r < 4; ++r) {
+                      for (int r2 = 0; r2 < 4; ++r2) {
+                        texture.SetPixel(x+r, y+r2, new Color(1, 1, 1, 1));
+                      }
+                    }*/
                 }
 
 
                 intencities[i] = intencity;
             }
-           // texture.Apply();
+            //texture.Apply();
 
             return intencities;
         }
