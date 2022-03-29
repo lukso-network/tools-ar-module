@@ -11,6 +11,8 @@ namespace Assets.scripts
     {
 
         public Light lightSource;
+        [Range(0, 1)]
+        public float calculationInterval = 0.5f;
 
         private Vector3[] faceNormals;
         private Vector3[] faceVertices;
@@ -25,6 +27,8 @@ namespace Assets.scripts
 
         private const int FACE_POINT_COUNT = 468;
         float[] intencities = new float[FACE_POINT_COUNT];
+        private float lastCaclulationTime = 0;
+        private Vector3 lightDir;
 
 
         private readonly float[][,] rotTransform = new float[][,] { 
@@ -46,13 +50,15 @@ void Start() {
             faceVertices = dmtManager.FaceMesh.vertices;
             PrepareFaceNormals(faceNormals);
 
+          lightDir = lightSource.transform.rotation * Vector3.forward;
+
         }
 
 
         // Update is called once per frame
         void Update() {
-
-        }
+            lightSource.transform.rotation =Quaternion.Lerp(lightSource.transform.rotation, Quaternion.FromToRotation(-Vector3.forward, lightDir), 0.1f);
+        } 
 
         private Matrix4x4 InitLeastSqrMatrix(int[] indices) {
             var mt = Matrix4x4.zero;
@@ -71,7 +77,7 @@ void Start() {
             mt = mt.inverse;
             return mt;
         }
-
+        
         private void PrepareFaceNormals(Vector3[] faceNormals) {
             float[,][] mat = new float[4, 4][];
             for (int i = 0; i < 4; ++i) {
@@ -97,16 +103,21 @@ void Start() {
             }
 
 
-            Vector4 res = SolveLightEquation(faceLandmarks, texture, flipped);
+            if (Time.realtimeSinceStartup - lastCaclulationTime < calculationInterval) {
+                return;
+            }
+            lastCaclulationTime = Time.realtimeSinceStartup;
+
+     Vector4 res = SolveLightEquation(faceLandmarks, texture, flipped);
             RenderSettings.ambientLight = Vector4.one * Mathf.Clamp(res.w, 0, 0.3f);
             var dir = new Vector3(res.x, res.y, res.z).normalized;
 
             //dir = new Vector3(0, 0, -1);
 
             dir = dmtManager.FaceDirection * dir;
-            dir = FilterDir(dir);
-            lightSource.transform.rotation = Quaternion.FromToRotation(-Vector3.forward, dir);
-
+            //dir = FilterDir(dir);
+            lightDir = dir;
+            
         }
 
 
