@@ -37,24 +37,20 @@ namespace Assets.scripts.Avatar
         return;
       }
       renderer.material = newMaterial;
-
+      
       //TODO start it only one time
       texture.wrapMode = TextureWrapMode.Clamp;
 
       float w = cam3d.ScreenSize.x;
       float h = cam3d.ScreenSize.y;
+      
 
       var im = ImageSourceProvider.ImageSource;
-      var angle = (int)(im.isFrontFacing ? im.rotation : im.rotation.Reverse());
+      var angle = (int)im.rotation;
 
       var mat = new Matrix4x4(new Vector4(1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4((w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
-      //var mat = new Matrix4x4(new Vector4(-1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4(1-(w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
-      //mat = mat * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, 90), Vector3.one);
-
+      
       Quaternion rot = Quaternion.Euler(0, 0, angle);
-                     // Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, webScreenPlane.IsFrontCamera() ? new Vector3(-1, 1, 1) : Vector3.one);
-
-
        Matrix4x4 m = Matrix4x4.Translate(new Vector3(0.5f, 0.5f, 0)) * Matrix4x4.Rotate(rot) * Matrix4x4.Scale(im.isFrontFacing ? new Vector3(-1, 1, 1) : Vector3.one) * Matrix4x4.Translate(new Vector3(-0.5f, -0.5f, 0));
 
       //   m[3 * 4 + 0] = 1;

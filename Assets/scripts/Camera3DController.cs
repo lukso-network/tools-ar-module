@@ -46,11 +46,14 @@ namespace Lukso
         height = temp;
       }
 
+      this.width = width;
+      this.height = height;
+
       int refHeight = 4;
       screenPlane.transform.localScale = new Vector3((float)width / height * refHeight, refHeight, 1);
 
-      Quaternion rot = Quaternion.Euler(0, 0, angle);
-      Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, frontCamera ? new Vector3(-1, 1, 1) : Vector3.one);
+     // Quaternion rot = Quaternion.Euler(0, 0, angle);
+     // Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, frontCamera ? new Vector3(-1, 1, 1) : Vector3.one);
 
      // GetComponent<Renderer>().material.SetMatrix("_TextureRotation", m);
       //transform.localRotation = baseRotation * Quaternion.Euler(0, angle, 0);
