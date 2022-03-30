@@ -1881,7 +1881,7 @@ MonoBehaviour:
   screen: {fileID: 1889892132}
   graphRunner: {fileID: 188083188}
   textureFramePool: {fileID: 188083189}
-  runningMode: 2
+  runningMode: 0
   _worldAnnotationArea: {fileID: 1936307554}
   _skeletonDetectionAnnotationController: {fileID: 1889892130}
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
@@ -1903,7 +1903,7 @@ MonoBehaviour:
   _cpuConfig: {fileID: 4900000, guid: 543ef0a186cae534c9a957bef418bd20, type: 3}
   _gpuConfig: {fileID: 0}
   _openGlEsConfig: {fileID: 4900000, guid: e61127ee3a7d34b439336a84201c83ef, type: 3}
-  _timeoutMicrosec: 50000
+  _timeoutMicrosec: 120000
   modelComplexity: 0
   smoothLandmarks: 1
   OnSkeletonDetectionOutput:
@@ -3758,6 +3758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightSource: {fileID: 1909744803}
+  calculationInterval: 0.5
   filterScale: 0.364
 --- !u!1 &394984864
 GameObject:

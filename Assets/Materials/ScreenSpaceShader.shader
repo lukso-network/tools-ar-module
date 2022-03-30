@@ -68,15 +68,16 @@ Shader "Unlit/ScreenSpaceShader"
             fixed4 frag(v2f i) : SV_Target
             {
                 float2 screenPosition = (i.scrPos.xy / i.scrPos.w);
-                float c = screenPosition.y;
-                fixed4 col = float4(screenPosition.x, screenPosition.y,0, 1);
+                //float c = screenPosition.y;
+                //fixed4 col = float4(screenPosition.x, screenPosition.y,0, 1);
 
                 float4x4 m = _TextureMat;
                 float2 uv = mul(m, float4(screenPosition.x, screenPosition.y, 0, 1)).xy;
 
-                col = tex2D(_MainTex, uv) ;
+                float4 col = tex2D(_MainTex, uv) ;
                 //col = float4(1, 1, 1, 1);
   //              col = (i.scrPos + float4(0, 0, 0, 10));
+               // col.x = col.y = 0;
     
                 return col;
             }
