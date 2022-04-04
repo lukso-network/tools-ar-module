@@ -133,6 +133,16 @@ namespace DeepMotion.DMBTDemo
     private Vector3[] cachedSkeleton;
 
 
+    [Header("Filter params:")]
+    [SerializeField] private OneEuroFilterParams zFilterParams;
+    [SerializeField] private OneEuroFilterParams xyFilterParams;
+
+
+    [SerializeField] private bool enableZFilter = true;
+    private OneEuroFilter []posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
+    private OneEuroFilter []posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
+    private OneEuroFilter []posFIlterY = new OneEuroFilter[Skeleton.JOINT_COUNT];
+
     public Texture2D GetLastFrame() {
       return lastFrame;
     }
@@ -145,11 +155,22 @@ namespace DeepMotion.DMBTDemo
       set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
     }
 
+    private void InitFilter() {
+      for (int i = 0; i < posFIlterZ.Length; ++i) {
+        posFIlterZ[i] = new OneEuroFilter(zFilterParams);
+        posFIlterX[i] = new OneEuroFilter(xyFilterParams);
+        posFIlterY[i] = new OneEuroFilter(xyFilterParams);
+      }
+    }
+
     void OnValidate() {
       scaleFilter.SetModified();
+      InitFilter();
+
     }
 
     void Start() {
+      InitFilter();
       InitFace();
       Init();
     }
@@ -334,6 +355,14 @@ namespace DeepMotion.DMBTDemo
       float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
       scale /= 2.8f;
       var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
+
+      if (enableZFilter) {
+        for (int i = 0; i < points.Length; ++i) {
+          points[i].z = posFIlterZ[i].Filter(points[i].z);
+          points[i].x = posFIlterX[i].Filter(points[i].x);
+          points[i].y = posFIlterY[i].Filter(points[i].y);
+        }
+      }
       /*
       var min = new Vector3(1000, 1000, 100);
       var max = new Vector3(-1000, -1000, -100);

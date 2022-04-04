@@ -31,6 +31,12 @@ namespace Assets.scripts.Avatar
       renderer.material = newMaterial;
     }
 
+    private void OnDestroy() {
+      if (skelGraph != null) {
+        skelGraph.newFrameRendered -= OnNewFrameRendered;
+      }
+    }
+
     private void OnNewFrameRendered(Texture2D texture) {
       if (!gameObject.activeSelf || !enabled) {
         renderer.material = oldMaterial;
