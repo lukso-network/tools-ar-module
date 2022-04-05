@@ -986,6 +986,7 @@ MonoBehaviour:
     type: 3}
   axis: {fileID: 0}
   updateAutomatically: 1
+  showRawPoints: 0
   showBody: 1
   showSkeleton: 0
   showLandmarks: 0
@@ -4865,6 +4866,7 @@ MonoBehaviour:
     type: 3}
   axis: {fileID: 0}
   updateAutomatically: 0
+  showRawPoints: 0
   showBody: 1
   showSkeleton: 1
   showLandmarks: 1
@@ -5843,6 +5845,18 @@ MonoBehaviour:
   hat: {fileID: 843617380}
   screenCamera: {fileID: 985747844}
   scaleDepth: 0.716
+  zFilterParams:
+    freq: 30
+    mincutoff: 1
+    beta: 0
+    dcutoff: 1
+  xyFilterParams:
+    freq: 30
+    mincutoff: 0.1
+    beta: 7
+    dcutoff: 0.5
+  useSameParams: 1
+  enableZFilter: 1
 --- !u!1 &832877925
 GameObject:
   m_ObjectHideFlags: 0
