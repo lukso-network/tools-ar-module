@@ -215,7 +215,7 @@ namespace Lukso
 
       var avatar = skeletonManager.GetClothController();
       if (avatar == null) {
-        return;
+        yield break;
       }
 
       yield return avatar.FindBestCloth(() => {

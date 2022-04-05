@@ -75,11 +75,11 @@ public class OneEuroFilterParams
   [Range(0, 30)]
   public float freq = 30;
 
-  [Range(0, 5)]
+  [Range(0, 30)]
   public float mincutoff = 1;
-  [Range(0, 5)]
+  [Range(0, 30)]
   public float beta = 0;
-  [Range(0, 5)]
+  [Range(0, 30)]
   public float dcutoff = 1;
 }
 

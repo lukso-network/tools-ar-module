@@ -136,8 +136,7 @@ namespace DeepMotion.DMBTDemo
     [Header("Filter params:")]
     [SerializeField] private OneEuroFilterParams zFilterParams;
     [SerializeField] private OneEuroFilterParams xyFilterParams;
-
-
+    [SerializeField] private bool useSameParams;
     [SerializeField] private bool enableZFilter = true;
     private OneEuroFilter []posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter []posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
@@ -156,8 +155,9 @@ namespace DeepMotion.DMBTDemo
     }
 
     private void InitFilter() {
+      var tempFilter = useSameParams ? xyFilterParams : zFilterParams;
       for (int i = 0; i < posFIlterZ.Length; ++i) {
-        posFIlterZ[i] = new OneEuroFilter(zFilterParams);
+        posFIlterZ[i] = new OneEuroFilter(tempFilter);
         posFIlterX[i] = new OneEuroFilter(xyFilterParams);
         posFIlterY[i] = new OneEuroFilter(xyFilterParams);
       }
@@ -166,7 +166,8 @@ namespace DeepMotion.DMBTDemo
     void OnValidate() {
       scaleFilter.SetModified();
       InitFilter();
-
+      
+      Debug.Log("New filter");
     }
 
     void Start() {
@@ -295,18 +296,16 @@ namespace DeepMotion.DMBTDemo
       this.paused = pause;
     }
 
-    private Vector3[] TransformPoints(Transform transform, NormalizedLandmarkList landmarkList, bool flipped, float zShift = 0, float spineSize = -1) {
+    private Vector3[] TransformPoints(Transform transform, Vector3 []points, bool flipped, float zShift = 0, float spineSize = -1) {
       if (spineSize < 0) {
         spineSize = 1;
       }
-      int count = landmarkList.Landmark.Count;
+      
       var scaleVector = ScaleVector(transform);
 
       //TODOLK - memory 
-      var points = new Vector3[count];
-      for (int i = 0; i < count; ++i) {
-        var landmark = landmarkList.Landmark[i];
-        var p = GetPositionFromNormalizedPoint(scaleVector, LandmarkToVector(landmark), flipped, zShift, spineSize);
+      for (int i = 0; i < points.Length; ++i) {
+        var p = GetPositionFromNormalizedPoint(scaleVector, points[i], flipped, zShift, spineSize);
         points[i] = p;
       }
 
@@ -354,15 +353,22 @@ namespace DeepMotion.DMBTDemo
       var spineSize = GetSpineSize(landmarkList);
       float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
       scale /= 2.8f;
-      var points = TransformPoints(screenTransform, landmarkList, flipped, 0, scale);
 
+      var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
+
+
+      var timestamp = Time.realtimeSinceStartup;
       if (enableZFilter) {
         for (int i = 0; i < points.Length; ++i) {
-          points[i].z = posFIlterZ[i].Filter(points[i].z);
-          points[i].x = posFIlterX[i].Filter(points[i].x);
-          points[i].y = posFIlterY[i].Filter(points[i].y);
+          points[i].z = posFIlterZ[i].Filter(points[i].z, timestamp);
+          points[i].x = posFIlterX[i].Filter(points[i].x, timestamp);
+          points[i].y = posFIlterY[i].Filter(points[i].y, timestamp);
         }
       }
+
+      TransformPoints(screenTransform, points, flipped, 0, scale);
+
+
       /*
       var min = new Vector3(1000, 1000, 100);
       var max = new Vector3(-1000, -1000, -100);
@@ -409,11 +415,12 @@ namespace DeepMotion.DMBTDemo
       //faceMesh.vertices = points;
       //TOFO
 
-
-      var points = TransformPoints(screenTransform, faceLandmarks, flipped, faceNoseShift, faceScale);
+      var points = Enumerable.Range(0, faceLandmarks.Landmark.Count).Select(i => LandmarkToVector(faceLandmarks.Landmark[i])).ToArray();
       if (points.Length == 0) {
         return;
       }
+      TransformPoints(screenTransform, points, flipped, faceNoseShift, faceScale);
+      
 
       faceMesh.vertices = points;
 
@@ -440,150 +447,6 @@ namespace DeepMotion.DMBTDemo
       hat.transform.localScale = new Vector3(scale, scale, scale);
       hat.transform.rotation = faceDirection;
       hat.transform.localPosition = nose;
-    }
-
-
-    internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
-      if (paused) {
-        return;
-      }
-
-      if (!enabled) {
-        return;
-      }
-
-      if (faceLandmarks == null) {
-        faceLandmarks = new NormalizedLandmarkList();
-      }
-
-      lastFrame = texture;
-      face.SetActive(faceLandmarks != null && faceLandmarks.Landmark.Count > 0);
-      var t = Time.realtimeSinceStartup;
-      float t2 = 0;
-      float t3 = 0;
-      float t4 = 0;
-
-      if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
-        newPoseEvent(false);
-
-        var fps0 = counter.UpdateFps();
-        display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0, 0, 0);
-        return;
-      }
-
-      var t1 = Time.realtimeSinceStartup;
-
-      try {
-        var scale = screenTransform.localScale;
-        scale.z = scaleDepth;
-        screenTransform.localScale = scale;
-
-        var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
-        t2 = Time.realtimeSinceStartup;
-
-        UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
-        t3 = Time.realtimeSinceStartup;
-
-        newFaceEvent(faceLandmarks, texture, flipped);
-
-        t4 = Time.realtimeSinceStartup;
-
-
-        //  Debug.Log("light:" + (t4 - t3));
-
-      } catch (Exception ex) {
-        Debug.LogError("DMBTManage new pose failed");
-        Debug.LogException(ex);
-      }
-
-      newPoseEvent(true);
-      var fps = counter.UpdateFps();
-      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
-
-    }
-
-    internal void OnNewPose2(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
-      if (paused) {
-        return;
-      }
-
-      if (!enabled) {
-        return;
-      }
-
-      lastFrame = texture;
-
-      //TODO
-      if (landmarkList == null && faceLandmarks == null) {
-        face.SetActive(false);
-        //face.SetActive(faceLandmarks != null && faceLandmarks.Landmark.Count > 0);
-      } else if (faceLandmarks != null) {
-        face.SetActive(true);
-      }
-
-
-      var t = Time.realtimeSinceStartup;
-      float t2 = 0;
-      float t3 = 0;
-      float t4 = 0;
-
-      /*
-            if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
-                newPoseEvent(false);
-
-                var fps0 = counter.UpdateFps();
-                display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0,0,0);
-                return;
-            }
-      */
-
-      var t1 = Time.realtimeSinceStartup;
-
-      try {
-        var scale = screenTransform.localScale;
-        scale.z = scaleDepth;
-        screenTransform.localScale = scale;
-
-        var skelPoints = UpdateSkeleton(screenTransform, landmarkList, flipped);
-        if (skelPoints == null) {
-          skelPoints = this.skeletonPoints;
-        } else {
-          this.skeletonPoints = skelPoints;
-        }
-        if (skelPoints == null) {
-          return;
-        }
-
-
-        t2 = Time.realtimeSinceStartup;
-
-        if (faceLandmarks != null) {
-          UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
-          t3 = Time.realtimeSinceStartup;
-
-          newFaceEvent(faceLandmarks, texture, flipped);
-        }
-
-
-
-        t4 = Time.realtimeSinceStartup;
-
-
-        //  Debug.Log("light:" + (t4 - t3));
-
-      } catch (Exception ex) {
-        Debug.LogError("DMBTManage new pose failed");
-        Debug.LogException(ex);
-      }
-
-      if (landmarkList != null) {
-        newPoseEvent(true);
-      } else {
-
-      }
-      var fps = counter.UpdateFps();
-      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3);
-
     }
 
 

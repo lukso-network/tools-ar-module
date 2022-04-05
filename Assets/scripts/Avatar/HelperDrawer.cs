@@ -62,7 +62,7 @@ namespace Assets.scripts.Avatar
         public bool ShowSkeleton {
             get => showSkeleton;
             set {
-				showSkeleton = value;
+				        showSkeleton = value;
                 gameObject.SetActive(showSkeleton);
             }
         }
@@ -87,6 +87,7 @@ namespace Assets.scripts.Avatar
                 var poseManager = FindObjectOfType<DMBTDemoManager>();
                 poseManager.newPoseEvent += UpdateHelpers;
             }
+            ShowSkeleton = false;
         }
 
         private void InitAvatar() { 
