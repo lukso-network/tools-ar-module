@@ -261,8 +261,8 @@ namespace Assets
         }
 
         public Avatar GetClothController() {
-            //TODO
-            return contollerAvatars.Values.First();
+          return contollerAvatars.Values.FirstOrDefault();
+
         }
     }
 

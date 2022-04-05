@@ -214,6 +214,9 @@ namespace Lukso
 
 
       var avatar = skeletonManager.GetClothController();
+      if (avatar == null) {
+        return;
+      }
 
       yield return avatar.FindBestCloth(() => {
         avatar.ApplyClothShift(true);

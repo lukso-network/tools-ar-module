@@ -62,11 +62,8 @@ namespace Assets.scripts.Avatar
         public bool ShowSkeleton {
             get => showSkeleton;
             set {
-                showSkeleton = value;
-                if (dotsRoot != null) {
-                    dotsRoot.SetActive(showSkeleton);
-                    bonesRoot.SetActive(showSkeleton);
-                }
+				showSkeleton = value;
+                gameObject.SetActive(showSkeleton);
             }
         }
 
