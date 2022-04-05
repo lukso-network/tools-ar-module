@@ -15,12 +15,14 @@ namespace Assets.scripts.Avatar
         private SkeletonManager skeletonManager;
 
         private GameObject dotsRoot;
+        private GameObject rawPointsRoot;
         private GameObject bonesRoot;
 
         public GameObject dotPrefab;
         public GameObject bonePrefab;
         public GameObject axis;
         public bool updateAutomatically = true;
+        public bool showRawPoints;
 
         public bool showBody = true;
         public bool showSkeleton = false;
@@ -123,6 +125,7 @@ namespace Assets.scripts.Avatar
 
             dotsRoot = new GameObject("dots root");
             bonesRoot = new GameObject("bones root");
+            rawPointsRoot = new GameObject("rawPoints root");
             dotsRoot.transform.parent = transform;
             bonesRoot.transform.parent = transform;
 
@@ -130,7 +133,13 @@ namespace Assets.scripts.Avatar
                        x.definition != null && (x.definition.pointId >= 0 || x.definition.gradCalculator != null)
             ).ToList();
 
-            foreach(var joint in joints) {
+            for (int i = 0; i < Skeleton.JOINT_COUNT;++i) {
+              var obj = GameObject.Instantiate(dotPrefab, rawPointsRoot.transform);
+              var type = (Skeleton.Point)i;
+              obj.name = $"{type}-{i}";
+            }
+  
+          foreach (var joint in joints) {
 
                 var obj = GameObject.Instantiate(dotPrefab, dotsRoot.transform);
                 obj.name = $"{joint.transform.name}({joint.definition.point})";
@@ -171,20 +180,26 @@ namespace Assets.scripts.Avatar
                 return;
             }
 
+
+            for (int i = 0; i < Skeleton.JOINT_COUNT; ++i) {
+              var obj = rawPointsRoot.transform.GetChild(i);
+              obj.transform.position = skeletonManager.RawSkeletonPoints[i] ?? Vector3.zero;
+            }
+
             int idx = 0;
             foreach (var joint in joints) {
                 var obj = dotsRoot.transform.GetChild(idx);
                 idx += 1;
-
                 obj.transform.position = joint.transform.position;
                 obj.transform.rotation = joint.transform.rotation;
+
             }
 
             int jdx = 0;
-            foreach (var jointPair in bones) { 
-                
+            foreach (var jointPair in bones) {
                 var p1 = jointPair[0].transform.position;
                 var p2 = jointPair[1].transform.position;
+                
 
                 var rot = Quaternion.FromToRotation(Vector3.up, (p2 - p1));
                 var scale = (p2 - p1).magnitude;
@@ -206,6 +221,7 @@ namespace Assets.scripts.Avatar
             }
 
             if (avatar != null) {
+                rawPointsRoot.SetActive(showRawPoints);
                 //TODO for debugging only
                 // when paused mode is active
                 if (updateAutomatically) {

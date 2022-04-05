@@ -23,6 +23,8 @@ namespace Assets
         // these avatars can share the same skeleton
         // controllerAvatars actually calculates position and other avatars just copy data from it
         private readonly Dictionary<string, Assets.Avatar> contollerAvatars = new Dictionary<string, Assets.Avatar>();
+        
+        public Vector3?[] RawSkeletonPoints { get; private set; }
 
         // Use this for initialization
         void Start() {
@@ -239,7 +241,7 @@ namespace Assets
         }
 
         internal void UpdatePose(Vector3?[] ps) {
-
+            this.RawSkeletonPoints = ps ;
             foreach (var controller in contollerAvatars.Values) {
                 controller.SetIkTarget(ps);
                 controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
