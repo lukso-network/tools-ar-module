@@ -1,4 +1,4 @@
-﻿using Assets.PoseEstimator;
+using Assets.PoseEstimator;
 
 namespace Assets
 {

@@ -91,7 +91,7 @@ namespace Assets
         }
 
         public void DebugChange() {
-            var parameters = new List<ClothPointParameter>();
+            var parameters = new List<PointParameter>();
             foreach (var cp in clothPoints) {
                 parameters.AddRange(cp.definition.GetParameters());
             }
@@ -113,7 +113,7 @@ namespace Assets
 
 
 
-           var parameters = new List<ClothPointParameter>();
+           var parameters = new List<PointParameter>();
             foreach(var cp in clothPoints) {
                 parameters.AddRange(cp.definition.GetParameters());
             }
