@@ -160,9 +160,18 @@ namespace Assets
             skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_ELBOW, 0.5f));
             
 
-            skeleton.clothPoints.Add(new ClothAttachmentScale(Point.LEFT_SHOULDER, 0.5f));
-            skeleton.clothPoints.Add(new ClothAttachmentScale(Point.SPINE, 0.2f));
-            skeleton.clothPoints.Add(new ClothAttachmentScale(Point.CHEST, 0.5f));
+            skeleton.ikCalculator.Add(new Rotation3DParameter(Point.HIPS));
+
+
+           // skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP));
+            //skeleton.ikCalculator.Add(new Rotation1DParameter(Point.LEFT_KNEE, StretchingGradCalculator.Axis.Y));
+            //skeleton.ikCalculator.Add(new Stretching3DParameter(Point.LEFT_KNEE, StretchingGradCalculator.Axis.Z));
+
+        
+
+
+
+      
 
             //            skeleton.joints.Add(new JointDefinition(Skeleton.Point.Hips, new int[] {23,24 }, new GeneralFilter(new ScaleFilter(scaleFilter), new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(-10, 10, -10, 10, 0, 359.99f), new ScalingGradCalculator()));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12 }, new GeneralFilter(new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(0, 359.99f, 0, 359.99f, 0, 359.99f), new ScalingGradCalculator()));

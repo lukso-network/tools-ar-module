@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Lukso.Skeleton;
 
 namespace Assets
 {
@@ -15,6 +16,12 @@ namespace Assets
     private SkeletonTransform initalSkeletonTransform = new SkeletonTransform();
     private SkeletonTransform clothSkeletonTransform = new SkeletonTransform();
 
+    private List<PointParameter> ikCalcualationParameters = new List<PointParameter>();
+    
+    private Transform[] affectedSource;
+    private Vector3[] affectedTarget;
+
+    private Dictionary<Point, Joint[]> dependendJoints = new Dictionary<Point, Joint[]>();
 
     public void Update(float gradStep, float moveStep, int steps) {
       /*if (ikTarget.Length > 0) {
@@ -39,7 +46,7 @@ namespace Assets
       return;
     }
 
-    public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
+    public void UpdateFastBySteps2(float gradStep, float moveStep, int steps) {
       initalSkeletonTransform.CopyTo(this.joints);
 
       MoveHipsToCenter();
@@ -84,6 +91,75 @@ namespace Assets
       if (settings.enableAttaching) {
         PullAttachJoints();
       }
+
+    }
+
+
+
+
+    public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
+      initalSkeletonTransform.CopyTo(this.joints);
+
+      MoveHipsToCenter();
+      ScaleHips();
+
+      //affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
+      //affectedSource = (from z in j.definition.AffectedPoints select GetJoint(z).transform).ToArray();
+
+      var chest = GetChest();
+      var hips = GetHips();
+      var spine = GetSpine();
+
+      
+      float dx = settings.gradDescentStep;
+      float regularization = settings.ikRegularization;
+      float lambda = settings.ikGradDescentLambda;
+
+      for (int step = 0; step < 300; ++step) {
+        //int idx = rnd.Next(0, parameters.Count);
+        int idx = step % ikCalcualationParameters.Count;
+        var par = ikCalcualationParameters[idx];
+
+        var dependent = dependendJoints[par.AssignedObj.point];
+        var currentJoint = GetJointByPoint(par.AssignedObj.point);
+
+
+        // calculate gradient
+        var value = TargetFunction(dependent);
+        float prevVal = value;
+        var oldX = par.Get();
+        par.Set(oldX + dx);
+
+        par.AssignedObj.Apply(currentJoint, 1);
+
+        var newValue = TargetFunction(dependent);
+        var grad = (newValue - value) / dx;
+
+        var temp = lambda;
+        
+        var tryCount = 3;
+        var found = false;
+        for (int k = 0; k < tryCount; ++k) {
+
+          par.Set(oldX * (1 - temp * regularization) - temp * grad);
+          par.AssignedObj.Apply(currentJoint, 1);
+
+          var value2 = TargetFunction(dependent);
+          if (value2 <= value) {
+            value = value2;
+            found = true;
+            break;
+          }
+
+          temp /= 4;
+        }
+
+        if (!found) {
+          par.Set(oldX);
+          par.AssignedObj.Apply(currentJoint, 1);
+        }
+      }
+
 
     }
 
@@ -309,22 +385,34 @@ namespace Assets
       return Mathf.Sqrt(s);
     }
 
-   /* public float TargetFunctionOld() {
+    /* public float TargetFunctionOld() {
+       double s = 0;
+       var ln = Math.Min(ikSource.Length, ikTarget.Length);
+       for (int i = 0; i < ln; ++i) {
+         var p1 = ikSource[i].transform.position;
+         var p2 = ikTarget[i];
+         if (p2 != null) {
+           s += (p1 - p2).Value.sqrMagnitude;
+         }
+       }
+
+       //*foreach(var j in joints) {
+         //  s += Dist(j.transform.position, j.initPosition)*0.1f;
+       //}
+       return (float)Math.Sqrt(s);
+     }*/
+
+    public float TargetFunction(Joint[] testJoints) {
       double s = 0;
-      var ln = Math.Min(ikSource.Length, ikTarget.Length);
-      for (int i = 0; i < ln; ++i) {
-        var p1 = ikSource[i].transform.position;
-        var p2 = ikTarget[i];
+      foreach (var j in testJoints) {
+        var p1 = j.transform.position;
+        var p2 = allTarget[j.definition.pointId];
         if (p2 != null) {
-          s += (p1 - p2).Value.sqrMagnitude;
+          s += (p1 - p2.Value).sqrMagnitude;
         }
       }
-
-      //*foreach(var j in joints) {
-        //  s += Dist(j.transform.position, j.initPosition)*0.1f;
-      //}
-      return (float)Math.Sqrt(s);
-    }*/
+      return (float)s;
+    }
 
     public float TargetFunction() {
       double s = 0;
@@ -387,8 +475,31 @@ namespace Assets
       return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
     }
 
+    private void InitIK() {
+      ikCalcualationParameters.Clear();
+      foreach(var ik in skeleton.ikCalculator) {
+        ikCalcualationParameters.AddRange(ik.GetParameters());
+
+        Joint joint = GetJointByPoint(ik.point);
+        ik.Init(joint);
+      }
+
+      foreach (var j in joints) {
+        if (j.definition != null && j.definition.AffectedPoints != null) {
+          var dependendIds = j.definition.AffectedPoints;
+          var depJoints = (from z in j.definition.AffectedPoints select GetJointByPoint((Point)z)).ToArray();
+
+          dependendJoints[j.definition.point] = depJoints;
+        }
+      }
+    }
+
     public void SetIkSource() {
+
       this.ikSource = skeleton.GetkeyPointIds().Select(id => jointByPointId[id].transform).ToArray();
+
+      InitIK();
+    
 
       this.joints.ForEach(x => x.gradEnabled = x.definition?.gradCalculator != null);
       //this.joints.ForEach(x => x.gradEnabled = x.transform.name == "Hips");
@@ -401,6 +512,8 @@ namespace Assets
       foreach (var j in calculatedJoints) {
         Debug.Log("Grad: " + j.transform.gameObject.name + " ");
       }
+
+
     }
 
 

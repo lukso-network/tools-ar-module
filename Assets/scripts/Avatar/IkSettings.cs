@@ -1,4 +1,4 @@
-﻿//using GD.MinMaxSlider;
+//using GD.MinMaxSlider;
 using System;
 using UnityEngine;
 
@@ -66,7 +66,17 @@ namespace Assets
         public bool stretchingEnabled = true;
 
         public bool useConstraints = true;
-    }
+
+        [Header("GradientDescent")]
+        [Range(0.001f, 0.1f)]
+        public float gradDescentStep = 0.1f;
+
+        [Range(0, 10)]
+        public float ikRegularization = 1f;
+
+        [Range(0, 1)]
+        public float ikGradDescentLambda = 0.1f;
+  }
 
 
     [Serializable]

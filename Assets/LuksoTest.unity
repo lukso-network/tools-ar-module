@@ -15587,6 +15587,9 @@ MonoBehaviour:
     gradientThreshold: 0
     stretchingEnabled: 1
     useConstraints: 1
+    gradDescentStep: 0.0103
+    ikRegularization: 1
+    ikGradDescentLambda: 0.032
   posFilter:
     sigma: 0.10000000149011612
     dt: 22

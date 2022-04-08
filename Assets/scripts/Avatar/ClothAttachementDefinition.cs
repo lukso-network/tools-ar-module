@@ -13,6 +13,8 @@ namespace Lukso {
         public readonly float gradScale;
         private readonly (float, float) minMax;
 
+    public ClothAttachementDefinition AssignedObj { get; internal set; }
+
     public PointParameter(float gradScale) : this(gradScale, (-1e9f, 1e9f)) {
     }
 
@@ -30,7 +32,11 @@ namespace Lukso {
         return value * gradScale;
       }
 
-    public void Set(float v) {
+      public void Set(float v) {
+          if (float.IsNaN(v)) {
+        Debug.LogError("NAN");
+        v = 0;
+      }
             value = UnityEngine.Mathf.Clamp(v, minMax.Item1, minMax.Item2);
         }
 
@@ -72,6 +78,11 @@ namespace Lukso {
         protected Vector3 ParamsToV3Scaled() {
           return new Vector3(parameters[0].GetScaled(), parameters[1].GetScaled(), parameters[2].GetScaled());
         }
+
+        public void AddParameter(PointParameter parameter) {
+          parameter.AssignedObj = this;
+          parameters.Add(parameter);
+        }
     }
 
    public class Position3DParameter : ClothAttachementDefinition
@@ -82,9 +93,9 @@ namespace Lukso {
     }
 
     public Position3DParameter(Point point) : base(point) {
-      parameters.Add(new PointParameter(0.1f));
-      parameters.Add(new PointParameter(0.1f));
-      parameters.Add(new PointParameter(0.1f));
+     AddParameter(new PointParameter(0.1f));
+     AddParameter(new PointParameter(0.1f));
+     AddParameter(new PointParameter(0.1f));
     }
 
     public override void Apply(Joint joint, float globalScale) {
@@ -102,9 +113,9 @@ namespace Lukso {
     }
 
     public Rotation3DParameter(Point point) : base(point) {
-      parameters.Add(new PointParameter(90));
-      parameters.Add(new PointParameter(90));
-      parameters.Add(new PointParameter(90));
+     AddParameter(new PointParameter(90));
+     AddParameter(new PointParameter(90));
+     AddParameter(new PointParameter(90));
     }
 
     public override void Apply(Joint joint, float globalScale) {
@@ -131,7 +142,7 @@ namespace Lukso {
     }
 
     public Stretching3DParameter(Point point, StretchingGradCalculator.Axis axis) : base(point) {
-      parameters.Add(new PointParameter(1));
+     AddParameter(new PointParameter(1));
       this.axis = axis;
     }
 
@@ -150,7 +161,7 @@ namespace Lukso {
     }
 
     public Rotation1DParameter(Point point, StretchingGradCalculator.Axis axis) : base(point) {
-      parameters.Add(new PointParameter(90));
+     AddParameter(new PointParameter(90));
       this.axis = axis;
     }
 
@@ -167,7 +178,7 @@ namespace Lukso {
   public class ClothAttachement1DNormal: ClothAttachementDefinition  {
 
         public ClothAttachement1DNormal(Point point, float maxValue) : base(point) {
-            parameters.Add(new PointParameter(1, (-maxValue, maxValue)));
+           AddParameter(new PointParameter(1, (-maxValue, maxValue)));
         }
 
         public override void Apply(Joint joint, float globalScale) {
@@ -184,7 +195,7 @@ namespace Lukso {
     {
 
         public ClothAttachementMoveAlongAxis(Point point, float maxValue) : base(point) {
-            parameters.Add(new PointParameter(1, (-maxValue, maxValue)));
+           AddParameter(new PointParameter(1, (-maxValue, maxValue)));
         }
 
         public override void Apply(Joint joint, float globalScale) {
@@ -200,7 +211,7 @@ namespace Lukso {
     {
 
         public ClothAttachmentScale(Point point, float maxValue) : base(point) {
-            parameters.Add(new PointParameter(1, (-maxValue, maxValue)));
+           AddParameter(new PointParameter(1, (-maxValue, maxValue)));
         }
 
         public override void Apply(Joint joint, float globalScale) {

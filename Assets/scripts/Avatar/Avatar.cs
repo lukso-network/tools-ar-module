@@ -15,81 +15,79 @@ using Joint = Assets.Joint;
 
 namespace Assets
 {
-    
-    public class SkeletonTransform {
-        internal Quaternion[] rots;
-        internal Vector3[] pos;
-        internal Vector3[] scales;
 
-        public void CopyFrom(List<Joint> joints) {
-            if (pos == null || pos.Length != joints.Count) {
-                rots = new Quaternion[joints.Count];
-                pos = new Vector3[joints.Count];
-                scales = new Vector3[joints.Count];
-            }
-            int i = 0;
-            foreach(var j in joints) {
-                if (j != null) {
-                    rots[i] = j.transform.localRotation;
-                    pos[i] = j.transform.localPosition;
-                    scales[i] = j.transform.localScale;
-                }
-                ++i;
-            }
-        }
+  public class SkeletonTransform
+  {
+    internal Quaternion[] rots;
+    internal Vector3[] pos;
+    internal Vector3[] scales;
 
-        public void CopyTo(List<Joint> joints) {
-            if (pos == null || pos.Length != joints.Count) {
-                Debug.LogError("Incorrect joints count on copy from skeleton transformations");
-                return;
-            }
-            int i = 0;
-            foreach (var j in joints) {
-                if (j != null) {
-                    j.transform.localRotation = rots[i];
-                    j.transform.localPosition = pos[i];
-                    j.transform.localScale = scales[i];
-                }
-                ++i;
-            }
+    public void CopyFrom(List<Joint> joints) {
+      if (pos == null || pos.Length != joints.Count) {
+        rots = new Quaternion[joints.Count];
+        pos = new Vector3[joints.Count];
+        scales = new Vector3[joints.Count];
+      }
+      int i = 0;
+      foreach (var j in joints) {
+        if (j != null) {
+          rots[i] = j.transform.localRotation;
+          pos[i] = j.transform.localPosition;
+          scales[i] = j.transform.localScale;
         }
+        ++i;
+      }
     }
 
-    public partial class Avatar {
+    public void CopyTo(List<Joint> joints) {
+      if (pos == null || pos.Length != joints.Count) {
+        Debug.LogError("Incorrect joints count on copy from skeleton transformations");
+        return;
+      }
+      int i = 0;
+      foreach (var j in joints) {
+        if (j != null) {
+          j.transform.localRotation = rots[i];
+          j.transform.localPosition = pos[i];
+          j.transform.localScale = scales[i];
+        }
+        ++i;
+      }
+    }
+  }
 
-        private GameObject avatar;
-        private List<Joint> joints;
-        private List<Joint> calculatedJoints;
+  public partial class Avatar
+  {
 
-        private Skeleton skeleton;
-        public Skeleton Skeleton => skeleton;
+    private GameObject avatar;
+    private List<Joint> joints;
+    private List<Joint> calculatedJoints;
 
-        private Vector3?[] ikTarget;
-        private Vector3?[] allTarget;
+    private Skeleton skeleton;
+    public Skeleton Skeleton => skeleton;
 
-        public bool Destroyed{get; set;}
+    private Vector3?[] ikTarget;
+    private Vector3?[] allTarget;
 
+    public bool Destroyed { get; set; }
 
-        private Transform[] affectedSource;
-        private Vector3[] affectedTarget;
+    private Transform[] ikSource;
+    private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();
+    private Dictionary<Point, Joint> jointMap = new Dictionary<Point, Joint>();
+    private Joint[] jointByPointId;
 
-        private Transform[] ikSource;
-        private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();
-        private Dictionary<Point, Joint> jointMap = new Dictionary<Point, Joint>();
-        private Joint[] jointByPointId;
+    public List<Joint> Joints { get => joints; }
+    public float GradientThreshold;
+    public bool useOld;
+    //TODO debugging only
+    public GradientDrawer gradientDrawer;
 
-        public List<Joint> Joints { get => joints; }
-        public float GradientThreshold;
-        public bool useOld;
-        //TODO debugging only
-        public GradientDrawer gradientDrawer;
+    public IkSettings settings;
 
-        public IkSettings settings;
+    //alias
+    public GameObject obj => avatar;
 
-        //alias
-        public GameObject obj => avatar;
-        
-        private CalcParam[] parameters = new CalcParam[] {
+    private CalcParam[] parameters = new CalcParam[] {
             //    new CalcParam("Position", new CalcFilter(typeof(Position3DGradCalculator)), 0.001f, 1, 0.0001f),
             //    new CalcParam("Scaling", new CalcFilter(typeof(ScalingGradCalculator)), 0.0001f, 1, 0.0001f),
                 new CalcParam("Rotation", new RotationFilter(), 0.1f, 500, 0.1f),
@@ -97,269 +95,269 @@ namespace Assets
         };
 
 
-        public Avatar(GameObject avatar, Skeleton skeleton) {
-            this.avatar = avatar;
-            this.skeleton = skeleton;
-            InitJoints();
-            InitCloth();
-            CopyRotationFromAvatar();
+    public Avatar(GameObject avatar, Skeleton skeleton) {
+      this.avatar = avatar;
+      this.skeleton = skeleton;
+      InitJoints();
+      InitCloth();
+      CopyRotationFromAvatar();
 
-            gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
+      gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
+    }
+    private Joint GetHips() {
+      return GetJointByPoint(Skeleton.Point.HIPS);
+    }
+    private Joint GetChest() {
+      return GetJointByPoint(Skeleton.Point.CHEST);
+    }
+
+    public Joint GetSpine() {
+      return GetJointByPoint(Skeleton.Point.SPINE);
+    }
+    private Joint GetJointByPoint(Skeleton.Point point) {
+      return jointMap[point];
+      //return transformByName[skeleton.GetBoneName(point)];
+    }
+
+
+    public void InitJoints() {
+      joints = new List<Joint>();
+      const int MAX_POINT_COUNT = 33;
+      jointByPointId = new Joint[MAX_POINT_COUNT];
+      int idx = 0;
+      foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
+        if (idx++ == 0) {
+          continue;
         }
-        private Joint GetHips() {
-            return GetJointByPoint(Skeleton.Point.HIPS);
-        }
-        private Joint GetChest() {
-            return GetJointByPoint(Skeleton.Point.CHEST);
-        }
+        var j = new Joint(t, skeleton?.GetByName(t.gameObject.name));
+        j.boneNormalRotation = CalculateBoneNormalRotation(t);
+        joints.Add(j);
 
-        public Joint GetSpine() {
-            return GetJointByPoint(Skeleton.Point.SPINE);
-        }
-        private Joint GetJointByPoint(Skeleton.Point point) {
-            return jointMap[point];
-            //return transformByName[skeleton.GetBoneName(point)];
-        }
+        var jc = t.gameObject.AddComponent(typeof(JointController)) as JointController;
+        jc.joint = j;
 
+        transformByName[t.gameObject.name] = j;
+        transformByName[Utils.ReplaceSpace(t.gameObject.name)] = j;
 
-        public void InitJoints() {
-            joints = new List<Joint>();
-            const int MAX_POINT_COUNT = 33;
-            jointByPointId = new Joint[MAX_POINT_COUNT];
-            int idx = 0;
-            foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
-                if (idx++ == 0) {
-                    continue;
-                }
-                var j = new Joint(t, skeleton?.GetByName(t.gameObject.name));
-                j.boneNormalRotation = CalculateBoneNormalRotation(t);
-                joints.Add(j);
-
-                var jc = t.gameObject.AddComponent(typeof(JointController)) as JointController;
-                jc.joint = j;
-
-                transformByName[t.gameObject.name] = j;
-                transformByName[Utils.ReplaceSpace(t.gameObject.name)] = j;
-
-                if (j.definition != null) {
-                    jointMap[j.definition.point] = j;
-                }
-
-                if (j.definition != null && j.definition.pointId > 0) {
-                    jointByPointId[j.definition.pointId] = j;
-                }
-            }
-
-            if (jointByPointId.All(x => x == null)) {
-                Debug.LogError("Null joints");
-            }
-
-            /*
-            foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
-
-                if (!transformByName.ContainsKey(Utils.ReplaceSpace(t.gameObject.name))) {
-                    continue;
-                }
-                var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
-
-                var obj = t;
-                while (true) {
-                    obj = obj.parent;
-                    if (obj == null) {
-                        break;
-                    } else {
-                        Joint parentJoint;
-                        if (transformByName.TryGetValue(Utils.ReplaceSpace(obj.gameObject.name), out parentJoint) && parentJoint.definition != null) {// && parentJoint.definition.pointId >= 0) {
-
-                            if (parentJoint.definition.pointId == -28 || parentJoint.definition.pointId == -27) {
-                                continue;
-                            }
-                            joint.parent = parentJoint;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            */
-
-
-            initalSkeletonTransform.CopyFrom(this.joints);
+        if (j.definition != null) {
+          jointMap[j.definition.point] = j;
         }
 
-        private Quaternion CalculateBoneNormalRotation(Transform t) {
-            var p = t.parent;
-            if (p == null) {
-                return Quaternion.identity;
-            }
+        if (j.definition != null && j.definition.pointId > 0) {
+          jointByPointId[j.definition.pointId] = j;
+        }
+      }
 
-            var dir = (t.position - t.parent.position).normalized;
-            var frontDir = Vector3.forward;
+      if (jointByPointId.All(x => x == null)) {
+        Debug.LogError("Null joints");
+      }
 
-            var norm = Vector3.Cross(dir, frontDir);
-            if (norm.y < 0) {
-                norm = -norm;
-            }
+      /*
+      foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
+
+          if (!transformByName.ContainsKey(Utils.ReplaceSpace(t.gameObject.name))) {
+              continue;
+          }
+          var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
+
+          var obj = t;
+          while (true) {
+              obj = obj.parent;
+              if (obj == null) {
+                  break;
+              } else {
+                  Joint parentJoint;
+                  if (transformByName.TryGetValue(Utils.ReplaceSpace(obj.gameObject.name), out parentJoint) && parentJoint.definition != null) {// && parentJoint.definition.pointId >= 0) {
+
+                      if (parentJoint.definition.pointId == -28 || parentJoint.definition.pointId == -27) {
+                          continue;
+                      }
+                      joint.parent = parentJoint;
+                      break;
+                  }
+              }
+          }
+      }
+
+      */
 
 
-            var q = Quaternion.FromToRotation(dir, norm);
+      initalSkeletonTransform.CopyFrom(this.joints);
+    }
 
-            var d = q * dir;
-            return q;
+    private Quaternion CalculateBoneNormalRotation(Transform t) {
+      var p = t.parent;
+      if (p == null) {
+        return Quaternion.identity;
+      }
+
+      var dir = (t.position - t.parent.position).normalized;
+      var frontDir = Vector3.forward;
+
+      var norm = Vector3.Cross(dir, frontDir);
+      if (norm.y < 0) {
+        norm = -norm;
+      }
+
+
+      var q = Quaternion.FromToRotation(dir, norm);
+
+      var d = q * dir;
+      return q;
+    }
+
+    public void CopyRotationFromAvatar(Avatar avatar) {
+      if (avatar.joints.Count != joints.Count) {
+        Debug.LogError("Incorrect joints count on copy avatar");
+        return;
+      }
+
+      for (int i = 0; i < avatar.joints.Count; ++i) {
+        joints[i].ApplyRotation(avatar.joints[i]);
+      }
+    }
+
+    public void CopyRotationAndPositionFromAvatar(Avatar avatar) {
+      if (avatar.joints.Count != joints.Count) {
+        Debug.LogWarning("Incorrect joints count on copy avatar");
+      }
+
+      foreach (var entry in avatar.transformByName) {
+        Joint j;
+
+
+        //TODO check copy unnecessary like arm
+        if (transformByName.TryGetValue(entry.Key, out j)) {
+          j.CopyRotationAndPosition(entry.Value);
+        }
+      }
+
+      joints[0].CopyRotationAndPosition(avatar.joints[0]);
+    }
+
+    public void CopyToLocalFromGlobal(Avatar avatar, Vector3 scaleVector, bool resizeBones) {
+      if (avatar.joints.Count != joints.Count) {
+        // Debug.LogWarning("Incorrect joints count on copy avatar");
+        //return;
+      }
+
+      Vector3 s;
+      foreach (var entry in avatar.transformByName) {
+        Joint j;
+        if (transformByName.TryGetValue(entry.Key, out j)) {
+          j.CopyToLocalFromGlobal(entry.Value);
+          s = scaleVector;
+          //s = Vector3.Scale(s, entry.Value.clothScale);
+          s += entry.Value.clothScale;
+          if (resizeBones) {
+            s.y *= entry.Value.lengthScale;
+          }
+          j.transform.localScale = Vector3.Scale(j.transform.localScale, s);
+        }
+      }
+      /*
+      foreach (var entry in avatar.jointMap) {
+          Joint j;
+          if (jointMap.TryGetValue(entry.Key, out j)) {
+              j.CopyToLocalFromGlobal(entry.Value);
+              s = scaleVector;
+              //s = Vector3.Scale(s, entry.Value.clothScale);
+              s += entry.Value.clothScale;
+              if (resizeBones) {
+                  s.y *= entry.Value.lengthScale;
+              }
+              j.transform.localScale = Vector3.Scale(j.transform.localScale, s);
+          }
+      }*/
+
+
+
+      s = scaleVector;
+      if (resizeBones) {
+        s.y *= avatar.joints[0].lengthScale;
+      }
+      joints[0].CopyToLocalFromGlobal(avatar.joints[0]);
+      joints[0].transform.localScale = Vector3.Scale(joints[0].transform.localScale, s);
+
+      /*
+      int i = 0;
+      foreach (var j in joints) {
+          j.CopyToLocalFromGlobal(avatar.joints[i]);
+          ++i;
+      }*/
+    }
+
+    /*  public void ScaleEveryJoint(Vector3 scaleVector) {
+
+           foreach(var j in joints) {
+               j.transform.localScale = Vector3.Scale(j.transform.localScale, scaleVector);
+           }
+
+       }*/
+
+
+    public void CopyRotationFromAvatar() {
+      CopyRotationFromAvatar(this);
+    }
+    public void ResetToObject() {
+      foreach (var j in joints) {
+        j.Reset();
+      }
+    }
+
+    public List<Joint> GetAllJoints() {
+      return joints;
+    }
+
+    //public Joint GetByName(String name) {
+    //return transformByName[name];
+    //}
+
+
+
+
+    private GameObject GetJoint(int point) {
+      return jointByPointId[(int)point].transform.gameObject;
+    }
+
+
+    public void RestoreSkeleton() {
+      initalSkeletonTransform.CopyTo(this.joints);
+    }
+
+
+    private float GetScaleBonesLength(Skeleton skeleton) {
+      float l1 = 0;
+      foreach (var bone in skeleton.ScaleBones) {
+        int idx1 = bone.fromIdx;
+        int idx2 = bone.toIdx;
+
+        if (idx1 >= jointByPointId.Length || idx2 >= jointByPointId.Length) {
+          continue;
         }
 
-        public void CopyRotationFromAvatar(Avatar avatar) {
-            if (avatar.joints.Count != joints.Count) {
-                Debug.LogError("Incorrect joints count on copy avatar");
-                return;
-            }
-
-            for (int i = 0; i < avatar.joints.Count; ++i ) {
-                joints[i].ApplyRotation(avatar.joints[i]);
-            }
-        }
-
-        public void CopyRotationAndPositionFromAvatar(Avatar avatar) {
-            if (avatar.joints.Count != joints.Count) {
-                Debug.LogWarning("Incorrect joints count on copy avatar");
-            }
-
-            foreach(var entry in avatar.transformByName) {
-                Joint j;
+        l1 += (jointByPointId[idx1].transform.position - jointByPointId[idx2].transform.position).magnitude;
+      }
+      return l1;
+    }
 
 
-                //TODO check copy unnecessary like arm
-                if (transformByName.TryGetValue(entry.Key, out j)) {
-                    j.CopyRotationAndPosition(entry.Value);
-                }
-            }
+    public float GetRelativeBonesScale(Avatar avatar) {
+      float l0 = GetScaleBonesLength(skeleton);
+      l0 = GetScaleBonesLength(skeleton);
+      float l1 = avatar.GetScaleBonesLength(skeleton);
 
-            joints[0].CopyRotationAndPosition(avatar.joints[0]);
-        }
-
-        public void CopyToLocalFromGlobal(Avatar avatar, Vector3 scaleVector, bool resizeBones) {
-            if (avatar.joints.Count != joints.Count) {
-               // Debug.LogWarning("Incorrect joints count on copy avatar");
-                //return;
-            }
-
-            Vector3 s;
-            foreach (var entry in avatar.transformByName) {
-                Joint j;
-                if (transformByName.TryGetValue(entry.Key, out j)) {
-                    j.CopyToLocalFromGlobal(entry.Value);
-                    s = scaleVector;
-                    //s = Vector3.Scale(s, entry.Value.clothScale);
-                    s += entry.Value.clothScale;
-                    if (resizeBones) {
-                        s.y *= entry.Value.lengthScale;
-                    }
-                    j.transform.localScale = Vector3.Scale(j.transform.localScale, s);
-                }
-            }
-            /*
-            foreach (var entry in avatar.jointMap) {
-                Joint j;
-                if (jointMap.TryGetValue(entry.Key, out j)) {
-                    j.CopyToLocalFromGlobal(entry.Value);
-                    s = scaleVector;
-                    //s = Vector3.Scale(s, entry.Value.clothScale);
-                    s += entry.Value.clothScale;
-                    if (resizeBones) {
-                        s.y *= entry.Value.lengthScale;
-                    }
-                    j.transform.localScale = Vector3.Scale(j.transform.localScale, s);
-                }
-            }*/
-
-
-
-            s = scaleVector;
-            if (resizeBones) {
-                s.y *= avatar.joints[0].lengthScale;
-            }
-            joints[0].CopyToLocalFromGlobal(avatar.joints[0]);
-            joints[0].transform.localScale = Vector3.Scale(joints[0].transform.localScale, s);
-
-            /*
-            int i = 0;
-            foreach (var j in joints) {
-                j.CopyToLocalFromGlobal(avatar.joints[i]);
-                ++i;
-            }*/
-        }
-
-     /*  public void ScaleEveryJoint(Vector3 scaleVector) {
-
-            foreach(var j in joints) {
-                j.transform.localScale = Vector3.Scale(j.transform.localScale, scaleVector);
-            }
-
-        }*/
-
-
-        public void CopyRotationFromAvatar() {
-            CopyRotationFromAvatar(this);
-        }
-        public void ResetToObject() {
-            foreach (var j in joints) {
-                j.Reset();
-            }
-        }
-
-        public List<Joint> GetAllJoints() {
-            return joints;
-        }
-
-        //public Joint GetByName(String name) {
-            //return transformByName[name];
-        //}
-
-
-
-
-        private GameObject GetJoint(int point) {
-            return jointByPointId[(int)point].transform.gameObject;
-        }
-
-
-        public void RestoreSkeleton() {
-            initalSkeletonTransform.CopyTo(this.joints);
-        }
-
-
-        private float GetScaleBonesLength(Skeleton skeleton) {
-            float l1 = 0;
-            foreach (var bone in skeleton.ScaleBones) {
-                int idx1 = bone.fromIdx;
-                int idx2 = bone.toIdx;
-
-                if (idx1 >= jointByPointId.Length || idx2 >= jointByPointId.Length) {
-                    continue;
-                }
-
-                l1 += (jointByPointId[idx1].transform.position - jointByPointId[idx2].transform.position).magnitude;
-            }
-            return l1;
-        }
-
-
-        public float GetRelativeBonesScale(Avatar avatar) {
-            float l0 = GetScaleBonesLength(skeleton);
-            l0 = GetScaleBonesLength(skeleton);
-            float l1 = avatar.GetScaleBonesLength(skeleton);
-
-            return l1 / l0;
-
-        }
-
-
-
-
-       
-
-
+      return l1 / l0;
 
     }
+
+
+
+
+
+
+
+
+  }
 
 }

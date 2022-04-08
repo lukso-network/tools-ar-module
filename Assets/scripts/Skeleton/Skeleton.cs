@@ -29,6 +29,7 @@ namespace Lukso {
       private int[] keyPointsIds;
 
       public List<ClothAttachementDefinition> clothPoints = new List<ClothAttachementDefinition>();
+      public List<ClothAttachementDefinition> ikCalculator = new List<ClothAttachementDefinition>();
 
       public List<Bone> ScaleBones;
       private Dictionary<Point, string> boneNameByPoint = new Dictionary<Point, string>();
