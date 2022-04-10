@@ -103,10 +103,22 @@ namespace Assets
       MoveHipsToCenter();
       ScaleHips();
 
-      //affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
-      //affectedSource = (from z in j.definition.AffectedPoints select GetJoint(z).transform).ToArray();
+      if (ikCalcualationParameters.Count == 0) {
+        InitIK();
+      }
 
-      var chest = GetChest();
+
+      //TOOD temp
+      foreach (var par in ikCalcualationParameters) {
+        var currentJoint = GetJointByPoint(par.AssignedObj.point);
+        par.AssignedObj.Apply(currentJoint, 1);
+      }
+
+
+        //affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
+        //affectedSource = (from z in j.definition.AffectedPoints select GetJoint(z).transform).ToArray();
+
+        var chest = GetChest();
       var hips = GetHips();
       var spine = GetSpine();
 
@@ -114,6 +126,10 @@ namespace Assets
       float dx = settings.gradDescentStep;
       float regularization = settings.ikRegularization;
       float lambda = settings.ikGradDescentLambda;
+      const float EARLY_STOP_THRESHOLD = 1 + 0.001f;
+
+      int EARLY_STOP_COUNT = ikCalcualationParameters.Count * 2;
+      int unchangeCount = 0;
 
       for (int step = 0; step < 300; ++step) {
         //int idx = rnd.Next(0, parameters.Count);
@@ -131,6 +147,7 @@ namespace Assets
         par.Set(oldX + dx);
 
         par.AssignedObj.Apply(currentJoint, 1);
+        //continue;
 
         var newValue = TargetFunction(dependent);
         var grad = (newValue - value) / dx;
@@ -158,6 +175,19 @@ namespace Assets
           par.Set(oldX);
           par.AssignedObj.Apply(currentJoint, 1);
         }
+
+
+        if (value / prevVal < EARLY_STOP_THRESHOLD) {
+          unchangeCount += 1;
+          if (unchangeCount > EARLY_STOP_COUNT) {
+            Debug.Log($"EARLY_STOP: iter={step}");
+            break;
+          }
+
+        } else {
+          unchangeCount = 0;
+        }
+
       }
 
 
@@ -411,7 +441,8 @@ namespace Assets
           s += (p1 - p2.Value).sqrMagnitude;
         }
       }
-      return (float)s;
+      //return (float)s;
+      return (float)Math.Sqrt(s);
     }
 
     public float TargetFunction() {
@@ -498,7 +529,7 @@ namespace Assets
 
       this.ikSource = skeleton.GetkeyPointIds().Select(id => jointByPointId[id].transform).ToArray();
 
-      InitIK();
+      //InitIK();
     
 
       this.joints.ForEach(x => x.gradEnabled = x.definition?.gradCalculator != null);
