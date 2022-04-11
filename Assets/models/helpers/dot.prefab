@@ -108,6 +108,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: lineX
       objectReference: {fileID: 0}
+    - target: {fileID: 747193453577342336, guid: 56e8fb82d60886f49a829c7dfac72c81,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6049798638391827727, guid: 56e8fb82d60886f49a829c7dfac72c81,
         type: 3}
       propertyPath: m_RootOrder

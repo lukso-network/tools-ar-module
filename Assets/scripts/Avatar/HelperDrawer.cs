@@ -16,6 +16,7 @@ namespace Assets.scripts.Avatar
 
         private GameObject dotsRoot;
         private GameObject rawPointsRoot;
+        private GameObject rawPointBonesRoot;
         private GameObject bonesRoot;
 
         public GameObject dotPrefab;
@@ -124,20 +125,35 @@ namespace Assets.scripts.Avatar
             dotsRoot = new GameObject("dots root");
             bonesRoot = new GameObject("bones root");
             rawPointsRoot = new GameObject("rawPoints root");
+            rawPointBonesRoot = new GameObject("rawPointBones root");
             dotsRoot.transform.parent = transform;
             bonesRoot.transform.parent = transform;
+            rawPointsRoot.transform.parent = transform;
+            rawPointBonesRoot.transform.parent = transform;
 
             joints = avatar.Joints.Where(x => 
                        x.definition != null && (x.definition.pointId >= 0 || x.definition.gradCalculator != null)
             ).ToList();
 
-            for (int i = 0; i < Skeleton.JOINT_COUNT;++i) {
+            for (int i = 0; i < Skeleton.POINT_COUNT;++i) {
               var obj = GameObject.Instantiate(dotPrefab, rawPointsRoot.transform);
               var type = (Skeleton.Point)i;
               obj.name = $"{type}-{i}";
             }
-  
-          foreach (var joint in joints) {
+
+            for (int i = 0; i < SKELETON_BONES.GetLength(0); ++i) {
+              var from = SKELETON_BONES[i, 0];
+              var to = SKELETON_BONES[i, 1];
+              if ((int)from < 0 || (int)to < 0) {
+                continue;
+              }
+              var bone = GameObject.Instantiate(bonePrefab, rawPointBonesRoot.transform);
+              bone.name = $"{from}-{to}";
+            }
+
+
+
+      foreach (var joint in joints) {
 
                 var obj = GameObject.Instantiate(dotPrefab, dotsRoot.transform);
                 obj.name = $"{joint.transform.name}({joint.definition.point})";
@@ -179,21 +195,40 @@ namespace Assets.scripts.Avatar
             }
 
 
-            for (int i = 0; i < Skeleton.JOINT_COUNT; ++i) {
+            for (int i = 0; i < Skeleton.POINT_COUNT; ++i) {
               var obj = rawPointsRoot.transform.GetChild(i);
               obj.transform.position = skeletonManager.RawSkeletonPoints[i] ?? Vector3.zero;
             }
 
-            int idx = 0;
+      int jdx = 0;
+            for (int i = 0; i < SKELETON_BONES.GetLength(0); ++i) {
+              var from = SKELETON_BONES[i, 0];
+              var to = SKELETON_BONES[i, 1];
+              if ((int)from < 0 || (int)to < 0) {
+                continue;
+              }
+              var p1 = skeletonManager.RawSkeletonPoints[(int)from] ?? Vector3.zero;
+              var p2 = skeletonManager.RawSkeletonPoints[(int)to] ?? Vector3.zero;
+              var bone = rawPointBonesRoot.transform.GetChild(jdx++);
+
+              var rot = Quaternion.FromToRotation(Vector3.up, (p2 - p1));
+              var scale = (p2 - p1).magnitude;
+
+              bone.transform.rotation = rot;
+              bone.transform.localScale = new Vector3(scale, scale, scale);
+              bone.transform.position = p1;
+            }
+
+
+      int idx = 0;
             foreach (var joint in joints) {
                 var obj = dotsRoot.transform.GetChild(idx);
                 idx += 1;
                 obj.transform.position = joint.transform.position;
                 obj.transform.rotation = joint.transform.rotation;
-
             }
 
-            int jdx = 0;
+            jdx = 0;
             foreach (var jointPair in bones) {
                 var p1 = jointPair[0].transform.position;
                 var p2 = jointPair[1].transform.position;
@@ -220,6 +255,7 @@ namespace Assets.scripts.Avatar
 
             if (avatar != null) {
                 rawPointsRoot.SetActive(showRawPoints);
+                rawPointBonesRoot.SetActive(showRawPoints);
                 //TODO for debugging only
                 // when paused mode is active
                 if (updateAutomatically) {
