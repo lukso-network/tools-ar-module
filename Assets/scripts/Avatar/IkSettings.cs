@@ -68,14 +68,20 @@ namespace Assets
         public bool useConstraints = true;
 
         [Header("GradientDescent")]
-        [Range(0.001f, 0.1f)]
+        [Range(0.001f, 0.2f)]
         public float gradDescentStep = 0.1f;
 
-        [Range(0, 10)]
+        [Range(0, 0.4f)]
         public float ikRegularization = 1f;
 
-        [Range(0, 1)]
+        [Range(0, 0.1f)]
         public float ikGradDescentLambda = 0.1f;
+
+    public bool useOldIk = false;
+    public bool manualIk = false;
+
+    [Range(-2,2)]
+    public float[] parametersTest;
   }
 
 

@@ -230,6 +230,7 @@ namespace DeepMotion.DMBTDemo
 
       var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);// + screenTransform.position;
       var dir = (screenCamera.transform.position - pos3d).normalized;
+     // dir = -Vector3.forward;
       // dir /= Math.Abs(dir.z);
       pos3d += dir * (-(v.z + zShift)) * scaleVector.z * perspectiveScale;
       return pos3d;

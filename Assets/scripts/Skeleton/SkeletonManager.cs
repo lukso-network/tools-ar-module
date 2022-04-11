@@ -158,23 +158,36 @@ namespace Assets
             skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_SHOULDER, 0.5f));
             skeleton.clothPoints.Add(new ClothAttachementMoveAlongAxis(Point.LEFT_SHOULDER, 0.5f));
             skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_ELBOW, 0.5f));
-            
-
-            skeleton.ikCalculator.Add(new Rotation3DParameter(Point.HIPS));
 
 
-           // skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP));
-            //skeleton.ikCalculator.Add(new Rotation1DParameter(Point.LEFT_KNEE, StretchingGradCalculator.Axis.Y));
-            //skeleton.ikCalculator.Add(new Stretching3DParameter(Point.LEFT_KNEE, StretchingGradCalculator.Axis.Z));
+          skeleton.ikCalculator.Add(new Rotation3DParameter(Point.HIPS));
+          skeleton.ikCalculator.Add(new Rotation3DParameter(Point.CHEST));
 
-        
+          skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_KNEE));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_SHOULDER));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_ELBOW));
+
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.RIGHT_HIP));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.RIGHT_KNEE));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.RIGHT_SHOULDER));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.RIGHT_ELBOW));
+
+      //  skeleton.ikCalculator.Add(new Rotation1DParameter(Point.RIGHT_KNEE, StretchingGradCalculator.Axis.Z));
+
+
+      // skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP));
+      //skeleton.ikCalculator.Add(new Rotation1DParameter(Point.LEFT_KNEE,StretchingGradCalculator.Axis.Y));
+      //skeleton.ikCalculator.Add(new Stretching3DParameter(Point.LEFT_KNEE, StretchingGradCalculator.Axis.Z));
 
 
 
-      
 
-            //            skeleton.joints.Add(new JointDefinition(Skeleton.Point.Hips, new int[] {23,24 }, new GeneralFilter(new ScaleFilter(scaleFilter), new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(-10, 10, -10, 10, 0, 359.99f), new ScalingGradCalculator()));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12 }, new GeneralFilter(new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(0, 359.99f, 0, 359.99f, 0, 359.99f), new ScalingGradCalculator()));
+
+
+
+      //            skeleton.joints.Add(new JointDefinition(Skeleton.Point.Hips, new int[] {23,24 }, new GeneralFilter(new ScaleFilter(scaleFilter), new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(-10, 10, -10, 10, 0, 359.99f), new ScalingGradCalculator()));
+      skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12 }, new GeneralFilter(new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(0, 359.99f, 0, 359.99f, 0, 359.99f), new ScalingGradCalculator()));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, new int[] { 23, 25, 29 }, new Rotation3DGradCalculator(-70, 15, -120, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, new int[] { 25, 29 }, new Rotation1DGradCalculator(-5, 140, Rotation1DGradCalculator.Axis.Y), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, new int[] { 29 }, new StretchingGradCalculator(0.7f, 1.1f, StretchingGradCalculator.Axis.PARENT)));

@@ -167,8 +167,8 @@ namespace Lukso {
 
     public override void Apply(Joint joint, float globalScale) {
       var v = localEulerAngles;
-      v[(int)axis] = parameters[0].Get() * globalScale;
-      joint.transform.localEulerAngles = localEulerAngles + ParamsToV3Scaled() * globalScale;
+      v[(int)axis] += parameters[0].Get() * globalScale;
+      joint.transform.localEulerAngles = v;
     }
   }
 

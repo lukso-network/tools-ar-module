@@ -56,7 +56,7 @@ namespace Assets
       var chest = GetChest();
       var hips = GetHips();
       var spine = GetSpine();
-
+      
       foreach (var j in calculatedJoints) {
         if (settings.chestOnly && (j != chest) && (j != hips)) {// && (j !=hips)){// {// && j != hips)) {
           continue;
@@ -87,6 +87,7 @@ namespace Assets
         }
 
       }
+      
 
       if (settings.enableAttaching) {
         PullAttachJoints();
@@ -95,9 +96,37 @@ namespace Assets
     }
 
 
+    private bool manualMode = false;
+    private bool DebugManualIK() {
+      int count = Math.Min(ikCalcualationParameters.Count, settings.parametersTest.Length);
+      if (!settings.manualIk) {
+        manualMode = false;
+        for (int i = 0; i < count; ++i) {
+          settings.parametersTest[i] = ikCalcualationParameters[i].Get();
+        }
+        return false;
+      }
 
+      manualMode = true;
+
+      for (int i = 0; i < count; ++i) {
+        ikCalcualationParameters[i].Set(settings.parametersTest[i]);
+      }
+      return true;
+
+    }
+
+
+    //TODO
+    // 1 priority queue
+    // 2 calculate step for every parameter (more difference, more speed)
 
     public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
+
+      if (settings.useOldIk) {
+        UpdateFastBySteps2(gradStep, moveStep, steps);
+        return;
+      }
       initalSkeletonTransform.CopyTo(this.joints);
 
       MoveHipsToCenter();
@@ -114,6 +143,10 @@ namespace Assets
         par.AssignedObj.Apply(currentJoint, 1);
       }
 
+      if (DebugManualIK()) {
+        DebugManualIK();
+        return;
+      }
 
         //affectedTarget = (from z in j.definition.AffectedPoints select allTarget[z].Value).ToArray();
         //affectedSource = (from z in j.definition.AffectedPoints select GetJoint(z).transform).ToArray();
@@ -162,6 +195,8 @@ namespace Assets
           par.AssignedObj.Apply(currentJoint, 1);
 
           var value2 = TargetFunction(dependent);
+         // found = true;
+          //break;
           if (value2 <= value) {
             value = value2;
             found = true;
@@ -188,6 +223,10 @@ namespace Assets
           unchangeCount = 0;
         }
 
+      }
+
+      if (settings.enableAttaching) {
+        PullAttachJoints();
       }
 
 

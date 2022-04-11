@@ -986,7 +986,7 @@ MonoBehaviour:
     type: 3}
   axis: {fileID: 0}
   updateAutomatically: 1
-  showRawPoints: 0
+  showRawPoints: 1
   showBody: 1
   showSkeleton: 0
   showLandmarks: 0
@@ -5844,7 +5844,7 @@ MonoBehaviour:
     type: 3}
   hat: {fileID: 843617380}
   screenCamera: {fileID: 985747844}
-  scaleDepth: 0.716
+  scaleDepth: 1.206
   zFilterParams:
     freq: 30
     mincutoff: 1
@@ -15587,9 +15587,32 @@ MonoBehaviour:
     gradientThreshold: 0
     stretchingEnabled: 1
     useConstraints: 1
-    gradDescentStep: 0.0103
-    ikRegularization: 1
-    ikGradDescentLambda: 0.032
+    gradDescentStep: 0.02
+    ikRegularization: 0.4
+    ikGradDescentLambda: 0.0822
+    useOldIk: 0
+    manualIk: 0
+    parametersTest:
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
+    - 2
   posFilter:
     sigma: 0.10000000149011612
     dt: 22
