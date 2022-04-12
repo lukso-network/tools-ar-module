@@ -77,6 +77,8 @@ namespace Assets
         [Range(0, 0.1f)]
         public float ikGradDescentLambda = 0.1f;
 
+    [Range(0,2)]
+    public float targetFunctionZScale = 1;
     public bool useOldIk = false;
     public bool manualIk = false;
 

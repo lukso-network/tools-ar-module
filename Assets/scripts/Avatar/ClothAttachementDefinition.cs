@@ -85,7 +85,27 @@ namespace Lukso {
         }
     }
 
-   public class Position3DParameter : ClothAttachementDefinition
+
+
+  public class ScalingParameter : ClothAttachementDefinition
+  {
+    private Vector3 initScale;
+    public override void Init(Joint joint) {
+      this.initScale = joint.transform.localScale;
+    }
+
+    public ScalingParameter(Point point, float scale, (float, float)minMax) : base(point) {
+    
+      AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2/scale)));
+    }
+
+    public override void Apply(Joint joint, float globalScale) {
+      joint.transform.localScale = initScale * (1 + parameters[0].GetScaled()) * globalScale;
+    }
+
+  }
+
+  public class Position3DParameter : ClothAttachementDefinition
   {
     private Vector3 initPosition;
     public override void Init(Joint joint) {
@@ -93,9 +113,9 @@ namespace Lukso {
     }
 
     public Position3DParameter(Point point) : base(point) {
-     AddParameter(new PointParameter(0.1f));
-     AddParameter(new PointParameter(0.1f));
-     AddParameter(new PointParameter(0.1f));
+     AddParameter(new PointParameter(0.4f));
+     AddParameter(new PointParameter(0.4f));
+     AddParameter(new PointParameter(0.4f));
     }
 
     public override void Apply(Joint joint, float globalScale) {

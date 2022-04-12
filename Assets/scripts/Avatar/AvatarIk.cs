@@ -120,13 +120,14 @@ namespace Assets
     //TODO
     // 1 priority queue
     // 2 calculate step for every parameter (more difference, more speed)
-
+    // 3 keep change of every parameter if small then ignore several times
     public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
 
       if (settings.useOldIk) {
         UpdateFastBySteps2(gradStep, moveStep, steps);
         return;
       }
+
       initalSkeletonTransform.CopyTo(this.joints);
 
       MoveHipsToCenter();
@@ -226,7 +227,7 @@ namespace Assets
       }
 
       if (settings.enableAttaching) {
-        PullAttachJoints();
+       // PullAttachJoints();
       }
 
 
@@ -477,7 +478,8 @@ namespace Assets
         var p1 = j.transform.position;
         var p2 = allTarget[j.definition.pointId];
         if (p2 != null) {
-          s += (p1 - p2.Value).sqrMagnitude;
+          var dp = p1 - p2.Value;
+          s += dp.x * dp.x + dp.y * dp.y + dp.z * dp.z * settings.targetFunctionZScale;
         }
       }
       //return (float)s;

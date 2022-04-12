@@ -31,8 +31,8 @@ namespace Assets.scripts.Avatar
         private List<GameObject> bodies = new List<GameObject>();
         private List<Joint> joints = new List<Joint>();
         private List<Joint[]> bones = new List<Joint[]>();
-
-        private readonly Skeleton.Point[,] SKELETON_BONES = new Skeleton.Point[,] {
+    public Material rawBonesMaterial;
+    private readonly Skeleton.Point[,] SKELETON_BONES = new Skeleton.Point[,] {
                 {Skeleton.Point.HIPS, Skeleton.Point.LEFT_HIP },
                 {Skeleton.Point.HIPS, Skeleton.Point.RIGHT_HIP },
                 {Skeleton.Point.LEFT_HIP, Skeleton.Point.LEFT_KNEE },
@@ -63,14 +63,19 @@ namespace Assets.scripts.Avatar
         public bool ShowSkeleton {
             get => showSkeleton;
             set {
-				        showSkeleton = value;
+        if (value != showSkeleton) {
+          showSkeleton = value;
+          avatar = null;
+        }
                 gameObject.SetActive(showSkeleton);
+              
             }
         }
 
         public bool ShowLandmarks {
             get => showLandmarks;
             set {
+              
                 showLandmarks = value;
                 //TODOLKvar annotations = FindObjectsOfType<AnnotationController>(true);
                 //TODOLKforeach(var obj in annotations) {
@@ -149,6 +154,8 @@ namespace Assets.scripts.Avatar
               }
               var bone = GameObject.Instantiate(bonePrefab, rawPointBonesRoot.transform);
               bone.name = $"{from}-{to}";
+        bone.transform.GetChild(1).GetComponent<Renderer>().material = rawBonesMaterial;
+            //bone.GetComponentInChildren<Renderer>().material = rawBonesMaterial;
             }
 
 

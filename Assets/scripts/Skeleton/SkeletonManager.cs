@@ -160,7 +160,11 @@ namespace Assets
             skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_ELBOW, 0.5f));
 
 
-          skeleton.ikCalculator.Add(new Rotation3DParameter(Point.HIPS));
+
+
+      skeleton.ikCalculator.Add(new Position3DParameter(Point.HIPS));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.HIPS));
+      skeleton.ikCalculator.Add(new ScalingParameter(Point.HIPS, 0.25f, (0, 0.2f)));
           skeleton.ikCalculator.Add(new Rotation3DParameter(Point.CHEST));
 
           skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP));
