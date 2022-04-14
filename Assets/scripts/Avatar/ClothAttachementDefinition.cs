@@ -55,6 +55,7 @@ namespace Lukso {
             ALONG
         }
         public readonly Skeleton.Point point;
+        public bool ReinitAlways { get; set; }
 
         protected List<PointParameter> parameters = new List<PointParameter>();
         //public Vector3 maxShift;
@@ -69,6 +70,11 @@ namespace Lukso {
         public List<PointParameter> GetParameters() {
             return parameters;
         }
+
+       public ClothAttachementDefinition SetReinit(bool value) {
+          ReinitAlways = value;
+          return this;
+       }
 
         public virtual void Apply(Joint joint, float globalScale) {
         }
@@ -132,11 +138,14 @@ namespace Lukso {
       this.localRotation = joint.transform.localEulerAngles;
     }
 
-    public Rotation3DParameter(Point point) : base(point) {
-     AddParameter(new PointParameter(90));
-     AddParameter(new PointParameter(90));
-     AddParameter(new PointParameter(90));
+    public Rotation3DParameter(Point point) : this(point, 90, (-1e9f,1e9f)) {
     }
+    public Rotation3DParameter(Point point, float scale, (float, float) minMax) : base(point) {
+      AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2 / scale)));
+      AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2 / scale)));
+      AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2 / scale)));
+    }
+
 
     public override void Apply(Joint joint, float globalScale) {
       joint.transform.localEulerAngles = localRotation + ParamsToV3Scaled() * globalScale;
@@ -161,8 +170,8 @@ namespace Lukso {
       }
     }
 
-    public Stretching3DParameter(Point point, StretchingGradCalculator.Axis axis) : base(point) {
-     AddParameter(new PointParameter(1));
+    public Stretching3DParameter(Point point, StretchingGradCalculator.Axis axis, float scale, (float, float) minMax) : base(point) {
+     AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2 / scale)));
       this.axis = axis;
     }
 

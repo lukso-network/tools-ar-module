@@ -137,9 +137,16 @@ namespace Assets
         InitIK();
       }
 
+      foreach (var ik in skeleton.ikCalculator) {
+        if (ik.ReinitAlways) {
+          Joint joint = GetJointByPoint(ik.point);
+          ik.Init(joint);
+        }
+      }
 
-      //TOOD temp
-      foreach (var par in ikCalcualationParameters) {
+
+        //TOOD temp
+        foreach (var par in ikCalcualationParameters) {
         var currentJoint = GetJointByPoint(par.AssignedObj.point);
         par.AssignedObj.Apply(currentJoint, 1);
       }

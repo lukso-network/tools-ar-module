@@ -71,7 +71,7 @@ namespace Assets
         [Range(0.001f, 0.2f)]
         public float gradDescentStep = 0.1f;
 
-        [Range(0, 0.4f)]
+        [Range(0, 0.8f)]
         public float ikRegularization = 1f;
 
         [Range(0, 0.1f)]

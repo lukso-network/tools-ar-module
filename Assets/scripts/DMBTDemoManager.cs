@@ -114,7 +114,7 @@ namespace DeepMotion.DMBTDemo
     private Quaternion faceDirection = Quaternion.identity;
     public Quaternion FaceDirection => faceDirection;
 
-    [Range(0, 2)]
+    [Range(0, 4)]
     public float scaleDepth = 0.5f;
 
     public delegate void OnNewPoseHandler(bool skeletonExist);

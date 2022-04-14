@@ -990,6 +990,7 @@ MonoBehaviour:
   showBody: 1
   showSkeleton: 0
   showLandmarks: 0
+  rawBonesMaterial: {fileID: 2100000, guid: 34096fae2cb961d479c07ed962611a7b, type: 2}
 --- !u!1 &73682050
 GameObject:
   m_ObjectHideFlags: 0
@@ -4870,6 +4871,7 @@ MonoBehaviour:
   showBody: 1
   showSkeleton: 1
   showLandmarks: 1
+  rawBonesMaterial: {fileID: 0}
 --- !u!114 &576423394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5844,7 +5846,7 @@ MonoBehaviour:
     type: 3}
   hat: {fileID: 843617380}
   screenCamera: {fileID: 985747844}
-  scaleDepth: 1.206
+  scaleDepth: 2
   zFilterParams:
     freq: 30
     mincutoff: 1
@@ -7269,7 +7271,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 50
+  field of view: 20
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -15590,6 +15592,7 @@ MonoBehaviour:
     gradDescentStep: 0.02
     ikRegularization: 0.4
     ikGradDescentLambda: 0.0822
+    targetFunctionZScale: 1
     useOldIk: 0
     manualIk: 0
     parametersTest:
@@ -15632,7 +15635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2066642483
 Transform:
   m_ObjectHideFlags: 0
