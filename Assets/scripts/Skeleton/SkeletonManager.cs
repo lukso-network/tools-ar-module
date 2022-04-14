@@ -168,8 +168,9 @@ namespace Assets
     
       skeleton.ikCalculator.Add(new Rotation3DParameter(Point.CHEST, 90, (-40, 40)));
       //skeleton.ikCalculator.Add(new Rotation3DParameter(Point.SPINE, 90, (-20, 20)));
-      skeleton.ikCalculator.Add(new Stretching3DParameter(Point.CHEST, StretchingGradCalculator.Axis.PARENT, 0.1f, (-0.1f, 0.1f)));
-      skeleton.ikCalculator.Add(new Stretching3DParameter(Point.SPINE, StretchingGradCalculator.Axis.PARENT, 0.1f, (-0.1f, 0.1f)));
+      skeleton.ikCalculator.Add(new Stretching3DParameter(Point.CHEST, StretchingGradCalculator.Axis.PARENT, 0.2f, (-0.1f, 0.1f)));
+      //skeleton.ikCalculator.Add(new Stretching3DParameter(Point.SPINE, StretchingGradCalculator.Axis.PARENT, 0.1f, (-0.1f, 0.1f)));
+      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.SPINE, 90f, (-20f, 20f)));
 
       skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP, 90, (-90,90)));
       skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_KNEE));

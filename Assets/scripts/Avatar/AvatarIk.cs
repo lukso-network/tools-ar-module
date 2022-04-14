@@ -167,7 +167,7 @@ namespace Assets
       float dx = settings.gradDescentStep;
       float regularization = settings.ikRegularization;
       float lambda = settings.ikGradDescentLambda;
-      const float EARLY_STOP_THRESHOLD = 1 + 0.001f;
+      const float EARLY_STOP_THRESHOLD = 1 + 0.0000001f;
 
       int EARLY_STOP_COUNT = ikCalcualationParameters.Count * 2;
       int unchangeCount = 0;
@@ -234,7 +234,7 @@ namespace Assets
       }
 
       if (settings.enableAttaching) {
-       // PullAttachJoints();
+       PullAttachJoints();
       }
 
 
