@@ -5854,9 +5854,14 @@ MonoBehaviour:
     dcutoff: 1
   xyFilterParams:
     freq: 30
-    mincutoff: 0.1
-    beta: 7
-    dcutoff: 0.5
+    mincutoff: 0.2
+    beta: 4.5
+    dcutoff: 0.4
+  spineSizeFilterParams:
+    freq: 30
+    mincutoff: 0.027
+    beta: 0
+    dcutoff: 0.3
   useSameParams: 1
   enableZFilter: 1
 --- !u!1 &832877925
@@ -15636,7 +15641,6 @@ MonoBehaviour:
     - 2
     - 2
     - 2
-    test: []
   posFilter:
     sigma: 0.10000000149011612
     dt: 22

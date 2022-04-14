@@ -136,11 +136,13 @@ namespace DeepMotion.DMBTDemo
     [Header("Filter params:")]
     [SerializeField] private OneEuroFilterParams zFilterParams;
     [SerializeField] private OneEuroFilterParams xyFilterParams;
+    [SerializeField] private OneEuroFilterParams spineSizeFilterParams;
     [SerializeField] private bool useSameParams;
     [SerializeField] private bool enableZFilter = true;
     private OneEuroFilter []posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter []posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter []posFIlterY = new OneEuroFilter[Skeleton.JOINT_COUNT];
+    private OneEuroFilter spineSizeFilter;
 
     public Texture2D GetLastFrame() {
       return lastFrame;
@@ -161,6 +163,8 @@ namespace DeepMotion.DMBTDemo
         posFIlterX[i] = new OneEuroFilter(xyFilterParams);
         posFIlterY[i] = new OneEuroFilter(xyFilterParams);
       }
+
+      spineSizeFilter = new OneEuroFilter(spineSizeFilterParams);
     }
 
     void OnValidate() {
@@ -359,13 +363,23 @@ namespace DeepMotion.DMBTDemo
 
 
       var timestamp = Time.realtimeSinceStartup;
+
+
+      //filtering depends on size of objecs
+      float filterScale = 1.15f / spineSize;
+      filterScale = this.spineSizeFilter.Filter(filterScale);
+    //  Vector3 mn = new Vector3(100, 100, 100);
+    //  Vector3 mx = new Vector3(-100, -100, -100);
       if (enableZFilter) {
         for (int i = 0; i < points.Length; ++i) {
-          points[i].z = posFIlterZ[i].Filter(points[i].z, timestamp);
-          points[i].x = posFIlterX[i].Filter(points[i].x, timestamp);
-          points[i].y = posFIlterY[i].Filter(points[i].y, timestamp);
+      //    mx = Vector3.Max(mx, points[i]);
+       //   mn = Vector3.Min(mn, points[i]);
+          points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
+          points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
+          points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
         }
       }
+      Debug.Log("FilterScale:" + filterScale);
 
       TransformPoints(screenTransform, points, flipped, 0, scale);
 

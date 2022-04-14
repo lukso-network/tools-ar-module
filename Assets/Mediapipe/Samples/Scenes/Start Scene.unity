@@ -218,7 +218,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04085488e5fac35599866a2a6fceeda3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _availableSources: []
+  _availableSources:
+  - {fileID: 32900000, guid: 8b06433232417ca4eba493dc70d40ecf, type: 3}
+  - {fileID: 32900000, guid: ef0f7a0b91707df4da7cef78c94c5141, type: 3}
 --- !u!114 &805128652
 MonoBehaviour:
   m_ObjectHideFlags: 0
