@@ -28,6 +28,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   [SerializeField] private Camera screenCamera;
   [SerializeField] private SelfieSegmentationCreator segmentation;
   [SerializeField] private ApiManager apiManager;
+  [SerializeField] private GameObject annotationLayer;
 
 
 
@@ -151,9 +152,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
   [Binding]
   public bool IsShowLandmarks {
-    get { return helper.ShowLandmarks; }
+    get { return annotationLayer.activeSelf; }
     set {
-      helper.ShowLandmarks = value;
+      annotationLayer.SetActive(value);
       OnPropertyChanged("IsShowLandmarks");
     }
   }

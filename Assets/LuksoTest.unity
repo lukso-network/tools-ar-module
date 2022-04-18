@@ -2924,6 +2924,7 @@ MonoBehaviour:
   screenCamera: {fileID: 985747844}
   segmentation: {fileID: 82176635}
   apiManager: {fileID: 458808354}
+  annotationLayer: {fileID: 1889892129}
 --- !u!1 &273507914
 GameObject:
   m_ObjectHideFlags: 0
