@@ -54,6 +54,14 @@ namespace Lukso {
             NORMAL,
             ALONG
         }
+
+        public enum Axis
+        {
+            PARENT,
+            X,
+            Y,
+            Z,
+        }
         public readonly Skeleton.Point point;
         public bool ReinitAlways { get; set; }
 
@@ -157,7 +165,7 @@ namespace Lukso {
 
     private Vector3 initPosition;
     private Vector3 dir;
-    private StretchingGradCalculator.Axis axis;
+    private Axis axis;
     public override void Init(Joint joint) {
       this.initPosition = joint.transform.localPosition;
       
@@ -170,7 +178,7 @@ namespace Lukso {
       }
     }
 
-    public Stretching3DParameter(Point point, StretchingGradCalculator.Axis axis, float scale, (float, float) minMax) : base(point) {
+    public Stretching3DParameter(Point point, Axis axis, float scale, (float, float) minMax) : base(point) {
      AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2 / scale)));
       this.axis = axis;
     }
