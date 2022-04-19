@@ -165,8 +165,14 @@ namespace Assets
       skeleton.ikCalculator.Add(new Position3DParameter(Point.HIPS).SetReinit(true));
       skeleton.ikCalculator.Add(new ScalingParameter(Point.HIPS, 0.25f, (0, 0.2f)).SetReinit(true));
       skeleton.ikCalculator.Add(new Rotation3DParameter(Point.HIPS, 10, (-20, 20)).SetReinit(true));
-    
-      skeleton.ikCalculator.Add(new Rotation3DParameter(Point.CHEST, 90, (-40, 40)));
+
+      //skeleton.ikCalculator.Add(new Rotation3DParameter(Point.CHEST, 90, (-40, 40)));
+      
+      
+      // USE X axis scale small to force regularization more
+      skeleton.ikCalculator.Add(new Rotation1DParameter(Point.CHEST, Axis.X, 5, (-40, 40)));
+      skeleton.ikCalculator.Add(new Rotation1DParameter(Point.CHEST, Axis.Y, 40, (-40, 40)));
+      skeleton.ikCalculator.Add(new Rotation1DParameter(Point.CHEST, Axis.Z, 40, (-40, 40)));
       //skeleton.ikCalculator.Add(new Rotation3DParameter(Point.SPINE, 90, (-20, 20)));
       skeleton.ikCalculator.Add(new Stretching3DParameter(Point.CHEST, Axis.PARENT, 0.2f, (-0.1f, 0.1f)));
       //skeleton.ikCalculator.Add(new Stretching3DParameter(Point.SPINE, StretchingGradCalculator.Axis.PARENT, 0.1f, (-0.1f, 0.1f)));

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Lukso.Skeleton;
 using static Assets.StretchingGradCalculator;
+using System;
 
 namespace Lukso {
 
@@ -57,12 +58,22 @@ namespace Lukso {
 
         public enum Axis
         {
-            PARENT,
+            
             X,
             Y,
             Z,
+          PARENT,
         }
-        public readonly Skeleton.Point point;
+
+      public Vector3 GetMask(Axis axis) {
+        Vector3 mask = Vector3.zero;
+        if ((int)axis < 3) {
+        mask[(int)axis] = 1;
+      }
+      return mask;
+      }
+
+    public readonly Skeleton.Point point;
         public bool ReinitAlways { get; set; }
 
         protected List<PointParameter> parameters = new List<PointParameter>();
@@ -138,6 +149,38 @@ namespace Lukso {
 
   }
 
+
+  public class Rotation1DParameter : ClothAttachementDefinition
+  {
+    
+
+    private Vector3 localRotation;
+    private Vector3 mask;
+    private int axisIdx;
+    public override void Init(Joint joint) {
+      this.localRotation = joint.transform.localEulerAngles;
+    }
+
+    public Rotation1DParameter(Point point, Axis axis) : this(point, axis, 90, (-1e9f, 1e9f)) {
+    }
+    public Rotation1DParameter(Point point, Axis axis, float scale, (float, float) minMax) : base(point) {
+      if ((int)axis >= 3) {
+        throw new Exception("Incorrect axis: Only X,Y,Z are supported");
+      }
+      AddParameter(new PointParameter(scale, (minMax.Item1 / scale, minMax.Item2 / scale)));
+      mask = GetMask(axis);
+      axisIdx = (int)axis;
+    }
+
+
+    public override void Apply(Joint joint, float globalScale) {
+      var v = joint.transform.localEulerAngles;
+      v[axisIdx] = localRotation[axisIdx] + parameters[0].GetScaled() * globalScale;
+      joint.transform.localEulerAngles = v;
+    }
+  }
+
+
   public class Rotation3DParameter : ClothAttachementDefinition
   {
 
@@ -188,26 +231,6 @@ namespace Lukso {
     }
   }
 
-  public class Rotation1DParameter : ClothAttachementDefinition
-  {
-
-    private StretchingGradCalculator.Axis axis;
-    private Vector3 localEulerAngles;
-    public override void Init(Joint joint) {
-      this.localEulerAngles = joint.transform.localEulerAngles ;
-    }
-
-    public Rotation1DParameter(Point point, StretchingGradCalculator.Axis axis) : base(point) {
-     AddParameter(new PointParameter(90));
-      this.axis = axis;
-    }
-
-    public override void Apply(Joint joint, float globalScale) {
-      var v = localEulerAngles;
-      v[(int)axis] += parameters[0].Get() * globalScale;
-      joint.transform.localEulerAngles = v;
-    }
-  }
 
 
   //---------------------------------------------------------------------------------------------------

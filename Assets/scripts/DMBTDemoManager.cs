@@ -379,7 +379,7 @@ namespace DeepMotion.DMBTDemo
           points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
         }
       }
-      Debug.Log("FilterScale:" + filterScale);
+   //   Debug.Log("FilterScale:" + filterScale);
 
       TransformPoints(screenTransform, points, flipped, 0, scale);
 
