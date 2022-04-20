@@ -115,7 +115,11 @@ void Start() {
             //dir = new Vector3(0, 0, -1);
 
             dir = dmtManager.FaceDirection * dir;
-            //dir = FilterDir(dir);
+      //dir = FilterDir(dir);
+            var imageSource = ImageSourceProvider.ImageSource;
+            if (imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing) {
+              dir.x = -dir.x;
+            }
             lightDir = dir;
             
         }
