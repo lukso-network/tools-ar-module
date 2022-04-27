@@ -245,7 +245,7 @@ namespace DeepMotion.DMBTDemo
       if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
         return 0;
       }
-      var scaleVector = ScaleVector(screenTransform);
+     /* var scaleVector = ScaleVector(screenTransform);
       var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
 
       var l = skeletonPoints[(int)Skeleton.Point.LEFT_SHOULDER];
@@ -259,7 +259,8 @@ namespace DeepMotion.DMBTDemo
 
       var nosePose = (l + r) / 2 + len * upDir * 0.5f + Vector3.Cross(upDir, rlDir) * len * 0.2f;
 
-      var to = nosePose;
+      var to = nosePose;*/
+      var to = skeletonPoints[0];
       //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
       //pos3d += (screenCamera.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
 

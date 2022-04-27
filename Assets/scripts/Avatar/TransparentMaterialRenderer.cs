@@ -37,11 +37,14 @@ namespace Assets.scripts.Avatar
       }
     }
 
-    private void OnNewFrameRendered(Texture2D texture) {
+    private void OnNewFrameRendered(Texture2D texture2) {
       if (!gameObject.activeSelf || !enabled) {
         renderer.material = oldMaterial;
         return;
       }
+
+      var imageSource = ImageSourceProvider.ImageSource;
+      var texture = imageSource.GetCurrentTexture();
       renderer.material = newMaterial;
       
       //TODO start it only one time
