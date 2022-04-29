@@ -190,7 +190,12 @@ namespace Mediapipe.Unity
       }
 
       InitializeWebCamTexture();
-      webCamTexture.Play();
+      try {
+        webCamTexture.Play();
+      } catch (Exception ex) {
+        Logger.LogError("Could not play webcam");
+        yield break;
+      }
       yield return WaitForWebCamTexture();
     }
 

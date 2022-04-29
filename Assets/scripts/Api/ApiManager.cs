@@ -55,9 +55,18 @@ namespace Assets.scripts.Api
               return;
           }
 
-          ImageSourceProvider.ImageSource.SelectSource(camIdx);
-          solution.StartTracking();
+
+          StartCoroutine(PlayCamera(camIdx));
+      
       }
+
+      private IEnumerator PlayCamera(int camIdx) {
+        ImageSourceProvider.ImageSource.Stop();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        ImageSourceProvider.ImageSource.SelectSource(camIdx);
+        solution.StartTracking();
+    }
 
 
 

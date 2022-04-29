@@ -41,12 +41,20 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
       if (ImageSourceProvider.ImageSource?.sourceName == value) {
         return; // No change.
       }
+
+
       var sources = CameraSource;
       int idx = Array.IndexOf(sources, value);
       apiManager.SelectCamera("" + idx);
-
-      OnPropertyChanged("SelectedCamera");
+      StartCoroutine(UpdateCameraSettings());
+      
     }
+  }
+
+  private IEnumerator UpdateCameraSettings() {
+    // Debug functionality
+    yield return new WaitForSeconds(0.1f);
+   // OnPropertyChanged("SelectedCamera");
   }
 
   [Binding]

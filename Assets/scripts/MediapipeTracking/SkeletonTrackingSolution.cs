@@ -57,6 +57,16 @@ namespace Mediapipe.Unity.SkeletonTracking
       selfieCreator.Play();
     }
 
+    public override void Stop() {
+      base.Stop();
+     // selfieCreator.Stop();
+    }
+
+    public override void Pause() {
+      base.Pause();
+     // selfieCreator.Pause();
+    }
+
     protected override void AddTextureFrameToInputStream(TextureFrame textureFrame)
     {
       graphRunner.AddTextureFrameToInputStream(textureFrame);

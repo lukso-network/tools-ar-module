@@ -54,9 +54,9 @@ namespace Mediapipe.Unity.SelfieSegmentation
       if (startNormally) {
         base.Play();
       } else {
-        if (_coroutine != null) {
+     //   if (_coroutine != null) {
           Stop();
-        }
+      //  }
         PlayPredecessor();
         StartCoroutine(PrepareCustomRun());
       }

@@ -45,6 +45,12 @@ namespace Assets.scripts.Avatar
 
       var imageSource = ImageSourceProvider.ImageSource;
       var texture = imageSource.GetCurrentTexture();
+
+      if (texture == null) {
+        gameObject.SetActive(false);
+        return;
+      }
+      
       renderer.material = newMaterial;
       
       //TODO start it only one time

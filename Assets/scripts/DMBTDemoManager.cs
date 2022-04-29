@@ -245,9 +245,9 @@ namespace DeepMotion.DMBTDemo
       if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
         return 0;
       }
-     /* var scaleVector = ScaleVector(screenTransform);
+      var scaleVector = ScaleVector(screenTransform);
       var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
-
+      /*
       var l = skeletonPoints[(int)Skeleton.Point.LEFT_SHOULDER];
       var r = skeletonPoints[(int)Skeleton.Point.RIGHT_SHOULDER];
       var lh = skeletonPoints[(int)Skeleton.Point.LEFT_HIP];

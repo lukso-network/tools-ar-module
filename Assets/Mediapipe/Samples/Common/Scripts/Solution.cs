@@ -77,6 +77,9 @@ namespace Mediapipe.Unity
     protected static void ReadFromImageSource(ImageSource imageSource, TextureFrame textureFrame)
     {
       var sourceTexture = imageSource.GetCurrentTexture();
+      if (sourceTexture == null) {
+        return;
+      }
 
       // For some reason, when the image is coiped on GPU, latency tends to be high.
       // So even when OpenGL ES is available, use CPU to copy images.
