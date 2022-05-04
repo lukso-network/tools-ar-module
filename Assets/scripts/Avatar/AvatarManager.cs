@@ -137,7 +137,7 @@ public class AvatarManager : MonoBehaviour
     }
 
     private bool IsTransparent(GameObject obj) {
-        return obj.GetComponentInChildren<TransparentMaterialRenderer>() != null;
+        return obj.GetComponentInChildren<TransparentMaterialRenderer>(true) != null;
     }
 
     private void AddTransparentBody(GameObject obj, Assets.Avatar controllerAvatar) {
