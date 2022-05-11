@@ -12,6 +12,8 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityWeld.Binding;
+using SimpleFileBrowser;
+using System.IO;
 
 [Binding]
 public class CanvasController : MonoBehaviour, INotifyPropertyChanged
@@ -23,6 +25,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   public DMBTDemoManager skeletonManager;
   public AvatarManager avatarManager;
   public SizeManager sizeManager;
+  private string initFilePath = null;
 
 
   [SerializeField] private Camera screenCamera;
@@ -77,11 +80,28 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
   [Binding]
   public void Load3DModel() {
-#if UNITY_EDITOR
-    string path = UnityEditor.EditorUtility.OpenFilePanel("Select model", "", "Gltf files,glb");
-    avatarManager.LoadGltf(path, false);
-#endif
+    /*#if UNITY_EDITOR
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select model", "", "Gltf files,glb");
+        avatarManager.LoadGltf(path, false);
+    #endif
+    */
+    StartCoroutine(ShowLoadDialogCoroutine());
   }
+
+
+  IEnumerator ShowLoadDialogCoroutine() {
+
+    yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.FilesAndFolders, true, initFilePath, null, "Load glb", "Load");
+
+    if (FileBrowser.Success) {
+        var file = FileBrowser.Result[0];
+
+        initFilePath = Path.GetDirectoryName(file);
+        avatarManager.LoadGltf(file, false);
+     }
+
+  }
+
 
   [Binding]
   public void RemveAll() {
@@ -215,7 +235,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     OnPropertyChanged("SkinScaleZ");
     OnPropertyChanged("SelectedCamera");
 
-
+    FileBrowser.SetFilters(true, new FileBrowser.Filter("Model", ".glb"));
+		FileBrowser.SetDefaultFilter(".glb");
+		FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
   }
 
   public void Update() {

@@ -1,7 +1,16 @@
 {
   "dependencies": {
+    "com.atteneder.draco": {
+      "version": "https://github.com/atteneder/DracoUnity.git#v4.0.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.burst": "1.4.11"
+      },
+      "hash": "4041c676d1dfdc93f85bd58d047001076fedaf78"
+    },
     "com.atteneder.gltfast": {
-      "version": "https://github.com/atteneder/glTFast.git",
+      "version": "https://github.com/atteneder/glTFast.git#v4.6.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -12,6 +21,15 @@
         "com.unity.burst": "1.4.11"
       },
       "hash": "f14444778cc468879b350a85eed5fe5f01e631ab"
+    },
+    "com.atteneder.ktx": {
+      "version": "https://github.com/atteneder/KtxUnity.git#v2.1.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      },
+      "hash": "7747a48d5e994db800b4c60a0a8b95a5ae2ce39f"
     },
     "com.github.homuler.mediapipe": {
       "version": "file:com.github.homuler.mediapipe",
@@ -92,8 +110,8 @@
       "dependencies": {}
     },
     "com.unity.burst": {
-      "version": "1.4.11",
-      "depth": 1,
+      "version": "1.6.5",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1"
@@ -250,6 +268,13 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.yasirkula.simplefilebrowser": {
+      "version": "https://github.com/yasirkula/UnitySimpleFileBrowser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "5e6d1cdf1e968d05e00f7ba7f7ea7a3ed3fa1d31"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
