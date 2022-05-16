@@ -1,3 +1,8 @@
+# Lukso Documentation
+
+Look at [documentation](Docs/index.me)
+
+
 # MediaPipe Unity Plugin
 
 This is a Unity (2020.3.30f1) [Native Plugin](https://docs.unity3d.com/Manual/NativePlugins.html) to use [MediaPipe](https://github.com/google/mediapipe) (0.8.9).
