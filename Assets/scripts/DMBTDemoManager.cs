@@ -107,6 +107,7 @@ namespace DeepMotion.DMBTDemo
     public GameObject hat;
 
     [SerializeField] private Camera screenCamera;
+    [SerializeField] private Camera3DController camera3dController;
 
     private GameObject face;
     private Mesh faceMesh;
@@ -116,6 +117,8 @@ namespace DeepMotion.DMBTDemo
 
     [Range(0, 4)]
     public float scaleDepth = 0.5f;
+    [Range(-20, 20)]
+    public float zshift = 0.0f;
 
     public delegate void OnNewPoseHandler(bool skeletonExist);
 
@@ -236,7 +239,8 @@ namespace DeepMotion.DMBTDemo
       var dir = (screenCamera.transform.position - pos3d).normalized;
      // dir = -Vector3.forward;
       // dir /= Math.Abs(dir.z);
-      pos3d += dir * (-(v.z + zShift)) * scaleVector.z * perspectiveScale;
+      pos3d += dir * (-(v.z * scaleVector.z + zShift))  * perspectiveScale;
+      //pos3d = Vector3.Scale(new Vector3(relX, relY, v.z), scaleVector);
       return pos3d;
     }
 
@@ -348,6 +352,10 @@ namespace DeepMotion.DMBTDemo
 
     private float[] times = new float[] { 0, 0, 0, 0, 0 };
 
+    private static string V2S(Vector3 v) {
+      return $"({v.x:0.00}, {v.y:0.00}, {v.z:0.00})";
+    }
+
     private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
 
       if (landmarkList == null) {
@@ -357,32 +365,47 @@ namespace DeepMotion.DMBTDemo
 
       var t0 = Time.realtimeSinceStartup;
       var spineSize = GetSpineSize(landmarkList);
-      float scale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
-      scale /= 2.8f;
 
-      var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
+      var texAspect = camera3dController.TextureAspect;
 
+      float scale = texAspect / 1.7f;
+      float scale1 = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
+      scale1 /= 2.8f;
 
+      var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => { var p = LandmarkToVector(landmarkList.Landmark[i]); p.z += 0;  return p; }).ToArray();
+
+      
       var timestamp = Time.realtimeSinceStartup;
 
 
       //filtering depends on size of objecs
       float filterScale = 1.15f / spineSize;
       filterScale = this.spineSizeFilter.Filter(filterScale);
-    //  Vector3 mn = new Vector3(100, 100, 100);
-    //  Vector3 mx = new Vector3(-100, -100, -100);
+      Vector3 mn = new Vector3(100, 100, 100);
+      Vector3 mx = new Vector3(-100, -100, -100);
       if (enableZFilter) {
         for (int i = 0; i < points.Length; ++i) {
-      //    mx = Vector3.Max(mx, points[i]);
-       //   mn = Vector3.Min(mn, points[i]);
+          mx = Vector3.Max(mx, points[i]);
+         mn = Vector3.Min(mn, points[i]);
           points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
           points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
           points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
         }
       }
-   //   Debug.Log("FilterScale:" + filterScale);
+      //Debug.Log("FilterScale:" + filterScale);
+      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
 
-      TransformPoints(screenTransform, points, flipped, 0, scale);
+      TransformPoints(screenTransform, points, flipped, zshift, scale);
+
+
+      mn = new Vector3(100, 100, 100);
+      mx = new Vector3(-100, -100, -100);
+      for (int i = 0; i < points.Length; ++i) {
+        mx = Vector3.Max(mx, points[i]);
+        mn = Vector3.Min(mn, points[i]);
+      }
+      Debug.Log("mn/mx2:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx - mn) + " " + V2S(points[16]));
+
 
 
       /*

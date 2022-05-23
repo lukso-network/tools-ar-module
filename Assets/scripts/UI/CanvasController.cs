@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityWeld.Binding;
 using SimpleFileBrowser;
 using System.IO;
+using Mediapipe.Unity.SkeletonTracking;
 
 [Binding]
 public class CanvasController : MonoBehaviour, INotifyPropertyChanged
@@ -28,6 +29,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   private string initFilePath = null;
 
 
+  [SerializeField] private SkeletonTrackingSolution solution;
   [SerializeField] private Camera screenCamera;
   [SerializeField] private SelfieSegmentationCreator segmentation;
   [SerializeField] private ApiManager apiManager;
@@ -121,6 +123,31 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
   [Binding]
   public void CaptureSegmentation() {
     segmentation.CaptureSegmentation();
+  }
+
+  [Binding]
+  public void SelectNextSource() {
+
+    ImageSourceProvider.ImageSource.SelectNextSource();
+    solution.StartTracking();
+  }
+  [Binding]
+  public void SwitchSource() {
+
+    var t = ImageSourceProvider.ImageSource.type;
+    if (t == ImageSource.SourceType.Image) {
+      ImageSourceProvider.SwitchSource(ImageSource.SourceType.Camera);
+    } else {
+      ImageSourceProvider.SwitchSource(ImageSource.SourceType.Image);
+    }
+    solution.StartTracking();
+  }
+
+  [Binding]
+  public void SelectNextResolution() {
+
+    ImageSourceProvider.ImageSource.SelectNextResolution();
+    solution.StartTracking();
   }
 
   [Binding]

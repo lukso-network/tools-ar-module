@@ -15,6 +15,7 @@ namespace Mediapipe.Unity
   {
     [SerializeField] private Texture[] _availableSources;
     [SerializeField] private ResolutionStruct[] _defaultAvailableResolutions;
+    private int currentId = 0;
 
     private Texture2D _outputTexture;
     private Texture _image;
@@ -59,6 +60,14 @@ namespace Mediapipe.Unity
       }
 
       image = _availableSources[sourceId];
+      currentId = sourceId;
+    }
+
+    public override void SelectNextSource() {
+      if (_availableSources == null || _availableSources.Length == 0) {
+        return;
+      }
+      SelectSource((currentId + 1) % _availableSources.Length);
     }
 
     public override IEnumerator Play()
@@ -112,8 +121,13 @@ namespace Mediapipe.Unity
 
     private void InitializeOutputTexture(Texture src)
     {
-      _outputTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
-      Texture resizedTexture = new Texture2D(textureWidth, textureHeight, TextureFormat.RGBA32, false);
+      int w = textureWidth == 0 ? src.width : textureWidth;
+      int h = textureHeight == 0 ? src.height : textureHeight;
+
+      resolution = new ResolutionStruct(w, h, resolution.frameRate);
+
+      _outputTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
+      Texture resizedTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
       //_outputTexture = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false);
       //Texture resizedTexture = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false);
       // TODO: assert ConvertTexture finishes successfully

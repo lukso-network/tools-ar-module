@@ -15,6 +15,9 @@ namespace Lukso
 
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject screenPlane;
+
+    public float TextureAspect => (float)width / height;
+
     // Use this for initialization
     void Start() {
 

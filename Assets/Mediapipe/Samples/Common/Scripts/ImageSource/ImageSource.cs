@@ -54,6 +54,8 @@ namespace Mediapipe.Unity
       Video = 2,
     }
 
+    private int resolutionId = 0;
+
     public ResolutionStruct resolution { get; protected set; }
 
     /// <remarks>
@@ -99,6 +101,8 @@ namespace Mediapipe.Unity
     /// <param name="sourceId">The index of <see cref="sourceCandidateNames" /></param>
     public abstract void SelectSource(int sourceId);
 
+    public virtual void SelectNextSource() { }
+
     /// <summary>
     ///   Choose the resolution from <see cref="availableResolutions" />.
     /// </summary>
@@ -116,6 +120,11 @@ namespace Mediapipe.Unity
       }
 
       resolution = resolutions[resolutionId];
+      this.resolutionId = resolutionId;
+    }
+
+    public void SelectNextResolution() {
+      SelectResolution((resolutionId + 1) % availableResolutions.Length);
     }
 
     /// <summary>
