@@ -70,7 +70,7 @@ namespace Lukso
     [SerializeField] private Camera skeletonCamera;
     [SerializeField] UnityEngine.UI.RawImage outputUI = null;
 
-    [Range(-2, 2)]
+    [Range(-0.5f, 0.5f)]
     [SerializeField] private float[] clothParametersTest;
     [SerializeField] private bool manualClothParameters;
 

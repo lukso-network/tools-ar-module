@@ -64,9 +64,10 @@ namespace Assets
             clothSkeletonTransform.CopyTo(clothJoints);
 
             var hips = GetHips();
-            float globalScale = 1;// hips.transform.localScale.x/5;
+            //float globalScale = 1;// hips.transform.localScale.x/5;
+            float globalScale = hips.transform.localScale.x/1.6f;
 
-            foreach (var cp in clothPoints) {
+      foreach (var cp in clothPoints) {
                 var point = cp.definition.point;
                 var mirrored = skeleton.GetMirrored(point);
 
