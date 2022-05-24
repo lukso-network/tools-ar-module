@@ -33,13 +33,16 @@ namespace Assets
         [Range(0, 0.02f)]
         public float clothStepGradient = 0.1f;
 
-        [Range(0, 2f)]
+        [Range(0, 6f)]
         public float clothRegularization = 0.001f;
 
         [Range(0, 100f)]
         public float clothPenalty = 1;
 
-        public bool clothDemoMode = false;
+        [Range(0, 100f)]
+        public float clothTooThinPenalty = 1;
+
+    public bool clothDemoMode = false;
 
 
         public bool resizeBones = true;

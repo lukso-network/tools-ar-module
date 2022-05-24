@@ -270,16 +270,32 @@ namespace Lukso {
     public class ClothAttachmentScale : ClothAttachementDefinition
     {
 
-        public ClothAttachmentScale(Point point, float maxValue) : base(point) {
-           AddParameter(new PointParameter(1, (-maxValue, maxValue)));
+        public ClothAttachmentScale(Point point, float scale,  float maxValue) : base(point) {
+           AddParameter(new PointParameter(scale, (-maxValue, maxValue)));
         }
 
         public override void Apply(Joint joint, float globalScale) {
            // var s = new Vector3(parameters[0].Get() * 5, 0, 0);
-            var s = new Vector3(parameters[0].Get(), 0, 0);
+            var s = new Vector3(parameters[0].Get()*10, 0, 0);
 
             joint.clothScale = s;
         }
     }
+
+  public class ClothAttachmentGlobalScale : ClothAttachementDefinition
+  {
+    private AvatarManager manager;
+    public ClothAttachmentGlobalScale(Point point, float maxValue) : base(point) {
+      AddParameter(new PointParameter(2, (-maxValue, maxValue)));
+
+      manager = GameObject.FindObjectOfType<AvatarManager>();
+    }
+
+    public override void Apply(Joint joint, float globalScale) {
+      // var s = new Vector3(parameters[0].Get() * 5, 0, 0);
+      var p = parameters[0].GetScaled();
+      manager.skinScaler = new Vector3(1+ p, 1, 1+p);
+    }
+  }
 
 }

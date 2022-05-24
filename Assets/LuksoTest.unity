@@ -13314,6 +13314,18 @@ MonoBehaviour:
   screenPlane: {fileID: 114348006}
   skeletonCamera: {fileID: 985747844}
   outputUI: {fileID: 1491910832}
+  clothParametersTest:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  manualClothParameters: 0
 --- !u!1 &1770147786
 GameObject:
   m_ObjectHideFlags: 0
@@ -16017,6 +16029,7 @@ MonoBehaviour:
     clothStepGradient: 0.01
     clothRegularization: 2
     clothPenalty: 1
+    clothTooThinPenalty: 1
     clothDemoMode: 0
     resizeBones: 1
     enableRot: 1

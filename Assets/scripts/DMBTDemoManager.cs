@@ -393,11 +393,11 @@ namespace DeepMotion.DMBTDemo
         }
       }
       //Debug.Log("FilterScale:" + filterScale);
-      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
+      //Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
 
       TransformPoints(screenTransform, points, flipped, zshift, scale);
 
-
+      /*
       mn = new Vector3(100, 100, 100);
       mx = new Vector3(-100, -100, -100);
       for (int i = 0; i < points.Length; ++i) {
@@ -405,7 +405,7 @@ namespace DeepMotion.DMBTDemo
         mn = Vector3.Min(mn, points[i]);
       }
       Debug.Log("mn/mx2:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx - mn) + " " + V2S(points[16]));
-
+      */
 
 
       /*

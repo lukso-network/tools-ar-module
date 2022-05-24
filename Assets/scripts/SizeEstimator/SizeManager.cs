@@ -70,6 +70,10 @@ namespace Lukso
     [SerializeField] private Camera skeletonCamera;
     [SerializeField] UnityEngine.UI.RawImage outputUI = null;
 
+    [Range(-2, 2)]
+    [SerializeField] private float[] clothParametersTest;
+    [SerializeField] private bool manualClothParameters;
+
     private ComputeBuffer iouBuffer;
     private int iouKernerlHandle;
 
@@ -114,10 +118,20 @@ namespace Lukso
 
     void Update() {
 
-      return;
+
+      var avatar = skeletonManager.GetClothController();
+      if (avatar != null) {
+        if (manualClothParameters) {
+          avatar.CopyToClothParameters(clothParametersTest);
+        } else {
+          avatar.CopyFromClothParameters(clothParametersTest);
+        }
+      }
+
+      //return;
       InitClothCamera();
       var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
-      Debug.Log(v);
+    //  Debug.Log(v);
 
       CaptureSegmentation();
 
@@ -130,7 +144,7 @@ namespace Lukso
       }
 
       clothCamera.Render();
-      return;
+      //return;
       maskMaterial.SetTexture("_MaskTexture", mask);
       maskMaterial.SetTexture("_ClothTexture", clothCamera.targetTexture);
       Graphics.Blit(null, renderedMask, maskMaterial);
@@ -154,6 +168,7 @@ namespace Lukso
 
     public void ResetSize() {
       skeletonManager.GetClothController()?.ResetClothSize();
+      skeletonManager.GetClothController()?.CopyFromClothParameters(clothParametersTest);
     }
 
     public void CalculateSize() {
@@ -178,7 +193,7 @@ namespace Lukso
     }
 
     private IEnumerator FindBestSize() {
-
+      manualClothParameters = false;
       /*
       for(int k = 0; k < 200; ++k) {
           var a = skeletonManager.GetClothController();
@@ -241,6 +256,7 @@ namespace Lukso
       }
       avatarManager.SetSkinRecalulation(false);
       calculateionInProgres = false;
+      
     }
 
     private void InitClothCamera() {
@@ -339,7 +355,7 @@ namespace Lukso
       uint onTexture = data[2];
       uint onMask = data[1];
 
-      float ior = and / (and + onTexture * skeletonManager.ikSettings.clothPenalty + onMask + 0.001f);
+      float ior = and / (and + onTexture * skeletonManager.ikSettings.clothPenalty + onMask * skeletonManager.ikSettings.clothTooThinPenalty + 0.001f);
 
       // Debug.Log("Shader:"+ior + " " + data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
 

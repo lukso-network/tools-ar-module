@@ -152,7 +152,6 @@ namespace Assets
       }
 
       if (DebugManualIK()) {
-        DebugManualIK();
         return;
       }
 
@@ -223,7 +222,7 @@ namespace Assets
         if (value / prevVal < EARLY_STOP_THRESHOLD) {
           unchangeCount += 1;
           if (unchangeCount > EARLY_STOP_COUNT) {
-            Debug.Log($"EARLY_STOP: iter={step}");
+         //   Debug.Log($"EARLY_STOP: iter={step}");
             break;
           }
 

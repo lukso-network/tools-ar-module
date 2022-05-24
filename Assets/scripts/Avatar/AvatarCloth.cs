@@ -1,4 +1,4 @@
-﻿using Lukso;
+using Lukso;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +36,7 @@ namespace Assets
 
 
         private List<ClothPoint> clothPoints = new List<ClothPoint>();
+        private List<PointParameter> clothPointParameters = new List<PointParameter>();
         private List<Joint> clothJoints = new List<Joint>();
         private void InitCloth() {
             var definition = skeleton.clothPoints;
@@ -52,7 +53,11 @@ namespace Assets
                     clothJoints.Add(GetJointByPoint(mirrored));
                 }
             }
-        }
+
+          foreach (var cp in clothPoints) {
+            clothPointParameters.AddRange(cp.definition.GetParameters());
+          }
+    }
 
 
         public void ApplyClothShift(bool keepPrevious) {
@@ -101,7 +106,21 @@ namespace Assets
             }
         }
 
-        public IEnumerator FindBestCloth(Func<float> target) {
+        public void CopyToClothParameters(float [] parameters) {
+          var l = Math.Min(parameters.Length, clothPointParameters.Count);
+          for (int i = 0; i < l; ++i) {
+            clothPointParameters[i].Set(parameters[i]);
+          }
+        }
+        public void CopyFromClothParameters(float[] parameters) {
+          var l = Math.Min(parameters.Length, clothPointParameters.Count);
+          for (int i = 0; i < l; ++i) {
+            parameters[i] = clothPointParameters[i].Get();
+          }
+        }
+
+
+    public IEnumerator FindBestCloth(Func<float> target) {
             ResetClothSize();
            /*  foreach (var cp in clothPoints) {
 
@@ -113,10 +132,10 @@ namespace Assets
 
 
 
-           var parameters = new List<PointParameter>();
-            foreach(var cp in clothPoints) {
-                parameters.AddRange(cp.definition.GetParameters());
-            }
+           var parameters = clothPointParameters;
+            //foreach(var cp in clothPoints) {
+              //  parameters.AddRange(cp.definition.GetParameters());
+            //}
 
             /*
             foreach (var p in parameters) {
@@ -181,7 +200,7 @@ namespace Assets
                 if (value / prevVal < EARLY_STOP_THRESHOLD) {
                     unchangeCount += 1;
                     if (unchangeCount > EARLY_STOP_COUNT) {
-                        Debug.Log($"EARLY_STOP: iter={step}");
+                    //    Debug.Log($"EARLY_STOP: iter={step}");
                         break;
                     }
 
