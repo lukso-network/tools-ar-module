@@ -160,6 +160,8 @@ namespace Assets
             skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_ELBOW, 0.5f));
       //skeleton.clothPoints.Add(new ClothAttachmentScale(Point.SPINE, 1, 0.5f));
             skeleton.clothPoints.Add(new ClothAttachmentGlobalScale(Point.SPINE, 0.5f));
+            skeleton.clothPoints.Add(new ClothAttachmentScale(Point.SPINE, 2, 0.5f));
+            skeleton.clothPoints.Add(new ClothAttachmentScale(Point.CHEST, 2, 0.5f));
 
 
 

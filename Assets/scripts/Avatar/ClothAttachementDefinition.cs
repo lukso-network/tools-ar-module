@@ -275,8 +275,9 @@ namespace Lukso {
         }
 
         public override void Apply(Joint joint, float globalScale) {
-           // var s = new Vector3(parameters[0].Get() * 5, 0, 0);
-            var s = new Vector3(parameters[0].Get()*10, 0, 0);
+      // var s = new Vector3(parameters[0].Get() * 5, 0, 0);
+            var p = parameters[0].GetScaled();
+            var s = new Vector3(p, 0, p);
 
             joint.clothScale = s;
         }
