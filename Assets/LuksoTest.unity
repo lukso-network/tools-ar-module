@@ -16028,8 +16028,8 @@ MonoBehaviour:
     clothLambdaGradient: 0.1
     clothStepGradient: 0.01
     clothRegularization: 2
-    clothPenalty: 1
-    clothTooThinPenalty: 1
+    clothPenalty: 8
+    clothTooThinPenalty: 8
     clothDemoMode: 0
     resizeBones: 1
     enableRot: 1

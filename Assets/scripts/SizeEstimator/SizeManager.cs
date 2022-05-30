@@ -73,6 +73,7 @@ namespace Lukso
     [Range(-0.5f, 0.5f)]
     [SerializeField] private float[] clothParametersTest;
     [SerializeField] private bool manualClothParameters;
+    [SerializeField] private bool useTransparentBody;
 
     private ComputeBuffer iouBuffer;
     private int iouKernerlHandle;
@@ -193,6 +194,9 @@ namespace Lukso
     }
 
     private IEnumerator FindBestSize() {
+      var prevTransparentState = avatarManager.ShowTransparentBody;
+      avatarManager.ShowTransparentBody = useTransparentBody;
+
       manualClothParameters = false;
       /*
       for(int k = 0; k < 200; ++k) {
@@ -256,6 +260,8 @@ namespace Lukso
       }
       avatarManager.SetSkinRecalulation(false);
       calculateionInProgres = false;
+
+      avatarManager.ShowTransparentBody = prevTransparentState;
       
     }
 
