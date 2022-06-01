@@ -198,6 +198,7 @@ namespace Lukso {
     }
 
 
+
     public override void Apply(Joint joint, float globalScale) {
       joint.transform.localEulerAngles = localRotation + ParamsToV3Scaled() * globalScale;
     }
@@ -286,8 +287,8 @@ namespace Lukso {
   public class ClothAttachmentGlobalScale : ClothAttachementDefinition
   {
     private AvatarManager manager;
-    public ClothAttachmentGlobalScale(Point point, float maxValue) : base(point) {
-      AddParameter(new PointParameter(2, (-maxValue, maxValue)));
+    public ClothAttachmentGlobalScale(Point point, float scale, float maxValue) : base(point) {
+      AddParameter(new PointParameter(scale, (-maxValue, maxValue)));
 
       manager = GameObject.FindObjectOfType<AvatarManager>();
     }

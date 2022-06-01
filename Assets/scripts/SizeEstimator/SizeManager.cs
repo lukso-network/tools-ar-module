@@ -194,9 +194,6 @@ namespace Lukso
     }
 
     private IEnumerator FindBestSize() {
-      var prevTransparentState = avatarManager.ShowTransparentBody;
-      avatarManager.ShowTransparentBody = useTransparentBody;
-
       manualClothParameters = false;
       /*
       for(int k = 0; k < 200; ++k) {
@@ -237,6 +234,8 @@ namespace Lukso
         yield break;
       }
 
+      var prevTransparentState = avatarManager.ShowTransparentBody;
+      avatarManager.ShowTransparentBody = useTransparentBody;
       yield return avatar.FindBestCloth(() => {
         avatar.ApplyClothShift(true);
         avatarManager.UpdateSkeleton(true);
@@ -249,7 +248,7 @@ namespace Lukso
 
         // minus as we find maximum ior
         var ior = CalculateIOR(mask, clothCamera.targetTexture);
-        Debug.Log("Ior:" + ior);
+        //Debug.Log("Ior:" + ior);
         return -ior;
       });
 
@@ -357,13 +356,26 @@ namespace Lukso
 
       iouBuffer.GetData(data);
 
-      uint and = data[3];
-      uint onTexture = data[2];
-      uint onMask = data[1];
+      float and = data[3] + 0.001f;
+      uint onTexture = data[2]; //cloth texture
+      uint onMask = data[1];//human mask
 
-      float ior = and / (and + onTexture * skeletonManager.ikSettings.clothPenalty + onMask * skeletonManager.ikSettings.clothTooThinPenalty + 0.001f);
+      float ior = and / (and + onTexture * skeletonManager.ikSettings.clothPenalty + onMask * skeletonManager.ikSettings.clothTooThinPenalty);
 
-      // Debug.Log("Shader:"+ior + " " + data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
+      ior = and / (and + onTexture + onMask) - onTexture / and * skeletonManager.ikSettings.clothPenalty - onMask / and * skeletonManager.ikSettings.clothTooThinPenalty;
+
+      ior = and / (and + onTexture + onMask);
+      float z1 = skeletonManager.ikSettings.clothPenalty;
+      float z2 = skeletonManager.ikSettings.clothTooThinPenalty;
+      //ior = ior - (z1 + z2) / (onTexture + onMask + 0.001f);
+
+      ior = ior - z1 * (z2 * onMask + (1 - z2) * onTexture) / (onMask + onTexture + 0.001f);
+      //ior = -z1 * (z2 * onMask + (1 - z2) * onTexture) / (onMask + onTexture + 0.001f);
+      // ior = ior * z1 * (z2 * onMask + (1 - z2) * onTexture) / (onMask + onTexture + 0.001f);
+      ior = and / (and + z1 * (z2 * onMask + (1 - z2) * onTexture)*2);
+
+
+      //Debug.Log("Shader:"+ior + " " + data[0] + " " + data[1] + " " + data[2] + " " + data[3]);
 
       // Debug.Log("Shader:" + ior + " def:" + and / (and + onTexture + onMask + 0.001f));
       //float ior = data[0] / (float)(data[1] + 0.01f);

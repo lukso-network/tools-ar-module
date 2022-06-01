@@ -160,7 +160,7 @@ namespace Assets
             int EARLY_STOP_COUNT = parameters.Count * 2;
             int unchangeCount = 0;
 
-            for (int step = 0; step < 300; ++step) {
+            for (int step = 0; step < 600; ++step) {
                 int idx = rnd.Next(0, parameters.Count);
                 idx = step % parameters.Count;
                 var par = parameters[idx];

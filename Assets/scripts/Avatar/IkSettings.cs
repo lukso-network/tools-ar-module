@@ -36,10 +36,10 @@ namespace Assets
         [Range(0, 6f)]
         public float clothRegularization = 0.001f;
 
-        [Range(0, 100f)]
+        [Range(-5, 5)]
         public float clothPenalty = 1;
 
-        [Range(0, 100f)]
+        [Range(0, 1)]
         public float clothTooThinPenalty = 1;
 
     public bool clothDemoMode = false;

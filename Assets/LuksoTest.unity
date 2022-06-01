@@ -13326,6 +13326,7 @@ MonoBehaviour:
   - 0
   - 0
   manualClothParameters: 0
+  useTransparentBody: 1
 --- !u!1 &1770147786
 GameObject:
   m_ObjectHideFlags: 0
@@ -16027,9 +16028,9 @@ MonoBehaviour:
     scaleMoveMultiplier: 0.05
     clothLambdaGradient: 0.1
     clothStepGradient: 0.01
-    clothRegularization: 2
-    clothPenalty: 8
-    clothTooThinPenalty: 8
+    clothRegularization: 0.55
+    clothPenalty: 5
+    clothTooThinPenalty: 0.512
     clothDemoMode: 0
     resizeBones: 1
     enableRot: 1
