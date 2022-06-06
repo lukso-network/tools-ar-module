@@ -239,7 +239,7 @@ namespace DeepMotion.DMBTDemo
       var dir = (screenCamera.transform.position - pos3d).normalized;
      // dir = -Vector3.forward;
       // dir /= Math.Abs(dir.z);
-      pos3d += dir * (-(v.z * scaleVector.z + zShift))  * perspectiveScale;
+      pos3d += dir * (-(v.z  + zShift)) * scaleVector.z * perspectiveScale;
       //pos3d = Vector3.Scale(new Vector3(relX, relY, v.z), scaleVector);
       return pos3d;
     }
@@ -367,10 +367,7 @@ namespace DeepMotion.DMBTDemo
       var spineSize = GetSpineSize(landmarkList);
 
       var texAspect = camera3dController.TextureAspect;
-
       float scale = texAspect / 1.7f;
-      float scale1 = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
-      scale1 /= 2.8f;
 
       var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => { var p = LandmarkToVector(landmarkList.Landmark[i]); p.z += 0;  return p; }).ToArray();
 
@@ -448,7 +445,10 @@ namespace DeepMotion.DMBTDemo
       if (faceLandmarks == null) {
         return;
       }
-      float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
+
+      var texAspect = camera3dController.TextureAspect;
+      float faceScale = texAspect / 1.7f;
+     // float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
       var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
 
       //faceMesh.vertices = points;
