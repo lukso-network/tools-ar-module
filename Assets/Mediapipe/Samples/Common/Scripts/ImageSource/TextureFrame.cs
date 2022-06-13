@@ -4,6 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using Assets.scripts.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -353,7 +354,11 @@ namespace Mediapipe.Unity
       var currentRenderTexture = RenderTexture.active;
       RenderTexture.active = tmpRenderTexture;
 
-      Graphics.Blit(texture, tmpRenderTexture);
+      if (ScaleTexture.instance.mode == ScaleTexture.Mode.SCALE_IMAGE) {
+        Graphics.Blit(texture, tmpRenderTexture, ScaleTexture.instance.scale, ScaleTexture.instance.offset);
+      } else {
+        Graphics.Blit(texture, tmpRenderTexture);
+      }
 
       var rect = new UnityEngine.Rect(0, 0, Mathf.Min(tmpRenderTexture.width, _textureBuffer.width), Mathf.Min(tmpRenderTexture.height, _textureBuffer.height));
       _textureBuffer.ReadPixels(rect, 0, 0);

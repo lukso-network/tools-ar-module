@@ -1122,7 +1122,7 @@ MonoBehaviour:
     type: 3}
   axis: {fileID: 0}
   updateAutomatically: 1
-  showRawPoints: 1
+  showRawPoints: 0
   showBody: 1
   showSkeleton: 0
   showLandmarks: 0
@@ -2948,6 +2948,7 @@ GameObject:
   - component: {fileID: 271437890}
   - component: {fileID: 271437889}
   - component: {fileID: 271437893}
+  - component: {fileID: 271437894}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -3062,6 +3063,22 @@ MonoBehaviour:
   segmentation: {fileID: 82176635}
   apiManager: {fileID: 458808354}
   annotationLayer: {fileID: 1889892129}
+--- !u!114 &271437894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271437888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aa0d762ee4fc014281b364ab85f6b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageScreen: {fileID: 1869387663}
+  scale: {x: 1, y: 1}
+  offset: {x: 0, y: 0}
+  mode: 3
 --- !u!1 &273507914
 GameObject:
   m_ObjectHideFlags: 0
@@ -6078,8 +6095,8 @@ MonoBehaviour:
     dcutoff: 0.4
   spineSizeFilterParams:
     freq: 30
-    mincutoff: 0.027
-    beta: 0
+    mincutoff: 0.104
+    beta: 1.3
     dcutoff: 0.3
   useSameParams: 1
   enableZFilter: 1
@@ -9802,7 +9819,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1264297878}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1264297880
 Camera:
   m_ObjectHideFlags: 0
@@ -11540,7 +11557,7 @@ RectTransform:
   m_GameObject: {fileID: 1491910831}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.7, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.3, z: 1}
   m_Children: []
   m_Father: {fileID: 569641835}
   m_RootOrder: 0
@@ -14043,6 +14060,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04152e8a6a6ad714f8de02b7f5140d99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1869387663 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3259285889726014649, guid: 5713b959e3c77a58fb258133fc8e4aef,
+    type: 3}
+  m_PrefabInstance: {fileID: 1889892127}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1889892127

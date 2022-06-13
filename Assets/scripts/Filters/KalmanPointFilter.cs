@@ -1,4 +1,4 @@
-﻿using Kalman;
+using Kalman;
 using LinearAlgebra;
 using System;
 

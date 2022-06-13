@@ -146,6 +146,7 @@ namespace DeepMotion.DMBTDemo
     private OneEuroFilter []posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter []posFIlterY = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter spineSizeFilter;
+    private Vector3[] prevPoints = new Vector3[Skeleton.JOINT_COUNT];
 
     public Texture2D GetLastFrame() {
       return lastFrame;
@@ -369,9 +370,10 @@ namespace DeepMotion.DMBTDemo
       var texAspect = camera3dController.TextureAspect;
       float scale = texAspect / 1.7f;
 
-      var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => { var p = LandmarkToVector(landmarkList.Landmark[i]); p.z += 0;  return p; }).ToArray();
+      var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
+      var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f ).ToArray();
 
-      
+
       var timestamp = Time.realtimeSinceStartup;
 
 
@@ -380,17 +382,42 @@ namespace DeepMotion.DMBTDemo
       filterScale = this.spineSizeFilter.Filter(filterScale);
       Vector3 mn = new Vector3(100, 100, 100);
       Vector3 mx = new Vector3(-100, -100, -100);
+
+      float dl = 0;
+      Vector3 ds = Vector3.zero;
+      int count = 0;      
+      for (int i = 0; i < points.Length; ++i) {
+        if (presence[i]) {
+          var dist = points[i] - prevPoints[i];
+          ds += points[i] - prevPoints[i];
+          dl += Mathf.Sqrt(dist.x * dist.x + dist.y * dist.y);// ignore z component
+          count++;
+        }
+        prevPoints[i] = points[i];
+      }
+      dl *= filterScale;
+      ds *= filterScale;
+      ds.z = 0;
+      if (count > 0) {
+        dl /= count;
+        ds /= count;
+      }
+
       if (enableZFilter) {
         for (int i = 0; i < points.Length; ++i) {
-          mx = Vector3.Max(mx, points[i]);
-         mn = Vector3.Min(mn, points[i]);
+          //  mx = Vector3.Max(mx, points[i]);
+          //mn = Vector3.Min(mn, points[i]);
+          mx = Vector3.Max(mx, points[i] * filterScale);
+          mn = Vector3.Min(mn, points[i] * filterScale);
           points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
           points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
           points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
+
+
         }
       }
-      //Debug.Log("FilterScale:" + filterScale);
-      //Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
+      Debug.Log("FilterScale:" + filterScale + " " + spineSize + " "  + dl + " " + V2S(ds) + " " + ds.magnitude);
+      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
 
       TransformPoints(screenTransform, points, flipped, zshift, scale);
 

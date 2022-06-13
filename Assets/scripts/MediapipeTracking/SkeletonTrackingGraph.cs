@@ -4,6 +4,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using Assets.scripts.UI;
 using DeepMotion.DMBTDemo;
 using Lukso;
 using System;
@@ -209,6 +210,14 @@ namespace Mediapipe.Unity.SkeletonTracking
         {
           if (skeletonTrackingGraph._skeletonLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec))
           {
+            if (ScaleTexture.instance.mode == ScaleTexture.Mode.SCALE_SKELETON && value != null) {
+              (Vector2 scale, Vector2 offset) tr = (ScaleTexture.instance.scale, ScaleTexture.instance.offset);
+              foreach (var v in value.Landmark) {
+                v.X = (v.X-0.5f) / tr.scale[0] +0.5f- tr.offset[0];
+                v.Y = (v.Y - 0.5f)/ tr.scale[0]+0.5f + tr.offset[1];
+                v.Z = v.Z / tr.scale[0];
+              }
+            }
             skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
             skeletonTrackingGraph.lastSkeletonLandmarkds = value;
           }

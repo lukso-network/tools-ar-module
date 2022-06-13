@@ -155,7 +155,7 @@ MonoBehaviour:
   _screen: {fileID: 0}
   _consolePrefab: {fileID: 3481718972971892304, guid: 3bd1ffa1267fbef6fbdd99b4a8e699ff,
     type: 3}
-  _defaultImageSource: 1
+  _defaultImageSource: 2
   _preferableInferenceMode: 0
   _assetLoaderType: 0
   _enableGlog: 1
@@ -218,7 +218,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04085488e5fac35599866a2a6fceeda3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _availableSources: []
+  _availableSources:
+  - {fileID: 32900000, guid: 6763ad3d3059e1248a9328b385ab2aae, type: 3}
+  - {fileID: 32900000, guid: cc47c67caec3975408c4dcb191cb7e64, type: 3}
+  - {fileID: 32900000, guid: 0457f381fc4b7644b90fde7102a1df86, type: 3}
+  - {fileID: 32900000, guid: 8b06433232417ca4eba493dc70d40ecf, type: 3}
+  - {fileID: 32900000, guid: ef0f7a0b91707df4da7cef78c94c5141, type: 3}
 --- !u!114 &805128652
 MonoBehaviour:
   m_ObjectHideFlags: 0

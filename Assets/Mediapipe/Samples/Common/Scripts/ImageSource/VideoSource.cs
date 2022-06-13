@@ -15,6 +15,7 @@ namespace Mediapipe.Unity
   public class VideoSource : ImageSource
   {
     [SerializeField] private VideoClip[] _availableSources;
+    private int currentId = 0;
 
     private VideoClip _video;
     private VideoClip video
@@ -60,6 +61,14 @@ namespace Mediapipe.Unity
       {
         _videoPlayer.clip = video;
       }
+      currentId = sourceId;
+    }
+
+    public override void SelectNextSource() {
+      if (_availableSources == null || _availableSources.Length == 0) {
+        return;
+      }
+      SelectSource((currentId + 1) % _availableSources.Length);
     }
 
     public override IEnumerator Play()
@@ -68,10 +77,14 @@ namespace Mediapipe.Unity
       {
         throw new InvalidOperationException("Video is not selected");
       }
+
       _videoPlayer = gameObject.AddComponent<VideoPlayer>();
+
       _videoPlayer.renderMode = VideoRenderMode.APIOnly;
       _videoPlayer.isLooping = true;
       _videoPlayer.clip = video;
+      _videoPlayer.EnableAudioTrack(0, false);
+      _videoPlayer.SetDirectAudioVolume(0, 0);
       _videoPlayer.Prepare();
 
       yield return new WaitUntil(() => _videoPlayer.isPrepared);
@@ -107,7 +120,7 @@ namespace Mediapipe.Unity
         return;
       }
       _videoPlayer.Stop();
-      Destroy(gameObject.GetComponent<VideoPlayer>());
+      DestroyImmediate(gameObject.GetComponent<VideoPlayer>());
       _videoPlayer = null;
     }
 

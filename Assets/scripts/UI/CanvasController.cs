@@ -16,6 +16,9 @@ using SimpleFileBrowser;
 using System.IO;
 using Mediapipe.Unity.SkeletonTracking;
 
+
+
+
 [Binding]
 public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 {

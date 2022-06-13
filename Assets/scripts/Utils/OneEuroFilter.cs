@@ -89,6 +89,8 @@ public class OneEuroFilter
 	float mincutoff;
 	float beta;
 	float dcutoff;
+
+  //OneEuroFilterParams fitlerParams;
 	LowPassFilter x;
 	LowPassFilter dx;
 	float lasttime;
