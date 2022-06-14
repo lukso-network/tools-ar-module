@@ -140,12 +140,14 @@ namespace DeepMotion.DMBTDemo
     [SerializeField] private OneEuroFilterParams zFilterParams;
     [SerializeField] private OneEuroFilterParams xyFilterParams;
     [SerializeField] private OneEuroFilterParams spineSizeFilterParams;
+    [SerializeField] private OneEuroFilterParams movementFactorFilterParams;
     [SerializeField] private bool useSameParams;
     [SerializeField] private bool enableZFilter = true;
     private OneEuroFilter []posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter []posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter []posFIlterY = new OneEuroFilter[Skeleton.JOINT_COUNT];
     private OneEuroFilter spineSizeFilter;
+    private OneEuroFilter movementFactorFilter;
     private Vector3[] prevPoints = new Vector3[Skeleton.JOINT_COUNT];
 
     public Texture2D GetLastFrame() {
@@ -169,6 +171,7 @@ namespace DeepMotion.DMBTDemo
       }
 
       spineSizeFilter = new OneEuroFilter(spineSizeFilterParams);
+      movementFactorFilter = new OneEuroFilter(movementFactorFilterParams);
     }
 
     void OnValidate() {
@@ -294,9 +297,10 @@ namespace DeepMotion.DMBTDemo
       var rightArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_SHOULDER]);
 
       //probably Vector2 needed
-      var l = ((left + right) / 2 - (leftArm + rightArm) / 2).magnitude;
+      var l = ((left + right) / 2 - (leftArm + rightArm) / 2);
+      l.z = 0;
 
-      return l;
+      return l.magnitude;
     }
 
     private Vector3 LandmarkToVector(NormalizedLandmark lnd) {
@@ -403,6 +407,9 @@ namespace DeepMotion.DMBTDemo
         ds /= count;
       }
 
+
+      xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
+
       if (enableZFilter) {
         for (int i = 0; i < points.Length; ++i) {
           //  mx = Vector3.Max(mx, points[i]);
@@ -412,11 +419,9 @@ namespace DeepMotion.DMBTDemo
           points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
           points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
           points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
-
-
         }
       }
-      Debug.Log("FilterScale:" + filterScale + " " + spineSize + " "  + dl + " " + V2S(ds) + " " + ds.magnitude);
+      Debug.Log("FilterScale:" + filterScale + " " + spineSize + " "  + dl + " " + V2S(ds) + " " + ds.magnitude + " " + xyFilterParams.movementFactor);
       Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
 
       TransformPoints(screenTransform, points, flipped, zshift, scale);
