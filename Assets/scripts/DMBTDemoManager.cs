@@ -288,13 +288,13 @@ namespace DeepMotion.DMBTDemo
       return new Vector3(landmark.X, landmark.Y, landmark.Z);
     }
 
-    private float GetSpineSize(NormalizedLandmarkList landmarklist) {
+    private float GetSpineSize(Vector3 [] points) {
 
-      var left = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_HIP]);
-      var right = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_HIP]);
+      var left = points[(int)Skeleton.Point.LEFT_HIP];
+      var right = points[(int)Skeleton.Point.RIGHT_HIP];
 
-      var leftArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.LEFT_SHOULDER]);
-      var rightArm = ToVector3(landmarklist.Landmark[(int)Skeleton.Point.RIGHT_SHOULDER]);
+      var leftArm = points[(int)Skeleton.Point.LEFT_SHOULDER];
+      var rightArm = points[(int)Skeleton.Point.RIGHT_SHOULDER];
 
       //probably Vector2 needed
       var l = ((left + right) / 2 - (leftArm + rightArm) / 2);
@@ -330,6 +330,7 @@ namespace DeepMotion.DMBTDemo
 
     private float defaultFaceSize;
     private float faceGeomCoef;
+
     private void InitFace() {
       face = Instantiate(facePrefab, transform);
       face.SetActive(false);
@@ -362,34 +363,75 @@ namespace DeepMotion.DMBTDemo
     }
 
     private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
-
+      
       if (landmarkList == null) {
-
         return null;
       }
 
-      var t0 = Time.realtimeSinceStartup;
-      var spineSize = GetSpineSize(landmarkList);
-
-      var texAspect = camera3dController.TextureAspect;
-      float scale = texAspect / 1.7f;
-
       var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
-      var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f ).ToArray();
-
-
+      var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f).ToArray();
+      var spineSize = GetSpineSize(points);
       var timestamp = Time.realtimeSinceStartup;
 
 
       //filtering depends on size of objecs
       float filterScale = 1.15f / spineSize;
       filterScale = this.spineSizeFilter.Filter(filterScale);
+
+      
+      CalculateTotalMovement(spineSize, points, presence, timestamp, filterScale);
+
+      FilterPointPositions(points, timestamp, filterScale);
+
+      var texAspect = camera3dController.TextureAspect;
+      float scale = texAspect / 1.7f;
+      TransformPoints(screenTransform, points, flipped, zshift, scale);
+
+      //TODO make it faster
+      if (flipped) {
+        //TODOLK
+        var fPoints = new Vector3[points.Length];
+        int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
+        for (int i = 0; i < maxSize; ++i) {
+          fPoints[i] = points[FLIP_POINTS[i]];
+        }
+        points = fPoints;
+      }
+
+      var ps = points.Select(x => new Vector3?(x)).ToArray();
+
+      var t = Time.realtimeSinceStartup;
+      skeletonManager.UpdatePose(ps);
+      var dt = Time.realtimeSinceStartup - t;
+
+      times[0] = dt;
+      times[1] = t - timestamp;
+
+      return points;
+    }
+
+    private void FilterPointPositions(Vector3[] points, float timestamp, float filterScale) {
       Vector3 mn = new Vector3(100, 100, 100);
       Vector3 mx = new Vector3(-100, -100, -100);
+      if (enableZFilter) {
+        for (int i = 0; i < points.Length; ++i) {
+          //  mx = Vector3.Max(mx, points[i]);
+          //mn = Vector3.Min(mn, points[i]);
+          mx = Vector3.Max(mx, points[i] * filterScale);
+          mn = Vector3.Min(mn, points[i] * filterScale);
+          points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
+          points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
+          points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
+        }
+      }
 
+//      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx - mn) + " " + V2S(points[16]));
+    }
+
+    private void CalculateTotalMovement(float spineSize, Vector3[] points, bool[] presence, float timestamp, float filterScale) {
       float dl = 0;
       Vector3 ds = Vector3.zero;
-      int count = 0;      
+      int count = 0;
       for (int i = 0; i < points.Length; ++i) {
         if (presence[i]) {
           var dist = points[i] - prevPoints[i];
@@ -409,68 +451,7 @@ namespace DeepMotion.DMBTDemo
 
 
       xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
-
-      if (enableZFilter) {
-        for (int i = 0; i < points.Length; ++i) {
-          //  mx = Vector3.Max(mx, points[i]);
-          //mn = Vector3.Min(mn, points[i]);
-          mx = Vector3.Max(mx, points[i] * filterScale);
-          mn = Vector3.Min(mn, points[i] * filterScale);
-          points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
-          points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
-          points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
-        }
-      }
-      Debug.Log("FilterScale:" + filterScale + " " + spineSize + " "  + dl + " " + V2S(ds) + " " + ds.magnitude + " " + xyFilterParams.movementFactor);
-      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx -mn) + " " + V2S(points[16]));
-
-      TransformPoints(screenTransform, points, flipped, zshift, scale);
-
-      /*
-      mn = new Vector3(100, 100, 100);
-      mx = new Vector3(-100, -100, -100);
-      for (int i = 0; i < points.Length; ++i) {
-        mx = Vector3.Max(mx, points[i]);
-        mn = Vector3.Min(mn, points[i]);
-      }
-      Debug.Log("mn/mx2:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx - mn) + " " + V2S(points[16]));
-      */
-
-
-      /*
-      var min = new Vector3(1000, 1000, 100);
-      var max = new Vector3(-1000, -1000, -100);
-      foreach(var p in points) {
-        min = Vector3.Min(min, p);
-        max = Vector3.Max(max, p);
-      }
-
-      Debug.Log("" + min + " " + max);
-      */
-
-      //TODO make it faster
-      if (flipped) {
-        //TODOLK
-        var fPoints = new Vector3[points.Length];
-        int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
-        for (int i = 0; i < maxSize; ++i) {
-          fPoints[i] = points[FLIP_POINTS[i]];
-        }
-        points = fPoints;
-      }
-
-      var ps = points.Select(x => new Vector3?(x)).ToArray();
-
-      var t = Time.realtimeSinceStartup;
-      skeletonManager.UpdatePose(ps);
-      var dt = Time.realtimeSinceStartup - t;
-
-
-
-      times[0] = dt;
-      times[1] = t - t0;
-
-      return points;
+     // Debug.Log("FilterScale:" + filterScale + " " + spineSize + " " + dl + " " + V2S(ds) + " " + ds.magnitude + " " + xyFilterParams.movementFactor);
     }
 
     private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
