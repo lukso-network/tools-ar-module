@@ -378,9 +378,7 @@ namespace DeepMotion.DMBTDemo
       float filterScale = 1.15f / spineSize;
       filterScale = this.spineSizeFilter.Filter(filterScale);
 
-      
       CalculateTotalMovement(spineSize, points, presence, timestamp, filterScale);
-
       FilterPointPositions(points, timestamp, filterScale);
 
       var texAspect = camera3dController.TextureAspect;
@@ -428,27 +426,68 @@ namespace DeepMotion.DMBTDemo
 //      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx - mn) + " " + V2S(points[16]));
     }
 
+
+    private float Suared2V(Vector3 v) {
+      return v.x * v.x + v.y * v.y;
+    }
+
     private void CalculateTotalMovement(float spineSize, Vector3[] points, bool[] presence, float timestamp, float filterScale) {
+      int count = presence.Count(x => x);
+      if (count == 0) {
+        xyFilterParams.movementFactor = movementFactorFilter.Filter(1, timestamp);
+        return;
+      }
+
+      var ds = Enumerable.Range(0, points.Length).Aggregate(Vector3.zero, (v, i) => v + (presence[i] ? (points[i] - prevPoints[i]): Vector3.zero));
+      ds.z = 0;
+      ds /= count;
+      /*
+      var dl = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Mathf.Sqrt(Suared2V(points[i] - prevPoints[i])) : 0));
+      dl /= count;
+
+      var dl2 = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Suared2V(points[i] - prevPoints[i]) : 0));
+      dl2 = dl2/count;
+      var disp = Mathf.Sqrt(dl2 - dl*dl);
+
+      var ds2 = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Suared2V((points[i] - prevPoints[i]) - ds) : 0));
+      ds2 /= count;
+      ds2 = Mathf.Sqrt(ds2);
+      */
+      ds *= filterScale;
+      //ds2 *= filterScale;
+
+      xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
+      //Debug.Log("FilterScale:" + filterScale + " " + spineSize + " " +  V2S(ds) + " " + ds.magnitude + " " + ds2 + " " + xyFilterParams.movementFactor  + ":dl=" + dl + " " + disp);
+
+      prevPoints = (Vector3[])points.Clone();
+      return;
+      /*
       float dl = 0;
-      Vector3 ds = Vector3.zero;
-      int count = 0;
+
       for (int i = 0; i < points.Length; ++i) {
         if (presence[i]) {
           var dist = points[i] - prevPoints[i];
-          ds += points[i] - prevPoints[i];
           dl += Mathf.Sqrt(dist.x * dist.x + dist.y * dist.y);// ignore z component
-          count++;
         }
         prevPoints[i] = points[i];
       }
       dl *= filterScale;
       ds *= filterScale;
       ds.z = 0;
-      if (count > 0) {
-        dl /= count;
-        ds /= count;
+      dl /= count;
+
+
+      float ds2 = 0;
+      for (int i = 0; i < points.Length; ++i) {
+        if (presence[i]) {
+          var d = (points[i] - prevPoints[i]) - ds;
+          d.z = 0;
+          ds2 += d.sqrMagnitude;
+        }
+        prevPoints[i] = points[i];
       }
 
+      */
 
       xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
      // Debug.Log("FilterScale:" + filterScale + " " + spineSize + " " + dl + " " + V2S(ds) + " " + ds.magnitude + " " + xyFilterParams.movementFactor);
@@ -575,7 +614,7 @@ namespace DeepMotion.DMBTDemo
       newPoseEvent(true);
       var fps = counter.UpdateFps();
       display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3, Time.realtimeSinceStartup - t);
-
+      Debug.Log("!!!" + xyFilterParams.movementFactor);
     }
 
     internal void ResetAvatar() {

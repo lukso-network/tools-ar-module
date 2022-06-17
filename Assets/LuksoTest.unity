@@ -6084,20 +6084,25 @@ MonoBehaviour:
   scaleDepth: 2
   zshift: 0
   zFilterParams:
-    freq: 30
     mincutoff: 1
     beta: 0
     dcutoff: 1
+    movementFactor: 1
   xyFilterParams:
-    freq: 30
     mincutoff: 0.2
     beta: 4.5
     dcutoff: 0.4
+    movementFactor: 1
   spineSizeFilterParams:
-    freq: 30
     mincutoff: 0.104
     beta: 1.3
     dcutoff: 0.3
+    movementFactor: 1
+  movementFactorFilterParams:
+    mincutoff: 1
+    beta: 0
+    dcutoff: 1
+    movementFactor: 1
   useSameParams: 1
   enableZFilter: 1
 --- !u!1 &832877925
