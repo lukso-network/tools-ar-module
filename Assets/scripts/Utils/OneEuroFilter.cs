@@ -121,19 +121,23 @@ public class OneEuroFilter
 		prevValue = currValue;
 	}
 
-	public float Filter(float value, float timestamp = -1.0f) 
+	public float Filter(float value, float timestamp, float presenceFactor = 1) 
 	{
 		prevValue = currValue;
+
+    if (timestamp < 0) {
+      timestamp = Time.realtimeSinceStartup;
+    }
 		
 		// update the sampling frequency based on timestamps
-		if (lasttime!=-1.0f && timestamp != -1.0f)
+		if (lasttime!=-1.0f)
 			freq = 1.0f/(timestamp-lasttime);
 		lasttime = timestamp;
 		// estimate the current variation per second 
 		float dvalue = x.hasLastRawValue() ? (value - x.lastRawValue())*freq : 0.0f; // FIXME: 0.0 or value? 
 		float edvalue = dx.filterWithAlpha(dvalue, alpha(filterParams.dcutoff));
 		// use it to update the cutoff frequency
-		float cutoff = (filterParams.mincutoff + filterParams.beta * Mathf.Abs(edvalue))*filterParams.movementFactor;
+		float cutoff = (filterParams.mincutoff + filterParams.beta * Mathf.Abs(edvalue))*filterParams.movementFactor * presenceFactor;
 		// filter the given value
 		currValue = x.filterWithAlpha(value, alpha(cutoff));
 

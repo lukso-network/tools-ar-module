@@ -6084,12 +6084,12 @@ MonoBehaviour:
   scaleDepth: 2
   zshift: 0
   zFilterParams:
-    mincutoff: 1
+    mincutoff: 0.2
     beta: 0
     dcutoff: 1
     movementFactor: 1
   xyFilterParams:
-    mincutoff: 0.2
+    mincutoff: 0.112
     beta: 4.5
     dcutoff: 0.4
     movementFactor: 1
@@ -6103,7 +6103,7 @@ MonoBehaviour:
     beta: 0
     dcutoff: 1
     movementFactor: 1
-  useSameParams: 1
+  useSameParams: 0
   enableZFilter: 1
 --- !u!1 &832877925
 GameObject:

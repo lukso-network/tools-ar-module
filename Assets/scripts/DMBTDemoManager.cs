@@ -100,6 +100,7 @@ namespace DeepMotion.DMBTDemo
       public GameObject prefab;
     }
 
+    private StreamWriter log = new StreamWriter("movement.txt");
     public StatisticDisplay display;
     public FilterSettings scaleFilter;
     public SkeletonManager skeletonManager;
@@ -376,10 +377,10 @@ namespace DeepMotion.DMBTDemo
 
       //filtering depends on size of objecs
       float filterScale = 1.15f / spineSize;
-      filterScale = this.spineSizeFilter.Filter(filterScale);
+      filterScale = this.spineSizeFilter.Filter(filterScale, timestamp);
 
       CalculateTotalMovement(spineSize, points, presence, timestamp, filterScale);
-      FilterPointPositions(points, timestamp, filterScale);
+      FilterPointPositions(points, presence, timestamp, filterScale);
 
       var texAspect = camera3dController.TextureAspect;
       float scale = texAspect / 1.7f;
@@ -408,7 +409,7 @@ namespace DeepMotion.DMBTDemo
       return points;
     }
 
-    private void FilterPointPositions(Vector3[] points, float timestamp, float filterScale) {
+    private void FilterPointPositions(Vector3[] points, bool[] presence, float timestamp, float filterScale) {
       Vector3 mn = new Vector3(100, 100, 100);
       Vector3 mx = new Vector3(-100, -100, -100);
       if (enableZFilter) {
@@ -417,6 +418,7 @@ namespace DeepMotion.DMBTDemo
           //mn = Vector3.Min(mn, points[i]);
           mx = Vector3.Max(mx, points[i] * filterScale);
           mn = Vector3.Min(mn, points[i] * filterScale);
+          float presenceFactor = presence[i] ? 1 : 0.1f;
           points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
           points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
           points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
@@ -437,14 +439,15 @@ namespace DeepMotion.DMBTDemo
         xyFilterParams.movementFactor = movementFactorFilter.Filter(1, timestamp);
         return;
       }
-
+      
       var ds = Enumerable.Range(0, points.Length).Aggregate(Vector3.zero, (v, i) => v + (presence[i] ? (points[i] - prevPoints[i]): Vector3.zero));
+
       ds.z = 0;
       ds /= count;
-      /*
+      
       var dl = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Mathf.Sqrt(Suared2V(points[i] - prevPoints[i])) : 0));
       dl /= count;
-
+      /*
       var dl2 = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Suared2V(points[i] - prevPoints[i]) : 0));
       dl2 = dl2/count;
       var disp = Mathf.Sqrt(dl2 - dl*dl);
@@ -453,10 +456,18 @@ namespace DeepMotion.DMBTDemo
       ds2 /= count;
       ds2 = Mathf.Sqrt(ds2);
       */
-      ds *= filterScale;
-      //ds2 *= filterScale;
+      
 
-      xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
+      log.WriteLine($"{Time.frameCount}, {count}, {V2S(ds)}, {dl}, {V2S(ds * filterScale)} {dl*filterScale}");
+      //Debug.Log($"{Time.frameCount}, {count}, {V2S(ds)}, magn:{(ds).magnitude} {dl}, {V2S(ds * filterScale)} magn: {(ds * filterScale).magnitude} {dl * filterScale}");
+      if (Time.frameCount % 100 == 0) {
+        log.Flush();
+      }
+      //ds2 *= filterScale;
+      ds *= filterScale;
+      dl *= filterScale;
+      //  xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
+      xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, dl / 0.1f/1.5f), timestamp);
       //Debug.Log("FilterScale:" + filterScale + " " + spineSize + " " +  V2S(ds) + " " + ds.magnitude + " " + ds2 + " " + xyFilterParams.movementFactor  + ":dl=" + dl + " " + disp);
 
       prevPoints = (Vector3[])points.Clone();
@@ -471,7 +482,6 @@ namespace DeepMotion.DMBTDemo
         }
         prevPoints[i] = points[i];
       }
-      dl *= filterScale;
       ds *= filterScale;
       ds.z = 0;
       dl /= count;
@@ -611,10 +621,12 @@ namespace DeepMotion.DMBTDemo
         Debug.LogException(ex);
       }
 
-      newPoseEvent(true);
+      if (skelModified) {
+        newPoseEvent(true);
+      }
       var fps = counter.UpdateFps();
       display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3, Time.realtimeSinceStartup - t);
-      Debug.Log("!!!" + xyFilterParams.movementFactor);
+      //Debug.Log("!!!" + xyFilterParams.movementFactor);
     }
 
     internal void ResetAvatar() {
