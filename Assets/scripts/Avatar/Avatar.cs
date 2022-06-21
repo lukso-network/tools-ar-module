@@ -101,6 +101,7 @@ namespace Assets
       InitJoints();
       InitCloth();
       CopyRotationFromAvatar();
+      
 
       gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
     }

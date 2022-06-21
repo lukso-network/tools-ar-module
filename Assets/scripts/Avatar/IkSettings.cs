@@ -80,6 +80,9 @@ namespace Assets
         [Range(0, 0.1f)]
         public float ikGradDescentLambda = 0.1f;
 
+        public bool enablePostIKSmoothing = true;
+        public OneEuroFilterParams filterPosSmoothingParams;
+
     [Range(0,2)]
     public float targetFunctionZScale = 1;
     public bool useOldIk = false;

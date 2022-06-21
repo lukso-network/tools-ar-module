@@ -100,7 +100,7 @@ namespace DeepMotion.DMBTDemo
       public GameObject prefab;
     }
 
-    private StreamWriter log = new StreamWriter("movement.txt");
+    
     public StatisticDisplay display;
     public FilterSettings scaleFilter;
     public SkeletonManager skeletonManager;
@@ -144,9 +144,9 @@ namespace DeepMotion.DMBTDemo
     [SerializeField] private OneEuroFilterParams movementFactorFilterParams;
     [SerializeField] private bool useSameParams;
     [SerializeField] private bool enableZFilter = true;
-    private OneEuroFilter []posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
-    private OneEuroFilter []posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
-    private OneEuroFilter []posFIlterY = new OneEuroFilter[Skeleton.JOINT_COUNT];
+    private OneEuroFilter[] posFIlterZ;
+    private OneEuroFilter[] posFIlterX;
+    private OneEuroFilter[] posFIlterY;
     private OneEuroFilter spineSizeFilter;
     private OneEuroFilter movementFactorFilter;
     private Vector3[] prevPoints = new Vector3[Skeleton.JOINT_COUNT];
@@ -164,6 +164,10 @@ namespace DeepMotion.DMBTDemo
     }
 
     private void InitFilter() {
+      posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
+      posFIlterX = new OneEuroFilter[Skeleton.JOINT_COUNT];
+      posFIlterY = new OneEuroFilter[Skeleton.JOINT_COUNT];
+
       var tempFilter = useSameParams ? xyFilterParams : zFilterParams;
       for (int i = 0; i < posFIlterZ.Length; ++i) {
         posFIlterZ[i] = new OneEuroFilter(tempFilter);
@@ -178,7 +182,7 @@ namespace DeepMotion.DMBTDemo
     void OnValidate() {
       scaleFilter.SetModified();
       InitFilter();
-      
+
       Debug.Log("New filter");
     }
 
@@ -357,7 +361,7 @@ namespace DeepMotion.DMBTDemo
 
 
 
-    private float[] times = new float[] { 0, 0, 0, 0, 0 };
+   private float[] times = new float[] { 0, 0, 0, 0, 0 };
 
     private static string V2S(Vector3 v) {
       return $"({v.x:0.00}, {v.y:0.00}, {v.z:0.00})";
@@ -458,11 +462,9 @@ namespace DeepMotion.DMBTDemo
       */
       
 
-      log.WriteLine($"{Time.frameCount}, {count}, {V2S(ds)}, {dl}, {V2S(ds * filterScale)} {dl*filterScale}");
+      
       //Debug.Log($"{Time.frameCount}, {count}, {V2S(ds)}, magn:{(ds).magnitude} {dl}, {V2S(ds * filterScale)} magn: {(ds * filterScale).magnitude} {dl * filterScale}");
-      if (Time.frameCount % 100 == 0) {
-        log.Flush();
-      }
+
       //ds2 *= filterScale;
       ds *= filterScale;
       dl *= filterScale;

@@ -21,6 +21,8 @@ namespace Assets
     private Transform[] affectedSource;
     private Vector3[] affectedTarget;
 
+    private OneEuroFilter3D[] posFilters = new OneEuroFilter3D[] { };
+
     private Dictionary<Point, Joint[]> dependendJoints = new Dictionary<Point, Joint[]>();
 
     public void Update(float gradStep, float moveStep, int steps) {
@@ -232,6 +234,11 @@ namespace Assets
 
       }
 
+
+      if (settings.enablePostIKSmoothing) {
+        filterPoints();
+      }
+
       if (settings.enableAttaching) {
        PullAttachJoints();
       }
@@ -239,6 +246,26 @@ namespace Assets
 
     }
 
+    private void InitSkeletonFilters() {
+      posFilters = new OneEuroFilter3D[skeleton.filterPoints.Length];
+      for(int i = 0; i<posFilters.Length; ++i) {
+        posFilters[i] = new OneEuroFilter3D(settings.filterPosSmoothingParams);
+      }
+    }
+
+    private void filterPoints() {
+      int i = 0;
+      var timestamp = Time.realtimeSinceStartup;
+
+      var hips = GetHips();
+      var scale = 1;// hips.transform.localScale.x;
+      foreach (var p in skeleton.filterPoints) {
+        var j = GetJointByPoint(p);
+        var pos = j.transform.position;
+        pos = posFilters[i++].Filter(pos, timestamp);
+        j.transform.position = pos;
+      }
+    }
 
     private void MoveHipsToCenter() {
       var hips = GetHips();
@@ -553,6 +580,7 @@ namespace Assets
       return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
     }
 
+
     private void InitIK() {
       ikCalcualationParameters.Clear();
       foreach(var ik in skeleton.ikCalculator) {
@@ -570,10 +598,12 @@ namespace Assets
           dependendJoints[j.definition.point] = depJoints;
         }
       }
+
+
     }
 
     public void SetIkSource() {
-
+      InitSkeletonFilters();
       this.ikSource = skeleton.GetkeyPointIds().Select(id => jointByPointId[id].transform).ToArray();
 
       //InitIK();

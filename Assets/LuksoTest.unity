@@ -6085,7 +6085,7 @@ MonoBehaviour:
   zshift: 0
   zFilterParams:
     mincutoff: 0.2
-    beta: 0
+    beta: 0.4
     dcutoff: 1
     movementFactor: 1
   xyFilterParams:
@@ -16081,6 +16081,12 @@ MonoBehaviour:
     gradDescentStep: 0.02
     ikRegularization: 0.4
     ikGradDescentLambda: 0.0822
+    enablePostIKSmoothing: 0
+    filterPosSmoothingParams:
+      mincutoff: 0.93
+      beta: 1.4
+      dcutoff: 1
+      movementFactor: 1
     targetFunctionZScale: 1
     useOldIk: 0
     manualIk: 0

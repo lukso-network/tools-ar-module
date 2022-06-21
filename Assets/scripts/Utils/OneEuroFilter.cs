@@ -10,6 +10,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 class LowPassFilter 
 {
@@ -75,7 +76,7 @@ public class OneEuroFilterParams
   //ange(0, 30)]
  //ublic float freq = 30;
 
-  [Range(0, 1)]
+  [Range(0, 5)]
   public float mincutoff = 1;
   [Range(0, 30)]
   public float beta = 0;
@@ -144,5 +145,23 @@ public class OneEuroFilter
 		return currValue;
 	}
 };
+
+public class OneEuroFilter3D
+{
+  private OneEuroFilter[] filters = new OneEuroFilter[3];
+  public OneEuroFilter3D(OneEuroFilterParams settings) {
+    for (int i = 0; i < filters.Length; ++i) {
+      filters[i] = new OneEuroFilter(settings);
+    }
+  }
+
+  public Vector3 Filter(Vector3 value, float timestamp, float presenceFactor = 1) {
+      //values = filters.Select((x,i)=>filters[i].Filter(value[i], timestamp, presenceFactor));
+      value.x = filters[0].Filter(value[0], timestamp, presenceFactor);
+      value.y = filters[1].Filter(value[1], timestamp, presenceFactor);
+      value.z = filters[2].Filter(value[2], timestamp, presenceFactor);
+      return value;
+  }
+}
 
 

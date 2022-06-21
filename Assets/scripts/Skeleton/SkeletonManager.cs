@@ -74,6 +74,7 @@ namespace Assets
 
         private Skeleton InitNewSkeleton(SkeletonSet.Skeleton skeletonDescription, GameObject obj) {
             var children = obj.GetComponentsInChildren<Transform>();
+            //TODO
             var scalesBones = new int[,] { { 11, 13 }, { 13, 15 }, { 12, 14 }, { 14, 16 }, { 23, 25 }, { 25, 29 }, { 24, 26 }, { 26, 30 } };
             var skeleton = CreateDefaultSkeletoStructure(skeletonDescription.name);
             skeleton.Init(obj, scalesBones, skeletonDescription);
@@ -198,6 +199,8 @@ namespace Assets
       skeleton.ikCalculator.Add(new Rotation3DParameter(Point.RIGHT_SHOULDER, 90, (-90, 90)));
       skeleton.ikCalculator.Add(new Rotation3DParameter(Point.RIGHT_ELBOW, 90, (-90, 90)));
 
+
+      skeleton.filterPoints = new Point[] { Point.HIPS, Point.CHEST, Point.SPINE };
       //  skeleton.ikCalculator.Add(new Rotation1DParameter(Point.RIGHT_KNEE, StretchingGradCalculator.Axis.Z));
 
 

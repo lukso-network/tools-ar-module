@@ -31,6 +31,9 @@ namespace Lukso {
       public List<ClothAttachementDefinition> clothPoints = new List<ClothAttachementDefinition>();
       public List<ClothAttachementDefinition> ikCalculator = new List<ClothAttachementDefinition>();
 
+    //Points processed by smoothing filter after an inverse kinematics solver
+    public Point[] filterPoints = new Point[] { };
+
       public List<Bone> ScaleBones;
       private Dictionary<Point, string> boneNameByPoint = new Dictionary<Point, string>();
 
