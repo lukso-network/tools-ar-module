@@ -22,6 +22,7 @@ namespace Assets
     private Vector3[] affectedTarget;
 
     private OneEuroFilter3D[] posFilters = new OneEuroFilter3D[] { };
+    private OneEuroFilter hipFilter;
 
     private Dictionary<Point, Joint[]> dependendJoints = new Dictionary<Point, Joint[]>();
 
@@ -247,6 +248,7 @@ namespace Assets
     }
 
     private void InitSkeletonFilters() {
+      hipFilter = new OneEuroFilter(settings.hipScaler);
       posFilters = new OneEuroFilter3D[skeleton.filterPoints.Length];
       for(int i = 0; i<posFilters.Length; ++i) {
         posFilters[i] = new OneEuroFilter3D(settings.filterPosSmoothingParams);
@@ -441,6 +443,7 @@ namespace Assets
       float l2 = GetTargetBonesLength(skeleton);
 
       float scale = l2 / l1;
+      scale = hipFilter.Filter(scale, -1);
       var hips = GetHips();
       hips.transform.localScale = hips.transform.localScale * scale;
     }

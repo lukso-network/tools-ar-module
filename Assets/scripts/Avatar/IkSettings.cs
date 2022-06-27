@@ -82,6 +82,7 @@ namespace Assets
 
         public bool enablePostIKSmoothing = true;
         public OneEuroFilterParams filterPosSmoothingParams;
+        public OneEuroFilterParams hipScaler;
 
     [Range(0,2)]
     public float targetFunctionZScale = 1;

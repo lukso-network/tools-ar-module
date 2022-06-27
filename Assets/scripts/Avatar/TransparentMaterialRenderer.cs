@@ -44,7 +44,8 @@ namespace Assets.scripts.Avatar
       }
 
       var imageSource = ImageSourceProvider.ImageSource;
-      var texture = imageSource.GetCurrentTexture();
+      //var texture = imageSource.GetCurrentTexture();
+      var texture = texture2;
 
       if (texture == null) {
         gameObject.SetActive(false);

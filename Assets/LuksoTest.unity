@@ -2019,7 +2019,7 @@ MonoBehaviour:
   screen: {fileID: 1889892132}
   graphRunner: {fileID: 188083188}
   textureFramePool: {fileID: 188083189}
-  runningMode: 0
+  runningMode: 2
   _worldAnnotationArea: {fileID: 1936307554}
   _skeletonDetectionAnnotationController: {fileID: 1889892130}
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
@@ -16081,10 +16081,15 @@ MonoBehaviour:
     gradDescentStep: 0.02
     ikRegularization: 0.4
     ikGradDescentLambda: 0.0822
-    enablePostIKSmoothing: 0
+    enablePostIKSmoothing: 1
     filterPosSmoothingParams:
-      mincutoff: 0.93
-      beta: 1.4
+      mincutoff: 1.2
+      beta: 18.8
+      dcutoff: 1
+      movementFactor: 1
+    hipScaler:
+      mincutoff: 1
+      beta: 0
       dcutoff: 1
       movementFactor: 1
     targetFunctionZScale: 1

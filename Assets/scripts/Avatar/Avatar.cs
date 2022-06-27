@@ -336,8 +336,9 @@ namespace Assets
         if (idx1 >= jointByPointId.Length || idx2 >= jointByPointId.Length) {
           continue;
         }
-
-        l1 += (jointByPointId[idx1].transform.position - jointByPointId[idx2].transform.position).magnitude;
+        var v = (jointByPointId[idx1].transform.position - jointByPointId[idx2].transform.position);
+        //v.z = 0;
+        l1 += v.magnitude;
       }
       return l1;
     }
@@ -345,7 +346,7 @@ namespace Assets
 
     public float GetRelativeBonesScale(Avatar avatar) {
       float l0 = GetScaleBonesLength(skeleton);
-      l0 = GetScaleBonesLength(skeleton);
+     // l0 = GetScaleBonesLength(skeleton);
       float l1 = avatar.GetScaleBonesLength(skeleton);
 
       return l1 / l0;
