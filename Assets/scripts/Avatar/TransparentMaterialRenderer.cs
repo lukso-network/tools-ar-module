@@ -43,7 +43,7 @@ namespace Assets.scripts.Avatar
         return;
       }
 
-      var imageSource = ImageSourceProvider.ImageSource;
+      //var imageSource = ImageSourceProvider.ImageSource;
       //var texture = imageSource.GetCurrentTexture();
       var texture = texture2;
 

@@ -5,6 +5,7 @@
 // https://opensource.org/licenses/MIT.
 
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 namespace Mediapipe.Unity
@@ -14,6 +15,7 @@ namespace Mediapipe.Unity
     [SerializeField] protected Screen screen;
     [SerializeField] protected T graphRunner;
     [SerializeField] protected TextureFramePool textureFramePool;
+    [SerializeField] protected bool isVideoPlayerController = true;
 
     protected Coroutine _coroutine;
 
@@ -38,20 +40,28 @@ namespace Mediapipe.Unity
 
     public override void Pause() {
       base.Pause();
-      ImageSourceProvider.ImageSource.Pause();
+
+      if (isVideoPlayerController) {
+        ImageSourceProvider.ImageSource.Pause();
+      }
     }
 
     public override void Resume() {
       base.Resume();
-      var _ = StartCoroutine(ImageSourceProvider.ImageSource.Resume());
+      if (isVideoPlayerController) {
+        StartCoroutine(ImageSourceProvider.ImageSource.Resume());
+      }
     }
+    int frameIdx = 0;
 
     public override void Stop() {
       base.Stop();
       if (_coroutine != null) {
         StopCoroutine(_coroutine);
       }
-      ImageSourceProvider.ImageSource.Stop();
+      if (isVideoPlayerController) {
+        ImageSourceProvider.ImageSource.Stop();
+      }
       graphRunner.Stop();
     }
 
@@ -59,7 +69,9 @@ namespace Mediapipe.Unity
       var graphInitRequest = graphRunner.WaitForInit(runningMode);
       var imageSource = ImageSourceProvider.ImageSource;
 
-      yield return imageSource.Play();
+      if (isVideoPlayerController) {
+        yield return imageSource.Play();
+      }
 
       if (!imageSource.isPrepared) {
         Logger.LogError(TAG, "Failed to start ImageSource, exiting...");
@@ -69,7 +81,9 @@ namespace Mediapipe.Unity
       // Use RGBA32 as the input format.
       // TODO: When using GpuBuffer, MediaPipe assumes that the input format is BGRA, so the following code must be fixed.
       textureFramePool.ResizeTexture(imageSource.textureWidth, imageSource.textureHeight, TextureFormat.RGBA32);
-      SetupScreen(imageSource);
+      if (isVideoPlayerController) {
+        SetupScreen(imageSource);
+      }
 
       yield return graphInitRequest;
       if (graphInitRequest.isError) {
@@ -86,6 +100,15 @@ namespace Mediapipe.Unity
         if (isPaused) {
           yield return waitWhilePausing;
         }
+
+       // Debug.Log("Save image:" + frameIdx);
+       // ScreenCapture.CaptureScreenshot($"out/screenshot_{frameIdx:00000}_{Time.frameCount}.png");
+       // frameIdx += 1;
+       // yield return new WaitForEndOfFrame();
+        //continue;
+
+        //Thread.Sleep(100);
+        //continue;
 
         if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
           yield return new WaitForEndOfFrame();
@@ -132,8 +155,11 @@ namespace Mediapipe.Unity
       var graphInitRequest = graphRunner.WaitForInit(runningMode);
       var imageSource = ImageSourceProvider.ImageSource;
 
-      yield return imageSource.Play();
+      if (isVideoPlayerController) {
+        yield return imageSource.Play();
+      }
 
+      yield break;
       if (!imageSource.isPrepared) {
         Logger.LogError(TAG, "Failed to start ImageSource, exiting...");
         yield break;

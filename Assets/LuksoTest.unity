@@ -1246,7 +1246,6 @@ GameObject:
   m_Component:
   - component: {fileID: 82176634}
   - component: {fileID: 82176633}
-  - component: {fileID: 82176632}
   - component: {fileID: 82176631}
   - component: {fileID: 82176635}
   m_Layer: 0
@@ -1275,23 +1274,6 @@ MonoBehaviour:
   OnSelfieMaskOutput:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &82176632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82176630}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10dfbc1950388f649abfcac1a7bfbe86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screen: {fileID: 1005241245}
-  graphRunner: {fileID: 82176631}
-  textureFramePool: {fileID: 82176633}
-  runningMode: 2
-  _SelfieMaskAnnotationController: {fileID: 1401345059}
 --- !u!114 &82176633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1334,6 +1316,7 @@ MonoBehaviour:
   screen: {fileID: 1005241245}
   graphRunner: {fileID: 82176631}
   textureFramePool: {fileID: 82176633}
+  isVideoPlayerController: 0
   runningMode: 2
   _selfieMaskAnnotationController: {fileID: 1401345059}
   maskWidth: 256
@@ -2019,6 +2002,7 @@ MonoBehaviour:
   screen: {fileID: 1889892132}
   graphRunner: {fileID: 188083188}
   textureFramePool: {fileID: 188083189}
+  isVideoPlayerController: 1
   runningMode: 2
   _worldAnnotationArea: {fileID: 1936307554}
   _skeletonDetectionAnnotationController: {fileID: 1889892130}
