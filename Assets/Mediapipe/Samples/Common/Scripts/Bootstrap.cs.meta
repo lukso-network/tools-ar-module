@@ -8,7 +8,7 @@ MonoImporter:
       type: 3}
   - gpuManagerPrefab: {fileID: 7458244645391269047, guid: a84904e562ecaf887b2dba62111bb901,
       type: 3}
-  executionOrder: 0
+  executionOrder: -1100
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

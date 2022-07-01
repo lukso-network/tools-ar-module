@@ -95,11 +95,11 @@ namespace Mediapipe.Unity
       OnStartRun();
 
       var waitWhilePausing = new WaitWhile(() => isPaused);
-
       while (true) {
         if (isPaused) {
           yield return waitWhilePausing;
         }
+
 
        // Debug.Log("Save image:" + frameIdx);
        // ScreenCapture.CaptureScreenshot($"out/screenshot_{frameIdx:00000}_{Time.frameCount}.png");
@@ -115,12 +115,20 @@ namespace Mediapipe.Unity
           continue;
         }
 
+        while (!imageSource.didUpdateSinceLastAsk) {
+          // Debug.Log("Wait:" + Time.frameCount);
+          yield return new WaitForSecondsRealtime(0.001f);
+          //yield return new WaitForEndOfFrame();
+        }
+
+
+
         // Copy current image to TextureFrame
         ReadFromImageSource(imageSource, textureFrame);
         AddTextureFrameToInputStream(textureFrame);
 
         if (runningMode.IsSynchronous()) {
-          RenderCurrentFrame(textureFrame);
+       //   RenderCurrentFrame(textureFrame);
           var frame = Time.frameCount;
           yield return WaitForNextValue();
           if (Time.frameCount == frame) {
@@ -129,6 +137,8 @@ namespace Mediapipe.Unity
         } else {
           yield return new WaitForEndOfFrame();
         }
+
+
       }
     }
 

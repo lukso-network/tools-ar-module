@@ -60,6 +60,9 @@ public class FPSCounter
     times = new float[periods];
   }
 
+  public float GetFps() {
+    return fps;
+  }
 
   public float UpdateFps2() {
     counter++;
@@ -158,6 +161,7 @@ namespace DeepMotion.DMBTDemo
     private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
     private FPSCounter counter = new FPSCounter();
+    private FPSCounter counterSkel = new FPSCounter();
     public bool ShowTransparentFace {
       get => face?.GetComponent<TransparentMaterialRenderer>().enabled ?? true;
       set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
@@ -588,8 +592,8 @@ namespace DeepMotion.DMBTDemo
       if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
         newPoseEvent(false);
 
-        var fps0 = counter.UpdateFps();
-        display.LogValue($"FPS:{fps0:0.0}", times[0], times[1], 0, 0, 0);
+        counter.UpdateFps();
+        display.LogValue($"FPS:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", times[0], times[1], 0, 0, 0);
         return;
       }
 
@@ -603,6 +607,10 @@ namespace DeepMotion.DMBTDemo
         var skelPoints = skelModified ? UpdateSkeleton(screenTransform, landmarkList, flipped) : cachedSkeleton;
         cachedSkeleton = skelPoints;
         t2 = Time.realtimeSinceStartup;
+
+        if (skelModified) {
+          counterSkel.UpdateFps();
+        }
 
         if (faceModified || skelModified) {
           UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
@@ -627,7 +635,7 @@ namespace DeepMotion.DMBTDemo
         newPoseEvent(true);
       }
       var fps = counter.UpdateFps();
-      display.LogValue($"FPS:{fps:0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3, Time.realtimeSinceStartup - t);
+      display.LogValue($"FPS:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3, Time.realtimeSinceStartup - t);
       //Debug.Log("!!!" + xyFilterParams.movementFactor);
     }
 

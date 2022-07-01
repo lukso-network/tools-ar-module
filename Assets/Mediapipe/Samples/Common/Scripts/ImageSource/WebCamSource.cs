@@ -31,6 +31,18 @@ namespace Mediapipe.Unity
     public override SourceType type => SourceType.Camera;
 
     private WebCamTexture _webCamTexture;
+
+    long frameAsk = -1;
+    public override bool didUpdateSinceLastAsk {
+      get {
+        if (_webCamTexture != null && _webCamTexture.didUpdateThisFrame && Time.frameCount != frameAsk) {
+          frameAsk = Time.frameCount;
+          return true;
+        }
+        return false;
+      }
+    }
+
     private WebCamTexture webCamTexture
     {
       get => _webCamTexture;

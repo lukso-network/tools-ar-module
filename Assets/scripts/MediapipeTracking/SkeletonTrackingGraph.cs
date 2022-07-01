@@ -137,6 +137,9 @@ namespace Mediapipe.Unity.SkeletonTracking
       lastFaceLandmarkds = null;
     }
 
+    FPSCounter fpsCounter = new FPSCounter(60);
+    FPSCounter fpsCounter2 = new FPSCounter(60);
+    FPSCounter fpsCounter3 = new FPSCounter(60);
     public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks,
       out NormalizedLandmarkList faceLandmarks,
       bool allowBlock = true)
@@ -150,7 +153,20 @@ namespace Mediapipe.Unity.SkeletonTracking
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
-      Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
+      // Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
+
+      if (skeletonLandmarks != null) {
+        fpsCounter.UpdateFps();
+      } else {
+        fpsCounter2.UpdateFps();
+      }
+
+      fpsCounter3.UpdateFps();
+
+      if (Time.frameCount % 30 == 0) {
+          Debug.Log("Skel fps:" + fpsCounter.GetFps() + " " + fpsCounter2.GetFps() + " " + fpsCounter3.GetFps());
+        }
+      
 
       skeletonWorldLandmarks = null;
       skeletonDetection = null;

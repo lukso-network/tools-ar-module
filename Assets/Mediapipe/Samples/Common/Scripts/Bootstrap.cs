@@ -107,8 +107,8 @@ namespace Mediapipe.Unity
 
       Logger.LogInfo(_TAG, "Loading the first scene...");
       //var sceneLoadReq = SceneManager.LoadSceneAsync(1);
-      var sceneLoadReq = SceneManager.LoadSceneAsync("LuksoTest");
-      yield return new WaitUntil(() => sceneLoadReq.isDone);
+    //  var sceneLoadReq = SceneManager.LoadSceneAsync("LuksoTest");
+   //   yield return new WaitUntil(() => sceneLoadReq.isDone);
     }
 
     private void DecideInferenceMode()

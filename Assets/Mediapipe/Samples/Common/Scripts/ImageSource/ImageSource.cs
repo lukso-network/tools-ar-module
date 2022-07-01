@@ -82,6 +82,8 @@ namespace Mediapipe.Unity
     public abstract string[] sourceCandidateNames { get; }
     public abstract ResolutionStruct[] availableResolutions { get; }
 
+    public virtual bool didUpdateSinceLastAsk { get; } = true;
+
     /// <remarks>
     ///   Once <see cref="Play" /> finishes successfully, it will become true.
     /// </remarks>

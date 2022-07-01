@@ -41,6 +41,17 @@ namespace Mediapipe.Unity
     public override bool isPlaying => _videoPlayer != null && _videoPlayer.isPlaying;
     public override bool isPrepared => _videoPlayer != null && _videoPlayer.isPrepared;
 
+    private long lastFrameIdx = -1;
+    public override bool didUpdateSinceLastAsk {
+      get {
+        long frame = _videoPlayer?.frame ?? -1;
+        bool res = frame != lastFrameIdx;
+        lastFrameIdx = frame;
+        //Debug.Log("Frame: " + frame + " Un:" + Time.frameCount + " " + " Changed:" + res);
+        return res;
+      }
+    }
+
     private void Start()
     {
       if (_availableSources != null && _availableSources.Length > 0)
