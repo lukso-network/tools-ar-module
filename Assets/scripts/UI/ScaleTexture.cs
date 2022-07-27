@@ -11,10 +11,8 @@ using UnityEngine.UI;
 
 namespace Assets.scripts.UI
 {
-  public class ScaleTexture : MonoBehaviour
-  {
-    public enum Mode
-    {
+  public class ScaleTexture : MonoBehaviour {
+    public enum Mode {
       NONE,
       IMAGE_ONLY,
       SCALE_SKELETON,
@@ -34,7 +32,11 @@ namespace Assets.scripts.UI
     //TODO DEBUGGING ONLY
     public static ScaleTexture instance;
 
-
+    static ScaleTexture() {
+      instance = new ScaleTexture();
+      instance.scale = Vector2.one;
+      instance.offset = Vector2.zero;
+    }
     // Use this for initialization
     void Start() {
       //TESTING ONLY
@@ -51,6 +53,7 @@ namespace Assets.scripts.UI
 
     // Update is called once per frame
     void Update() {
+      return;
       if (imageScreen.uvRect.width < 0) {
         isFace = true;
         return;

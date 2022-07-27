@@ -67,6 +67,24 @@ namespace Mediapipe.Unity
       }
     }
 
+    public void Reset() {
+      lock (((ICollection)_availableTextureFrames).SyncRoot) {
+        _availableTextureFrames.Clear();
+        _availableTextureFrames = null;
+      }
+
+      lock (((ICollection)_textureFramesInUse).SyncRoot) {
+        foreach (var textureFrame in _textureFramesInUse.Values) {
+          textureFrame.OnRelease.RemoveListener(OnTextureFrameRelease);
+        }
+        _textureFramesInUse.Clear();
+        _textureFramesInUse = null;
+      }
+
+      _availableTextureFrames = new Queue<TextureFrame>(_poolSize);
+      _textureFramesInUse = new Dictionary<Guid, TextureFrame>();
+    }
+
     public void ResizeTexture(int textureWidth, int textureHeight, TextureFormat format)
     {
       lock (_formatLock)
@@ -85,7 +103,6 @@ namespace Mediapipe.Unity
     public bool TryGetTextureFrame(out TextureFrame outFrame)
     {
       TextureFrame nextFrame = null;
-
       lock (((ICollection)_availableTextureFrames).SyncRoot)
       {
         if (_poolSize <= frameCount)

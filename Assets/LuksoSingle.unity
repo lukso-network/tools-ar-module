@@ -2003,7 +2003,7 @@ MonoBehaviour:
   graphRunner: {fileID: 188083188}
   textureFramePool: {fileID: 188083189}
   isVideoPlayerController: 1
-  runningMode: 2
+  runningMode: 0
   _worldAnnotationArea: {fileID: 1936307554}
   _skeletonDetectionAnnotationController: {fileID: 1889892130}
   _skeletonLandmarksAnnotationController: {fileID: 1889892131}
@@ -2025,7 +2025,8 @@ MonoBehaviour:
   _cpuConfig: {fileID: 4900000, guid: 543ef0a186cae534c9a957bef418bd20, type: 3}
   _gpuConfig: {fileID: 0}
   _openGlEsConfig: {fileID: 4900000, guid: e61127ee3a7d34b439336a84201c83ef, type: 3}
-  _timeoutMicrosec: 500000
+  _timeoutMicrosec: 300000
+  textureLifetime: 200000
   modelComplexity: 0
   smoothLandmarks: 1
   OnSkeletonDetectionOutput:
@@ -2055,7 +2056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5da564da19cb6b7d8e4f97f269edc5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _poolSize: 2
+  _poolSize: 10
 --- !u!4 &188083190
 Transform:
   m_ObjectHideFlags: 0
@@ -3062,7 +3063,7 @@ MonoBehaviour:
   imageScreen: {fileID: 1869387663}
   scale: {x: 1, y: 1}
   offset: {x: 0, y: 0}
-  mode: 3
+  mode: 0
 --- !u!1 &273507914
 GameObject:
   m_ObjectHideFlags: 0
@@ -4615,7 +4616,7 @@ MonoBehaviour:
   _screen: {fileID: 0}
   _consolePrefab: {fileID: 3481718972971892304, guid: 3bd1ffa1267fbef6fbdd99b4a8e699ff,
     type: 3}
-  _defaultImageSource: 2
+  _defaultImageSource: 0
   _preferableInferenceMode: 0
   _assetLoaderType: 0
   _enableGlog: 1
@@ -15564,7 +15565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc466c2c721c9d94ba00ee806ce8d5b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderImage: {fileID: 8400000, guid: 393dfb3e7dd74544db8442150c127974, type: 2}
+  renderImage: {fileID: 0}
 --- !u!1 &2028646851
 GameObject:
   m_ObjectHideFlags: 0

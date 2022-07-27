@@ -27,6 +27,8 @@ namespace Mediapipe.Unity
     private readonly Texture2D _texture;
     private IntPtr _nativeTexturePtr = IntPtr.Zero;
     private GlSyncPoint _glSyncToken;
+    public long packetTime;
+    
 
     // Buffers that will be used to copy texture data on CPU.
     // They won't be initialized until it's necessary.
@@ -260,10 +262,14 @@ namespace Mediapipe.Unity
       _glSyncToken = null;
     }
 
+
+
     [AOT.MonoPInvokeCallback(typeof(GlTextureBuffer.DeletionCallback))]
     public static void OnReleaseTextureFrame(uint textureName, IntPtr syncTokenPtr)
     {
-      var isIdFound = _NameTable.TryGetValue(textureName, out var _instanceId);
+      // ignore
+      return;
+      /*var isIdFound = _NameTable.TryGetValue(textureName, out var _instanceId);
 
       if (!isIdFound)
       {
@@ -281,6 +287,7 @@ namespace Mediapipe.Unity
 
       var _glSyncToken = syncTokenPtr == IntPtr.Zero ? null : new GlSyncPoint(syncTokenPtr);
       textureFrame.Release(_glSyncToken);
+      */
     }
 
     private static void RegisterInstance(TextureFrame textureFrame)
@@ -354,11 +361,12 @@ namespace Mediapipe.Unity
       var currentRenderTexture = RenderTexture.active;
       RenderTexture.active = tmpRenderTexture;
 
-      if (ScaleTexture.instance.mode == ScaleTexture.Mode.SCALE_IMAGE) {
+      Graphics.Blit(texture, tmpRenderTexture, ScaleTexture.instance.scale, ScaleTexture.instance.offset);
+      /*if (ScaleTexture.instance.mode == ScaleTexture.Mode.SCALE_IMAGE) {
         Graphics.Blit(texture, tmpRenderTexture, ScaleTexture.instance.scale, ScaleTexture.instance.offset);
       } else {
         Graphics.Blit(texture, tmpRenderTexture);
-      }
+      }*/
 
       var rect = new UnityEngine.Rect(0, 0, Mathf.Min(tmpRenderTexture.width, _textureBuffer.width), Mathf.Min(tmpRenderTexture.height, _textureBuffer.height));
       _textureBuffer.ReadPixels(rect, 0, 0);

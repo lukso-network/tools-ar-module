@@ -264,10 +264,22 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     OnPropertyChanged("SkinScaleX");
     OnPropertyChanged("SkinScaleZ");
     OnPropertyChanged("SelectedCamera");
+    OnPropertyChanged("CameraSource");
 
+    StartCoroutine(WaitBootStrap());
+    
     FileBrowser.SetFilters(true, new FileBrowser.Filter("Model", ".glb"));
 		FileBrowser.SetDefaultFilter(".glb");
 		FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
+  }
+
+  private IEnumerator WaitBootStrap() {
+    while (ImageSourceProvider.ImageSource?.sourceName == null) {
+      yield return new WaitForEndOfFrame();
+    }
+    OnPropertyChanged("SelectedCamera");
+    FindObjectOfType<DropdownBinding>().Init();
+
   }
 
   public void Update() {

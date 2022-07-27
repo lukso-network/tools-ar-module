@@ -4,6 +4,8 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using UnityEngine;
+
 namespace Mediapipe.Unity
 {
   public class OutputStream<TPacket, TValue> where TPacket : Packet<TValue>, new()
@@ -23,6 +25,12 @@ namespace Mediapipe.Unity
     private long _lastTimestampMicrosec;
 
     protected bool canTestPresence => presenceStreamName != null;
+
+    public long GetLastpacketTimestamp() {
+        using (var timestamp = _outputPacket.Timestamp()) {
+          return timestamp.Microseconds();
+        }
+      }
 
     /// <summary>
     ///  Initialize a new instance of the <see cref="OutputStream" /> class.
@@ -137,7 +145,7 @@ namespace Mediapipe.Unity
         {
           timestampMicrosec = timestamp.Microseconds();
         }
-      }
+        }
 
       if (_outputPacket.IsEmpty())
       {
@@ -152,7 +160,7 @@ namespace Mediapipe.Unity
 
     public bool TryGetNext(out TValue value, bool allowBlock = true)
     {
-      return TryGetNext(out value, 0, allowBlock);
+      return TryGetNext(out value, _lastTimestampMicrosec, allowBlock);
     }
 
     public bool TryConsumeNext(out TValue value, long timestampThreshold, bool allowBlock = true)

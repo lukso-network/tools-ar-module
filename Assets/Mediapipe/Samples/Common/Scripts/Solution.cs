@@ -87,12 +87,13 @@ namespace Mediapipe.Unity
 
       if (textureType == typeof(WebCamTexture))
       {
-
-#if UNITY_EDITOR
+        textureFrame.ReadTextureFromOnCPU((WebCamTexture)sourceTexture);
+/*#if UNITY_EDITOR
         textureFrame.ReadTextureFromOnCPU((WebCamTexture)sourceTexture);
 #else
         textureFrame.ReadTextureFromOnGPU((WebCamTexture)sourceTexture);
 #endif
+*/
       } else if (textureType == typeof(Texture2D))
       {
         textureFrame.ReadTextureFromOnCPU((Texture2D)sourceTexture);

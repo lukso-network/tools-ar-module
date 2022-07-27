@@ -54,7 +54,7 @@ namespace Mediapipe.Unity
 
     private void Start()
     {
-      if (_availableSources != null && _availableSources.Length > 0)
+      if (_availableSources != null && _availableSources.Length > 0 && _availableSources[0] != null)
       {
         video = _availableSources[0];
       }

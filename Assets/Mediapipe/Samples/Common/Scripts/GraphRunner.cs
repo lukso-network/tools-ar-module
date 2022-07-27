@@ -38,9 +38,13 @@ namespace Mediapipe.Unity
     private static readonly GlobalInstanceTable<int, GraphRunner> _InstanceTable = new GlobalInstanceTable<int, GraphRunner>(5);
     private static readonly Dictionary<IntPtr, int> _NameTable = new Dictionary<IntPtr, int>();
 
+    public delegate void OnDataProcessed(TextureFrame texture);
+    public virtual event OnDataProcessed onDataProcessed;
+
     protected RunningMode runningMode { get; private set; } = RunningMode.Async;
     private bool _isRunning = false;
 
+    public virtual void UpdateData(Texture2D texture) { }
     public InferenceMode inferenceMode => configType == ConfigType.CPU ? InferenceMode.CPU : InferenceMode.GPU;
     public virtual ConfigType configType
     {
@@ -183,26 +187,27 @@ namespace Mediapipe.Unity
       calculatorGraph.AddPacketToInputStream(streamName, packet).AssertOk();
     }
 
-    protected void AddTextureFrameToInputStream(string streamName, TextureFrame textureFrame)
-    {
+    protected void AddTextureFrameToInputStream(string streamName, TextureFrame textureFrame) {
       latestTimestamp = GetCurrentTimestamp();
-
-      if (configType == ConfigType.OpenGLES)
-      {
+      textureFrame.packetTime = latestTimestamp.Microseconds();
+      //Debug.Log("Send Packet:" + +Time.realtimeSinceStartup + " " + latestTimestamp.Microseconds());
+      if (configType == ConfigType.OpenGLES) {
         var gpuBuffer = textureFrame.BuildGpuBuffer(GpuManager.GlCalculatorHelper.GetGlContext());
         AddPacketToInputStream(streamName, new GpuBufferPacket(gpuBuffer, latestTimestamp));
         return;
       }
 
       var imageFrame = textureFrame.BuildImageFrame();
-      textureFrame.Release();
 
+      //textureFrame.Release();
+
+   
       AddPacketToInputStream(streamName, new ImageFramePacket(imageFrame, latestTimestamp));
     }
 
     protected bool TryGetNext<TPacket, TValue>(OutputStream<TPacket, TValue> stream, out TValue value, bool allowBlock, long currentTimestampMicrosec) where TPacket : Packet<TValue>, new()
     {
-      var result = stream.TryGetNext(out value, allowBlock);
+      var result = stream.TryGetNext(out value,  allowBlock);
       return result || allowBlock || stream.ResetTimestampIfTimedOut(currentTimestampMicrosec, timeoutMicrosec);
     }
 

@@ -591,9 +591,14 @@ namespace DeepMotion.DMBTDemo
 
       if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
         newPoseEvent(false);
+        face.SetActive(false);
 
         counter.UpdateFps();
-        display.LogValue($"FPS:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", times[0], times[1], 0, 0, 0);
+        display.LogValue($"FPS0:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", times[0], times[1], 0, 0, 0);
+        return;
+      }
+
+      if (!skelModified) {
         return;
       }
 

@@ -9,12 +9,23 @@ using DeepMotion.DMBTDemo;
 using Lukso;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Mediapipe.Unity.SkeletonTracking
 {
+   public class LandmarkData
+  {
+    public NormalizedLandmarkList landmarks;
+    public long timestamp;
 
+    public LandmarkData(NormalizedLandmarkList list, long timestamp) {
+      this.landmarks = list;
+      this.timestamp = timestamp;
+    }
+  }
 
   public class SkeletonTrackingGraph : GraphRunner
   {
@@ -25,8 +36,13 @@ namespace Mediapipe.Unity.SkeletonTracking
       Heavy = 2,
     }
 
-    private NormalizedLandmarkList lastSkeletonLandmarkds = null;
-    private NormalizedLandmarkList lastFaceLandmarkds = null;
+    private LandmarkData lastSkeletonLandmarkds = null;
+    private LandmarkData lastFaceLandmarkds = null;
+    private TextureFrame lastTextureTemp;
+
+    public int textureLifetime = 200000;
+
+    public override event OnDataProcessed onDataProcessed;
 
 
     public ModelComplexity modelComplexity = ModelComplexity.Full;
@@ -45,6 +61,10 @@ namespace Mediapipe.Unity.SkeletonTracking
 
     public delegate void OnNewFrameRendered(Texture2D texture);
     public event OnNewFrameRendered newFrameRendered;
+
+    private object syncObject = new object();
+    //TODO volotile
+    private long lastRenderedTimestamp;
 
     //private const string poseLandmarksStream = "pose_landmarks";
     // private const string poseDetectionStream = "pose_detection";
@@ -69,6 +89,10 @@ namespace Mediapipe.Unity.SkeletonTracking
     private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _skeletonLandmarksStream;
     private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _faceLandmarksStream;
     private OutputStream<LandmarkListPacket, LandmarkList> _skeletonWorldLandmarksStream;
+    public Dictionary<long, TextureFrame> sentTextures = new Dictionary<long, TextureFrame>();
+
+    // MEdiapipe can return value near to long.MaxValue
+    private static long MAX_TIMESTAMP = long.MaxValue / 2; 
    // private OutputStream<NormalizedRectPacket, NormalizedRect> _roiFromLandmarksStream;
 
     public override void StartRun(ImageSource imageSource)
@@ -84,7 +108,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       }
       else
       {
-        _skeletonDetectionStream.AddListener(SkeletonDetectionCallback).AssertOk();
+      // _skeletonDetectionStream.AddListener(SkeletonDetectionCallback).AssertOk();
         _skeletonLandmarksStream.AddListener(SkeletonLandmarksCallback).AssertOk();
         _faceLandmarksStream.AddListener(FaceLandmarksCallback).AssertOk();
 
@@ -92,6 +116,35 @@ namespace Mediapipe.Unity.SkeletonTracking
        // _roiFromLandmarksStream.AddListener(RoiFromLandmarksCallback).AssertOk();
       }
       StartRun(BuildSidePacket(imageSource));
+
+      Thread thread = new Thread(TexturePoolCleaner);
+      thread.Start();
+    }
+
+    private void TexturePoolCleaner() {
+
+      while (true) {
+        Thread.Sleep(10);
+
+        var ts = GetCurrentTimestampMicrosec();
+
+        lock (syncObject) {
+          try {
+            // delete outdated textures
+            var toDelete = sentTextures.Keys.Where(k => k < Math.Max(lastRenderedTimestamp, ts - textureLifetime)).ToList();
+
+            //Debug.Log("************ToDelete:" + toDelete.Count + " of " + sentTextures.Count);
+            foreach (var key in toDelete) {
+
+              var text = sentTextures[key];
+              sentTextures.Remove(key);
+              text.Release();
+            }
+          } catch (Exception ex) {
+
+          }
+        }
+      }
     }
 
     public override void Stop()
@@ -112,12 +165,18 @@ namespace Mediapipe.Unity.SkeletonTracking
     {
       AddTextureFrameToInputStream(_InputStreamName, textureFrame);
 
+      lock (syncObject) {
+        var t = textureFrame.packetTime;
+        //TODO android gives erros
+        while (sentTextures.ContainsKey(t)) {
+          t += 2;
+        }
+
+        sentTextures.Add(t, textureFrame);
+
+      }
       Update3DCamera(textureFrame);
       lastTexture = textureFrame.Texture;
-
-      if (newFrameRendered != null) {
-        newFrameRendered(lastTexture);
-      }
     }
 
     private void Update3DCamera(TextureFrame textureFrame) {
@@ -125,63 +184,101 @@ namespace Mediapipe.Unity.SkeletonTracking
       cameraController.UpdateCamera(textureFrame, rotation, imageSource);
     }
 
-    public void LateUpdate() {
+
+    public void Update() {
+
+
       var imageSource = ImageSourceProvider.ImageSource;
       if (imageSource == null) {
         return;
       }
+
+
+
       var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
-      skeletonManager.OnNewPose3(screenPlane, lastSkeletonLandmarkds, lastFaceLandmarkds, mirrored, lastTexture);
+      
+     
+
+
+      var ts = lastSkeletonLandmarkds?.timestamp ?? 0;
+      if (ts > 0) {
+        lastRenderedTimestamp = ts;
+      }
+      
+      if (lastSkeletonLandmarkds?.landmarks == null) {
+        skeletonManager.OnNewPose3(screenPlane, null, null, mirrored, null);
+        return;
+      }
+
+      // get texture. Note - packet can return t-1 timestamp. So check this too
+      TextureFrame texture;
+      if (ts != 0) {
+        lock (syncObject) {
+          if (!sentTextures.TryGetValue(ts, out texture)) {
+            if (!sentTextures.TryGetValue(ts + 1, out texture))
+              return;
+            //TODO REMOVE
+              texture = lastTextureTemp;
+
+            }
+          }
+        }
+      else {
+        texture = lastTextureTemp;
+      }
+
+      if (texture != null) {
+
+        skeletonManager.OnNewPose3(screenPlane, lastSkeletonLandmarkds?.landmarks, lastFaceLandmarkds?.landmarks, mirrored, texture.Texture);
+        if (newFrameRendered != null) {
+          newFrameRendered(texture.Texture);
+        }
+      }
+
       lastSkeletonLandmarkds = null;
       lastFaceLandmarkds = null;
+      if (texture != null && onDataProcessed != null) {
+        onDataProcessed(texture);
+      }
+      lastTextureTemp = texture;
     }
 
-    FPSCounter fpsCounter = new FPSCounter(60);
-    FPSCounter fpsCounter2 = new FPSCounter(60);
-    FPSCounter fpsCounter3 = new FPSCounter(60);
     public bool TryGetNext(out Detection skeletonDetection, out NormalizedLandmarkList skeletonLandmarks, out LandmarkList skeletonWorldLandmarks, out NormalizedRect roiFromLandmarks,
       out NormalizedLandmarkList faceLandmarks,
       bool allowBlock = true)
     {
 
       var currentTimestampMicrosec = GetCurrentTimestampMicrosec();
+
     //  var r1 = TryGetNext(_skeletonDetectionStream, out skeletonDetection, allowBlock, currentTimestampMicrosec);
       var r3 = TryGetNext(_faceLandmarksStream, out faceLandmarks, allowBlock, currentTimestampMicrosec);
-      var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
+      var faceTimestamp = _faceLandmarksStream.GetLastpacketTimestamp();
 
+      var r2 = TryGetNext(_skeletonLandmarksStream, out skeletonLandmarks, allowBlock, currentTimestampMicrosec);
+      var skelTimestamp = _faceLandmarksStream.GetLastpacketTimestamp();
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r3 = TryGetNext(_skeletonWorldLandmarksStream, out skeletonWorldLandmarks, allowBlock, currentTimestampMicrosec);
       // var r4 = TryGetNext(_roiFromLandmarksStream, out roiFromLandmarks, allowBlock, currentTimestampMicrosec);
       // Debug.Log((faceLandmarks == null ? "NULL FACE" : "Has face") + " " + ((skeletonLandmarks == null ? "NULL skeleton" : "Has skeleton")));
-
-      if (skeletonLandmarks != null) {
-        fpsCounter.UpdateFps();
-      } else {
-        fpsCounter2.UpdateFps();
-      }
-
-      fpsCounter3.UpdateFps();
-
-      if (Time.frameCount % 30 == 0) {
-          Debug.Log("Skel fps:" + fpsCounter.GetFps() + " " + fpsCounter2.GetFps() + " " + fpsCounter3.GetFps());
-        }
       
 
       skeletonWorldLandmarks = null;
       skeletonDetection = null;
       roiFromLandmarks = null;
 
-      lastFaceLandmarkds = faceLandmarks;
-      lastSkeletonLandmarkds = skeletonLandmarks;
+      lastFaceLandmarkds = new LandmarkData(faceLandmarks, faceTimestamp);
+      lastSkeletonLandmarkds = new LandmarkData(skeletonLandmarks, skelTimestamp);
       if (skeletonLandmarks == null) {
      //  return false;
       }
 
-    //  if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
+      //  if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
       if (r2 && skeletonLandmarks != null) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
-    //  if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
-    //  if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
+
+
+      //  if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
+      //  if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
       /*
       var tempList = new NormalizedLandmarkList();
       for(int i = 0; i < skeletonWorldLandmarks.Landmark.Count; ++i) {
@@ -195,10 +292,10 @@ namespace Mediapipe.Unity.SkeletonTracking
 
 
       //TODO check on different phones
-    //  var imageSource = ImageSourceProvider.ImageSource;
-//      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
+      //  var imageSource = ImageSourceProvider.ImageSource;
+      //      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
-  //    skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
+      //    skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
       return  r2||r3;// || r3;//|| r4;
     }
 
@@ -235,10 +332,29 @@ namespace Mediapipe.Unity.SkeletonTracking
               }
             }
             skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
-            skeletonTrackingGraph.lastSkeletonLandmarkds = value;
+            using (var timestamp = packet.Timestamp()) {
+
+             AddSkeletonResult(skeletonTrackingGraph, value, timestamp.Microseconds());
+              //skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp.Microseconds());
+            }
           }
         }
       }).mpPtr;
+    }
+
+    private static void AddSkeletonResult(SkeletonTrackingGraph skeletonTrackingGraph, NormalizedLandmarkList value, long timestamp) {
+    
+      if (timestamp < MAX_TIMESTAMP && (skeletonTrackingGraph.lastSkeletonLandmarkds == null ||  skeletonTrackingGraph.lastSkeletonLandmarkds.timestamp < timestamp)) {
+        skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp);
+      } else {
+        Debug.Log("Add sckeleton results error!:" + timestamp + " " + (value!=null));
+      }
+    }
+
+    private static void AddFaceResult(SkeletonTrackingGraph skeletonTrackingGraph, NormalizedLandmarkList value, long timestamp) {
+      if (timestamp < MAX_TIMESTAMP && (skeletonTrackingGraph.lastFaceLandmarkds == null || skeletonTrackingGraph.lastFaceLandmarkds.timestamp < timestamp)) {
+        skeletonTrackingGraph.lastFaceLandmarkds = new LandmarkData(value, timestamp);
+      }
     }
 
     [AOT.MonoPInvokeCallback(typeof(CalculatorGraph.NativePacketCallback))]
@@ -247,7 +363,10 @@ namespace Mediapipe.Unity.SkeletonTracking
         using (var packet = new NormalizedLandmarkListPacket(ptr, false)) {
           if (skeletonTrackingGraph._skeletonLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec)) {
             //skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
-            skeletonTrackingGraph.lastFaceLandmarkds = value;
+            using (var timestamp = packet.Timestamp()) {
+              AddFaceResult(skeletonTrackingGraph, value, timestamp.Microseconds());
+             // skeletonTrackingGraph.lastFaceLandmarkds = new LandmarkData(value, timestamp.Microseconds());
+            }
           }
         }
       }).mpPtr;

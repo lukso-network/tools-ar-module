@@ -4,9 +4,46 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+using Mediapipe.Unity.SkeletonTracking;
 using System.Collections;
+using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using static Mediapipe.Unity.GraphRunner;
+using Debug = UnityEngine.Debug;
+
+class Timer
+{
+  public int count;
+  private Stopwatch stopwatch = new Stopwatch();
+  public void Start() {
+    stopwatch.Start();
+    count += 1;
+  }
+
+  public void Stop() {
+    stopwatch.Stop();
+  }
+
+  public float ms => 1000 * (float)stopwatch.ElapsedTicks / Stopwatch.Frequency;
+  public float msAver => ms / (count == 0 ? 1 : count);
+}
+
+class Stat
+{
+  public Timer t1 = new Timer();
+  public Timer t2 = new Timer();
+  public Timer t3 = new Timer();
+  public Timer t4 = new Timer();
+  public Timer t5 = new Timer();
+  public Timer t6 = new Timer();
+
+  public void Log(string label="") {
+    string s = $"\n{label}\nt1={t1.msAver} {t1.count}\nt2={t2.msAver} {t2.count}\nt3={t3.msAver}  {t3.count}\nt4={t4.msAver}  {t4.count}\nt5={t5.msAver}  {t5.count}\nt6={t6.msAver}  {t6.count}\n";
+    UnityEngine.Debug.Log(s);
+  }
+
+}
 
 namespace Mediapipe.Unity
 {
@@ -56,6 +93,10 @@ namespace Mediapipe.Unity
 
     public override void Stop() {
       base.Stop();
+      //TODO
+      //textureFramePool.Reset();
+
+      graphRunner.onDataProcessed -= RenderCurrentFrame;
       if (_coroutine != null) {
         StopCoroutine(_coroutine);
       }
@@ -91,8 +132,10 @@ namespace Mediapipe.Unity
         yield break;
       }
 
+      graphRunner.onDataProcessed += RenderCurrentFrame;
       graphRunner.StartRun(imageSource);
       OnStartRun();
+    //  Debug.unityLogger.logEnabled = false;
 
       var waitWhilePausing = new WaitWhile(() => isPaused);
       while (true) {
@@ -101,10 +144,10 @@ namespace Mediapipe.Unity
         }
 
 
-       // Debug.Log("Save image:" + frameIdx);
-       // ScreenCapture.CaptureScreenshot($"out/screenshot_{frameIdx:00000}_{Time.frameCount}.png");
-       // frameIdx += 1;
-       // yield return new WaitForEndOfFrame();
+        // Debug.Log("Save image:" + frameIdx);
+        // ScreenCapture.CaptureScreenshot($"out/screenshot_{frameIdx:00000}_{Time.frameCount}.png");
+        // frameIdx += 1;
+        // yield return new WaitForEndOfFrame();
         //continue;
 
         //Thread.Sleep(100);
@@ -119,8 +162,9 @@ namespace Mediapipe.Unity
           // Debug.Log("Wait:" + Time.frameCount);
           yield return new WaitForSecondsRealtime(0.001f);
           //yield return new WaitForEndOfFrame();
+          //break;
         }
-
+        
 
 
         // Copy current image to TextureFrame
@@ -128,7 +172,7 @@ namespace Mediapipe.Unity
         AddTextureFrameToInputStream(textureFrame);
 
         if (runningMode.IsSynchronous()) {
-       //   RenderCurrentFrame(textureFrame);
+          RenderCurrentFrame(textureFrame);
           var frame = Time.frameCount;
           yield return WaitForNextValue();
           if (Time.frameCount == frame) {
@@ -139,16 +183,22 @@ namespace Mediapipe.Unity
         }
 
 
+        }
       }
-    }
 
     protected virtual void SetupScreen(ImageSource imageSource) {
       // NOTE: The screen will be resized later, keeping the aspect ratio.
       screen.Initialize(imageSource);
     }
 
+
+    private int prevRenderFrame = 0;
     protected virtual void RenderCurrentFrame(TextureFrame textureFrame) {
+      if (Time.frameCount == prevRenderFrame) {
+        return;
+      }
       screen.ReadSync(textureFrame);
+      prevRenderFrame = Time.frameCount;
     }
 
     protected abstract void OnStartRun();
