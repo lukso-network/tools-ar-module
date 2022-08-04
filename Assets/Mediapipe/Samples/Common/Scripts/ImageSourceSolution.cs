@@ -210,39 +210,6 @@ namespace Mediapipe.Unity
     protected virtual void OnPrepared() { }
 
 
-
-    protected IEnumerator PrepareCustomRun() {
-      var graphInitRequest = graphRunner.WaitForInit(runningMode);
-      var imageSource = ImageSourceProvider.ImageSource;
-
-      if (isVideoPlayerController) {
-        yield return imageSource.Play();
-      }
-
-      yield break;
-      if (!imageSource.isPrepared) {
-        Logger.LogError(TAG, "Failed to start ImageSource, exiting...");
-        yield break;
-      }
-
-      // Use RGBA32 as the input format.
-      // TODO: When using GpuBuffer, MediaPipe assumes that the input format is BGRA, so the following code must be fixed.
-      textureFramePool.ResizeTexture(imageSource.textureWidth, imageSource.textureHeight, TextureFormat.RGBA32);
-      SetupScreen(imageSource);
-
-      yield return graphInitRequest;
-      if (graphInitRequest.isError) {
-        Logger.LogError(TAG, graphInitRequest.error);
-        yield break;
-      }
-
-      graphRunner.StartRun(imageSource);
-      OnStartRun();
-
-
-      OnPrepared();
-  }
-
     public IEnumerator ProcessImage(bool waitEndOfFrame) {
       var imageSource = ImageSourceProvider.ImageSource;
       if (isPaused) {

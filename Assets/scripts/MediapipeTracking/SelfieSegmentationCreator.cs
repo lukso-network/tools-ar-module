@@ -32,6 +32,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
 
     protected override void AddTextureFrameToInputStream(TextureFrame textureFrame) {
       graphRunner.AddTextureFrameToInputStream(textureFrame);
+
     }
 
     protected override IEnumerator WaitForNextValue() {
@@ -60,6 +61,42 @@ namespace Mediapipe.Unity.SelfieSegmentation
         PlayPredecessor();
         StartCoroutine(PrepareCustomRun());
       }
+    }
+
+
+
+    protected IEnumerator PrepareCustomRun() {
+      var graphInitRequest = graphRunner.WaitForInit(runningMode);
+      var imageSource = ImageSourceProvider.ImageSource;
+
+      if (isVideoPlayerController) {
+        yield return imageSource.Play();
+      }
+
+      yield break;
+
+      yield return new WaitUntil(() => imageSource.isPrepared);
+      if (!imageSource.isPrepared) {
+        Logger.LogError(TAG, "Failed to start ImageSource, exiting...");
+        yield break;
+      }
+
+      // Use RGBA32 as the input format.
+      // TODO: When using GpuBuffer, MediaPipe assumes that the input format is BGRA, so the following code must be fixed.
+      //textureFramePool.ResizeTexture(imageSource.textureWidth, imageSource.textureHeight, TextureFormat.RGBA32);
+      //SetupScreen(imageSource);
+
+      yield return graphInitRequest;
+      if (graphInitRequest.isError) {
+        Logger.LogError(TAG, graphInitRequest.error);
+        yield break;
+      }
+
+      graphRunner.StartRun(imageSource);
+      OnStartRun();
+
+
+      OnPrepared();
     }
 
     protected override void OnPrepared() {
