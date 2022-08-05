@@ -73,7 +73,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
         yield return imageSource.Play();
       }
 
-      yield break;
+      
 
       yield return new WaitUntil(() => imageSource.isPrepared);
       if (!imageSource.isPrepared) {
@@ -83,7 +83,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
 
       // Use RGBA32 as the input format.
       // TODO: When using GpuBuffer, MediaPipe assumes that the input format is BGRA, so the following code must be fixed.
-      //textureFramePool.ResizeTexture(imageSource.textureWidth, imageSource.textureHeight, TextureFormat.RGBA32);
+      textureFramePool.ResizeTexture(imageSource.textureWidth, imageSource.textureHeight, TextureFormat.RGBA32);
       //SetupScreen(imageSource);
 
       yield return graphInitRequest;
@@ -92,6 +92,7 @@ namespace Mediapipe.Unity.SelfieSegmentation
         yield break;
       }
 
+      
       graphRunner.StartRun(imageSource);
       OnStartRun();
 
