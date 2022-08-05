@@ -40,8 +40,9 @@ namespace Lukso {
     //Points processed by smoothing filter after an inverse kinematics solver
     public Point[] filterPoints = new Point[] { };
 
-      public List<Bone> ScaleBones;
-      private Dictionary<Point, string> boneNameByPoint = new Dictionary<Point, string>();
+      public List<Bone> ScaleBones { get; private set; }
+      public List<Bone> AttachementBones { get; private set; }
+    private Dictionary<Point, string> boneNameByPoint = new Dictionary<Point, string>();
 
 
       public Skeleton(string name) {
@@ -65,7 +66,7 @@ namespace Lukso {
           return Regex.Match(objName, rexExp).Success;
       }
 
-      internal bool Init(GameObject obj, Point[,] scaleBones, SkeletonSet.Skeleton skeletonDescrs) {
+      internal bool Init(GameObject obj, (Point, Point)[] scaleBones, (Point, Point)[] attachementBones, SkeletonSet.Skeleton skeletonDescrs) {
           var children = obj.GetComponentsInChildren<Transform>();
 
           List<int> ids = new List<int>();
@@ -104,12 +105,9 @@ namespace Lukso {
           ids.Sort();
           this.keyPointsIds = ids.ToArray();
 
-          ScaleBones = new List<Bone>();
-          for (var i = 0; i < scaleBones.GetLength(0); ++i) {
-              var idx1 = scaleBones[i, 0];
-              var idx2 = scaleBones[i, 1];
-              ScaleBones.Add(new Bone(idx1, idx2));
-          }
+          ScaleBones = scaleBones.Select(x => new Bone(x.Item1, x.Item2)).ToList();
+          AttachementBones = attachementBones.Select(x => new Bone(x.Item1, x.Item2)).ToList();
+
 
           return true;
       }

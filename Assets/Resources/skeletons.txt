@@ -6,6 +6,8 @@
 			{"id":-3, "type":"CHEST", "node":"chest"},
 			{"id":-2, "type":"SPINE", "node":"spine"},
 			{"id":-1, "type":"HIPS", "node":"hips"},
+			{"id":-6, "type":"CENTER_LEFT_SHOULDER", "node":"left shoulder"},
+			{"id":-5, "type":"CENTER_RIGHT_SHOULDER", "node":"right shoulder"},
 			{"id":0, "type":"NOSE", "node":""},
 			{"id":1, "type":"LEFT_EYE_INNER", "node":""},
 			{"id":2, "type":"LEFT_EYE", "node":""},

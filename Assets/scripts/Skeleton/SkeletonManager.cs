@@ -75,15 +75,25 @@ namespace Assets
         private Skeleton InitNewSkeleton(SkeletonSet.Skeleton skeletonDescription, GameObject obj) {
             var children = obj.GetComponentsInChildren<Transform>();
  
-            var scalesBones = new Point[,] { 
-              { Point.LEFT_SHOULDER, Point.LEFT_ELBOW }, { Point.LEFT_ELBOW, Point.LEFT_WRIST }, 
-              { Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW }, { Point.RIGHT_ELBOW, Point.RIGHT_WRIST }, 
-              { Point.LEFT_HIP, Point.LEFT_KNEE }, { Point.LEFT_KNEE, Point.LEFT_HEEL }, 
-              { Point. RIGHT_HIP, Point.RIGHT_KNEE }, { Point.RIGHT_KNEE, Point.RIGHT_HEEL } };
-            
-            var skeleton = CreateDefaultSkeletoStructure(skeletonDescription.name);
-            skeleton.Init(obj, scalesBones, skeletonDescription);
-            return skeleton;
+            var scalesBones = new (Point, Point)[] {
+               (Point.LEFT_SHOULDER, Point.LEFT_ELBOW ), ( Point.LEFT_ELBOW, Point.LEFT_WRIST ),
+               (Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW ), ( Point.RIGHT_ELBOW, Point.RIGHT_WRIST ),
+               (Point.LEFT_HIP, Point.LEFT_KNEE ), ( Point.LEFT_KNEE, Point.LEFT_HEEL ),
+               (Point. RIGHT_HIP, Point.RIGHT_KNEE ), ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
+             };
+
+          var attachementBones = new (Point, Point)[] {
+              ( Point.CENTER_LEFT_SHOULDER, Point.LEFT_SHOULDER ),
+              ( Point.LEFT_SHOULDER, Point.LEFT_ELBOW ), ( Point.LEFT_ELBOW, Point.LEFT_WRIST ),
+              ( Point.CENTER_RIGHT_SHOULDER, Point.RIGHT_SHOULDER ),
+              ( Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW ), ( Point.RIGHT_ELBOW, Point.RIGHT_WRIST ),
+              ( Point.LEFT_HIP, Point.LEFT_KNEE ), ( Point.LEFT_KNEE, Point.LEFT_HEEL ),
+              ( Point. RIGHT_HIP, Point.RIGHT_KNEE ), ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
+              };
+
+          var skeleton = CreateDefaultSkeletoStructure(skeletonDescription.name);
+          skeleton.Init(obj, scalesBones, attachementBones, skeletonDescription);
+          return skeleton;
         }
 
         private SkeletonSet.Skeleton FindSkeletonType(GameObject obj) {
@@ -143,7 +153,7 @@ namespace Assets
                 }
             }
 
-            Debug.Log("Found skeleton: {skeleton.name}: ");
+            Debug.Log($"Found skeleton: {skeleton.name}: ");
             return true;
         }
 
@@ -221,7 +231,12 @@ namespace Assets
 
       //            skeleton.joints.Add(new JointDefinition(Skeleton.Point.Hips, new int[] {23,24 }, new GeneralFilter(new ScaleFilter(scaleFilter), new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(-10, 10, -10, 10, 0, 359.99f), new ScalingGradCalculator()));
       skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12,13,14 }, new GeneralFilter(new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(0, 359.99f, 0, 359.99f, 0, 359.99f), new ScalingGradCalculator()));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, new int[] { 23, 25, 29 }, new Rotation3DGradCalculator(-70, 15, -120, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
+
+      skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_LEFT_SHOULDER));
+      skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_RIGHT_SHOULDER));
+
+
+      skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, new int[] { 23, 25, 29 }, new Rotation3DGradCalculator(-70, 15, -120, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, new int[] { 25, 29 }, new Rotation1DGradCalculator(-5, 140, Rotation1DGradCalculator.Axis.Y), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, new int[] { 29 }, new StretchingGradCalculator(0.7f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
             //skeleton.joints.Add(new JointDefinition("LEFT_FOOT_INDEX", -31));

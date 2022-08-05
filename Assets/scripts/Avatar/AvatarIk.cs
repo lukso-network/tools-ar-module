@@ -336,7 +336,10 @@ namespace Assets
       float[] size = new float[skeleton.ScaleBones.Count];
 
       int i = 0;
-      foreach (var bone in skeleton.ScaleBones) {
+      foreach (var bone in skeleton.AttachementBones) {
+        if(bone.fromIdx < 0) {
+          continue;
+        }
         var j = GetJoint(bone.fromIdx);
         var c = GetJoint(bone.toIdx);
         size[i] = (j.transform.position - c.transform.position).magnitude;
@@ -344,32 +347,44 @@ namespace Assets
       }
 
       i = 0;
-      foreach (var bone in skeleton.ScaleBones) {
-        var j = GetJoint(bone.fromIdx);
-        var c = GetJoint(bone.toIdx);
-        if (settings.enableAttaching) {
+      foreach (var bone in skeleton.AttachementBones) {
+        Transform fromTr, toTr;
+
+        if (bone.fromIdx < 0) {
+          fromTr = GetJointByPoint(bone.fromPoint).transform;
+          
+        } else {
+          fromTr = GetJoint(bone.fromIdx).transform;
+        }
+
+
+        toTr = GetJoint(bone.toIdx).transform;
+        if (settings.enableAttaching && bone.fromIdx >= 0) {
           // set parent position first
-          j.transform.position = allTarget[bone.fromIdx].Value; ;
+          fromTr.position = allTarget[bone.fromIdx].Value; ;
         }
 
         var pt = allTarget[bone.toIdx].Value;
-        var v1 = (c.transform.position - j.transform.position).normalized;
-        var v2 = (pt - j.transform.position).normalized;
+        var v1 = (toTr.position - fromTr.position).normalized;
+        var v2 = (pt - fromTr.position).normalized;
         var rot = Quaternion.FromToRotation(v1, v2);
-        j.transform.rotation = rot * j.transform.rotation;
+        fromTr.rotation = rot * fromTr.rotation;
 
         if (settings.enableAttaching) {
-          var l2 = (j.transform.position - pt).magnitude;
-          var s = j.transform.localScale;
+          var l2 = (fromTr.position - pt).magnitude;
+          var s = fromTr.localScale;
           s.y *= l2 / size[i];
 
-          jointByPointId[bone.fromIdx].lengthScale = l2 / size[i];
+          if (bone.fromIdx >= 0) {
+            jointByPointId[bone.fromIdx].lengthScale = l2 / size[i];
+            ++i;
+          }
           // j.lenghtScale = l2 / size[i];
 
-          c.transform.position = pt;
+          toTr.position = pt;
         }
 
-        ++i;
+       
       }
     }
 

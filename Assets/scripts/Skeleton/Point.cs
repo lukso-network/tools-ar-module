@@ -10,6 +10,9 @@ namespace Lukso
       CHEST = -3,
       SPINE = -2,
       HIPS = -1,
+      //REAL_SHOULDER_IN_MODEL
+      CENTER_LEFT_SHOULDER = -6,
+      CENTER_RIGHT_SHOULDER = -5,
 
       NOSE = 0,
       LEFT_EYE_INNER = 1,

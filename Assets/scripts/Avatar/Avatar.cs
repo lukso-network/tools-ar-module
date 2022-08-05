@@ -330,7 +330,7 @@ namespace Assets
     private float GetScaleBonesLength(Skeleton skeleton) {
       float l1 = 0;
       foreach (var bone in skeleton.ScaleBones) {
-        int idx1 = bone.fromIdx;
+        var idx1 = bone.fromIdx;
         int idx2 = bone.toIdx;
 
         if (idx1 >= jointByPointId.Length || idx2 >= jointByPointId.Length) {
