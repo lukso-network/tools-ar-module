@@ -17,9 +17,15 @@ namespace Lukso {
           public readonly int fromIdx;
           public readonly int toIdx;
 
-          public Bone(int fromIdx, int toIdx) {
-              this.fromIdx = fromIdx;
-              this.toIdx = toIdx;
+          public readonly Point fromPoint;
+          public readonly Point toPoint;
+
+      public Bone(Point fromPoint, Point toPoint) {
+              this.fromPoint = fromPoint;
+              this.toPoint = toPoint;
+
+              this.fromIdx = (int)fromPoint;
+              this.toIdx = (int)toPoint;
           }
       }
 
@@ -59,7 +65,7 @@ namespace Lukso {
           return Regex.Match(objName, rexExp).Success;
       }
 
-      internal bool Init(GameObject obj, int[,] scaleBones, SkeletonSet.Skeleton skeletonDescrs) {
+      internal bool Init(GameObject obj, Point[,] scaleBones, SkeletonSet.Skeleton skeletonDescrs) {
           var children = obj.GetComponentsInChildren<Transform>();
 
           List<int> ids = new List<int>();
@@ -100,8 +106,8 @@ namespace Lukso {
 
           ScaleBones = new List<Bone>();
           for (var i = 0; i < scaleBones.GetLength(0); ++i) {
-              int idx1 = scaleBones[i, 0];
-              int idx2 = scaleBones[i, 1];
+              var idx1 = scaleBones[i, 0];
+              var idx2 = scaleBones[i, 1];
               ScaleBones.Add(new Bone(idx1, idx2));
           }
 

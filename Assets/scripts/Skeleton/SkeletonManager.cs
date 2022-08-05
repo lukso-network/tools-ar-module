@@ -74,8 +74,13 @@ namespace Assets
 
         private Skeleton InitNewSkeleton(SkeletonSet.Skeleton skeletonDescription, GameObject obj) {
             var children = obj.GetComponentsInChildren<Transform>();
-            //TODO
-            var scalesBones = new int[,] { { 11, 13 }, { 13, 15 }, { 12, 14 }, { 14, 16 }, { 23, 25 }, { 25, 29 }, { 24, 26 }, { 26, 30 } };
+ 
+            var scalesBones = new Point[,] { 
+              { Point.LEFT_SHOULDER, Point.LEFT_ELBOW }, { Point.LEFT_ELBOW, Point.LEFT_WRIST }, 
+              { Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW }, { Point.RIGHT_ELBOW, Point.RIGHT_WRIST }, 
+              { Point.LEFT_HIP, Point.LEFT_KNEE }, { Point.LEFT_KNEE, Point.LEFT_HEEL }, 
+              { Point. RIGHT_HIP, Point.RIGHT_KNEE }, { Point.RIGHT_KNEE, Point.RIGHT_HEEL } };
+            
             var skeleton = CreateDefaultSkeletoStructure(skeletonDescription.name);
             skeleton.Init(obj, scalesBones, skeletonDescription);
             return skeleton;
