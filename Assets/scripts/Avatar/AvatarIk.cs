@@ -352,7 +352,7 @@ namespace Assets
 
         if (bone.fromIdx < 0) {
           fromTr = GetJointByPoint(bone.fromPoint).transform;
-          
+        //  continue;
         } else {
           fromTr = GetJoint(bone.fromIdx).transform;
         }
