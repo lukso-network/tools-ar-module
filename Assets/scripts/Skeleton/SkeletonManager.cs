@@ -126,12 +126,19 @@ namespace Assets
             }
             return res;
         }
+        
+        private static bool IsRegex(string val) {
+      ///(val != Regex.Escape(val));
+        return val.Contains(".*") || val.Contains("$");
+        }
 
         private static bool IsSkeletonAppliable(SkeletonSet.Skeleton skeleton, Transform[] nodes) {
+      Debug.Log($"=========== Trying {skeleton.name} model ================");
             HashSet<Transform> usedTransforms = new HashSet<Transform>();
             foreach (var j in skeleton.description) {
                 if (j.node.Length > 0) {
-                    bool isRegexp = (j.node != Regex.Escape(j.node));
+                    bool isRegexp = IsRegex(j.node);
+
                     var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node, isRegexp));
 
                     if (candidateNodes.Length == 1 || (candidateNodes.Length > 1 && j.allowMultiple)) {
