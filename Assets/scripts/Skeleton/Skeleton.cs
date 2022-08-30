@@ -59,11 +59,14 @@ namespace Lukso {
           return joints.Where(x => x.point.ToString().Equals(name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
       }
 
-
-      internal static bool CompareNodeByNames(string objName, string rexExp) {
+      internal static bool CompareNodeByNames(string objName, string searchName, bool isRegexp = true) {
           //objName = Utils.ReplaceSpace(objName.ToLower());
           objName = objName.ToLower();
-          return Regex.Match(objName, rexExp).Success;
+          if (isRegexp) {
+            return Regex.Match(objName, searchName).Success;
+          } else {
+            return objName == searchName;
+          }
       }
 
       internal bool Init(GameObject obj, (Point, Point)[] scaleBones, (Point, Point)[] attachementBones, SkeletonSet.Skeleton skeletonDescrs) {

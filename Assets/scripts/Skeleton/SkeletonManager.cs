@@ -9,6 +9,7 @@ using Assets.PoseEstimator;
 using Lukso;
 using static Lukso.ClothAttachementDefinition;
 using static Lukso.Skeleton;
+using System.Text.RegularExpressions;
 
 namespace Assets
 {
@@ -130,8 +131,8 @@ namespace Assets
             HashSet<Transform> usedTransforms = new HashSet<Transform>();
             foreach (var j in skeleton.description) {
                 if (j.node.Length > 0) {
-
-                    var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node));
+                    bool isRegexp = (j.node != Regex.Escape(j.node));
+                    var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node, isRegexp));
 
                     if (candidateNodes.Length == 1 || (candidateNodes.Length > 1 && j.allowMultiple)) {
                         if (usedTransforms.Contains(candidateNodes[0])) {

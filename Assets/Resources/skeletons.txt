@@ -132,7 +132,9 @@
 		"description":[
 			{"id":-3, "type":"CHEST", "node":".*spine1"},
 			{"id":-2, "type":"SPINE", "node":"spine"},
-			{"id":-1, "type":"HIPS", "node":".*hip.*"},
+			{"id":-1, "type":"HIPS", "node":"hips"},
+            {"id":-6, "type":"CENTER_LEFT_SHOULDER", "node":"leftshoulder"},
+			{"id":-5, "type":"CENTER_RIGHT_SHOULDER", "node":"rightshoulder"},
 			{"id":0, "type":"NOSE", "node":""},
 			{"id":1, "type":"LEFT_EYE_INNER", "node":""},
 			{"id":2, "type":"LEFT_EYE", "node":""},
@@ -220,6 +222,8 @@
 			{"id":-3, "type":"CHEST", "node":"spine01"},
 			{"id":-2, "type":"SPINE", "node":"spine03"},
 			{"id":-1, "type":"HIPS", "node":"root"},
+            {"id":-6, "type":"CENTER_LEFT_SHOULDER", "node":"clavicle.l"},
+			{"id":-5, "type":"CENTER_RIGHT_SHOULDER", "node":"clavicle.r"},
 			{"id":0, "type":"NOSE", "node":""},
 			{"id":1, "type":"LEFT_EYE_INNER", "node":""},
 			{"id":2, "type":"LEFT_EYE", "node":""},
@@ -255,6 +259,7 @@
 			{"id":32, "type":"RIGHT_FOOT_INDEX", "node":""}
 		]
 	},
+
 
 	{
 		"name":"Alice",
