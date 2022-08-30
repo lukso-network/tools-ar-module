@@ -116,7 +116,13 @@ namespace Assets
       return GetJointByPoint(Skeleton.Point.SPINE);
     }
     private Joint GetJointByPoint(Skeleton.Point point) {
-      return jointMap[point];
+      Joint joint;
+      if (jointMap.TryGetValue(point, out joint)) {
+        return joint;
+      }
+
+      Debug.LogError("Joint is not found:" + point);
+      return null;
       //return transformByName[skeleton.GetBoneName(point)];
     }
 

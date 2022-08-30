@@ -1286,7 +1286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5da564da19cb6b7d8e4f97f269edc5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _poolSize: 10
+  _poolSize: 1
 --- !u!4 &82176634
 Transform:
   m_ObjectHideFlags: 0
@@ -4616,7 +4616,7 @@ MonoBehaviour:
   _screen: {fileID: 0}
   _consolePrefab: {fileID: 3481718972971892304, guid: 3bd1ffa1267fbef6fbdd99b4a8e699ff,
     type: 3}
-  _defaultImageSource: 0
+  _defaultImageSource: 2
   _preferableInferenceMode: 0
   _assetLoaderType: 0
   _enableGlog: 1
@@ -6230,6 +6230,8 @@ MonoBehaviour:
   - {fileID: 32900000, guid: e7193fd5b57c1d6468873d499cc8e24c, type: 3}
   - {fileID: 32900000, guid: 729b5fe243f7c9e47a30b2f1ebb42338, type: 3}
   - {fileID: 32900000, guid: 69f427030ab46d74e996ae902a6ab928, type: 3}
+  - {fileID: 32900000, guid: 69f427030ab46d74e996ae902a6ab928, type: 3}
+  - {fileID: 32900000, guid: 83a4fb4f07407ed4eb7155b0c3d01daa, type: 3}
 --- !u!114 &805128652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6243,6 +6245,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableSources:
+  - {fileID: 2800000, guid: b4b4ea4a483ea0c4f8dbafd6dd2c4e4d, type: 3}
+  - {fileID: 2800000, guid: dd186db8ef1dc5d4782b6924e59db19c, type: 3}
+  - {fileID: 2800000, guid: 059277626269dcd4e9eb4c0a0d31d30b, type: 3}
   - {fileID: 2800000, guid: ef60f2190b319de4a8327f680103b1b7, type: 3}
   - {fileID: 2800000, guid: d36f2530ae6d981469696fd2a9fc6894, type: 3}
   - {fileID: 2800000, guid: c22c4756f47cdf44e935d046630a316f, type: 3}
@@ -6268,7 +6273,6 @@ MonoBehaviour:
   - {fileID: 2800000, guid: d38984bec3a9b994fa0f4620340167bf, type: 3}
   - {fileID: 2800000, guid: 7a6516247090e144fb4d182703e986ab, type: 3}
   - {fileID: 2800000, guid: 055742eee429be14b885614d0b54601f, type: 3}
-  - {fileID: 2800000, guid: 5fea78baec2130e4fa82c8e415a2d52e, type: 3}
   _defaultAvailableResolutions:
   - width: 0
     height: 0
