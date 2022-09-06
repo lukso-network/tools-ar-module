@@ -138,8 +138,8 @@ namespace Assets
             foreach (var j in skeleton.description) {
                 if (j.node.Length > 0) {
                     bool isRegexp = IsRegex(j.node);
-
-                    var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, j.node, isRegexp));
+                    var nodeName = j.node.ToLower();
+                    var candidateNodes = Array.FindAll(nodes.ToArray(), c => Skeleton.CompareNodeByNames(c.gameObject.name, nodeName, isRegexp));
 
                     if (candidateNodes.Length == 1 || (candidateNodes.Length > 1 && j.allowMultiple)) {
                         if (usedTransforms.Contains(candidateNodes[0])) {
@@ -161,7 +161,7 @@ namespace Assets
                 }
             }
 
-            Debug.Log($"Found skeleton: {skeleton.name}: ");
+            Debug.Log($"*************************************\nFound skeleton: {skeleton.name}: ");
             return true;
         }
 
