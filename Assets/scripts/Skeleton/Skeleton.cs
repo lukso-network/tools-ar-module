@@ -62,6 +62,12 @@ namespace Lukso {
       internal static bool CompareNodeByNames(string objName, string searchName, bool isRegexp = true) {
           //objName = Utils.ReplaceSpace(objName.ToLower());
           objName = objName.ToLower();
+
+          //TODO temporary - VRM model can contain collider node with the same name
+          // we can add 'exclude' rule later
+          if (objName.Contains("collider")) {
+              return false;
+          }
           if (isRegexp) {
             return Regex.Match(objName, searchName).Success;
           } else {
