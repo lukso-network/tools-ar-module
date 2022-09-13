@@ -33,11 +33,11 @@ namespace Assets.scripts.Api
       }
 
       public async void LoadModel(string url) {
-          avatarManager.LoadGltf(url, true);
+          avatarManager.Load(url, true);
       }
 
       public async void AppendModel(string url) {
-          avatarManager.LoadGltf(url, false);
+          avatarManager.Load(url, false);
       }
 
       public async void ShowUI(string boolStr) {

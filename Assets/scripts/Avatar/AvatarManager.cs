@@ -9,6 +9,7 @@ using Assets.Demo.Scripts;
 using Assets;
 using Assets.scripts.Avatar;
 using Skeleton = Lukso.Skeleton;
+using VRM;
 
 public class AvatarManager : MonoBehaviour
 {
@@ -40,16 +41,54 @@ public class AvatarManager : MonoBehaviour
 
     }
 
-    public async void LoadGltf(string url, bool replaceModel) {
-    
-        var model = await GltfGlbLoader.LoadUrl(url);
-        if (model != null) {
 
-            if (replaceModel) {
-                RemoveAllModels(false);
-            }
-            AddModel(model);
+    public async void Load(string url, bool replaceModel) {
+      if (url.ToLower().EndsWith("glb")) {
+        LoadGltf(url, replaceModel);
+      }
+
+      if (url.ToLower().EndsWith("vrm")) {
+        LoadVrm(url, replaceModel);
+      }
+    }
+
+    private async void LoadGltf(string url, bool replaceModel) {
+
+      var model = await GltfGlbLoader.LoadUrl(url);
+      if (model != null) {
+
+        if (replaceModel) {
+          RemoveAllModels(false);
         }
+        AddModel(model);
+      }
+    }
+
+    private async void LoadVrm(string url, bool replaceModel) {
+      var loaded = await VrmUtility.LoadAsync(url);
+      loaded.ShowMeshes();
+      //loaded.EnableUpdateWhenOffscreen();
+      var model = loaded.gameObject;
+
+      bool enablePhysics = false;
+      if (!enablePhysics) { 
+        foreach (var c in model.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
+          Destroy(c);
+        }
+        foreach (var c in model.GetComponentsInChildren(typeof(VRMSpringBoneColliderGroup), true)) {
+          Destroy(c);
+        }
+      }
+   
+
+      if (model != null) {
+
+        if (replaceModel) {
+          RemoveAllModels(false);
+        }
+        AddModel(model);
+      }
+
     }
 
     public void RemoveAllModels(bool clearUnused) {

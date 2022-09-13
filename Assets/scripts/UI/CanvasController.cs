@@ -96,15 +96,14 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
   IEnumerator ShowLoadDialogCoroutine() {
 
-    yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.FilesAndFolders, true, initFilePath, null, "Load glb", "Load");
+    yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.FilesAndFolders, true, initFilePath, null, "Load models", "Load");
 
     if (FileBrowser.Success) {
         var file = FileBrowser.Result[0];
 
         initFilePath = Path.GetDirectoryName(file);
-        avatarManager.LoadGltf(file, false);
+        avatarManager.Load(file, false);
      }
-
   }
 
 
@@ -268,7 +267,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
     StartCoroutine(WaitBootStrap());
     
-    FileBrowser.SetFilters(true, new FileBrowser.Filter("Model", ".glb"));
+    FileBrowser.SetFilters(true, new FileBrowser.Filter("Model", ".glb"), new FileBrowser.Filter("VRoid", ".vrm"));
 		FileBrowser.SetDefaultFilter(".glb");
 		FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
   }
