@@ -166,6 +166,12 @@ namespace DeepMotion.DMBTDemo
       get => face?.GetComponent<TransparentMaterialRenderer>().enabled ?? true;
       set => face.GetComponent<TransparentMaterialRenderer>().enabled = value;
     }
+    public bool ShowFace {
+      get => face?.GetComponent<MeshRenderer>().enabled ?? true;
+      set => face.GetComponent<MeshRenderer>().enabled = value;
+    }
+
+    public bool UsePhysics { get; set; }
 
     private void InitFilter() {
       posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];

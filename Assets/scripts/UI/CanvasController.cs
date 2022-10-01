@@ -237,6 +237,24 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
 
 
   [Binding]
+  public bool IsShowFace {
+    get { return skeletonManager.ShowFace; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+    set {
+      skeletonManager.ShowFace = value;
+      OnPropertyChanged("IsShowFace");
+    }
+  }
+
+  [Binding]
+  public bool IsUsePhysics {
+    get { return skeletonManager.UsePhysics; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+    set {
+      skeletonManager.UsePhysics = value;
+      OnPropertyChanged("IsUsePhysics");
+    }
+  }
+
+  [Binding]
   public float RootScaleValue {
     get { return 1; }// return skeletonManager.controller.GetHips().transform.localScale.x; }
     set {
@@ -264,10 +282,12 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged
     OnPropertyChanged("SkinScaleZ");
     OnPropertyChanged("SelectedCamera");
     OnPropertyChanged("CameraSource");
+    OnPropertyChanged("IsShowFace");
+    OnPropertyChanged("IsUsePhysics");
 
     StartCoroutine(WaitBootStrap());
     
-    FileBrowser.SetFilters(true, new FileBrowser.Filter("Model", ".glb"), new FileBrowser.Filter("VRoid", ".vrm"));
+    FileBrowser.SetFilters(true, new FileBrowser.Filter("Model", new string[] { ".glb", ".vrm" }), new FileBrowser.Filter("Gltf", ".glb"), new FileBrowser.Filter("VRoid", ".vrm"));
 		FileBrowser.SetDefaultFilter(".glb");
 		FileBrowser.SetExcludedExtensions(".lnk", ".tmp", ".zip", ".rar", ".exe");
   }

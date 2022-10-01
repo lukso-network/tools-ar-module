@@ -10,6 +10,7 @@ using Assets;
 using Assets.scripts.Avatar;
 using Skeleton = Lukso.Skeleton;
 using VRM;
+using System.Reflection;
 
 public class AvatarManager : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class AvatarManager : MonoBehaviour
     private bool skeletonJustAppeared = true;
 
     private int testModelIdx = -1;
+
+    private List<VRMSpringBone> vrmPhysicsObjects = new List<VRMSpringBone>();
 
     // Start is called before the first frame update
     void Start() {
@@ -64,22 +67,20 @@ public class AvatarManager : MonoBehaviour
       }
     }
 
-    private async void LoadVrm(string url, bool replaceModel) {
+    void LateUpdate() { 
+      var instanceMethod = typeof(VRMSpringBone).GetMethod("LateUpdate",  BindingFlags.Instance | BindingFlags.NonPublic);
+    
+      foreach (var b in vrmPhysicsObjects) {
+        instanceMethod.Invoke(b, null);
+      }
+    }
+
+  private async void LoadVrm(string url, bool replaceModel) {
       var loaded = await VrmUtility.LoadAsync(url);
       loaded.ShowMeshes();
       //loaded.EnableUpdateWhenOffscreen();
       var model = loaded.gameObject;
 
-      bool enablePhysics = false;
-      if (!enablePhysics) { 
-        foreach (var c in model.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
-          Destroy(c);
-        }
-        foreach (var c in model.GetComponentsInChildren(typeof(VRMSpringBoneColliderGroup), true)) {
-          Destroy(c);
-        }
-      }
-   
 
       if (model != null) {
 
@@ -95,6 +96,7 @@ public class AvatarManager : MonoBehaviour
         foreach (Transform child in modelRoot.transform) {
             GameObject.Destroy(child.gameObject);
         }
+        vrmPhysicsObjects.Clear();
 
 
         avatars = new List<Assets.Avatar>();
@@ -142,6 +144,15 @@ public class AvatarManager : MonoBehaviour
 
     }
     
+    private void DeletePhysicsObjects(GameObject obj) {
+      foreach (var c in obj.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
+        Destroy(c);
+      }
+      foreach (var c in obj.GetComponentsInChildren(typeof(VRMSpringBoneColliderGroup), true)) {
+        Destroy(c);
+      }
+    }
+
     public void AddModel(GameObject obj) {
         var root = new GameObject("LinearRoot:" + obj.name);
         root.transform.parent = modelRoot.transform;
@@ -154,7 +165,20 @@ public class AvatarManager : MonoBehaviour
             return;
         }
 
-        controllerAvatar.RestoreSkeleton();
+        bool enablePhysics = posManager.UsePhysics;
+        vrmPhysicsObjects.Clear();
+        DeletePhysicsObjects(obj);
+        if (!enablePhysics) {
+          DeletePhysicsObjects(controllerAvatar.obj);
+        } else {
+          foreach (VRMSpringBone c in controllerAvatar.obj.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
+            vrmPhysicsObjects.Add(c);
+          }
+        }
+
+
+
+    controllerAvatar.RestoreSkeleton();
 
         var curController = new Assets.Avatar(root, controllerAvatar.Skeleton);
         float scale = controllerAvatar.GetRelativeBonesScale(curController);
@@ -164,6 +188,9 @@ public class AvatarManager : MonoBehaviour
         //TODO check it. 
         curController.InitJoints();
         avatars.Add(curController);
+
+        DeletePhysicsObjects(obj);
+
         SplitModel(obj);
 
         root.SetActive(true);

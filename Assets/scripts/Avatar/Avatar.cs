@@ -30,7 +30,7 @@ namespace Assets
       }
       int i = 0;
       foreach (var j in joints) {
-        if (j != null) {
+        if (j != null ) {
           rots[i] = j.transform.localRotation;
           pos[i] = j.transform.localPosition;
           scales[i] = j.transform.localScale;
@@ -46,7 +46,7 @@ namespace Assets
       }
       int i = 0;
       foreach (var j in joints) {
-        if (j != null) {
+        if (j != null && j.definition != null) {
           j.transform.localRotation = rots[i];
           j.transform.localPosition = pos[i];
           j.transform.localScale = scales[i];
@@ -108,6 +108,11 @@ namespace Assets
     private Joint GetHips() {
       return GetJointByPoint(Skeleton.Point.HIPS);
     }
+
+    public float GetScale() {
+      return GetHips().transform.localScale.x;
+    }
+
     private Joint GetChest() {
       return GetJointByPoint(Skeleton.Point.CHEST);
     }
