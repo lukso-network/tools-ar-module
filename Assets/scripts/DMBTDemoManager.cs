@@ -415,6 +415,8 @@ namespace DeepMotion.DMBTDemo
 
       var t = Time.realtimeSinceStartup;
       skeletonManager.UpdatePose(ps);
+      camera3dController.SetCameraScale(1/skeletonManager.GetMainAvatarScale());
+
       var dt = Time.realtimeSinceStartup - t;
 
       times[0] = dt;
@@ -612,7 +614,7 @@ namespace DeepMotion.DMBTDemo
 
       try {
         var scale = screenTransform.localScale;
-        scale.z = scaleDepth;
+        scale.z = scaleDepth*scale.y;
         screenTransform.localScale = scale;
 
         var skelPoints = skelModified ? UpdateSkeleton(screenTransform, landmarkList, flipped) : cachedSkeleton;

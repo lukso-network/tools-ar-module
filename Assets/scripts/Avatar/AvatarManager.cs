@@ -186,7 +186,7 @@ public class AvatarManager : MonoBehaviour
         obj.transform.localScale /= scale;
 
         //TODO check it. 
-        curController.InitJoints();
+        //curController.InitJoints();
         avatars.Add(curController);
 
         DeletePhysicsObjects(obj);

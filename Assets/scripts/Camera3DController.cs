@@ -16,6 +16,8 @@ namespace Lukso
     [SerializeField] private Camera camera;
     [SerializeField] private GameObject screenPlane;
 
+    private float cameraScale = 1;
+
     public float TextureAspect => (float)width / height;
 
     // Use this for initialization
@@ -52,7 +54,7 @@ namespace Lukso
       this.width = width;
       this.height = height;
 
-      int refHeight = 4;
+      float refHeight = 4 * cameraScale;
       screenPlane.transform.localScale = new Vector3((float)width / height * refHeight, refHeight, 1);
 
      // Quaternion rot = Quaternion.Euler(0, 0, angle);
@@ -83,6 +85,10 @@ namespace Lukso
       pos.z = -dist;
 
       camera.transform.position = pos;
+    }
+
+    internal void SetCameraScale(float scale) {
+      this.cameraScale = Mathf.Clamp(scale, 0.1f, 10f);
     }
   }
 }

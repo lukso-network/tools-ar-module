@@ -4910,7 +4910,7 @@ MonoBehaviour:
   _screen: {fileID: 0}
   _consolePrefab: {fileID: 3481718972971892304, guid: 3bd1ffa1267fbef6fbdd99b4a8e699ff,
     type: 3}
-  _defaultImageSource: 1
+  _defaultImageSource: 2
   _preferableInferenceMode: 0
   _assetLoaderType: 0
   _enableGlog: 1
@@ -6598,7 +6598,7 @@ MonoBehaviour:
   hat: {fileID: 843617380}
   screenCamera: {fileID: 985747844}
   camera3dController: {fileID: 188083191}
-  scaleDepth: 2
+  scaleDepth: 0.5
   zshift: 0
   zFilterParams:
     mincutoff: 0.2

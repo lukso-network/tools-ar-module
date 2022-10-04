@@ -81,6 +81,7 @@ namespace Assets
     public bool useOld;
     //TODO debugging only
     public GradientDrawer gradientDrawer;
+    public float currentHipScale = 1;
 
     public IkSettings settings;
 
@@ -145,7 +146,11 @@ namespace Assets
         j.boneNormalRotation = CalculateBoneNormalRotation(t);
         joints.Add(j);
 
-        var jc = t.gameObject.AddComponent(typeof(JointController)) as JointController;
+        var jc = t.gameObject.GetComponent<JointController>();
+        if (jc == null) {
+          jc = t.gameObject.AddComponent(typeof(JointController)) as JointController;
+        }
+
         jc.joint = j;
 
         transformByName[t.gameObject.name] = j;

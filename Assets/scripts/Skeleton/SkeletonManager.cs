@@ -68,6 +68,7 @@ namespace Assets
             var controller = new Avatar(obj, skeleton);
             controller.settings = ikSettings;
             controller.SetIkSource();
+            
 
             contollerAvatars[skeletonDescription.name] = controller;
             return controller;
@@ -320,10 +321,18 @@ namespace Assets
 
         internal void UpdatePose(Vector3?[] ps) {
             this.RawSkeletonPoints = ps ;
+           
             foreach (var controller in contollerAvatars.Values) {
                 controller.SetIkTarget(ps);
                 controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
             }
+
+
+        }
+
+        public float GetMainAvatarScale() {
+              Avatar mainAvatar = contollerAvatars.FirstOrDefault().Value;
+              return mainAvatar == null ? 1 : mainAvatar.currentHipScale;
         }
 
         public void PrepareClothCalculation() {
