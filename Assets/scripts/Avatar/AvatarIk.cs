@@ -332,6 +332,41 @@ namespace Assets
 
 
     private void PullAttachJoints() {
+      /*  if (settings.enableAttaching) {
+       foreach (var bone in skeleton.AttachementBones) {
+         Transform fromTr, toTr;
+
+         if (bone.fromIdx < 0) {
+           fromTr = GetJointByPoint(bone.fromPoint)?.transform;
+           //  continue;
+         } else {
+           fromTr = GetJoint(bone.fromIdx)?.transform;
+         }
+
+         if (fromTr == null) {
+           continue;
+         }
+         toTr = GetJoint(bone.toIdx).transform;
+         var pt = allTarget[bone.toIdx].Value;
+         attachementShifts[bone.toIdx] = pt - toTr.position;
+       }
+
+       var hips = GetHips();
+       var chest = GetChest();
+       var ls = GetJointByPoint(Point.LEFT_SHOULDER);
+       var rs = GetJointByPoint(Point.RIGHT_SHOULDER);
+       var lh = GetJointByPoint(Point.LEFT_HIP);
+       var rh = GetJointByPoint(Point.RIGHT_HIP);
+
+       hips.transform.position += (attachementShifts[(int)Point.LEFT_SHOULDER] + attachementShifts[(int)Point.RIGHT_SHOULDER])*0.3f + (attachementShifts[(int)Point.LEFT_HIP] + attachementShifts[(int)Point.RIGHT_HIP])*0.7f;
+
+
+       chest.transform.position += (attachementShifts[(int)Point.LEFT_SHOULDER] + attachementShifts[(int)Point.RIGHT_SHOULDER]) * 0.7f + (attachementShifts[(int)Point.LEFT_HIP] + attachementShifts[(int)Point.RIGHT_HIP]) * 0.3f;
+
+     }
+   */
+
+
       //TODO
       float[] size = new float[skeleton.ScaleBones.Count];
 
