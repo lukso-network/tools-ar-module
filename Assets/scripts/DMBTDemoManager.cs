@@ -19,7 +19,7 @@ using Mediapipe;
 using System.Text.RegularExpressions;
 using Lukso;
 using Skeleton = Lukso.Skeleton;
-
+using static Lukso.Skeleton;
 
 struct Landmarks
 {
@@ -115,6 +115,7 @@ namespace DeepMotion.DMBTDemo
 
     private GameObject face;
     private Mesh faceMesh;
+
     public Mesh FaceMesh => faceMesh;
     private Quaternion faceDirection = Quaternion.identity;
     public Quaternion FaceDirection => faceDirection;
@@ -256,6 +257,9 @@ namespace DeepMotion.DMBTDemo
 
       var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);// + screenTransform.position;
       var dir = (screenCamera.transform.position - pos3d).normalized;
+      if (inZDirection) {
+        dir = -Vector3.forward;
+      }
      // dir = -Vector3.forward;
       // dir /= Math.Abs(dir.z);
       pos3d += dir * (-(v.z  + zShift)) * scaleVector.z * perspectiveScale;
@@ -377,6 +381,23 @@ namespace DeepMotion.DMBTDemo
       return $"({v.x:0.00}, {v.y:0.00}, {v.z:0.00})";
     }
 
+    private void RecalculateCameraPosition(Transform screenTransform, Vector3[] points, float aspectScale) {
+      var scaleVector = ScaleVector(screenTransform);
+      var lsh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.LEFT_SHOULDER], false, 0, aspectScale, true);
+      var rsh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.RIGHT_SHOULDER], false, 0, aspectScale, true);
+      var lh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.LEFT_HIP], false, 0, aspectScale, true);
+      var rh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.RIGHT_HIP], false, 0, aspectScale, true);
+      var l = ((lsh - lh).magnitude + (rsh - rh).magnitude) / 2;
+
+
+      float targetLength = 0.4f;
+
+      float scale = targetLength / l;
+      camera3dController.CameraScale *= scale;
+
+
+    }
+
     private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
       
       if (landmarkList == null) {
@@ -389,6 +410,8 @@ namespace DeepMotion.DMBTDemo
       var timestamp = Time.realtimeSinceStartup;
 
 
+
+
       //filtering depends on size of objecs
       float filterScale = 1.15f / spineSize;
       filterScale = this.spineSizeFilter.Filter(filterScale, timestamp);
@@ -398,6 +421,9 @@ namespace DeepMotion.DMBTDemo
 
       var texAspect = camera3dController.TextureAspect;
       float scale = texAspect / 1.7f;
+
+
+      RecalculateCameraPosition(screenTransform, points, scale);
       TransformPoints(screenTransform, points, flipped, zshift, scale);
 
       //TODO make it faster
@@ -415,7 +441,7 @@ namespace DeepMotion.DMBTDemo
 
       var t = Time.realtimeSinceStartup;
       skeletonManager.UpdatePose(ps);
-      camera3dController.SetCameraScale(1/skeletonManager.GetMainAvatarScale());
+      //camera3dController.SetCameraScale(1/skeletonManager.GetMainAvatarScale());
 
       var dt = Time.realtimeSinceStartup - t;
 
@@ -579,6 +605,7 @@ namespace DeepMotion.DMBTDemo
 
       OnNewPose3(screenTransform, landmarkList, faceLandmarks, flipped);
     }
+
 
     private void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
 

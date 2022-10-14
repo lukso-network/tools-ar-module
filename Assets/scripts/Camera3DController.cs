@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace Lukso
 {
-  public class Camera3DController : MonoBehaviour
-  {
+  public class Camera3DController : MonoBehaviour {
 
     private int width = -1;
     private int height = -1;
@@ -17,12 +16,19 @@ namespace Lukso
     [SerializeField] private GameObject screenPlane;
 
     private float cameraScale = 1;
+    public float CameraScale {
+      get => cameraScale;
+      set {
+        cameraScale = Mathf.Clamp(value, 0.1f, 10f);
+        UpdateCamera();
+      }
+    }
 
     public float TextureAspect => (float)width / height;
 
     // Use this for initialization
     void Start() {
-
+    CameraScale = 1;
     }
 
     // Update is called once per frame
@@ -54,8 +60,6 @@ namespace Lukso
       this.width = width;
       this.height = height;
 
-      float refHeight = 4 * cameraScale;
-      screenPlane.transform.localScale = new Vector3((float)width / height * refHeight, refHeight, 1);
 
      // Quaternion rot = Quaternion.Euler(0, 0, angle);
      // Matrix4x4 m = Matrix4x4.TRS(Vector3.zero, rot, frontCamera ? new Vector3(-1, 1, 1) : Vector3.one);
@@ -67,6 +71,9 @@ namespace Lukso
     }
 
     private void UpdateCamera() {
+
+      float refHeight = 4 * cameraScale;
+      screenPlane.transform.localScale = new Vector3((float)width / height * refHeight, refHeight, 1);
 
       float texAspect = (float)width / height;
 
@@ -87,8 +94,5 @@ namespace Lukso
       camera.transform.position = pos;
     }
 
-    internal void SetCameraScale(float scale) {
-      this.cameraScale = Mathf.Clamp(scale, 0.1f, 10f);
-    }
   }
 }
