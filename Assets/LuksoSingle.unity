@@ -8244,8 +8244,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.03
+  far clip plane: 50
   field of view: 20
   orthographic: 0
   orthographic size: 5
@@ -16891,7 +16891,7 @@ MonoBehaviour:
     gradDescentStep: 0.02
     ikRegularization: 0.4
     ikGradDescentLambda: 0.0822
-    enablePostIKSmoothing: 1
+    enablePostIKSmoothing: 0
     filterPosSmoothingParams:
       mincutoff: 1.2
       beta: 18.8

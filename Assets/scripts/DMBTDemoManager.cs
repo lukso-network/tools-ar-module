@@ -395,6 +395,10 @@ namespace DeepMotion.DMBTDemo
       float scale = targetLength / l;
       camera3dController.CameraScale *= scale;
 
+      var scrScale = screenTransform.localScale;
+      scrScale.z = scaleDepth * scrScale.y;
+      screenTransform.localScale = scrScale;
+
 
     }
 
