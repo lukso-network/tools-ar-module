@@ -207,7 +207,7 @@ namespace Mediapipe.Unity.SkeletonTracking
       }
       
       if (lastSkeletonLandmarkds?.landmarks == null) {
-        skeletonManager.OnNewPose3(screenPlane, null, null, mirrored, null);
+        skeletonManager.OnNewPose(screenPlane, null, null, mirrored, null);
         return;
       }
 
@@ -230,7 +230,7 @@ namespace Mediapipe.Unity.SkeletonTracking
 
       if (texture != null) {
 
-        skeletonManager.OnNewPose3(screenPlane, lastSkeletonLandmarkds?.landmarks, lastFaceLandmarkds?.landmarks, mirrored, texture.Texture);
+        skeletonManager.OnNewPose(screenPlane, lastSkeletonLandmarkds?.landmarks, lastFaceLandmarkds?.landmarks, mirrored, texture.Texture);
         if (newFrameRendered != null) {
           newFrameRendered(texture.Texture);
         }
@@ -269,33 +269,8 @@ namespace Mediapipe.Unity.SkeletonTracking
 
       lastFaceLandmarkds = new LandmarkData(faceLandmarks, faceTimestamp);
       lastSkeletonLandmarkds = new LandmarkData(skeletonLandmarks, skelTimestamp);
-      if (skeletonLandmarks == null) {
-     //  return false;
-      }
-
-      //  if (r1 && skeletonDetection != null) { OnSkeletonDetectionOutput.Invoke(skeletonDetection); }
       if (r2 && skeletonLandmarks != null) { OnSkeletonLandmarksOutput.Invoke(skeletonLandmarks); }
 
-
-      //  if (r3) { OnSkeletonWorldLandmarksOutput.Invoke(skeletonWorldLandmarks); }
-      //  if (r4) { OnRoiFromLandmarksOutput.Invoke(roiFromLandmarks); }
-      /*
-      var tempList = new NormalizedLandmarkList();
-      for(int i = 0; i < skeletonWorldLandmarks.Landmark.Count; ++i) {
-        var n = new NormalizedLandmark();
-        n.X = skeletonWorldLandmarks.Landmark[i].X;
-        n.Y = skeletonWorldLandmarks.Landmark[i].Y;
-        n.Z = skeletonWorldLandmarks.Landmark[i].Z;
-        tempList.Landmark.Add(n);
-      }*/
-
-
-
-      //TODO check on different phones
-      //  var imageSource = ImageSourceProvider.ImageSource;
-      //      var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
-
-      //    skeletonManager.OnNewPose(screenPlane, skeletonLandmarks, faceLandmarks, mirrored, lastTexture);
       return  r2||r3;// || r3;//|| r4;
     }
 
@@ -348,6 +323,7 @@ namespace Mediapipe.Unity.SkeletonTracking
         skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp);
       } else {
         Debug.Log("Add sckeleton results error!:" + timestamp + " " + (value!=null));
+        skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp+100);
       }
     }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,12 +37,57 @@ public static class MatrixExtensions
     }
 }
 
+
+
+
+
 namespace Assets.Demo.Scripts
 {
     public class Utils
     {
 
-        public static void GetAllChildrenDSF(Transform root, List<Transform> list) {
+      public class FPSCounter
+      {
+        const float fpsMeasurePeriod = 0.5f;
+        private int counter = 0;
+        private float lastTime = 0;
+        private float fps;
+
+        private float[] times;
+        private int idx = 0;
+
+        public FPSCounter(int periods = 30) {
+          times = new float[periods];
+        }
+
+        public float GetFps() {
+          return fps;
+        }
+
+        public float UpdateFps2() {
+          counter++;
+          float t = Time.realtimeSinceStartup;
+          if (t > lastTime + fpsMeasurePeriod) {
+            fps = counter / (t - lastTime);
+            counter = 0;
+            lastTime = t;
+          }
+          return fps;
+        }
+
+        public float UpdateFps() {
+          var t = Time.realtimeSinceStartup;
+          var tprev = times[idx];
+          times[idx] = t;
+
+          idx = (idx + 1) % times.Length;
+
+          fps = times.Length / (t - tprev);
+          return fps;
+        }
+      }
+
+    public static void GetAllChildrenDSF(Transform root, List<Transform> list) {
             foreach(Transform t in root) {
                 list.Add(t);
                 GetAllChildrenDSF(t, list);

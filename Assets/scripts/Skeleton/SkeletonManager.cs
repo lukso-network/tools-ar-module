@@ -330,11 +330,6 @@ namespace Assets
 
         }
 
-        public float GetMainAvatarScale() {
-              Avatar mainAvatar = contollerAvatars.FirstOrDefault().Value;
-              return mainAvatar == null ? 1 : mainAvatar.currentHipScale;
-        }
-
         public void PrepareClothCalculation() {
             foreach (var controller in contollerAvatars.Values) {
                 controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);

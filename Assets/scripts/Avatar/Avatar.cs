@@ -81,7 +81,6 @@ namespace Assets
     public bool useOld;
     //TODO debugging only
     public GradientDrawer gradientDrawer;
-    public float currentHipScale = 1;
 
     public IkSettings settings;
 

@@ -498,7 +498,6 @@ namespace Assets
 
       float scale = l2 / l1;
       scale = hipFilter.Filter(scale, -1);
-      currentHipScale *= scale;
       var hips = GetHips();
       hips.transform.localScale = hips.transform.localScale * scale;
     }

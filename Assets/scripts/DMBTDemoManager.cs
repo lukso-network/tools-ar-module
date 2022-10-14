@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using Lukso;
 using Skeleton = Lukso.Skeleton;
 using static Lukso.Skeleton;
+using static Assets.Demo.Scripts.Utils;
 
 struct Landmarks
 {
@@ -46,46 +47,6 @@ struct Landmarks
   }
 }
 
-public class FPSCounter
-{
-  const float fpsMeasurePeriod = 0.5f;
-  private int counter = 0;
-  private float lastTime = 0;
-  private float fps;
-
-  private float []times;
-  private int idx = 0;
-
-  public FPSCounter(int periods = 30) {
-    times = new float[periods];
-  }
-
-  public float GetFps() {
-    return fps;
-  }
-
-  public float UpdateFps2() {
-    counter++;
-    float t = Time.realtimeSinceStartup;
-    if (t > lastTime + fpsMeasurePeriod) {
-      fps = counter / (t - lastTime);
-      counter = 0;
-      lastTime = t;
-    }
-    return fps;
-  }
-
-  public float UpdateFps() {
-    var t = Time.realtimeSinceStartup;
-    var tprev = times[idx];
-    times[idx] = t;
-
-    idx = (idx + 1) % times.Length;
-
-    fps = times.Length / (t - tprev);
-    return fps;
-  }
-}
 
 namespace DeepMotion.DMBTDemo
 {
@@ -109,6 +70,7 @@ namespace DeepMotion.DMBTDemo
     public SkeletonManager skeletonManager;
     public GameObject facePrefab;
     public GameObject hat;
+    private const long VALID_DURATION = 2000;
 
     [SerializeField] private Camera screenCamera;
     [SerializeField] private Camera3DController camera3dController;
@@ -139,6 +101,8 @@ namespace DeepMotion.DMBTDemo
     private Landmarks skeletonLandmarks;
     private Landmarks faceLandmarks;
     private Vector3[] cachedSkeleton;
+    private float defaultFaceSize;
+    private float[] times = new float[] { 0, 0, 0, 0, 0 };
 
 
     [Header("Filter params:")]
@@ -200,45 +164,8 @@ namespace DeepMotion.DMBTDemo
     void Start() {
       InitFilter();
       InitFace();
-      Init();
     }
 
-    private void Init() {
-
-      try {
-
-        /*     var foundedAvatar = Array.Find(avatars, x => x.id == avatarType);
-             if (foundedAvatar == null) {
-                 Debug.LogError("Could not found avatar by id");
-             }
-
-             var obj = Instantiate(foundedAvatar.prefab, transform);
-             obj.SetActive(false);
-             Utils.PreparePivots(obj);
-             /*Skeleton = CreateSkeleton(obj);
-             controller = new Assets.Avatar(obj, Skeleton);
-             controller.settings = ikSettings;
-             controller.SetIkSource();*/
-
-
-        // obj.SetActive(false);
-
-        /*poseScaler = GetComponent<PoseScaler>();
-
-        poseScaler.Init();
-
-        obj = Instantiate(foundedAvatar.prefab, transform);
-        obj.name = "Initial debug copy";
-        obj.SetActive(false);
-        Utils.PreparePivots(obj);
-        initialAvatar = new Assets.Avatar(obj, CreateSkeleton(obj));
-        */
-      } catch (Exception ex) {
-        Debug.LogError("DMBTManage failed");
-        Debug.LogException(ex);
-      }
-
-    }
 
     protected Vector3 ScaleVector(Transform transform) {
       return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.y, transform.localScale.z);
@@ -274,19 +201,7 @@ namespace DeepMotion.DMBTDemo
       }
       var scaleVector = ScaleVector(screenTransform);
       var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
-      /*
-      var l = skeletonPoints[(int)Skeleton.Point.LEFT_SHOULDER];
-      var r = skeletonPoints[(int)Skeleton.Point.RIGHT_SHOULDER];
-      var lh = skeletonPoints[(int)Skeleton.Point.LEFT_HIP];
-      var rh = skeletonPoints[(int)Skeleton.Point.RIGHT_HIP];
-
-      var rlDir = (l - r).normalized;
-      var upDir = ((l + r) / 2 - (lh + rh) / 2).normalized;
-      var len = (l - r).magnitude;
-
-      var nosePose = (l + r) / 2 + len * upDir * 0.5f + Vector3.Cross(upDir, rlDir) * len * 0.2f;
-
-      var to = nosePose;*/
+     
       var to = skeletonPoints[0];
       //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
       //pos3d += (screenCamera.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
@@ -295,11 +210,6 @@ namespace DeepMotion.DMBTDemo
       var relY = 0.5f - from.y;
       var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);
       float delta = -(to.z - pos3d.z) / (screenCamera.transform.position - pos3d).normalized.z / (scaleVector.z * perspectiveScale) - from.z;
-
-
-      //var testP = GetPositionFromNormalizedPoint(scaleVector, from, false, delta, perspectiveScale, false);
-
-      //Debug.Log((testP - to).z);
       return delta;
     }
 
@@ -337,7 +247,6 @@ namespace DeepMotion.DMBTDemo
       
       var scaleVector = ScaleVector(transform);
 
-      //TODOLK - memory 
       for (int i = 0; i < points.Length; ++i) {
         var p = GetPositionFromNormalizedPoint(scaleVector, points[i], flipped, zShift, spineSize);
         points[i] = p;
@@ -345,10 +254,6 @@ namespace DeepMotion.DMBTDemo
 
       return points;
     }
-
-
-    private float defaultFaceSize;
-    private float faceGeomCoef;
 
     private void InitFace() {
       face = Instantiate(facePrefab, transform);
@@ -370,12 +275,8 @@ namespace DeepMotion.DMBTDemo
       var d1 = nose - c0;
       var d2 = (l - r);
 
-      faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
+      //faceGeomCoef = Vector3.Dot(d1, d1) / Vector3.Dot(d2, d2);
     }
-
-
-
-   private float[] times = new float[] { 0, 0, 0, 0, 0 };
 
     private static string V2S(Vector3 v) {
       return $"({v.x:0.00}, {v.y:0.00}, {v.z:0.00})";
@@ -554,16 +455,13 @@ namespace DeepMotion.DMBTDemo
 
       var texAspect = camera3dController.TextureAspect;
       float faceScale = texAspect / 1.7f;
-     // float faceScale = screenCamera.aspect > 1 ? screenCamera.aspect * screenCamera.aspect : 1;
       var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
-
-      //faceMesh.vertices = points;
-      //TOFO
 
       var points = Enumerable.Range(0, faceLandmarks.Landmark.Count).Select(i => LandmarkToVector(faceLandmarks.Landmark[i])).ToArray();
       if (points.Length == 0) {
         return;
       }
+
       TransformPoints(screenTransform, points, flipped, faceNoseShift, faceScale);
       
 
@@ -575,10 +473,8 @@ namespace DeepMotion.DMBTDemo
       var r = points[33];
       var l = points[263];
 
-      //Debug.Log("face:" + (l - r) * 100 + " " + (nose - (l + r) / 2)*100);
 
       var center = (t + b + r + l) / 4;
-      // Debug.Log("Magn:" + (t - b).magnitude + " " + (l - r).magnitude);
       var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude) / defaultFaceSize);
 
       var up = (t - b).normalized;
@@ -595,9 +491,7 @@ namespace DeepMotion.DMBTDemo
     }
 
 
-
-
-    internal void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
+    internal void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped, Texture2D texture) {
       lastFrame = texture;
       if (paused) {
         return;
@@ -607,18 +501,17 @@ namespace DeepMotion.DMBTDemo
         return;
       }
 
-      OnNewPose3(screenTransform, landmarkList, faceLandmarks, flipped);
+      OnNewPose(screenTransform, landmarkList, faceLandmarks, flipped);
     }
 
 
-    private void OnNewPose3(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+    private void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
 
       bool skelModified = landmarkList != null;
       bool faceModified = faceLandmarks != null;
       this.skeletonLandmarks.Set(landmarkList);
       this.faceLandmarks.Set(faceLandmarks);
 
-      const long VALID_DURATION = 2000; //2 sec
       landmarkList = this.skeletonLandmarks.GetActualIfValid(VALID_DURATION);
       faceLandmarks = this.faceLandmarks.GetActualIfValid(VALID_DURATION);
 
