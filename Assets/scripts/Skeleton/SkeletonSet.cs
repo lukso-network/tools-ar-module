@@ -1,22 +1,18 @@
 ﻿
-namespace Assets
-{
+namespace Assets {
     using UnityEngine;
 
     //using Newtonsoft.Json.Linq;
     [System.Serializable]
-    public class SkeletonSet
-    {
+    public class SkeletonSet {
         public Skeleton[] skeletons;
 
 
 
         [System.Serializable]
-        public class Skeleton
-        {
+        public class Skeleton {
             [System.Serializable]
-            public class SkeletonJointDescriptor
-            {
+            public class SkeletonJointDescriptor {
                 public string type;
                 public int id;
                 public string node;

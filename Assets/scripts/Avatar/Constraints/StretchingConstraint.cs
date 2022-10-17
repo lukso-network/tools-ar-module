@@ -2,8 +2,7 @@
 using UnityEngine;
 using Joint = Assets.Joint;
 
-public class StretchingConstraint : Constraint
-{
+public class StretchingConstraint : Constraint {
     public readonly StretchingGradCalculator.Axis axis;
     private float? initialPosition = null;
     private Vector3 initialVector;
@@ -12,7 +11,7 @@ public class StretchingConstraint : Constraint
 
     private float minX;
     private float maxX;
- 
+
     public StretchingConstraint(float minX, float maxX, StretchingGradCalculator.Axis axis) {
         this.minRelative = minX;
         this.maxRelative = maxX;
@@ -44,7 +43,7 @@ public class StretchingConstraint : Constraint
     internal override void Fix(Joint joint) {
         var transform = joint.transform;
         if (axis == StretchingGradCalculator.Axis.PARENT) {
-            var dir= joint.transform.localPosition;
+            var dir = joint.transform.localPosition;
             var len = dir.magnitude;
             var newLength = Mathf.Clamp(len, minX, maxX);
             if (newLength != len) {

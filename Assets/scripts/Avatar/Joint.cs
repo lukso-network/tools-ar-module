@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets
-{
+namespace Assets {
 
-    public class Joint
-    {
+    public class Joint {
         public Transform transform;
 
         public Vector3 initPosition;
@@ -59,13 +57,13 @@ namespace Assets
                 return zeroLevel;
             }
             gradCalculator.calc(calcFilter, ref zeroLevel, targetFunction, this, step, ikSettings);
-         //   CalcRotGradient(ref zeroLevel, targetFunction, transform, step, ref i);
-           // CalcStretchingGradient(ref zeroLevel, targetFunction, transform, posStep, ref i);
-         
+            //   CalcRotGradient(ref zeroLevel, targetFunction, transform, step, ref i);
+            // CalcStretchingGradient(ref zeroLevel, targetFunction, transform, posStep, ref i);
+
             return zeroLevel;
             //transform.localRotation = rotation;
         }
-  
+
         internal virtual void FixConstraints() {
             gradCalculator.FixConstraint(this);
         }
@@ -85,15 +83,15 @@ namespace Assets
             } else {
                 gradCalculator.apply(calcFilter, this, step, threshold, ikSettings);
             }
-        
+
         }
 
         internal void ApplyRotation(Joint joint) {
             transform.localRotation = joint.transform.localRotation;
             transform.localScale = joint.transform.localScale;
             transform.localPosition = joint.transform.localPosition;
-        }       
-        
+        }
+
         internal void CopyRotationAndPosition(Joint joint) {
             transform.localPosition = joint.transform.localPosition;
             transform.localRotation = joint.transform.localRotation;
@@ -126,5 +124,5 @@ namespace Assets
         }
 
     }
-  
+
 }

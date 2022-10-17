@@ -1,8 +1,7 @@
 ﻿using Joint = Assets.Joint;
 
 public class Rotation3DConstraint
-    : Constraint
-{
+    : Constraint {
     public readonly AngleConstraint x;
     public readonly AngleConstraint y;
     public readonly AngleConstraint z;

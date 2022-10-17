@@ -1,7 +1,5 @@
-﻿namespace Assets.PoseEstimator
-{
-    class LowPassFilter : Filter<float>
-    {
+﻿namespace Assets.PoseEstimator {
+    class LowPassFilter : Filter<float> {
         private readonly float smoothStep;
 
         public LowPassFilter(float step) {

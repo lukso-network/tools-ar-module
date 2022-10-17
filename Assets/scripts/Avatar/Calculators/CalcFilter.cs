@@ -1,7 +1,6 @@
 ﻿using System;
 
-public class CalcFilter : ICalcFilter
-{
+public class CalcFilter : ICalcFilter {
     private readonly Type type;
 
     public CalcFilter(Type type) {

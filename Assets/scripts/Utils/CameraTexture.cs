@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CameraTexture : MonoBehaviour
-{
+public class CameraTexture : MonoBehaviour {
     public RenderTexture renderImage;
     private RawImage rawImage;
     // Start is called before the first frame update

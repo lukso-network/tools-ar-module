@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets
-{
-    public class GeneralGradCalculator : GradCalculator
-    {
+namespace Assets {
+    public class GeneralGradCalculator : GradCalculator {
         private readonly GradCalculator[] calcualtors;
         public GeneralGradCalculator(params GradCalculator[] calcs) {
             calcualtors = calcs;
@@ -38,7 +36,7 @@ namespace Assets
         }
 
         internal override void FixConstraint(Joint joint) {
-            foreach (var c in calcualtors) { 
+            foreach (var c in calcualtors) {
                 c.FixConstraint(joint);
             }
         }

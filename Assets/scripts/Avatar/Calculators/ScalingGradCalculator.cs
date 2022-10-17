@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets
-{
-    public class ScalingGradCalculator : GradCalculator
-    {
+namespace Assets {
+    public class ScalingGradCalculator : GradCalculator {
         private float? initValue;
         public ScalingGradCalculator() {
             this.grad = new float[1];
@@ -12,12 +10,12 @@ namespace Assets
         }
 
 
-        
+
 
         public override void apply(Joint joint, float step, float threshold, IkSettings ikSettings) {
 
             var pos = joint.transform.localScale;
-            var p = pos.x - grad[0] * step * initValue.Value ;
+            var p = pos.x - grad[0] * step * initValue.Value;
             p = p < 0.5f ? 0.5f : p;
             pos.x = pos.y = pos.z = p;
 

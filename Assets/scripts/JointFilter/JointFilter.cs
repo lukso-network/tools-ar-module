@@ -1,5 +1,4 @@
-﻿namespace Assets
-{
+﻿namespace Assets {
     public abstract class JointFilter {
         public abstract void Filter(Joint joint);
 

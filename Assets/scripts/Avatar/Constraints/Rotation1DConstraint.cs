@@ -2,8 +2,7 @@
 using UnityEngine;
 using Joint = Assets.Joint;
 
-public class Rotation1DConstraint : Constraint
-{
+public class Rotation1DConstraint : Constraint {
     public readonly AngleConstraint x;
     public readonly Rotation1DGradCalculator.Axis axis;
     private Vector3 prevAngles;

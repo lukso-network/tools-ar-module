@@ -12,8 +12,7 @@ using Skeleton = Lukso.Skeleton;
 using VRM;
 using System.Reflection;
 
-public class AvatarManager : MonoBehaviour
-{
+public class AvatarManager : MonoBehaviour {
     private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
     public SkeletonManager skeletonManager;
     public DMBTDemoManager posManager;
@@ -26,7 +25,7 @@ public class AvatarManager : MonoBehaviour
     public bool ShowTransparentBody;
     public string avatarLayerMask;
 
-    [Range(-0.01f,0.01f)]
+    [Range(-0.01f, 0.01f)]
     public float transparentBodyShrinkAmount = 0.04f;
 
     private bool skeletonJustAppeared = true;
@@ -40,55 +39,55 @@ public class AvatarManager : MonoBehaviour
 
         posManager.newPoseEvent += UpdateSkeleton;
 
-      //  LoadNextTestModel();
+        //  LoadNextTestModel();
 
     }
 
 
     public async void Load(string url, bool replaceModel) {
-      if (url.ToLower().EndsWith("glb")) {
-        LoadGltf(url, replaceModel);
-      }
+        if (url.ToLower().EndsWith("glb")) {
+            LoadGltf(url, replaceModel);
+        }
 
-      if (url.ToLower().EndsWith("vrm")) {
-        LoadVrm(url, replaceModel);
-      }
+        if (url.ToLower().EndsWith("vrm")) {
+            LoadVrm(url, replaceModel);
+        }
     }
 
     private async void LoadGltf(string url, bool replaceModel) {
 
-      var model = await GltfGlbLoader.LoadUrl(url);
-      if (model != null) {
+        var model = await GltfGlbLoader.LoadUrl(url);
+        if (model != null) {
 
-        if (replaceModel) {
-          RemoveAllModels(false);
+            if (replaceModel) {
+                RemoveAllModels(false);
+            }
+            AddModel(model);
         }
-        AddModel(model);
-      }
     }
 
-    void LateUpdate() { 
-      var instanceMethod = typeof(VRMSpringBone).GetMethod("LateUpdate",  BindingFlags.Instance | BindingFlags.NonPublic);
-    
-      foreach (var b in vrmPhysicsObjects) {
-        instanceMethod.Invoke(b, null);
-      }
+    void LateUpdate() {
+        var instanceMethod = typeof(VRMSpringBone).GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        foreach (var b in vrmPhysicsObjects) {
+            instanceMethod.Invoke(b, null);
+        }
     }
 
-  private async void LoadVrm(string url, bool replaceModel) {
-      var loaded = await VrmUtility.LoadAsync(url);
-      loaded.ShowMeshes();
-      //loaded.EnableUpdateWhenOffscreen();
-      var model = loaded.gameObject;
+    private async void LoadVrm(string url, bool replaceModel) {
+        var loaded = await VrmUtility.LoadAsync(url);
+        loaded.ShowMeshes();
+        //loaded.EnableUpdateWhenOffscreen();
+        var model = loaded.gameObject;
 
 
-      if (model != null) {
+        if (model != null) {
 
-        if (replaceModel) {
-          RemoveAllModels(false);
+            if (replaceModel) {
+                RemoveAllModels(false);
+            }
+            AddModel(model);
         }
-        AddModel(model);
-      }
 
     }
 
@@ -124,7 +123,7 @@ public class AvatarManager : MonoBehaviour
             var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
             AddModel(cpy);
         }
-        
+
     }
 
     private void SplitModel(GameObject model) {
@@ -143,14 +142,14 @@ public class AvatarManager : MonoBehaviour
         }
 
     }
-    
+
     private void DeletePhysicsObjects(GameObject obj) {
-      foreach (var c in obj.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
-        Destroy(c);
-      }
-      foreach (var c in obj.GetComponentsInChildren(typeof(VRMSpringBoneColliderGroup), true)) {
-        Destroy(c);
-      }
+        foreach (var c in obj.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
+            Destroy(c);
+        }
+        foreach (var c in obj.GetComponentsInChildren(typeof(VRMSpringBoneColliderGroup), true)) {
+            Destroy(c);
+        }
     }
 
     public void AddModel(GameObject obj) {
@@ -169,16 +168,16 @@ public class AvatarManager : MonoBehaviour
         vrmPhysicsObjects.Clear();
         DeletePhysicsObjects(obj);
         if (!enablePhysics) {
-          DeletePhysicsObjects(controllerAvatar.obj);
+            DeletePhysicsObjects(controllerAvatar.obj);
         } else {
-          foreach (VRMSpringBone c in controllerAvatar.obj.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
-            vrmPhysicsObjects.Add(c);
-          }
+            foreach (VRMSpringBone c in controllerAvatar.obj.GetComponentsInChildren(typeof(VRMSpringBone), true)) {
+                vrmPhysicsObjects.Add(c);
+            }
         }
 
 
 
-    controllerAvatar.RestoreSkeleton();
+        controllerAvatar.RestoreSkeleton();
 
         var curController = new Assets.Avatar(root, controllerAvatar.Skeleton);
         float scale = controllerAvatar.GetRelativeBonesScale(curController);
@@ -216,14 +215,14 @@ public class AvatarManager : MonoBehaviour
 
         //TODO temporary way to find male or female
         bool female = false;
-        foreach(Transform t in obj.transform) {
+        foreach (Transform t in obj.transform) {
             if (t.name.ToLower().Contains("alice")) {
                 female = true;
                 break;
             }
         }
 
-        var body = transpBodyRoot.Find(female? (name + "_female"):name);
+        var body = transpBodyRoot.Find(female ? (name + "_female") : name);
         if (body == null) {
             return;
         }
@@ -285,7 +284,7 @@ public class AvatarManager : MonoBehaviour
         }
 
         UpdateTransparentBody();
-         
+
         foreach (var avatar in avatars) {
 
             var pos = avatar.obj.transform.localPosition;

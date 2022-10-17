@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using GLTFast;
 
-public class GltfGlbLoader { 
+public class GltfGlbLoader {
 
     public static async Task<GameObject> LoadUrl(String url) {
         var gltf = new GltfImport();
@@ -26,12 +26,12 @@ public class GltfGlbLoader {
     }
 
 
-     private static void ResizeMeshToUnit(GameObject gameObject) {
-         Debug.Log ("ResizeMeshToUnit");
+    private static void ResizeMeshToUnit(GameObject gameObject) {
+        Debug.Log("ResizeMeshToUnit");
         MeshFilter mf = gameObject.GetComponentInChildren<MeshFilter>();
         var skin = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         if (mf == null && skin == null) {
-            Debug.Log ("MeshFilter and skinMesh are nulls");
+            Debug.Log("MeshFilter and skinMesh are nulls");
             return;
         }
 
@@ -40,21 +40,21 @@ public class GltfGlbLoader {
 
         Bounds bounds = renderer.bounds;
 
-        Debug.Log (bounds);
+        Debug.Log(bounds);
         float size = bounds.size.x;
         if (size < bounds.size.y)
             size = bounds.size.y;
         if (size < bounds.size.z)
             size = bounds.size.z;
-        
+
         if (Math.Abs(1.0f - size) < 0.01f) {
-            Debug.Log ("Already unit size");
+            Debug.Log("Already unit size");
             return;
         }
-        
+
         float scale = (1.0f / size) / 2;
         gameObject.transform.localScale = new Vector3(scale, scale, scale);
-     }
+    }
 
 
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-public class AngleConstraint : Constraint
-{
+public class AngleConstraint : Constraint {
     public readonly float minAngle;
     public readonly float maxAngle;
 

@@ -4,35 +4,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets
-{
-    public partial class Avatar
-    {
-      /*  private class ClothParameter
-        {
-            private ClothPoint point;
-            private int idx;
-            private float regulararization = 1;
-            public ClothParameter(ClothPoint point, int idx) {
-                this.point = point;
-                this.idx = idx;
-            }
+namespace Assets {
+    public partial class Avatar {
+        /*  private class ClothParameter
+          {
+              private ClothPoint point;
+              private int idx;
+              private float regulararization = 1;
+              public ClothParameter(ClothPoint point, int idx) {
+                  this.point = point;
+                  this.idx = idx;
+              }
 
-            public float Get() {
-                return point.position[idx];
-            }
+              public float Get() {
+                  return point.position[idx];
+              }
 
-            public void Set(float v, bool clamp = false) {
-                var max = point.definition.maxShift[idx];
-                v = Mathf.Clamp(v, -max, max);
-                point.position[idx] = v;
-            }
+              public void Set(float v, bool clamp = false) {
+                  var max = point.definition.maxShift[idx];
+                  v = Mathf.Clamp(v, -max, max);
+                  point.position[idx] = v;
+              }
 
-            public void Add(float v) {
-                point.position[idx] += v;
-            }
+              public void Add(float v) {
+                  point.position[idx] += v;
+              }
 
-        }*/
+          }*/
 
 
         private List<ClothPoint> clothPoints = new List<ClothPoint>();
@@ -54,10 +52,10 @@ namespace Assets
                 }
             }
 
-          foreach (var cp in clothPoints) {
-            clothPointParameters.AddRange(cp.definition.GetParameters());
-          }
-    }
+            foreach (var cp in clothPoints) {
+                clothPointParameters.AddRange(cp.definition.GetParameters());
+            }
+        }
 
 
         public void ApplyClothShift(bool keepPrevious) {
@@ -65,9 +63,9 @@ namespace Assets
 
             var hips = GetHips();
             //float globalScale = 1;// hips.transform.localScale.x/5;
-            float globalScale = hips.transform.localScale.x/1.6f;
+            float globalScale = hips.transform.localScale.x / 1.6f;
 
-      foreach (var cp in clothPoints) {
+            foreach (var cp in clothPoints) {
                 var point = cp.definition.point;
                 var mirrored = skeleton.GetMirrored(point);
 
@@ -79,7 +77,7 @@ namespace Assets
                 }
 
                 cp.definition.Apply(j, globalScale);
-                
+
                 if ((int)mirrored >= 0) {
                     j = jointByPointId[(int)mirrored];
                     cp.definition.Apply(j, globalScale);
@@ -90,7 +88,7 @@ namespace Assets
 
         public void ResetClothSize() {
             foreach (var cp in clothPoints) {
-                foreach(var p in cp.definition.GetParameters()) {
+                foreach (var p in cp.definition.GetParameters()) {
                     p.Reset();
                 }
             }
@@ -102,40 +100,40 @@ namespace Assets
                 parameters.AddRange(cp.definition.GetParameters());
             }
 
-            foreach(var p in parameters) { 
+            foreach (var p in parameters) {
                 p.Set(Mathf.Sin(Time.realtimeSinceStartup) * 0.5f);
             }
         }
 
-        public void CopyToClothParameters(float [] parameters) {
-          var l = Math.Min(parameters.Length, clothPointParameters.Count);
-          for (int i = 0; i < l; ++i) {
-            clothPointParameters[i].Set(parameters[i]);
-          }
+        public void CopyToClothParameters(float[] parameters) {
+            var l = Math.Min(parameters.Length, clothPointParameters.Count);
+            for (int i = 0; i < l; ++i) {
+                clothPointParameters[i].Set(parameters[i]);
+            }
         }
         public void CopyFromClothParameters(float[] parameters) {
-          var l = Math.Min(parameters.Length, clothPointParameters.Count);
-          for (int i = 0; i < l; ++i) {
-            parameters[i] = clothPointParameters[i].Get();
-          }
+            var l = Math.Min(parameters.Length, clothPointParameters.Count);
+            for (int i = 0; i < l; ++i) {
+                parameters[i] = clothPointParameters[i].Get();
+            }
         }
 
 
-    public IEnumerator FindBestCloth(Func<float> target) {
+        public IEnumerator FindBestCloth(Func<float> target) {
             ResetClothSize();
-           /*  foreach (var cp in clothPoints) {
+            /*  foreach (var cp in clothPoints) {
 
-                 var x = 0;// 0.4f * Mathf.Cos(Time.time * 0.5f);
-                 var y = 0.8f;
+                  var x = 0;// 0.4f * Mathf.Cos(Time.time * 0.5f);
+                  var y = 0.8f;
 
-                 cp.position = new Vector3(x, y, 0);
-             }*/
+                  cp.position = new Vector3(x, y, 0);
+              }*/
 
 
 
-           var parameters = clothPointParameters;
+            var parameters = clothPointParameters;
             //foreach(var cp in clothPoints) {
-              //  parameters.AddRange(cp.definition.GetParameters());
+            //  parameters.AddRange(cp.definition.GetParameters());
             //}
 
             /*
@@ -171,7 +169,7 @@ namespace Assets
                 var newValue = target();
                 if (settings.clothDemoMode) {
                     yield return new WaitForEndOfFrame();
-                  
+
                 }
 
                 var grad = (newValue - value) / dx;
@@ -197,11 +195,11 @@ namespace Assets
                 }
 
 
-               // Debug.Log("Scale:" + value / prevVal);
+                // Debug.Log("Scale:" + value / prevVal);
                 if (value / prevVal < EARLY_STOP_THRESHOLD) {
                     unchangeCount += 1;
                     if (unchangeCount > EARLY_STOP_COUNT) {
-                    //    Debug.Log($"EARLY_STOP: iter={step}");
+                        //    Debug.Log($"EARLY_STOP: iter={step}");
                         break;
                     }
 

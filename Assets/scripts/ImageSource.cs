@@ -2,11 +2,9 @@
 using UnityEngine.Networking;
 using UnityEngine.Video;
 
-namespace TEST
-{
+namespace TEST {
 
-    public sealed class ImageSource2 : MonoBehaviour
-    {
+    public sealed class ImageSource2 : MonoBehaviour {
         #region Public property
 
         public Texture Texture => OutputBuffer;
@@ -21,7 +19,7 @@ namespace TEST
         [SerializeField] SourceType _sourceType = SourceType.Card;
 
         // Texture mode options
-        [SerializeField] 
+        [SerializeField]
         public Texture2D _texture = null;
         [SerializeField] string _textureUrl = null;
 

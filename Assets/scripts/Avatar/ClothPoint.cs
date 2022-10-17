@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Lukso { 
-    class ClothPoint  {
+namespace Lukso {
+    class ClothPoint {
 
         public readonly ClothAttachementDefinition definition;
 
@@ -14,7 +14,7 @@ namespace Lukso {
             this.definition = definition;
         }
 
-       // public List<ClothParameter> GetClothParameters() {
+        // public List<ClothParameter> GetClothParameters() {
 
         //}
     }

@@ -1,7 +1,6 @@
 ﻿using Joint = Assets.Joint;
 
-public class GeneralConstraint
-{
+public class GeneralConstraint {
     public GeneralConstraint(params Constraint[] constraints) {
 
     }

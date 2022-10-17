@@ -1,10 +1,8 @@
 ﻿using Assets.PoseEstimator;
 using UnityEngine;
 
-namespace Assets
-{
-    public class ScaleFilter : ParameterizedJointFilter
-    {
+namespace Assets {
+    public class ScaleFilter : ParameterizedJointFilter {
         private KalmanPointFilter filter;
         public ScaleFilter(FilterSettings settings) : base(settings) {
             this.filter = new KalmanPointFilter(settings);

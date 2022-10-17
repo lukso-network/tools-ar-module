@@ -289,8 +289,8 @@ public class WebCamScreenController : MonoBehaviour {
         dist = Mathf.Max(h1, h2)/ tg / 2;
         //  var h = Mathf.Max(h1, h2);
 */
-        //  var dist = h / tg;
-        
+//  var dist = h / tg;
+
 
 /*var pos = cam.transform.position;
         pos.z = -dist;

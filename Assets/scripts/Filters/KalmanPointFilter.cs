@@ -2,12 +2,10 @@ using Kalman;
 using LinearAlgebra;
 using System;
 
-namespace Assets.PoseEstimator
-{
+namespace Assets.PoseEstimator {
 
     [Serializable]
-    public class FilterSettings
-    {
+    public class FilterSettings {
         public double sigma;
         public double dt;
         public FilterType filterType = FilterType.XV;
@@ -32,7 +30,7 @@ namespace Assets.PoseEstimator
         public void ResetModified() {
             IsModified = false;
         }
-        
+
     }
 
     class KalmanPointFilter : Filter<float> {
@@ -82,7 +80,7 @@ namespace Assets.PoseEstimator
         }
 
         public KalmanPointFilter(double sigma, double dt, FilterType filterType) :
-            this(new FilterSettings(sigma, dt, filterType)) { 
+            this(new FilterSettings(sigma, dt, filterType)) {
 
         }
 
@@ -97,7 +95,7 @@ namespace Assets.PoseEstimator
                 // optimized version
                 kalman.Correct(v);
             }
-            return (float)(kalman.State[0,0]);
+            return (float)(kalman.State[0, 0]);
         }
 
         protected override float filterInternal(float v) {

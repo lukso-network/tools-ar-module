@@ -2,12 +2,10 @@
 using System;
 using UnityEngine;
 
-namespace Assets
-{
+namespace Assets {
 
     [Serializable]
-    public class IkSettings
-    {
+    public class IkSettings {
 
         [Range(0, 5)]
         public float gradientCalcStep = 0.1f;
@@ -42,7 +40,7 @@ namespace Assets
         [Range(0, 1)]
         public float clothTooThinPenalty = 1;
 
-    public bool clothDemoMode = false;
+        public bool clothDemoMode = false;
 
 
         public bool resizeBones = true;
@@ -84,30 +82,29 @@ namespace Assets
         public OneEuroFilterParams filterPosSmoothingParams;
         public OneEuroFilterParams hipScaler;
 
-    [Range(0,2)]
-    public float targetFunctionZScale = 1;
-    public bool useOldIk = false;
-    public bool manualIk = false;
+        [Range(0, 2)]
+        public float targetFunctionZScale = 1;
+        public bool useOldIk = false;
+        public bool manualIk = false;
 
-    [Range(-2,2)]
-    public float[] parametersTest;
-  }
+        [Range(-2, 2)]
+        public float[] parametersTest;
+    }
 
 
     [Serializable]
-    public class BoneValidator
-    {
+    public class BoneValidator {
 
-     //   [MinMaxSlider(0.1f, 1.5f)]
+        //   [MinMaxSlider(0.1f, 1.5f)]
         public Vector2 arm1to2 = new Vector2(0.64f, 1.3f);
 
-       // [MinMaxSlider(0.4f, 0.8f)]
+        // [MinMaxSlider(0.4f, 0.8f)]
         public Vector2 arm2toSpine = new Vector2(0.4f, 0.7f);
 
-     //   [MinMaxSlider(0.1f, 1.3f)]
+        //   [MinMaxSlider(0.1f, 1.3f)]
         public Vector2 leg1to2 = new Vector2(0.75f, 1.05f);
 
-     //   [MinMaxSlider(0.25f, 1.6f)]
+        //   [MinMaxSlider(0.25f, 1.6f)]
         public Vector2 leg2toSpine = new Vector2(0.34f, 0.9f);
 
     }

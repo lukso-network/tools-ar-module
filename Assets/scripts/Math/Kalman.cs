@@ -1,11 +1,9 @@
 ﻿using LinearAlgebra;
 
-namespace Kalman
-{
-    public sealed class KalmanFilter
-    {
+namespace Kalman {
+    public sealed class KalmanFilter {
         //System matrices
-        public Matrix X0 { get; private set; } 
+        public Matrix X0 { get; private set; }
         public Matrix P0 { get; private set; }
 
         public Matrix F { get; private set; }
@@ -21,11 +19,10 @@ namespace Kalman
         private Matrix k;
         private Matrix ikh;
 
-        public Matrix State { get; private set; } 
+        public Matrix State { get; private set; }
         public Matrix Covariance { get; private set; }
 
-        public KalmanFilter(Matrix f, Matrix b, Matrix u, Matrix q, Matrix h, Matrix r)
-        {
+        public KalmanFilter(Matrix f, Matrix b, Matrix u, Matrix q, Matrix h, Matrix r) {
             F = f;
             B = b;
             U = u;
@@ -41,16 +38,14 @@ namespace Kalman
             ikh = new Matrix(new double[F.RowCount, F.RowCount]);
             X0 = new Matrix(new double[F.RowCount, 1]);
         }
-       
-        public void SetState(Matrix state, Matrix covariance)
-        {
+
+        public void SetState(Matrix state, Matrix covariance) {
             // Set initial state
             State = state;
             Covariance = covariance;
         }
 
-        public void Correct(Matrix z)
-        {
+        public void Correct(Matrix z) {
             // Predict
             X0 = F * State;// +(B * U);
             P0 = F * Covariance * F_tr + Q;
@@ -94,8 +89,8 @@ namespace Kalman
 
         public void Correct(double z) {
             // Predict
-            X0[0, 0] = State[0,0] + F[0, 1] * State[1, 0];// = F * State;// +(B * U);
-            X0[1, 0] = State[1,0];// = F * State;// +(B * U);
+            X0[0, 0] = State[0, 0] + F[0, 1] * State[1, 0];// = F * State;// +(B * U);
+            X0[1, 0] = State[1, 0];// = F * State;// +(B * U);
             P0 = F * Covariance * F_tr + Q;
 
             // Correct
@@ -118,7 +113,7 @@ namespace Kalman
             //var s2 = X0 + (k * (new Matrix(new double[,] { { z } }) - (H * X0)));
 
             //  State = X0 + (k * (z - (H * X0)));
-           // Covariance = (Ident - k * H) * P0;
+            // Covariance = (Ident - k * H) * P0;
 
 
             ikh[0, 0] = 1 - k[0, 0];

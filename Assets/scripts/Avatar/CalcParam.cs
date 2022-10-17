@@ -1,9 +1,7 @@
-﻿namespace Assets
-{
+﻿namespace Assets {
 
     public partial class Avatar {
-        class CalcParam
-        {
+        class CalcParam {
             public readonly string name;
             public float gradStep;
             public float moveStep;

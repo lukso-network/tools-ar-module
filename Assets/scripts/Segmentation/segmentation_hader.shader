@@ -2,17 +2,17 @@ Shader "Hidden/SelfieBarracuda/Compositor"
 {
     CGINCLUDE
 
-    #include "UnityCG.cginc"
+#include "UnityCG.cginc"
 
-    sampler2D _SourceTexture;
+        sampler2D _SourceTexture;
     sampler2D _MaskTexture;
     sampler2D _ClothTexture;
     sampler2D _BGTexture;
 
     void Vertex(float4 position : POSITION,
-                float2 uv : TEXCOORD0,
-                out float4 outPosition : SV_Position,
-                out float2 outUV : TEXCOORD0)
+        float2 uv : TEXCOORD0,
+        out float4 outPosition : SV_Position,
+        out float2 outUV : TEXCOORD0)
     {
         outPosition = UnityObjectToClipPos(position);
         outUV = uv;
@@ -30,24 +30,24 @@ Shader "Hidden/SelfieBarracuda/Compositor"
         float3 rgb = bg;
         rgb = lerp(rgb, bl, saturate((mask - 0.1) / 0.4));
         rgb = lerp(rgb, fg, saturate((mask - 0.5) / 0.4));
-        return float4(rgb , 1);
+        return float4(rgb, 1);
     }
 
     float4 FragmentThru(float4 position : SV_Position,
-                        float2 uv : TEXCOORD0) : SV_Target
+        float2 uv : TEXCOORD0) : SV_Target
     {
         return tex2D(_SourceTexture, uv);
     }
 
-    float4 FragmentMask(float4 position : SV_Position,
-                        float2 uv : TEXCOORD0) : SV_Target
+        float4 FragmentMask(float4 position : SV_Position,
+            float2 uv : TEXCOORD0) : SV_Target
     {
         float4 color = tex2D(_SourceTexture, uv);
-        float cloth = tex2D(_ClothTexture, float2(1-uv.x, uv.y)).r;
+        float cloth = tex2D(_ClothTexture, float2(1 - uv.x, uv.y)).r;
 
         float mask = tex2D(_MaskTexture, uv).r;
 
-        float4 res = float4(ceil(cloth), ceil(mask-0.5),0, 1);
+        float4 res = float4(ceil(cloth), ceil(mask - 0.5),0, 1);
         res.xyz += color.xyz * 0.3f;
         return res;
 
@@ -57,14 +57,14 @@ Shader "Hidden/SelfieBarracuda/Compositor"
         //return lerp(color, float4(1, 0, 0, 1), mask * 0.8);
     }
 
-    float4 FragmentStatic(float4 position : SV_Position,
-                          float2 uv : TEXCOORD0) : SV_Target
+        float4 FragmentStatic(float4 position : SV_Position,
+            float2 uv : TEXCOORD0) : SV_Target
     {
         return CompositeForeground(uv, tex2D(_BGTexture, uv).rgb);
     }
 
-    float4 FragmentDynamic(float4 position : SV_Position,
-                           float2 uv : TEXCOORD0) : SV_Target
+        float4 FragmentDynamic(float4 position : SV_Position,
+            float2 uv : TEXCOORD0) : SV_Target
     {
         // Polar coodinates
         float2 p = (uv - 0.5) * float2(_ScreenParams.x / _ScreenParams.y, 1);
@@ -81,33 +81,33 @@ Shader "Hidden/SelfieBarracuda/Compositor"
         return CompositeForeground(uv, rgb);
     }
 
-    ENDCG
+        ENDCG
 
-    SubShader
+        SubShader
     {
         Cull Off ZWrite Off ZTest Always
-        Pass
+            Pass
         {
             CGPROGRAM
             #pragma vertex Vertex
             #pragma fragment FragmentThru
             ENDCG
         }
-        Pass
+            Pass
         {
             CGPROGRAM
             #pragma vertex Vertex
             #pragma fragment FragmentMask
             ENDCG
         }
-        Pass
+            Pass
         {
             CGPROGRAM
             #pragma vertex Vertex
             #pragma fragment FragmentStatic
             ENDCG
         }
-        Pass
+            Pass
         {
             CGPROGRAM
             #pragma vertex Vertex

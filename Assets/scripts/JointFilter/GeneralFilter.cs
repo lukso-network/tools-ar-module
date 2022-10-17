@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets
-{
-    public class GeneralFilter : JointFilter
-    {
+namespace Assets {
+    public class GeneralFilter : JointFilter {
         private readonly List<JointFilter> filters;
 
         public GeneralFilter(params JointFilter[] filters) {

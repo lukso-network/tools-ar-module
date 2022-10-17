@@ -1,9 +1,7 @@
 using Assets.PoseEstimator;
 
-namespace Assets
-{
-    public class PositionFilter : ParameterizedJointFilter
-    {
+namespace Assets {
+    public class PositionFilter : ParameterizedJointFilter {
         private KalmanVectorFilter filter;
         public PositionFilter(FilterSettings settings) : base(settings) {
             this.filter = new KalmanVectorFilter(settings);

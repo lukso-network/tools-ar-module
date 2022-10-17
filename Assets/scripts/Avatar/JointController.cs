@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.scripts.Avatar
-{
-    public class JointController : MonoBehaviour
-    {
+namespace Assets.scripts.Avatar {
+    public class JointController : MonoBehaviour {
         public Joint joint;
 
         public bool gradientEnabled;

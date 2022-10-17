@@ -4,8 +4,7 @@ using Assets;
 using Lukso;
 
 
-public class JointDefinition
-{
+public class JointDefinition {
     public string name = "";
     public readonly int pointId;
     public readonly Skeleton.Point point;
@@ -24,7 +23,7 @@ public class JointDefinition
     }
 
     public JointDefinition(Skeleton.Point point, int[] affectedPoints, params GradCalculator[] gradCalculator) :
-        this(point, affectedPoints, null, gradCalculator) { 
+        this(point, affectedPoints, null, gradCalculator) {
     }
 
     public void SetName(string name) {
