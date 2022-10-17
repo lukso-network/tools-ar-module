@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
     public abstract class GradCalculator {
         protected float[] grad;
         protected readonly Constraint constraint;

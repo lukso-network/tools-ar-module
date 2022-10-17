@@ -1,6 +1,4 @@
-﻿using Assets.PoseEstimator;
-
-namespace Assets {
+﻿namespace Lukso{
     public abstract class ParameterizedJointFilter : JointFilter {
         protected readonly FilterSettings settigs;
 

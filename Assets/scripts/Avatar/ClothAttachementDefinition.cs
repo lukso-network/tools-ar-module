@@ -1,10 +1,7 @@
-
-using Assets;
-using Joint = Assets.Joint;
+using Joint = Lukso.Joint;
 using System.Collections.Generic;
 using UnityEngine;
 using static Lukso.Skeleton;
-using static Assets.StretchingGradCalculator;
 using System;
 
 namespace Lukso {

@@ -1,16 +1,10 @@
-using UnityEngine;
-using Joint = Assets.Joint;
-using Assets.scripts.Avatar;
+using Mediapipe;
 using System;
 using System.Linq;
-using Assets.PoseEstimator;
+using UnityEngine;
 using UnityWeld.Binding;
-using Assets;
-using Mediapipe;
-using Lukso;
-using Skeleton = Lukso.Skeleton;
-using static Lukso.Skeleton;
 using static Assets.Demo.Scripts.Utils;
+using static Lukso.Skeleton;
 
 struct Landmarks {
     public NormalizedLandmarkList lastLandmarks { get; private set; }
@@ -37,7 +31,7 @@ struct Landmarks {
 }
 
 
-namespace DeepMotion.DMBTDemo {
+namespace Lukso {
 
 
     [Binding]

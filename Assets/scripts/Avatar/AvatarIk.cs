@@ -1,13 +1,10 @@
-using Assets.scripts.Avatar;
-using Lukso;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Lukso.Skeleton;
 
-namespace Assets {
+namespace Lukso{
     public partial class Avatar {
 
         private SkeletonTransform gradientSkeletonTransform = new SkeletonTransform();

@@ -1,6 +1,5 @@
-using Assets.PoseEstimator;
 
-namespace Assets {
+namespace Lukso{
     public class PositionFilter : ParameterizedJointFilter {
         private KalmanVectorFilter filter;
         public PositionFilter(FilterSettings settings) : base(settings) {

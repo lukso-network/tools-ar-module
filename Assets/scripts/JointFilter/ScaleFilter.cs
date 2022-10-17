@@ -1,7 +1,6 @@
-﻿using Assets.PoseEstimator;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
     public class ScaleFilter : ParameterizedJointFilter {
         private KalmanPointFilter filter;
         public ScaleFilter(FilterSettings settings) : base(settings) {

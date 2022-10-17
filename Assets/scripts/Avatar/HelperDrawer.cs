@@ -1,15 +1,12 @@
-using DeepMotion.DMBTDemo;
-using Mediapipe;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Skeleton = Lukso.Skeleton;
+using Avatar = Lukso.Avatar;
 
-namespace Assets.scripts.Avatar {
+namespace Lukso {
     public class HelperDrawer : MonoBehaviour {
-        private Assets.Avatar avatar;
+        private Avatar avatar;
         private SkeletonManager skeletonManager;
 
         private GameObject dotsRoot;
@@ -113,7 +110,7 @@ namespace Assets.scripts.Avatar {
 
         }
 
-        public void Init(Assets.Avatar avatar) {
+        public void Init(Avatar avatar) {
             this.avatar = avatar;
 
             foreach (Transform t in transform) {

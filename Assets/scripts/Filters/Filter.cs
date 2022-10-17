@@ -1,4 +1,4 @@
-﻿namespace Assets.PoseEstimator {
+﻿namespace Lukso {
 
     public interface IFilter {
         public object Filter(object t);

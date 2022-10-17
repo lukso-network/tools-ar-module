@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets {
+namespace Lukso{
     public class Rotation1DGradCalculator : GradCalculator {
         public enum Axis {
             X, Y, Z

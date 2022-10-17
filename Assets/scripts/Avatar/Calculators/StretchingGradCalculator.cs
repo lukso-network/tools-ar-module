@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets {
+namespace Lukso{
     public class StretchingGradCalculator : GradCalculator {
         public enum Axis : int {
             X, Y, Z, PARENT

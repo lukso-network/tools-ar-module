@@ -1,19 +1,13 @@
-using Assets;
 using Assets.Demo.Scripts;
-using Assets.scripts.Avatar;
-using DeepMotion.DMBTDemo;
-using Lukso;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using static Lukso.Skeleton;
 //using Skeleton = Lukso.Skeleton;
-using Joint = Assets.Joint;
+using Joint = Lukso.Joint;
 
-namespace Assets {
+namespace Lukso{
 
     public class SkeletonTransform {
         internal Quaternion[] rots;

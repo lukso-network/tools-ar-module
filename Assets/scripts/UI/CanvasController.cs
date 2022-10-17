@@ -1,15 +1,10 @@
-using Assets.PoseEstimator;
 using Assets.scripts.Api;
-using Assets.scripts.Avatar;
-using DeepMotion.DMBTDemo;
 using Lukso;
 using Mediapipe.Unity;
 using Mediapipe.Unity.SelfieSegmentation;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityWeld.Binding;
 using SimpleFileBrowser;

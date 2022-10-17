@@ -1,7 +1,6 @@
-using DeepMotion.DMBTDemo;
+using Lukso;
 using Mediapipe;
 using Mediapipe.Unity;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 

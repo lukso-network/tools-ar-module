@@ -2,7 +2,7 @@ using Kalman;
 using LinearAlgebra;
 using System;
 
-namespace Assets.PoseEstimator {
+namespace Lukso {
 
     [Serializable]
     public class FilterSettings {

@@ -1,10 +1,9 @@
-using Lukso;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
     public partial class Avatar {
         /*  private class ClothParameter
           {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.PoseEstimator {
+namespace Lukso {
     class KalmanVectorFilter {
         private KalmanPointFilter[] filters = new KalmanPointFilter[3];
         private FilterSettings settings;

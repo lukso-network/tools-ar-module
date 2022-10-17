@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
 
     [Serializable]
     public class IkSettings {

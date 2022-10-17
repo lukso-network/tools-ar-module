@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
     public class GeneralGradCalculator : GradCalculator {
         private readonly GradCalculator[] calcualtors;
         public GeneralGradCalculator(params GradCalculator[] calcs) {

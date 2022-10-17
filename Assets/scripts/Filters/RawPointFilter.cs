@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Assets.PoseEstimator {
+namespace Lukso {
     public class RawPointFilter : Filter<Vector3[]> {
         private readonly float discardValue;
         private readonly float step;

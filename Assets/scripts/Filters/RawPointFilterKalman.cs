@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.PoseEstimator {
+namespace Lukso {
     public class RawPointFilterKalman : Filter<Vector3[]> {
         private readonly float sigma;
         private readonly bool enabled;

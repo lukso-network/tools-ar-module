@@ -1,7 +1,6 @@
 ﻿using System;
-using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
     public class Rotation3DGradCalculator : GradCalculator {
 
         public Rotation3DGradCalculator(Constraint constraint) : base(constraint) {

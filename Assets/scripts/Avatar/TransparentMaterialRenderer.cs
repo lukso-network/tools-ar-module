@@ -1,10 +1,8 @@
-using Lukso;
 using Mediapipe.Unity;
 using Mediapipe.Unity.SkeletonTracking;
-using System.Collections;
 using UnityEngine;
 
-namespace Assets.scripts.Avatar {
+namespace Lukso {
     public class TransparentMaterialRenderer : MonoBehaviour {
 
         private Camera3DController cam3d;

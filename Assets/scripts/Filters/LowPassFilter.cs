@@ -1,4 +1,4 @@
-﻿namespace Assets.PoseEstimator {
+﻿namespace Lukso {
     class LowPassFilter : Filter<float> {
         private readonly float smoothStep;
 

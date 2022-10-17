@@ -1,17 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets;
 using System;
 using System.Linq;
-using DeepMotion.DMBTDemo;
-using Assets.PoseEstimator;
-using Lukso;
 using static Lukso.ClothAttachementDefinition;
 using static Lukso.Skeleton;
-using System.Text.RegularExpressions;
 
-namespace Assets {
+namespace Lukso{
     public class SkeletonManager : MonoBehaviour {
 
         public IkSettings ikSettings;
@@ -21,7 +15,7 @@ namespace Assets {
         // different models has its own avatar
         // these avatars can share the same skeleton
         // controllerAvatars actually calculates position and other avatars just copy data from it
-        private readonly Dictionary<string, Assets.Avatar> contollerAvatars = new Dictionary<string, Assets.Avatar>();
+        private readonly Dictionary<string, Avatar> contollerAvatars = new Dictionary<string, Avatar>();
 
         public Vector3?[] RawSkeletonPoints { get; private set; }
 

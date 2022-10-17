@@ -1,4 +1,4 @@
-﻿namespace Assets {
+﻿namespace Lukso{
 
     public partial class Avatar {
         class CalcParam {

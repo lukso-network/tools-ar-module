@@ -1,7 +1,7 @@
 ﻿using System;
-using UnityEngine;
 
-namespace Assets {
+
+namespace Lukso{
     public class Position3DGradCalculator : GradCalculator {
         public Position3DGradCalculator() {
             this.grad = new float[3];

@@ -1,9 +1,5 @@
-using Assets;
-using DeepMotion.DMBTDemo;
-using Mediapipe;
 using Mediapipe.Unity;
 using Mediapipe.Unity.SelfieSegmentation;
-using System;
 using System.Collections;
 using UnityEngine;
 

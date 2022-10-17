@@ -5,7 +5,6 @@
 // https://opensource.org/licenses/MIT.
 
 using Assets.scripts.UI;
-using DeepMotion.DMBTDemo;
 using Lukso;
 using System;
 using System.Collections.Generic;

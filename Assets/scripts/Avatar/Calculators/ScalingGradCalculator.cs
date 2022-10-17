@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets {
+namespace Lukso{
     public class ScalingGradCalculator : GradCalculator {
         private float? initValue;
         public ScalingGradCalculator() {

@@ -1,19 +1,16 @@
-using DeepMotion.DMBTDemo;
-using System;
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Assets.Demo.Scripts;
-using Assets;
-using Assets.scripts.Avatar;
+using Lukso;
 using Skeleton = Lukso.Skeleton;
 using VRM;
 using System.Reflection;
+using Lukso;
+using Avatar = Lukso.Avatar;
 
 public class AvatarManager : MonoBehaviour {
-    private List<Assets.Avatar> avatars = new List<Assets.Avatar>();
+    private List<Avatar> avatars = new List<Avatar>();
     public SkeletonManager skeletonManager;
     public DMBTDemoManager posManager;
     public Material transparentMaterial;
@@ -98,7 +95,7 @@ public class AvatarManager : MonoBehaviour {
         vrmPhysicsObjects.Clear();
 
 
-        avatars = new List<Assets.Avatar>();
+        avatars = new List<Avatar>();
 
         if (clearUnused) {
             CleanUpUnusedSkeletons();
@@ -179,7 +176,7 @@ public class AvatarManager : MonoBehaviour {
 
         controllerAvatar.RestoreSkeleton();
 
-        var curController = new Assets.Avatar(root, controllerAvatar.Skeleton);
+        var curController = new Avatar(root, controllerAvatar.Skeleton);
         float scale = controllerAvatar.GetRelativeBonesScale(curController);
 
         obj.transform.localScale /= scale;
@@ -205,7 +202,7 @@ public class AvatarManager : MonoBehaviour {
         return obj.GetComponentInChildren<TransparentMaterialRenderer>(true) != null;
     }
 
-    private void AddTransparentBody(GameObject obj, Assets.Avatar controllerAvatar) {
+    private void AddTransparentBody(GameObject obj, Avatar controllerAvatar) {
         var name = controllerAvatar.Skeleton.Name;
         var transp_name = $"{name}_transparent";
 

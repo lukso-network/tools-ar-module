@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets.scripts.Avatar {
+namespace Lukso {
     public class JointController : MonoBehaviour {
         public Joint joint;
 

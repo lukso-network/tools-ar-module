@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets {
+namespace Lukso{
     public class GeneralFilter : JointFilter {
         private readonly List<JointFilter> filters;
 

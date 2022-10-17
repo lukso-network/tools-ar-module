@@ -1,4 +1,4 @@
-﻿namespace DeepMotion.DMBTDemo {
+﻿namespace Lukso.DMBTDemo {
     enum RawPoint : int {
         RANKLE = 0,
         RKNEE,
