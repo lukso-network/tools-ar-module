@@ -394,58 +394,13 @@ namespace DeepMotion.DMBTDemo
       
       var dl = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Mathf.Sqrt(Suared2V(points[i] - prevPoints[i])) : 0));
       dl /= count;
-      /*
-      var dl2 = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Suared2V(points[i] - prevPoints[i]) : 0));
-      dl2 = dl2/count;
-      var disp = Mathf.Sqrt(dl2 - dl*dl);
 
-      var ds2 = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Suared2V((points[i] - prevPoints[i]) - ds) : 0));
-      ds2 /= count;
-      ds2 = Mathf.Sqrt(ds2);
-      */
-      
-
-      
-      //Debug.Log($"{Time.frameCount}, {count}, {V2S(ds)}, magn:{(ds).magnitude} {dl}, {V2S(ds * filterScale)} magn: {(ds * filterScale).magnitude} {dl * filterScale}");
-
-      //ds2 *= filterScale;
       ds *= filterScale;
       dl *= filterScale;
-      //  xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
+
       xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, dl / 0.1f/1.5f), timestamp);
-      //Debug.Log("FilterScale:" + filterScale + " " + spineSize + " " +  V2S(ds) + " " + ds.magnitude + " " + ds2 + " " + xyFilterParams.movementFactor  + ":dl=" + dl + " " + disp);
-
       prevPoints = (Vector3[])points.Clone();
-      return;
-      /*
-      float dl = 0;
-
-      for (int i = 0; i < points.Length; ++i) {
-        if (presence[i]) {
-          var dist = points[i] - prevPoints[i];
-          dl += Mathf.Sqrt(dist.x * dist.x + dist.y * dist.y);// ignore z component
-        }
-        prevPoints[i] = points[i];
-      }
-      ds *= filterScale;
-      ds.z = 0;
-      dl /= count;
-
-
-      float ds2 = 0;
-      for (int i = 0; i < points.Length; ++i) {
-        if (presence[i]) {
-          var d = (points[i] - prevPoints[i]) - ds;
-          d.z = 0;
-          ds2 += d.sqrMagnitude;
-        }
-        prevPoints[i] = points[i];
-      }
-
-      */
-
-      xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, ds.magnitude / 0.1f), timestamp);
-     // Debug.Log("FilterScale:" + filterScale + " " + spineSize + " " + dl + " " + V2S(ds) + " " + ds.magnitude + " " + xyFilterParams.movementFactor);
+  
     }
 
     private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
