@@ -1,22 +1,12 @@
 using UnityEngine;
 using Joint = Assets.Joint;
 using Assets.scripts.Avatar;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
-using System.IO;
 using System;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-//using Newtonsoft.Json.Linq;
 using System.Linq;
-using Assets.Demo.Scripts;
 using Assets.PoseEstimator;
-using System.ComponentModel;
 using UnityWeld.Binding;
 using Assets;
 using Mediapipe;
-using System.Text.RegularExpressions;
 using Lukso;
 using Skeleton = Lukso.Skeleton;
 using static Lukso.Skeleton;
@@ -70,11 +60,12 @@ namespace DeepMotion.DMBTDemo
     public SkeletonManager skeletonManager;
     public GameObject facePrefab;
     public GameObject hat;
-    private const long VALID_DURATION = 2000;
+    
 
     [SerializeField] private Camera screenCamera;
     [SerializeField] private Camera3DController camera3dController;
 
+    private const long VALID_DURATION = 2000;
     private GameObject face;
     private Mesh faceMesh;
 
@@ -103,6 +94,8 @@ namespace DeepMotion.DMBTDemo
     private Vector3[] cachedSkeleton;
     private float defaultFaceSize;
     private float[] times = new float[] { 0, 0, 0, 0, 0 };
+    //TODO 
+    private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
 
 
     [Header("Filter params:")]
@@ -119,12 +112,6 @@ namespace DeepMotion.DMBTDemo
     private OneEuroFilter movementFactorFilter;
     private Vector3[] prevPoints = new Vector3[Skeleton.JOINT_COUNT];
 
-    public Texture2D GetLastFrame() {
-      return lastFrame;
-    }
-
-    private readonly int[] FLIP_POINTS = new int[] { 0, 4, 5, 6, 1, 2, 3, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15, 17, 17, 20, 19, 22, 21, 24, 23, 26, 25, 28, 27, 30, 29, 32, 31 };
-
     private FPSCounter counter = new FPSCounter();
     private FPSCounter counterSkel = new FPSCounter();
     public bool ShowTransparentFace {
@@ -137,6 +124,10 @@ namespace DeepMotion.DMBTDemo
     }
 
     public bool UsePhysics { get; set; }
+
+    public Texture2D GetLastFrame() {
+      return lastFrame;
+    }
 
     private void InitFilter() {
       posFIlterZ = new OneEuroFilter[Skeleton.JOINT_COUNT];
@@ -165,7 +156,6 @@ namespace DeepMotion.DMBTDemo
       InitFilter();
       InitFace();
     }
-
 
     protected Vector3 ScaleVector(Transform transform) {
       return new Vector3(1 * transform.localScale.x, 1 * transform.localScale.y, transform.localScale.z);
@@ -299,8 +289,6 @@ namespace DeepMotion.DMBTDemo
       var scrScale = screenTransform.localScale;
       scrScale.z = scaleDepth * scrScale.y;
       screenTransform.localScale = scrScale;
-
-
     }
 
     private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
@@ -313,8 +301,6 @@ namespace DeepMotion.DMBTDemo
       var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f).ToArray();
       var spineSize = GetSpineSize(points);
       var timestamp = Time.realtimeSinceStartup;
-
-
 
 
       //filtering depends on size of objecs
@@ -375,8 +361,7 @@ namespace DeepMotion.DMBTDemo
 //      Debug.Log("mn/mx:" + V2S(mn) + " " + V2S(mx) + "|   " + V2S(mx - mn) + " " + V2S(points[16]));
     }
 
-
-    private float Suared2V(Vector3 v) {
+    private float Squared2V(Vector3 v) {
       return v.x * v.x + v.y * v.y;
     }
 
@@ -392,7 +377,7 @@ namespace DeepMotion.DMBTDemo
       ds.z = 0;
       ds /= count;
       
-      var dl = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Mathf.Sqrt(Suared2V(points[i] - prevPoints[i])) : 0));
+      var dl = Enumerable.Range(0, points.Length).Aggregate(0.0f, (v, i) => v + (presence[i] ? Mathf.Sqrt(Squared2V(points[i] - prevPoints[i])) : 0));
       dl /= count;
 
       ds *= filterScale;
@@ -400,7 +385,6 @@ namespace DeepMotion.DMBTDemo
 
       xyFilterParams.movementFactor = movementFactorFilter.Filter(Mathf.Lerp(1, 10, dl / 0.1f/1.5f), timestamp);
       prevPoints = (Vector3[])points.Clone();
-  
     }
 
     private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
@@ -458,7 +442,6 @@ namespace DeepMotion.DMBTDemo
 
       OnNewPose(screenTransform, landmarkList, faceLandmarks, flipped);
     }
-
 
     private void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
 
@@ -534,7 +517,6 @@ namespace DeepMotion.DMBTDemo
     internal void ResetAvatar() {
       //           controller.CopyRotationAndPositionFromAvatar(initialAvatar);
     }
-
 
   }
 }
