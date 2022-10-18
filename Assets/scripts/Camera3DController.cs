@@ -87,5 +87,8 @@ namespace Lukso {
             camera.transform.position = pos;
         }
 
+        internal Transform GetScreenTransform() {
+            return screenPlane.transform;
+        }
     }
 }

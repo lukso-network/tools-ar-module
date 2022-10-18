@@ -174,12 +174,11 @@ namespace Lukso {
             return pos3d;
         }
 
-        private float CalculateZShift(Transform screenTransform, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, bool isFlipped, float perspectiveScale) {
+        private float CalculateZShift(Vector3 pointScaler, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, bool isFlipped, float perspectiveScale) {
 
             if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
                 return 0;
             }
-            var scaleVector = ScaleVector(screenTransform);
             var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
 
             var to = skeletonPoints[0];
@@ -188,8 +187,8 @@ namespace Lukso {
 
             var relX = (isFlipped ? -1 : 1) * (from.x - 0.5f);
             var relY = 0.5f - from.y;
-            var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), scaleVector);
-            float delta = -(to.z - pos3d.z) / (screenCamera.transform.position - pos3d).normalized.z / (scaleVector.z * perspectiveScale) - from.z;
+            var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), pointScaler);
+            float delta = -(to.z - pos3d.z) / (screenCamera.transform.position - pos3d).normalized.z / (pointScaler.z * perspectiveScale) - from.z;
             return delta;
         }
 
@@ -220,15 +219,13 @@ namespace Lukso {
             this.paused = pause;
         }
 
-        private Vector3[] TransformPoints(Transform transform, Vector3[] points, bool flipped, float zShift = 0, float spineSize = -1) {
+        private Vector3[] TransformPoints(Vector3 pointScaler, Vector3[] points, bool flipped, float zShift = 0, float spineSize = -1) {
             if (spineSize < 0) {
                 spineSize = 1;
             }
 
-            var scaleVector = ScaleVector(transform);
-
             for (int i = 0; i < points.Length; ++i) {
-                var p = GetPositionFromNormalizedPoint(scaleVector, points[i], flipped, zShift, spineSize);
+                var p = GetPositionFromNormalizedPoint(pointScaler, points[i], flipped, zShift, spineSize);
                 points[i] = p;
             }
 
@@ -262,12 +259,18 @@ namespace Lukso {
             return $"({v.x:0.00}, {v.y:0.00}, {v.z:0.00})";
         }
 
-        private void RecalculateCameraPosition(Transform screenTransform, Vector3[] points, float aspectScale) {
-            var scaleVector = ScaleVector(screenTransform);
-            var lsh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.LEFT_SHOULDER], false, 0, aspectScale, true);
-            var rsh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.RIGHT_SHOULDER], false, 0, aspectScale, true);
-            var lh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.LEFT_HIP], false, 0, aspectScale, true);
-            var rh = GetPositionFromNormalizedPoint(scaleVector, points[(int)Point.RIGHT_HIP], false, 0, aspectScale, true);
+        private Vector3 CalculatePointScaler() {
+            var pointScaler = camera3dController.GetScreenTransform().localScale;
+            pointScaler.z = scaleDepth * pointScaler.y;
+            return pointScaler;
+
+        }
+
+        private Vector3 RecalculateCameraPosition(Vector3 pointScaler, Vector3[] points, float aspectScale) {
+            var lsh = GetPositionFromNormalizedPoint(pointScaler, points[(int)Point.LEFT_SHOULDER], false, 0, aspectScale, true);
+            var rsh = GetPositionFromNormalizedPoint(pointScaler, points[(int)Point.RIGHT_SHOULDER], false, 0, aspectScale, true);
+            var lh = GetPositionFromNormalizedPoint(pointScaler, points[(int)Point.LEFT_HIP], false, 0, aspectScale, true);
+            var rh = GetPositionFromNormalizedPoint(pointScaler, points[(int)Point.RIGHT_HIP], false, 0, aspectScale, true);
             var l = ((lsh - lh).magnitude + (rsh - rh).magnitude) / 2;
 
 
@@ -276,19 +279,20 @@ namespace Lukso {
             float scale = targetLength / l;
             camera3dController.CameraScale *= scale;
 
-            var scrScale = screenTransform.localScale;
-            scrScale.z = scaleDepth * scrScale.y;
-            screenTransform.localScale = scrScale;
+            return CalculatePointScaler();
         }
 
-        private Vector3[] UpdateSkeleton(Transform screenTransform, NormalizedLandmarkList landmarkList, bool flipped) {
+        private float GetOrientationCorrectionScale() {
+            var texAspect = camera3dController.TextureAspect;
+            float scale = texAspect / 1.7f;
+            return scale;
+        }
 
-            if (landmarkList == null) {
-                return null;
-            }
+        private Vector3[] UpdateSkeleton(ref Vector3 pointScaler, NormalizedLandmarkList landmarkList, bool flipped) {
 
             var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
             var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f).ToArray();
+
             var spineSize = GetSpineSize(points);
             var timestamp = Time.realtimeSinceStartup;
 
@@ -300,12 +304,9 @@ namespace Lukso {
             CalculateTotalMovement(spineSize, points, presence, timestamp, filterScale);
             FilterPointPositions(points, presence, timestamp, filterScale);
 
-            var texAspect = camera3dController.TextureAspect;
-            float scale = texAspect / 1.7f;
 
-
-            RecalculateCameraPosition(screenTransform, points, scale);
-            TransformPoints(screenTransform, points, flipped, zshift, scale);
+            pointScaler = RecalculateCameraPosition(pointScaler, points, GetOrientationCorrectionScale());
+            TransformPoints(pointScaler, points, flipped, zshift, GetOrientationCorrectionScale());
 
             //TODO make it faster
             if (flipped) {
@@ -328,7 +329,6 @@ namespace Lukso {
 
             times[0] = dt;
             times[1] = t - timestamp;
-
             return points;
         }
 
@@ -377,21 +377,19 @@ namespace Lukso {
             prevPoints = (Vector3[])points.Clone();
         }
 
-        private void UpdateFace(Transform screenTransform, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
+        private void UpdateFace(Vector3 pointScaler, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
             if (faceLandmarks == null) {
                 return;
             }
 
-            var texAspect = camera3dController.TextureAspect;
-            float faceScale = texAspect / 1.7f;
-            var faceNoseShift = CalculateZShift(screenTransform, skelPoints, faceLandmarks, flipped, faceScale);
+            var faceNoseShift = CalculateZShift(pointScaler, skelPoints, faceLandmarks, flipped, GetOrientationCorrectionScale());
 
             var points = Enumerable.Range(0, faceLandmarks.Landmark.Count).Select(i => LandmarkToVector(faceLandmarks.Landmark[i])).ToArray();
             if (points.Length == 0) {
                 return;
             }
 
-            TransformPoints(screenTransform, points, flipped, faceNoseShift, faceScale);
+            TransformPoints(pointScaler, points, flipped, faceNoseShift, GetOrientationCorrectionScale());
 
 
             faceMesh.vertices = points;
@@ -430,24 +428,21 @@ namespace Lukso {
                 return;
             }
 
-            OnNewPose(screenTransform, landmarkList, faceLandmarks, flipped);
+            OnNewPose( landmarkList, faceLandmarks, flipped);
         }
 
-        private void OnNewPose(Transform screenTransform, NormalizedLandmarkList landmarkList, NormalizedLandmarkList faceLandmarks, bool flipped) {
+        private void OnNewPose(NormalizedLandmarkList landmarkListOrig, NormalizedLandmarkList faceLandmarksOrig, bool flipped) {
 
-            bool skelModified = landmarkList != null;
-            bool faceModified = faceLandmarks != null;
-            this.skeletonLandmarks.Set(landmarkList);
-            this.faceLandmarks.Set(faceLandmarks);
+            var pointScaler = CalculatePointScaler();
+            bool skelModified = landmarkListOrig != null;
+            bool faceModified = faceLandmarksOrig != null;
+            this.skeletonLandmarks.Set(landmarkListOrig);
+            this.faceLandmarks.Set(faceLandmarksOrig);
 
-            landmarkList = this.skeletonLandmarks.GetActualIfValid(VALID_DURATION);
-            faceLandmarks = this.faceLandmarks.GetActualIfValid(VALID_DURATION);
+            var landmarkList = this.skeletonLandmarks.GetActualIfValid(VALID_DURATION);
+            var faceLandmarks = this.faceLandmarks.GetActualIfValid(VALID_DURATION);
 
             face.SetActive(faceLandmarks != null);
-            var t = Time.realtimeSinceStartup;
-            float t2 = 0;
-            float t3 = 0;
-            float t4 = 0;
 
             if (!enabled || landmarkList == null || landmarkList.Landmark.Count == 0) {
                 newPoseEvent(false);
@@ -462,14 +457,16 @@ namespace Lukso {
                 return;
             }
 
+
+            var t = Time.realtimeSinceStartup;
+            float t2 = 0;
+            float t3 = 0;
+            float t4 = 0;
             var t1 = Time.realtimeSinceStartup;
 
             try {
-                var scale = screenTransform.localScale;
-                scale.z = scaleDepth * scale.y;
-                screenTransform.localScale = scale;
 
-                var skelPoints = skelModified ? UpdateSkeleton(screenTransform, landmarkList, flipped) : cachedSkeleton;
+                var skelPoints = UpdateSkeleton(ref pointScaler, landmarkList, flipped);
                 cachedSkeleton = skelPoints;
                 t2 = Time.realtimeSinceStartup;
 
@@ -478,7 +475,7 @@ namespace Lukso {
                 }
 
                 if (faceModified || skelModified) {
-                    UpdateFace(screenTransform, faceLandmarks, flipped, skelPoints);
+                    UpdateFace(pointScaler, faceLandmarks, flipped, skelPoints);
                 }
                 t3 = Time.realtimeSinceStartup;
 
