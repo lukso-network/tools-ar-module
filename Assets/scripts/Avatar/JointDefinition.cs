@@ -1,5 +1,5 @@
 using Lukso;
-
+using System.Linq;
 
 public class JointDefinition {
     public string name = "";
@@ -9,12 +9,10 @@ public class JointDefinition {
     public JointFilter filter;
     public int[] AffectedPoints { get; private set; }
 
-    public JointDefinition(Skeleton.Point point, int[] affectedPoints = null) {
-        this.AffectedPoints = affectedPoints;
+    public JointDefinition(Skeleton.Point point, params Skeleton.Point [] points) {
+        this.AffectedPoints = points.Select(x => (int)x).ToArray();
         this.point = point;
         this.pointId = (int)point;
-        this.filter = filter;
-
     }
 
     public void SetName(string name) {

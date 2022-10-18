@@ -217,28 +217,28 @@ namespace Lukso{
 
 
             skeleton.filterPoints = new Point[] { Point.HIPS, Point.CHEST, Point.SPINE };
-            
 
 
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12, 13, 14 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, Point.LEFT_HIP, Point.RIGHT_HIP, Point.LEFT_SHOULDER, Point.RIGHT_SHOULDER, Point.LEFT_ELBOW, Point.RIGHT_ELBOW));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_LEFT_SHOULDER));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_RIGHT_SHOULDER));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, new int[] { 23, 25, 29 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, new int[] { 25, 29 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, new int[] { 29 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, Point.LEFT_HIP, Point.LEFT_KNEE, Point.LEFT_HEEL));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, Point.LEFT_KNEE, Point.LEFT_HEEL));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, Point.LEFT_HEEL));
 
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HIP, new int[] { 24, 26, 30 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_KNEE, new int[] { 26, 30 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HIP, Point.RIGHT_HIP, Point.RIGHT_KNEE, Point.RIGHT_HEEL));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_KNEE, Point.RIGHT_KNEE, Point.RIGHT_HEEL));
             //TODO ankle in blender == heel in mediapipe
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HEEL, new int[] { 30 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.SPINE, new int[] { 11, 12, 13, 14 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.CHEST, new int[] { 11, 12, 13, 14 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_SHOULDER, new int[] { 11, 13, 15 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_ELBOW, new int[] { 13, 15 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_WRIST, new int[] { 15 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_SHOULDER, new int[] { 12, 14, 16 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_ELBOW, new int[] { 14, 16 }));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_WRIST, new int[] { 16 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HEEL, Point.RIGHT_HEEL));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.SPINE, Point.LEFT_SHOULDER, Point.RIGHT_SHOULDER, Point.LEFT_ELBOW, Point.RIGHT_ELBOW));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.CHEST, Point.LEFT_SHOULDER, Point.RIGHT_SHOULDER, Point.LEFT_ELBOW, Point.RIGHT_ELBOW));
+
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_SHOULDER, Point.LEFT_SHOULDER, Point.LEFT_ELBOW, Point.LEFT_WRIST));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_ELBOW, Point.LEFT_ELBOW, Point.LEFT_WRIST));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_WRIST, Point.LEFT_WRIST));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_SHOULDER, Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW, Point.RIGHT_WRIST));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_ELBOW, Point.RIGHT_ELBOW, Point.RIGHT_WRIST));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_WRIST, Point.RIGHT_WRIST));//?
             return skeleton;
         }
 
