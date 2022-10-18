@@ -217,97 +217,28 @@ namespace Lukso{
 
 
             skeleton.filterPoints = new Point[] { Point.HIPS, Point.CHEST, Point.SPINE };
-            //  skeleton.ikCalculator.Add(new Rotation1DParameter(Point.RIGHT_KNEE, StretchingGradCalculator.Axis.Z));
+            
 
 
-            // skeleton.ikCalculator.Add(new Rotation3DParameter(Point.LEFT_HIP));
-            //skeleton.ikCalculator.Add(new Rotation1DParameter(Point.LEFT_KNEE,StretchingGradCalculator.Axis.Y));
-            //skeleton.ikCalculator.Add(new Stretching3DParameter(Point.LEFT_KNEE, StretchingGradCalculator.Axis.Z));
-
-
-
-
-
-
-
-            //            skeleton.joints.Add(new JointDefinition(Skeleton.Point.Hips, new int[] {23,24 }, new GeneralFilter(new ScaleFilter(scaleFilter), new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(-10, 10, -10, 10, 0, 359.99f), new ScalingGradCalculator()));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12, 13, 14 }, new GeneralFilter(new PositionFilter(posFilter)), new Position3DGradCalculator(), new Rotation3DGradCalculator(0, 359.99f, 0, 359.99f, 0, 359.99f), new ScalingGradCalculator()));
-
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, new int[] { 23, 24, 11, 12, 13, 14 }));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_LEFT_SHOULDER));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_RIGHT_SHOULDER));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, new int[] { 23, 25, 29 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, new int[] { 25, 29 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, new int[] { 29 }));
 
-
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, new int[] { 23, 25, 29 }, new Rotation3DGradCalculator(-70, 15, -120, 70, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, new int[] { 25, 29 }, new Rotation1DGradCalculator(-5, 140, Rotation1DGradCalculator.Axis.Y), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, new int[] { 29 }, new StretchingGradCalculator(0.7f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
-            //skeleton.joints.Add(new JointDefinition("LEFT_FOOT_INDEX", -31));
-            //skeleton.joints.Add(new JointDefinition("Left toe_end", -31));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HIP, new int[] { 24, 26, 30 }, new Rotation3DGradCalculator(-15, 70, -70, 120, -30, 30), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.PARENT)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_KNEE, new int[] { 26, 30 }, new Rotation1DGradCalculator(-140, 5, Rotation1DGradCalculator.Axis.Y), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HIP, new int[] { 24, 26, 30 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_KNEE, new int[] { 26, 30 }));
             //TODO ankle in blender == heel in mediapipe
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HEEL, new int[] { 30 }, new StretchingGradCalculator(0.7f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
-            //skeleton.joints.Add(new JointDefinition("RIGHT_FOOT_INDEX", -32));
-            //skeleton.joints.Add(new JointDefinition("Right toe_end", -32));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.SPINE, new int[] { 11, 12, 13, 14 }, new Rotation3DGradCalculator(-15, 15, -15, 15, -15, 15), new StretchingGradCalculator(0.9f, 1.3f, StretchingGradCalculator.Axis.Z)));
-            // skeleton.joints.Add(new JointDefinition(Skeleton.Point.Chest, new int[] { 11, 12 }, new Rotation3DGradCalculator(-10, 10, -15, 15, -15, 15), new StretchingGradCalculator(0.9f, 1.5f, StretchingGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.CHEST, new int[] { 11, 12, 13, 14 }, new StretchingGradCalculator(0.5f, 1.5f, StretchingGradCalculator.Axis.PARENT)));
-            //skeleton.joints.Add(new JointDefinition(Skeleton.Point.Left shoulder, new Rotation1DGradCalculator(-15, 15, Rotation1DGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_SHOULDER, new int[] { 11, 13, 15 }, new Rotation3DGradCalculator(-85, 80, -15, 120, -115, 85), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_ELBOW, new int[] { 13, 15 }, new Rotation1DGradCalculator(0, 140, Rotation1DGradCalculator.Axis.Z), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Y)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_WRIST, new int[] { 15 }, new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
-            /*skeleton.joints.Add(new JointDefinition("IndexFinger1_L", -1));
-            skeleton.joints.Add(new JointDefinition("IndexFinger2_L", -1));
-            skeleton.joints.Add(new JointDefinition("IndexFinger3_L", -1));
-            skeleton.joints.Add(new JointDefinition("IndexFinger3_L_end", -1));
-            skeleton.joints.Add(new JointDefinition("LittleFinger1_L", -1));
-            skeleton.joints.Add(new JointDefinition("LittleFinger2_L", -1));
-            skeleton.joints.Add(new JointDefinition("LittleFinger3_L", -1));
-            skeleton.joints.Add(new JointDefinition("LittleFinger3_L_end", -1));
-            skeleton.joints.Add(new JointDefinition("MiddleFinger1_L", -1));
-            skeleton.joints.Add(new JointDefinition("MiddleFinger2_L", -1));
-            skeleton.joints.Add(new JointDefinition("MiddleFinger3_L", -1));
-            skeleton.joints.Add(new JointDefinition("MiddleFinger3_L_end", -1));
-            skeleton.joints.Add(new JointDefinition("RingFinger1_L", -1));
-            skeleton.joints.Add(new JointDefinition("RingFinger2_L", -1));
-            skeleton.joints.Add(new JointDefinition("RingFinger3_L", -1));
-            skeleton.joints.Add(new JointDefinition("RingFinger3_L_end", -1));
-            skeleton.joints.Add(new JointDefinition("Thumb0_L", -1));
-            skeleton.joints.Add(new JointDefinition("Thumb1_L", -1));
-            skeleton.joints.Add(new JointDefinition("Thumb2_L", -1));
-            skeleton.joints.Add(new JointDefinition("Thumb2_L_end", -1));
-            */
-            //skeleton.joints.Add(new JointDefinition(Skeleton.Point.Neck, null, new Rotation3DGradCalculator(-25, 25, -25, 25, -25, 25)));
-            //skeleton.joints.Add(new JointDefinition("Head", -1));
-            //skeleton.joints.Add(new JointDefinition("Eye_L", -1));
-            //skeleton.joints.Add(new JointDefinition("Eye_L_end", -1));
-            //skeleton.joints.Add(new JointDefinition("Eye_R", -1));
-            //skeleton.joints.Add(new JointDefinition("Eye_R_end", -1));
-            //skeleton.joints.Add(new JointDefinition(Skeleton.Point.Right shoulder, new Rotation1DGradCalculator(-15, 15, Rotation1DGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_SHOULDER, new int[] { 12, 14, 16 }, new Rotation3DGradCalculator(-85, 80, -120, 15, -55, 115), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Z)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_ELBOW, new int[] { 14, 16 }, new Rotation1DGradCalculator(-140, 0, Rotation1DGradCalculator.Axis.Z), new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.Y)));
-            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_WRIST, new int[] { 16 }, new StretchingGradCalculator(0.9f, 1.1f, StretchingGradCalculator.Axis.PARENT)));
-            /* skeleton.joints.Add(new JointDefinition("IndexFinger1_R", -1));
-             skeleton.joints.Add(new JointDefinition("IndexFinger2_R", -1));
-             skeleton.joints.Add(new JointDefinition("IndexFinger3_R", -1));
-             skeleton.joints.Add(new JointDefinition("IndexFinger3_R_end", -1));
-             skeleton.joints.Add(new JointDefinition("LittleFinger1_R", -1));
-             skeleton.joints.Add(new JointDefinition("LittleFinger2_R", -1));
-             skeleton.joints.Add(new JointDefinition("LittleFinger3_R", -1));
-             skeleton.joints.Add(new JointDefinition("LittleFinger3_R_end", -1));
-             skeleton.joints.Add(new JointDefinition("MiddleFinger1_R", -1));
-             skeleton.joints.Add(new JointDefinition("MiddleFinger2_R", -1));
-             skeleton.joints.Add(new JointDefinition("MiddleFinger3_R", -1));
-             skeleton.joints.Add(new JointDefinition("MiddleFinger3_R_end", -1));
-             skeleton.joints.Add(new JointDefinition("RingFinger1_R", -1));
-             skeleton.joints.Add(new JointDefinition("RingFinger2_R", -1));
-             skeleton.joints.Add(new JointDefinition("RingFinger3_R", -1));
-             skeleton.joints.Add(new JointDefinition("RingFinger3_R_end", -1));
-             skeleton.joints.Add(new JointDefinition("Thumb0_R", -1));
-             skeleton.joints.Add(new JointDefinition("Thumb1_R", -1));
-             skeleton.joints.Add(new JointDefinition("Thumb2_R", -1));
-             skeleton.joints.Add(new JointDefinition("Thumb2_R_end", -1));
-             skeleton.joints.Add(new JointDefinition("Body", -1));
-            */
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_HEEL, new int[] { 30 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.SPINE, new int[] { 11, 12, 13, 14 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.CHEST, new int[] { 11, 12, 13, 14 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_SHOULDER, new int[] { 11, 13, 15 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_ELBOW, new int[] { 13, 15 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_WRIST, new int[] { 15 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_SHOULDER, new int[] { 12, 14, 16 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_ELBOW, new int[] { 14, 16 }));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.RIGHT_WRIST, new int[] { 16 }));
             return skeleton;
         }
 

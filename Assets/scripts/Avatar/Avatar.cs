@@ -125,8 +125,7 @@ namespace Lukso{
 
         public void InitJoints() {
             joints = new List<Joint>();
-            const int MAX_POINT_COUNT = 33;
-            jointByPointId = new Joint[MAX_POINT_COUNT];
+            jointByPointId = new Joint[Skeleton.POINT_COUNT];
             int idx = 0;
             foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
                 if (idx++ == 0) {
@@ -158,36 +157,6 @@ namespace Lukso{
             if (jointByPointId.All(x => x == null)) {
                 Debug.LogError("Null joints");
             }
-
-            /*
-            foreach (Transform t in avatar.GetComponentsInChildren<Transform>()) {
-
-                if (!transformByName.ContainsKey(Utils.ReplaceSpace(t.gameObject.name))) {
-                    continue;
-                }
-                var joint = transformByName[Utils.ReplaceSpace(t.gameObject.name)];
-
-                var obj = t;
-                while (true) {
-                    obj = obj.parent;
-                    if (obj == null) {
-                        break;
-                    } else {
-                        Joint parentJoint;
-                        if (transformByName.TryGetValue(Utils.ReplaceSpace(obj.gameObject.name), out parentJoint) && parentJoint.definition != null) {// && parentJoint.definition.pointId >= 0) {
-
-                            if (parentJoint.definition.pointId == -28 || parentJoint.definition.pointId == -27) {
-                                continue;
-                            }
-                            joint.parent = parentJoint;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            */
-
 
             initalSkeletonTransform.CopyFrom(this.joints);
         }
