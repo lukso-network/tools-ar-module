@@ -112,12 +112,16 @@ namespace Lukso{
             return GetJointByPoint(Skeleton.Point.SPINE);
         }
         private Joint GetJointByPoint(Skeleton.Point point) {
+
+            if ((int)point >= 0) {
+                return jointByPointId[(int)point];
+            }
             Joint joint;
             if (jointMap.TryGetValue(point, out joint)) {
                 return joint;
             }
 
-            Debug.LogError("Joint is not found:" + point);
+            //Debug.LogError("Joint is not found:" + point);
             return null;
             //return transformByName[skeleton.GetBoneName(point)];
         }
@@ -149,7 +153,7 @@ namespace Lukso{
                     jointMap[j.definition.point] = j;
                 }
 
-                if (j.definition != null && j.definition.pointId > 0) {
+                if (j.definition != null && j.definition.pointId >= 0) {
                     jointByPointId[j.definition.pointId] = j;
                 }
             }

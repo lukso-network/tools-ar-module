@@ -14,13 +14,15 @@ namespace Lukso {
 
             public readonly Point fromPoint;
             public readonly Point toPoint;
+            public bool enableScaling;
 
-            public Bone(Point fromPoint, Point toPoint) {
+            public Bone(Point fromPoint, Point toPoint, bool enableScaling = true) {
                 this.fromPoint = fromPoint;
                 this.toPoint = toPoint;
 
                 this.fromIdx = (int)fromPoint;
                 this.toIdx = (int)toPoint;
+                this.enableScaling = enableScaling;
             }
         }
 
@@ -111,6 +113,7 @@ namespace Lukso {
 
             ScaleBones = scaleBones.Select(x => new Bone(x.Item1, x.Item2)).ToList();
             AttachementBones = attachementBones.Select(x => new Bone(x.Item1, x.Item2)).ToList();
+            //AttachementBones[0].enableScaling = false;
 
 
             return true;

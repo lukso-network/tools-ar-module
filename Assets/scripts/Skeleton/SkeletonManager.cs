@@ -70,19 +70,28 @@ namespace Lukso{
             var children = obj.GetComponentsInChildren<Transform>();
 
             var scalesBones = new (Point, Point)[] {
-               (Point.LEFT_SHOULDER, Point.LEFT_ELBOW ), ( Point.LEFT_ELBOW, Point.LEFT_WRIST ),
-               (Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW ), ( Point.RIGHT_ELBOW, Point.RIGHT_WRIST ),
-               (Point.LEFT_HIP, Point.LEFT_KNEE ), ( Point.LEFT_KNEE, Point.LEFT_HEEL ),
-               (Point. RIGHT_HIP, Point.RIGHT_KNEE ), ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
+               ( Point.LEFT_SHOULDER, Point.LEFT_ELBOW ), 
+               ( Point.LEFT_ELBOW, Point.LEFT_WRIST ),
+               ( Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW ), 
+               ( Point.RIGHT_ELBOW, Point.RIGHT_WRIST ),
+               ( Point.LEFT_HIP, Point.LEFT_KNEE ), 
+               ( Point.LEFT_KNEE, Point.LEFT_HEEL ),
+               ( Point. RIGHT_HIP, Point.RIGHT_KNEE ), 
+               ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
              };
 
             var attachementBones = new (Point, Point)[] {
+              //( Point.NECK, Point.HEAD ),
               ( Point.CENTER_LEFT_SHOULDER, Point.LEFT_SHOULDER ),
-              ( Point.LEFT_SHOULDER, Point.LEFT_ELBOW ), ( Point.LEFT_ELBOW, Point.LEFT_WRIST ),
+              ( Point.LEFT_SHOULDER, Point.LEFT_ELBOW ), 
+              ( Point.LEFT_ELBOW, Point.LEFT_WRIST ),
               ( Point.CENTER_RIGHT_SHOULDER, Point.RIGHT_SHOULDER ),
-              ( Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW ), ( Point.RIGHT_ELBOW, Point.RIGHT_WRIST ),
-              ( Point.LEFT_HIP, Point.LEFT_KNEE ), ( Point.LEFT_KNEE, Point.LEFT_HEEL ),
-              ( Point. RIGHT_HIP, Point.RIGHT_KNEE ), ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
+              ( Point.RIGHT_SHOULDER, Point.RIGHT_ELBOW ), 
+              ( Point.RIGHT_ELBOW, Point.RIGHT_WRIST ),
+              ( Point.LEFT_HIP, Point.LEFT_KNEE ), 
+              ( Point.LEFT_KNEE, Point.LEFT_HEEL ),
+              ( Point. RIGHT_HIP, Point.RIGHT_KNEE ),
+              ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
               };
 
             var skeleton = CreateDefaultSkeletoStructure(skeletonDescription.name);
@@ -222,6 +231,8 @@ namespace Lukso{
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, Point.LEFT_HIP, Point.RIGHT_HIP, Point.LEFT_SHOULDER, Point.RIGHT_SHOULDER, Point.LEFT_ELBOW, Point.RIGHT_ELBOW));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_LEFT_SHOULDER));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_RIGHT_SHOULDER));
+            //skeleton.joints.Add(new JointDefinition(Skeleton.Point.NECK));
+            //skeleton.joints.Add(new JointDefinition(Skeleton.Point.HEAD));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, Point.LEFT_HIP, Point.LEFT_KNEE, Point.LEFT_HEEL));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, Point.LEFT_KNEE, Point.LEFT_HEEL));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HEEL, Point.LEFT_HEEL));

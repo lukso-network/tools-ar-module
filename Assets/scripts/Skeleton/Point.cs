@@ -1,7 +1,7 @@
 namespace Lukso {
     public partial class Skeleton {
 
-        public const int POINT_COUNT = 33;
+        public const int POINT_COUNT = 34;
         public enum Point : int {
             DUMMY = -4,
             CHEST = -3,
@@ -10,6 +10,7 @@ namespace Lukso {
             //REAL_SHOULDER_IN_MODEL
             CENTER_LEFT_SHOULDER = -6,
             CENTER_RIGHT_SHOULDER = -5,
+            NECK = -7,
 
             NOSE = 0,
             LEFT_EYE_INNER = 1,
@@ -44,6 +45,7 @@ namespace Lukso {
             RIGHT_HEEL = 30,
             LEFT_FOOT_INDEX = 31,
             RIGHT_FOOT_INDEX = 32,
+            HEAD = 33,
         }
 
         private readonly Point[] MIRROR_POINTS = {

@@ -238,8 +238,6 @@ namespace Lukso{
             if (settings.enableAttaching) {
                 PullAttachJoints();
             }
-
-
         }
 
         private void InitSkeletonFilters() {
@@ -392,7 +390,7 @@ namespace Lukso{
                 }
 
 
-                toTr = GetJoint(bone.toIdx).transform;
+                toTr = GetJointByPoint(bone.toPoint).transform;
                 if (settings.enableAttaching && bone.fromIdx >= 0) {
                     // set parent position first
                     fromTr.position = allTarget[bone.fromIdx].Value; ;
@@ -404,10 +402,11 @@ namespace Lukso{
                 var rot = Quaternion.FromToRotation(v1, v2);
                 fromTr.rotation = rot * fromTr.rotation;
 
-                if (settings.enableAttaching) {
+                if (settings.enableAttaching && bone.enableScaling ) {
                     var l2 = (fromTr.position - pt).magnitude;
                     var s = fromTr.localScale;
                     s.y *= l2 / size[i];
+
 
                     if (bone.fromIdx >= 0) {
                         jointByPointId[bone.fromIdx].lengthScale = l2 / size[i];

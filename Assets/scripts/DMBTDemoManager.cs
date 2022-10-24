@@ -174,14 +174,15 @@ namespace Lukso {
             return pos3d;
         }
 
-        private float CalculateZShift(Vector3 pointScaler, Vector3[] skeletonPoints, NormalizedLandmarkList faceLandmarks, bool isFlipped, float perspectiveScale) {
+        private float CalculateZShift(Vector3 pointScaler, Vector3[] skeletonPoints, Vector3 [] facePoints, bool isFlipped, float perspectiveScale) {
 
-            if (faceLandmarks == null || faceLandmarks.Landmark.Count == 0) {
+            if (facePoints == null) {
                 return 0;
             }
-            var from = LandmarkToVector(faceLandmarks.Landmark[4]); //nose
+            const int FACE_NOSE_ID = 4;
+            var from = facePoints[FACE_NOSE_ID];
 
-            var to = skeletonPoints[0];
+            var to = skeletonPoints[(int)Point.NOSE];
             //var pos3d = Vector3.Scale(new Vector3(relX, relY, 0), ScaleVector(screenTransform)) + screenTransform.position;
             //pos3d += (screenCamera.transform.position - pos3d).normalized * (-z) * screenTransform.localScale.y * perspectiveScale;
 
@@ -288,10 +289,8 @@ namespace Lukso {
             return scale;
         }
 
-        private Vector3[] UpdateSkeleton(ref Vector3 pointScaler, NormalizedLandmarkList landmarkList, bool flipped) {
+        private Vector3[] UpdateSkeleton(ref Vector3 pointScaler, Vector3 [] points, bool[] presence, bool flipped) {
 
-            var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
-            var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f).ToArray();
 
             var spineSize = GetSpineSize(points);
             var timestamp = Time.realtimeSinceStartup;
@@ -319,7 +318,14 @@ namespace Lukso {
                 points = fPoints;
             }
 
-            var ps = points.Select(x => new Vector3?(x)).ToArray();
+            Vector3?[] res = new Vector3?[POINT_COUNT];
+            for (int i = 0; i < points.Length; ++i) {
+                res[i] = new Vector3?(points[i]);
+            }
+
+            res[(int)Point.HEAD] = CalculateHeadPoint(points, presence);
+            //var ps = points.Select(x => new Vector3?(x)).ToArray();
+            var ps = res;
 
             var t = Time.realtimeSinceStartup;
             skeletonManager.UpdatePose(ps);
@@ -330,6 +336,25 @@ namespace Lukso {
             times[0] = dt;
             times[1] = t - timestamp;
             return points;
+        }
+
+        private Vector3? CalculateHeadPoint(Vector3[] points, bool[] presence) {
+
+            if (!presence[(int)Point.NOSE] || !presence[(int)Point.LEFT_EYE] || !presence[(int)Point.RIGHT_EYE]) {
+                return null;
+            }
+
+            var nose = points[(int)Point.NOSE];
+            var le = points[(int)Point.LEFT_EYE];
+            var re = points[(int)Point.RIGHT_EYE];
+            var l = (le - re).magnitude;
+            var c = (le + re) / 2;
+            var v = c - nose;
+            var noseToHed = Quaternion.AngleAxis(60, le - re) * v;
+
+            var headPos = nose + noseToHed.normalized * l*3;
+            return headPos;
+
         }
 
         private void FilterPointPositions(Vector3[] points, bool[] presence, float timestamp, float filterScale) {
@@ -377,28 +402,24 @@ namespace Lukso {
             prevPoints = (Vector3[])points.Clone();
         }
 
-        private void UpdateFace(Vector3 pointScaler, NormalizedLandmarkList faceLandmarks, bool flipped, Vector3[] skelPoints) {
-            if (faceLandmarks == null) {
+        private void UpdateFace(Vector3 pointScaler, Vector3 [] facePoints, bool flipped, Vector3[] skelPoints) {
+            if (facePoints == null) {
                 return;
             }
 
-            var faceNoseShift = CalculateZShift(pointScaler, skelPoints, faceLandmarks, flipped, GetOrientationCorrectionScale());
+            var faceNoseShift = CalculateZShift(pointScaler, skelPoints, facePoints, flipped, GetOrientationCorrectionScale());
 
-            var points = Enumerable.Range(0, faceLandmarks.Landmark.Count).Select(i => LandmarkToVector(faceLandmarks.Landmark[i])).ToArray();
-            if (points.Length == 0) {
-                return;
-            }
-
-            TransformPoints(pointScaler, points, flipped, faceNoseShift, GetOrientationCorrectionScale());
+            TransformPoints(pointScaler, facePoints, flipped, faceNoseShift, GetOrientationCorrectionScale());
 
 
-            faceMesh.vertices = points;
+            faceMesh.vertices = facePoints;
 
-            var nose = points[4];
-            var t = points[10];
-            var b = points[152];
-            var r = points[33];
-            var l = points[263];
+            //TODO
+            var nose = facePoints[4];
+            var t = facePoints[10];
+            var b = facePoints[152];
+            var r = facePoints[33];
+            var l = facePoints[263];
 
 
             var center = (t + b + r + l) / 4;
@@ -466,7 +487,11 @@ namespace Lukso {
 
             try {
 
-                var skelPoints = UpdateSkeleton(ref pointScaler, landmarkList, flipped);
+                var points = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => LandmarkToVector(landmarkList.Landmark[i])).ToArray();
+                var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f).ToArray();
+                var facePoints = faceLandmarks == null ? null : Enumerable.Range(0, faceLandmarks.Landmark.Count).Select(i => LandmarkToVector(faceLandmarks.Landmark[i])).ToArray();
+
+                var skelPoints = UpdateSkeleton(ref pointScaler, points, presence, flipped);
                 cachedSkeleton = skelPoints;
                 t2 = Time.realtimeSinceStartup;
 
@@ -475,7 +500,7 @@ namespace Lukso {
                 }
 
                 if (faceModified || skelModified) {
-                    UpdateFace(pointScaler, faceLandmarks, flipped, skelPoints);
+                    UpdateFace(pointScaler, facePoints, flipped, skelPoints);
                 }
                 t3 = Time.realtimeSinceStartup;
 

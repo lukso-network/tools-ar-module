@@ -287,8 +287,8 @@ namespace Mediapipe.Unity.SkeletonTracking {
             if (timestamp < MAX_TIMESTAMP && (skeletonTrackingGraph.lastSkeletonLandmarkds == null || skeletonTrackingGraph.lastSkeletonLandmarkds.timestamp < timestamp)) {
                 skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp);
             } else {
-                Debug.Log("Add sckeleton results error!:" + timestamp + " " + (value != null));
-                skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp + 30);
+                Debug.LogError("Add sckeleton results error!:" + timestamp + " " + (value != null));
+                skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, 0);
             }
         }
 
