@@ -59,6 +59,7 @@ namespace Lukso{
 
         private Vector3?[] ikTarget;
         private Vector3?[] allTarget;
+        private Quaternion headRotation = Quaternion.identity;
 
         public bool Destroyed { get; set; }
 

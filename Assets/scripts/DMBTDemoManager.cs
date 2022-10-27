@@ -233,6 +233,15 @@ namespace Lukso {
             return points;
         }
 
+        private (Vector3, Vector3, Vector3, Vector3, Vector3) GetFaceMainPoints(Vector3 []points){
+            var nose = points[4];
+            var t = points[10];
+            var b = points[152];
+            var r = points[33];
+            var l = points[263];
+            return (nose, l, r, t, b);
+        }
+
         private void InitFace() {
             face = Instantiate(facePrefab, transform);
             face.SetActive(false);
@@ -242,13 +251,9 @@ namespace Lukso {
 
             var points = faceMesh.vertices;
 
-            var t = points[10];
-            var b = points[152];
-            var r = points[33];
-            var l = points[263];
+            var (nose, l, r, t, b) = GetFaceMainPoints(points);
             defaultFaceSize = ((t - b).magnitude * (l - r).magnitude);
 
-            var nose = points[4];
             var c0 = (r + l) / 2;
             var d1 = nose - c0;
             var d2 = (l - r);
@@ -289,12 +294,11 @@ namespace Lukso {
             return scale;
         }
 
-        private Vector3[] UpdateSkeleton(ref Vector3 pointScaler, Vector3 [] points, bool[] presence, bool flipped) {
+        private Vector3[] UpdateSkeleton(ref Vector3 pointScaler, Vector3 [] points, bool[] presence, Vector3[] facePoints, bool flipped) {
 
 
             var spineSize = GetSpineSize(points);
             var timestamp = Time.realtimeSinceStartup;
-
 
             //filtering depends on size of objecs
             float filterScale = 1.15f / spineSize;
@@ -309,7 +313,7 @@ namespace Lukso {
 
             //TODO make it faster
             if (flipped) {
-                //TODOLK
+                //TODO
                 var fPoints = new Vector3[points.Length];
                 int maxSize = Math.Min(points.Length, FLIP_POINTS.Length);
                 for (int i = 0; i < maxSize; ++i) {
@@ -318,43 +322,44 @@ namespace Lukso {
                 points = fPoints;
             }
 
-            Vector3?[] res = new Vector3?[POINT_COUNT];
-            for (int i = 0; i < points.Length; ++i) {
-                res[i] = new Vector3?(points[i]);
-            }
-
-            res[(int)Point.HEAD] = CalculateHeadPoint(points, presence);
-            //var ps = points.Select(x => new Vector3?(x)).ToArray();
-            var ps = res;
-
-            var t = Time.realtimeSinceStartup;
-            skeletonManager.UpdatePose(ps);
-            //camera3dController.SetCameraScale(1/skeletonManager.GetMainAvatarScale());
-
-            var dt = Time.realtimeSinceStartup - t;
-
-            times[0] = dt;
-            times[1] = t - timestamp;
             return points;
         }
 
-        private Vector3? CalculateHeadPoint(Vector3[] points, bool[] presence) {
-
-            if (!presence[(int)Point.NOSE] || !presence[(int)Point.LEFT_EYE] || !presence[(int)Point.RIGHT_EYE]) {
+        private Quaternion? CalculateHeadPoint(Vector3[] points, bool[] presence, Vector3 [] facePoints, bool flipped) {
+                
+            if (facePoints == null) {
                 return null;
             }
 
-            var nose = points[(int)Point.NOSE];
-            var le = points[(int)Point.LEFT_EYE];
-            var re = points[(int)Point.RIGHT_EYE];
-            var l = (le - re).magnitude;
-            var c = (le + re) / 2;
-            var v = c - nose;
-            var noseToHed = Quaternion.AngleAxis(60, le - re) * v;
+            var (faceNose, l, r, t, b) = GetFaceMainPoints(facePoints);
 
-            var headPos = nose + noseToHed.normalized * l*3;
-            return headPos;
+            if (!flipped) {
+                (l, r) = (r, l);
+            }
 
+            // As we see mirrored image we need to transform to mirrored coordinates (or we need to recalculate quaternion from global to local coordinates relative to neck
+            l.x = -l.x;
+            r.x = -r.x;
+            t.x = -t.x;
+            b.x = -b.x;
+
+            //swing z depth scale
+            var s = -2;
+            l.z *= s;
+            r.z *= s;
+            t.z *= s;
+            b.z *= s;
+            
+
+            
+
+            var dirZ = (t - b).normalized;
+            var q1 = Quaternion.FromToRotation(Vector3.up, dirZ);
+
+            var dirXTransformed = q1 * (Vector3.right);
+            var dirX = (l - r).normalized;
+            var q2 = Quaternion.FromToRotation(dirXTransformed, dirX); // mirrored transofrmation
+            return q2*q1;
         }
 
         private void FilterPointPositions(Vector3[] points, bool[] presence, float timestamp, float filterScale) {
@@ -414,13 +419,7 @@ namespace Lukso {
 
             faceMesh.vertices = facePoints;
 
-            //TODO
-            var nose = facePoints[4];
-            var t = facePoints[10];
-            var b = facePoints[152];
-            var r = facePoints[33];
-            var l = facePoints[263];
-
+            var (nose, l, r, t, b) = GetFaceMainPoints(facePoints);
 
             var center = (t + b + r + l) / 4;
             var scale = Mathf.Sqrt(((t - b).magnitude * (l - r).magnitude) / defaultFaceSize);
@@ -470,7 +469,7 @@ namespace Lukso {
                 face.SetActive(false);
 
                 counter.UpdateFps();
-                display.LogValue($"FPS0:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", times[0], times[1], 0, 0, 0);
+                display.LogValue($"FPS0:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", 0, 0, 0, 0, 0);
                 return;
             }
 
@@ -483,6 +482,7 @@ namespace Lukso {
             float t2 = 0;
             float t3 = 0;
             float t4 = 0;
+            float t5 = 0;
             var t1 = Time.realtimeSinceStartup;
 
             try {
@@ -491,7 +491,7 @@ namespace Lukso {
                 var presence = Enumerable.Range(0, landmarkList.Landmark.Count).Select(i => landmarkList.Landmark[i].Presence > 0.3f).ToArray();
                 var facePoints = faceLandmarks == null ? null : Enumerable.Range(0, faceLandmarks.Landmark.Count).Select(i => LandmarkToVector(faceLandmarks.Landmark[i])).ToArray();
 
-                var skelPoints = UpdateSkeleton(ref pointScaler, points, presence, flipped);
+                var skelPoints = UpdateSkeleton(ref pointScaler, points, presence, facePoints, flipped);
                 cachedSkeleton = skelPoints;
                 t2 = Time.realtimeSinceStartup;
 
@@ -502,13 +502,20 @@ namespace Lukso {
                 if (faceModified || skelModified) {
                     UpdateFace(pointScaler, facePoints, flipped, skelPoints);
                 }
+
                 t3 = Time.realtimeSinceStartup;
+
+                var headRotation = CalculateHeadPoint(skelPoints, presence, facePoints, flipped);
+                var ps = skelPoints.Select(x => new Vector3?(x)).ToArray();
+                skeletonManager.UpdatePose(ps, headRotation);
+
+                t4 = Time.realtimeSinceStartup;
 
                 if (faceModified || skelModified) {
                     newFaceEvent(faceLandmarks, lastFrame, flipped);
                 }
 
-                t4 = Time.realtimeSinceStartup;
+                t5 = Time.realtimeSinceStartup;
 
 
                 //  Debug.Log("light:" + (t4 - t3));
@@ -522,7 +529,7 @@ namespace Lukso {
                 newPoseEvent(true);
             }
             var fps = counter.UpdateFps();
-            display.LogValue($"FPS:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", times[0], times[1], t1 - t, t2 - t1, t3 - t2, t4 - t3, Time.realtimeSinceStartup - t);
+            display.LogValue($"FPS:{counter.GetFps():0.0} {counterSkel.GetFps():0.0}", t1 - t, t2 - t1, t3 - t2, t4 - t3, t5-t4, Time.realtimeSinceStartup - t);
             //Debug.Log("!!!" + xyFilterParams.movementFactor);
         }
 

@@ -231,7 +231,7 @@ namespace Lukso{
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.HIPS, Point.LEFT_HIP, Point.RIGHT_HIP, Point.LEFT_SHOULDER, Point.RIGHT_SHOULDER, Point.LEFT_ELBOW, Point.RIGHT_ELBOW));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_LEFT_SHOULDER));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.CENTER_RIGHT_SHOULDER));
-            //skeleton.joints.Add(new JointDefinition(Skeleton.Point.NECK));
+            skeleton.joints.Add(new JointDefinition(Skeleton.Point.NECK));
             //skeleton.joints.Add(new JointDefinition(Skeleton.Point.HEAD));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_HIP, Point.LEFT_HIP, Point.LEFT_KNEE, Point.LEFT_HEEL));
             skeleton.joints.Add(new JointDefinition(Skeleton.Point.LEFT_KNEE, Point.LEFT_KNEE, Point.LEFT_HEEL));
@@ -253,11 +253,11 @@ namespace Lukso{
             return skeleton;
         }
 
-        internal void UpdatePose(Vector3?[] ps) {
+        internal void UpdatePose(Vector3?[] ps, Quaternion? headRotation) {
             this.RawSkeletonPoints = ps;
 
             foreach (var controller in contollerAvatars.Values) {
-                controller.SetIkTarget(ps);
+                controller.SetIkTarget(ps, headRotation);
                 controller.Update(ikSettings.gradientCalcStep, ikSettings.gradientMoveStep, ikSettings.stepCount);
             }
 

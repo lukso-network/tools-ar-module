@@ -238,6 +238,17 @@ namespace Lukso{
             if (settings.enableAttaching) {
                 PullAttachJoints();
             }
+
+            RotateHead();
+        }
+
+        private void RotateHead() {
+            var neck = GetJointByPoint(Point.NECK);
+            if (neck == null) {
+                return;
+            }
+            
+            neck.transform.localRotation *= headRotation;
         }
 
         private void InitSkeletonFilters() {
@@ -676,10 +687,13 @@ namespace Lukso{
         }
 
 
-        public void SetIkTarget(Vector3?[] target) {
+        public void SetIkTarget(Vector3?[] target, Quaternion? headRotation) {
             //this.ikTarget = target.Where((p, i) => skeleton.HasKeyPoint(i)).ToArray();
             this.ikTarget = skeleton.FilterKeyPoints(target);
             this.allTarget = target;
+            if (headRotation.HasValue) {
+                this.headRotation = headRotation.Value;
+            }
         }
 
         private int GetIndexInSourceList(GameObject obj) {

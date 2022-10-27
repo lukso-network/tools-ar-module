@@ -319,7 +319,7 @@
             {"id":-6, "type":"CENTER_LEFT_SHOULDER", 	"node":"j_bip_l_shoulder.*"},
 			{"id":-5, "type":"CENTER_RIGHT_SHOULDER", 	"node":"j_bip_r_shoulder.*"},
 			{"id":-7, "type":"NECK", 	                "node":"j_bip_c_neck.*"},
-			{"id":-8, "type":"HEAD", 	                "node":"j_bip_c_head.*"},
+			
 			{"id":0, "type":"NOSE", 					 "node":""},
 			{"id":1, "type":"LEFT_EYE_INNER", 			"node":""},
 			{"id":2, "type":"LEFT_EYE", 				"node":""},
