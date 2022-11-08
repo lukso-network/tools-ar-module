@@ -21,6 +21,8 @@ public class AvatarManager : MonoBehaviour {
     public Vector3 skinScaler = Vector3.one;
     public bool ShowTransparentBody;
     public string avatarLayerMask;
+    public Shader vrmShader;
+    public bool replaceVRMMaterial;
 
     [Range(-0.01f, 0.01f)]
     public float transparentBodyShrinkAmount = 0.04f;
@@ -35,8 +37,6 @@ public class AvatarManager : MonoBehaviour {
     void Start() {
 
         posManager.newPoseEvent += UpdateSkeleton;
-
-        //  LoadNextTestModel();
 
     }
 
@@ -71,6 +71,53 @@ public class AvatarManager : MonoBehaviour {
         }
     }
 
+    private void SetKeyword(Material material, bool value, string keyword) {
+        if (value) {
+            material.EnableKeyword(keyword);
+        } else {
+            material.DisableKeyword(keyword);
+        }
+    }
+
+    private void ChangeMaterial(Material material) {
+
+        int srcBlend = material.GetInt("_SrcBlend");
+        int dstBlend = material.GetInt("_DstBlend");
+        int zWrite = material.GetInt("_ZWrite");
+        float cullMode = material.GetFloat("_CullMode");
+
+        var enabledKeywords = material.shaderKeywords.Select(x => (x, material.IsKeywordEnabled(x))).ToList();
+
+      //  bool alphaOn = material.IsKeywordEnabled("_ALPHATEST_ON");
+     //   bool alphaBlendOn = material.IsKeywordEnabled("_ALPHABLEND_ON");
+      //  bool alphaPreMult = material.IsKeywordEnabled("_ALPHAPREMULTIPLY_ON");
+        var rq = material.renderQueue;
+
+        material.shader = vrmShader;
+        material.SetInt("_SrcBlend", srcBlend);
+        material.SetInt("_DstBlend", dstBlend);
+        material.SetInt("_ZWrite", zWrite);
+        material.SetFloat("_CullMode", cullMode);
+       // SetKeyword(material, alphaOn, "_ALPHATEST_ON");
+      //  SetKeyword(material, alphaBlendOn, "_ALPHABLEND_ON");
+      //  SetKeyword(material, alphaPreMult, "_ALPHAPREMULTIPLY_ON");
+
+
+        enabledKeywords.ForEach(x=> SetKeyword(material, x.Item2, x.Item1));
+
+        material.renderQueue = rq;
+
+        /*
+        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        material.SetInt("_ZWrite", 0);
+        material.DisableKeyword("_ALPHATEST_ON");
+        material.DisableKeyword("_ALPHABLEND_ON");
+        material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+        material.renderQueue = 3000;
+        */
+    }
+
     private async void LoadVrm(string url, bool replaceModel) {
         var loaded = await VrmUtility.LoadAsync(url);
         loaded.ShowMeshes();
@@ -79,7 +126,25 @@ public class AvatarManager : MonoBehaviour {
 
 
         if (model != null) {
+            if (replaceVRMMaterial) {
+                if (vrmShader == null) {
+                    vrmShader = Shader.Find("Standard");
+                }
 
+                var renderers = model.GetComponentsInChildren<Renderer>();
+                foreach (var r in renderers) {
+                    foreach (var m in r.materials) {
+                        ChangeMaterial(m);
+                    }
+                    
+                    if (r is SkinnedMeshRenderer) {
+                        ((SkinnedMeshRenderer)r).sharedMesh.RecalculateBounds();
+                        ((SkinnedMeshRenderer)r).sharedMesh.RecalculateNormals();
+                        ((SkinnedMeshRenderer)r).sharedMesh.RecalculateTangents();
+                        //((SkinnedMeshRenderer)r).enabled = false;
+                    }
+                }
+            }
             if (replaceModel) {
                 RemoveAllModels(false);
             }
