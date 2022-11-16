@@ -38,7 +38,7 @@ namespace Lukso{
             supportedSkeletons = SkeletonSet.CreateFromJSON(jsonDescr);
         }
 
-        public Avatar GetOrCreateControllerAvatar(GameObject obj) {
+        public Avatar GetOrCreateControllerAvatar(GameObject obj, bool unique_avatar = false) {
             // find skeleton
             // check if this skeleton is already exist
             // add new avatar or link with existed
@@ -49,24 +49,26 @@ namespace Lukso{
                 return null;
             }
 
-            if (contollerAvatars.ContainsKey(skeletonDescription.name)) {
-                return contollerAvatars[skeletonDescription.name];
+
+            var name = unique_avatar ? $"{skeletonDescription.name}_{Time.realtimeSinceStartup}" : $"{skeletonDescription.name}";
+            if (contollerAvatars.ContainsKey(name)) {
+                return contollerAvatars[name];
             }
 
             obj = Instantiate(obj, transform);
-            obj.name = skeletonDescription.name + ": " + obj.name;
+            obj.name = name + ": " + obj.name;
             obj.SetActive(false);
-            var skeleton = InitNewSkeleton(skeletonDescription, obj);
+            var skeleton = InitNewSkeleton(skeletonDescription, obj, name);
             var controller = new Avatar(obj, skeleton);
             controller.settings = ikSettings;
             controller.SetIkSource();
 
 
-            contollerAvatars[skeletonDescription.name] = controller;
+            contollerAvatars[name] = controller;
             return controller;
         }
 
-        private Skeleton InitNewSkeleton(SkeletonSet.Skeleton skeletonDescription, GameObject obj) {
+        private Skeleton InitNewSkeleton(SkeletonSet.Skeleton skeletonDescription, GameObject obj, string skeletonName) {
             var children = obj.GetComponentsInChildren<Transform>();
 
             var scalesBones = new (Point, Point)[] {
@@ -94,7 +96,7 @@ namespace Lukso{
               ( Point.RIGHT_KNEE, Point.RIGHT_HEEL )
               };
 
-            var skeleton = CreateDefaultSkeletoStructure(skeletonDescription.name);
+            var skeleton = CreateDefaultSkeletoStructure(skeletonName);
             skeleton.Init(obj, scalesBones, attachementBones, skeletonDescription);
             return skeleton;
         }

@@ -148,7 +148,7 @@ public class AvatarManager : MonoBehaviour {
             if (replaceModel) {
                 RemoveAllModels(false);
             }
-            AddModel(model);
+            AddModel(model, true);
         }
 
     }
@@ -214,13 +214,13 @@ public class AvatarManager : MonoBehaviour {
         }
     }
 
-    public void AddModel(GameObject obj) {
+    public void AddModel(GameObject obj, bool unique_avatar = false) {
         var root = new GameObject("LinearRoot:" + obj.name);
         root.transform.parent = modelRoot.transform;
 
         obj.transform.parent = root.transform;
 
-        var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj);
+        var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj, unique_avatar);
         if (controllerAvatar == null) {
             GameObject.Destroy(obj);
             return;
