@@ -178,7 +178,8 @@ namespace Mediapipe.Unity {
             if (Time.frameCount == prevRenderFrame) {
                 return;
             }
-            screen.ReadSync(textureFrame);
+
+            screen.textureFrame = textureFrame;
             prevRenderFrame = Time.frameCount;
         }
 

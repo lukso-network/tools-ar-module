@@ -70,7 +70,7 @@ namespace Mediapipe.Unity
 
     // TODO: determine at runtime
     public GpuBufferFormat gpuBufferformat => GpuBufferFormat.kBGRA32;
-
+        public bool isOnScreen = false;
     /// <summary>
     ///   The event that will be invoked when the TextureFrame is released.
     /// </summary>
@@ -87,6 +87,7 @@ namespace Mediapipe.Unity
       OnRelease = new ReleaseEvent();
       _instanceId = Guid.NewGuid();
       RegisterInstance(this);
+
     }
 
     public Texture2D Texture => _texture;
