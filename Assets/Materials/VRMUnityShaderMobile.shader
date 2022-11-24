@@ -1,4 +1,4 @@
-Shader "Custom/temp2"
+Shader "VRMShaderMobile"
 {
     Properties
     {

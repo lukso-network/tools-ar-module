@@ -93,6 +93,7 @@ namespace Mediapipe.Unity {
             //textureFramePool.Reset();
 
             graphRunner.onDataProcessed -= RenderCurrentFrame;
+            graphRunner.onEmptyData -= RenderDefaultImage;
             if (_coroutine != null) {
                 StopCoroutine(_coroutine);
             }
@@ -129,6 +130,7 @@ namespace Mediapipe.Unity {
             }
 
             graphRunner.onDataProcessed += RenderCurrentFrame;
+            graphRunner.onEmptyData += RenderDefaultImage;
             graphRunner.StartRun(imageSource);
             OnStartRun();
             //  Debug.unityLogger.logEnabled = false;
@@ -181,6 +183,11 @@ namespace Mediapipe.Unity {
 
             screen.textureFrame = textureFrame;
             prevRenderFrame = Time.frameCount;
+        }
+
+        protected virtual void RenderDefaultImage(Texture texture) {
+            //screen.textureFrame = null;
+            screen.texture = ImageSourceProvider.ImageSource.GetCurrentTexture();
         }
 
         protected abstract void OnStartRun();

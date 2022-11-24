@@ -4984,7 +4984,7 @@ MonoBehaviour:
   skinScaler: {x: 1, y: 1, z: 1}
   ShowTransparentBody: 0
   avatarLayerMask: cloth
-  vrmShader: {fileID: 4800000, guid: 2d9d1646c6b5cbb46b6d70025b472c4d, type: 3}
+  vrmShader: {fileID: 4800000, guid: a60324df5d448f746b8dd4b71caeaa6c, type: 3}
   replaceVRMMaterial: 1
   transparentBodyShrinkAmount: 0.0001
 --- !u!1 &561833429

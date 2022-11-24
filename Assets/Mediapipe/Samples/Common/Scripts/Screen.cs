@@ -14,6 +14,8 @@ namespace Mediapipe.Unity {
         private ImageSource _imageSource;
         private TextureFrame _textureFrame;
 
+        private Texture webCamTexture;
+
         public Texture texture {
             set => _screen.texture = value;
         }
@@ -25,8 +27,10 @@ namespace Mediapipe.Unity {
                     _textureFrame.isOnScreen = false;
                 }
                 _textureFrame = value;
-                _textureFrame.isOnScreen = true;
-                texture = value.Texture;
+                if (_textureFrame != null) {
+                    _textureFrame.isOnScreen = true;
+                    texture = value.Texture;
+                }
             }
         }
 
