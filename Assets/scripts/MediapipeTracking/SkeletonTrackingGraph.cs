@@ -35,9 +35,11 @@ namespace Mediapipe.Unity.SkeletonTracking {
         private LandmarkData lastFaceLandmarkds = null;
         private TextureFrame lastTextureTemp;
 
+
         public int textureLifetime = 200000;
 
         public override event OnDataProcessed onDataProcessed;
+        public override event OnEmptyData onEmptyData;
 
 
         public ModelComplexity modelComplexity = ModelComplexity.Full;
@@ -60,6 +62,8 @@ namespace Mediapipe.Unity.SkeletonTracking {
         private object syncObject = new object();
         //TODO volotile
         private long lastRenderedTimestamp;
+
+        private const float EMPTY_RESULT_TIMEOUT = 500; //milliseconds
 
         //private const string poseLandmarksStream = "pose_landmarks";
         // private const string poseDetectionStream = "pose_detection";
@@ -122,7 +126,7 @@ namespace Mediapipe.Unity.SkeletonTracking {
                 lock (syncObject) {
                     try {
                         // delete outdated textures
-                        var toDelete = sentTextures.Keys.Where(k => k < Math.Max(lastRenderedTimestamp, ts - textureLifetime)).ToList();
+                        var toDelete = sentTextures.Keys.Where(k => k < Math.Max(lastRenderedTimestamp, ts - textureLifetime) && !sentTextures[k].isOnScreen).ToList();
 
                         //Debug.Log("************ToDelete:" + toDelete.Count + " of " + sentTextures.Count);
                         foreach (var key in toDelete) {
@@ -181,6 +185,7 @@ namespace Mediapipe.Unity.SkeletonTracking {
 
             var mirrored = imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing;
 
+            
             var ts = lastSkeletonLandmarkds?.timestamp ?? 0;
             if (ts > 0) {
                 lastRenderedTimestamp = ts;
@@ -188,6 +193,10 @@ namespace Mediapipe.Unity.SkeletonTracking {
 
             if (lastSkeletonLandmarkds?.landmarks == null) {
                 skeletonManager.OnNewPose(screenPlane, null, null, mirrored, null);
+                //Debug.Log("***" + (GetCurrentTimestampMicrosec() - lastRenderedTimestamp));
+                if (onEmptyData != null && (GetCurrentTimestampMicrosec() - lastRenderedTimestamp) / 1000 > EMPTY_RESULT_TIMEOUT) {
+                    onEmptyData(imageSource.GetCurrentTexture());
+                }
                 return;
             }
 
@@ -196,8 +205,12 @@ namespace Mediapipe.Unity.SkeletonTracking {
             if (ts != 0) {
                 lock (syncObject) {
                     if (!sentTextures.TryGetValue(ts, out texture)) {
-                        if (!sentTextures.TryGetValue(ts + 1, out texture))
+                        if (!sentTextures.TryGetValue(ts + 1, out texture)) {
+                            if (onEmptyData != null && (GetCurrentTimestampMicrosec() - lastRenderedTimestamp) / 1000 > EMPTY_RESULT_TIMEOUT) {
+                                onEmptyData(imageSource.GetCurrentTexture());
+                            }
                             return;
+                        }
                         //TODO REMOVE
                         texture = lastTextureTemp;
 
@@ -263,14 +276,14 @@ namespace Mediapipe.Unity.SkeletonTracking {
             return InvokeIfGraphRunnerFound<SkeletonTrackingGraph>(graphPtr, packetPtr, (skeletonTrackingGraph, ptr) => {
                 using (var packet = new NormalizedLandmarkListPacket(ptr, false)) {
                     if (skeletonTrackingGraph._skeletonLandmarksStream.TryGetPacketValue(packet, out var value, skeletonTrackingGraph.timeoutMicrosec)) {
-                        if (ScaleTexture.instance.mode == ScaleTexture.Mode.SCALE_SKELETON && value != null) {
+                     /*   if (ScaleTexture.instance.mode == ScaleTexture.Mode.SCALE_SKELETON && value != null) {
                             (Vector2 scale, Vector2 offset) tr = (ScaleTexture.instance.scale, ScaleTexture.instance.offset);
                             foreach (var v in value.Landmark) {
                                 v.X = (v.X - 0.5f) / tr.scale[0] + 0.5f - tr.offset[0];
                                 v.Y = (v.Y - 0.5f) / tr.scale[0] + 0.5f + tr.offset[1];
                                 v.Z = v.Z / tr.scale[0];
                             }
-                        }
+                        }*/
                         skeletonTrackingGraph.OnSkeletonLandmarksOutput.Invoke(value);
                         using (var timestamp = packet.Timestamp()) {
 
@@ -285,7 +298,8 @@ namespace Mediapipe.Unity.SkeletonTracking {
         private static void AddSkeletonResult(SkeletonTrackingGraph skeletonTrackingGraph, NormalizedLandmarkList value, long timestamp) {
 
             if (timestamp < MAX_TIMESTAMP && (skeletonTrackingGraph.lastSkeletonLandmarkds == null || skeletonTrackingGraph.lastSkeletonLandmarkds.timestamp < timestamp)) {
-                skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, timestamp);
+                //Debug.Log("Add sckeleton results :" + timestamp + " " + (value != null));
+                skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, (value != null) ? timestamp : 0);
             } else {
                 Debug.LogError("Add sckeleton results error!:" + timestamp + " " + (value != null));
                 skeletonTrackingGraph.lastSkeletonLandmarkds = new LandmarkData(value, 0);
