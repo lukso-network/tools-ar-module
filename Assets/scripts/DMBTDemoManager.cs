@@ -245,7 +245,9 @@ namespace Lukso {
         private void InitFace() {
             face = Instantiate(facePrefab, transform);
             face.SetActive(false);
-            face.AddComponent<TransparentMaterialRenderer>();
+            var tr = face.AddComponent<TransparentMaterialRenderer>();
+            tr.Init();
+
             faceMesh = face.GetComponent<MeshFilter>().mesh;
             faceMesh.RecalculateNormals();
 

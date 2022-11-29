@@ -12,19 +12,28 @@ namespace Lukso {
         private Material oldMaterial;
         private Material newMaterial;
 
-        // Use this for initialization
-        void Start() {
-
-            avatarManager = FindObjectOfType<AvatarManager>();
-            cam3d = FindObjectOfType<Camera3DController>();
-
+        public void Init() {
             skelGraph = FindObjectOfType<SkeletonTrackingGraph>();
             skelGraph.newFrameRendered += OnNewFrameRendered;
 
-            renderer = transform.parent.GetComponentInChildren<Renderer>();
+
+            avatarManager = FindObjectOfType<AvatarManager>();
+            cam3d = FindObjectOfType<Camera3DController>();
+               
+
+            //sometime Unity does not find renderer in child just after attach
+            renderer = transform.parent.GetComponentInChildren<Renderer>() ?? transform.GetComponent<Renderer>();
             oldMaterial = renderer.material;
             newMaterial = FindObjectOfType<AvatarManager>().transparentMaterial;
             renderer.material = newMaterial;
+        }
+
+        // Use this for initialization
+        void Start() {
+            if (skelGraph == null) {
+                Init();
+            }
+
         }
 
         private void OnDestroy() {
@@ -38,6 +47,7 @@ namespace Lukso {
                 renderer.material = oldMaterial;
                 return;
             }
+
 
             //var imageSource = ImageSourceProvider.ImageSource;
             //var texture = imageSource.GetCurrentTexture();
