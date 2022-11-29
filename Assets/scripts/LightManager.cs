@@ -11,6 +11,9 @@ namespace Assets.scripts {
         [Range(0, 1)]
         public float calculationInterval = 0.5f;
 
+        public Vector3 faceNormalScaler = new Vector3(1, 0.3f, 2f);
+        public Vector3 lightDirectionOverrider;
+
         private Vector3[] faceNormals;
         private Vector3[] faceVertices;
         private float[,][] faceNormalsProduct;
@@ -43,7 +46,14 @@ namespace Assets.scripts {
             dmtManager = FindObjectOfType<DMBTDemoManager>();
             dmtManager.newFaceEvent += CalculateLight;
 
-            faceNormals = dmtManager.FaceMesh.normals;
+            faceNormals = (Vector3[])dmtManager.FaceMesh.normals.Clone();
+            for(int i = 0; i < faceNormals.Length; ++i) {
+                var n = faceNormals[i];
+                n.x *= faceNormalScaler.x;
+                n.y *= faceNormalScaler.y;
+                n.z *= faceNormalScaler.z;
+                faceNormals[i] = n.normalized;
+            }
             faceVertices = dmtManager.FaceMesh.vertices;
             PrepareFaceNormals(faceNormals);
 
@@ -106,8 +116,13 @@ namespace Assets.scripts {
             lastCaclulationTime = Time.realtimeSinceStartup;
 
             Vector4 res = SolveLightEquation(faceLandmarks, texture, flipped);
+            
             RenderSettings.ambientLight = Vector4.one * Mathf.Clamp(res.w, 0, 0.3f);
-            var dir = new Vector3(res.x, res.y, res.z).normalized;
+
+            var dir = new Vector3(res.x, res.y, res.z);
+            dir += lightDirectionOverrider;
+            
+            dir = dir.normalized;
 
             //dir = new Vector3(0, 0, -1);
 
