@@ -38,7 +38,9 @@ namespace Assets.scripts {
             new float[,] { { 0, 1, 0 }, { 1, 0, 0 } }
         };
 
-
+        public void OnValidate() {
+            InitFace();
+        }
 
         // Use this for initialization
         void Start() {
@@ -46,8 +48,15 @@ namespace Assets.scripts {
             dmtManager = FindObjectOfType<DMBTDemoManager>();
             dmtManager.newFaceEvent += CalculateLight;
 
+            InitFace();
+
+            lightDir = lightSource.transform.rotation * Vector3.forward;
+
+        }
+
+        private void InitFace(){
             faceNormals = (Vector3[])dmtManager.FaceMesh.normals.Clone();
-            for(int i = 0; i < faceNormals.Length; ++i) {
+            for (int i = 0; i < faceNormals.Length; ++i) {
                 var n = faceNormals[i];
                 n.x *= faceNormalScaler.x;
                 n.y *= faceNormalScaler.y;
@@ -56,9 +65,6 @@ namespace Assets.scripts {
             }
             faceVertices = dmtManager.FaceMesh.vertices;
             PrepareFaceNormals(faceNormals);
-
-            lightDir = lightSource.transform.rotation * Vector3.forward;
-
         }
 
 

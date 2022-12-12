@@ -8,6 +8,7 @@ using VRM;
 using System.Reflection;
 using Lukso;
 using Avatar = Lukso.Avatar;
+using System.Collections;
 
 public class AvatarManager : MonoBehaviour {
     private List<Avatar> avatars = new List<Avatar>();
@@ -149,8 +150,13 @@ public class AvatarManager : MonoBehaviour {
                 RemoveAllModels(false);
             }
             AddModel(model, true);
+            AddFaceController(model);
         }
 
+    }
+
+    private void AddFaceController(GameObject model) {
+        var controller = model.AddComponent<FaceAnimationController>();
     }
 
     public void RemoveAllModels(bool clearUnused) {

@@ -47,7 +47,7 @@ namespace VRM
                 {
                     if (!m_blendShapeSetterMap.ContainsKey(binding))
                     {
-                        var _target = root.Find(binding.RelativePath);
+                        var _target = root.transform.parent.Find(binding.RelativePath);
                         SkinnedMeshRenderer target = null;
                         if (_target != null)
                         {
