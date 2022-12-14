@@ -3,8 +3,17 @@
 - [Android API](#android-api)
 - [API methods](#api-methods)
 - [Supported features](#supported-features)
+	- [Skeleton calculation](#skeleton-calculation)
+	- [Multiple models support](#multiple-models-support)
+	- [Cloth calculation](#cloth-calculation)
+	- [GLTF model loading](#gltf-model-loading)
+	- [Light estimation](#light-estimation)
+	- [VRM model loading](#vrm-model-loading)
+	- [VRM model material replacement](#vrm-material-replacement)
+	- [VRM animation of eye and mounth](#vrm-animation)
+	- [VRM physics](#vrm-physics)
 - [Technology description](#technology-description)
-- [3rd party libraries used](#third-party-libraries)
+- [3rd party libraries](#third-party-libraries)
 
 ## Android API
 
