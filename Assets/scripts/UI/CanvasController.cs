@@ -259,9 +259,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
 
     [Binding]
     public bool IsVrmCloth {
-        get { return skeletonManager.UsePhysics; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+        get { return avatarManager.vrmClothOnly; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
         set {
-            skeletonManager.UsePhysics = value;
+            avatarManager.vrmClothOnly = value;
             OnPropertyChanged("IsVrmCloth");
         }
     }

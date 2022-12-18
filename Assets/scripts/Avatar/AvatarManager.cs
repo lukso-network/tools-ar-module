@@ -24,6 +24,8 @@ public class AvatarManager : MonoBehaviour {
     public string avatarLayerMask;
     public Shader vrmShader;
     public bool replaceVRMMaterial;
+    public bool vrmClothOnly = false;
+    public Material discardMaterial;
 
     [Range(-0.01f, 0.01f)]
     public float transparentBodyShrinkAmount = 0.04f;
@@ -36,11 +38,8 @@ public class AvatarManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-
         posManager.newPoseEvent += UpdateSkeleton;
-
     }
-
 
     public async void Load(string url, bool replaceModel) {
         if (url.ToLower().EndsWith("glb")) {
@@ -151,12 +150,41 @@ public class AvatarManager : MonoBehaviour {
             }
             AddModel(model, true);
             AddFaceController(model);
+
+            if (vrmClothOnly) {
+                RemoveVRMBody(model);
+            }
         }
 
     }
 
     private void AddFaceController(GameObject model) {
-        var controller = model.AddComponent<FaceAnimationController>();
+        model.AddComponent<FaceAnimationController>();
+    }
+
+    private void RemoveVRMBody(GameObject model) {
+        foreach(Transform child in model.transform.parent) {
+            if (child.name.StartsWith("Face") || child.name.StartsWith("Hair")) {
+                child.gameObject.SetActive(false);
+            }
+        }
+
+        var body = model.transform.parent.Find("Body");
+        if (body != null) {
+            var r = body.GetComponent<Renderer>();
+
+
+            Material[] matArray = r.materials;
+            for (int i = 0; i < matArray.Length; ++i) {
+                var name = matArray[i].name.ToLower();
+                if (name.Contains("ear") || !name.Contains("cloth")) {
+                    matArray[i] = discardMaterial;
+                }
+            }
+            r.materials = matArray;
+            
+
+        }
     }
 
     public void RemoveAllModels(bool clearUnused) {
