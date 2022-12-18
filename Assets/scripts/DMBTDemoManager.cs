@@ -115,6 +115,8 @@ namespace Lukso {
 
         public bool UsePhysics { get; set; }
 
+
+        public bool enableFaceAnimation = false;
         public Texture2D GetLastFrame() {
             return lastFrame;
         }

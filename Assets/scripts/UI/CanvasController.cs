@@ -249,6 +249,24 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
     }
 
     [Binding]
+    public bool IsFaceAnimationEnabled {
+        get { return skeletonManager.enableFaceAnimation; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+        set {
+            skeletonManager.enableFaceAnimation = value;
+            OnPropertyChanged("IsFaceAnimationEnabled");
+        }
+    }
+
+    [Binding]
+    public bool IsVrmCloth {
+        get { return skeletonManager.UsePhysics; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+        set {
+            skeletonManager.UsePhysics = value;
+            OnPropertyChanged("IsVrmCloth");
+        }
+    }
+
+    [Binding]
     public float RootScaleValue {
         get { return 1; }// return skeletonManager.controller.GetHips().transform.localScale.x; }
         set {
@@ -278,6 +296,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
         OnPropertyChanged("CameraSource");
         OnPropertyChanged("IsShowFace");
         OnPropertyChanged("IsUsePhysics");
+        OnPropertyChanged("IsFaceAnimationEnabled");
+        OnPropertyChanged("IsVrmCloth");
 
         StartCoroutine(WaitBootStrap());
 
