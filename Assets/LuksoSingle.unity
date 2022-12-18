@@ -4441,6 +4441,7 @@ MonoBehaviour:
   avatarManager: {fileID: 548813479}
   canvasController: {fileID: 271437893}
   sizeManager: {fileID: 1755837388}
+  poseManager: {fileID: 780931513}
   solution: {fileID: 188083187}
 --- !u!1 &475013384
 GameObject:

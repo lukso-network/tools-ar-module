@@ -10,6 +10,8 @@ namespace Assets.scripts.Api {
         public AvatarManager avatarManager;
         public CanvasController canvasController;
         public SizeManager sizeManager;
+        public DMBTDemoManager poseManager;
+
         [SerializeField] private SkeletonTrackingSolution solution;
         // Use this for initialization
         void Start() {
@@ -41,6 +43,11 @@ namespace Assets.scripts.Api {
         public async void ShowUI(string boolStr) {
             canvasController.gameObject.SetActive(ToBool(boolStr));
             canvasController.GetComponent<Canvas>().enabled = ToBool(boolStr);
+        }
+
+        public async void UseVRMPhysics(string boolStr) {
+            poseManager.UsePhysics = ToBool(boolStr);
+            canvasController.IsUsePhysics = ToBool(boolStr);
         }
 
         public async void SelectCamera(string intStr) {
@@ -83,7 +90,8 @@ namespace Assets.scripts.Api {
         }
 
         private bool ToBool(string boolStr) {
-            return boolStr == "true";
+
+            return string.Equals(boolStr, "true", StringComparison.OrdinalIgnoreCase);
         }
 
         private int ToInt(string intStr) {
