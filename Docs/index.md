@@ -1,5 +1,7 @@
 # Lukso Documentation
 
+LICENSE: [Apache License 2.0](/LICENSE)
+
 - [Android API](#android-api)
 - [API methods](#api-methods)
 - [Supported features](#supported-features)
