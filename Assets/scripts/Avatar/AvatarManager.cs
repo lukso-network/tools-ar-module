@@ -9,6 +9,8 @@ using System.Reflection;
 using Lukso;
 using Avatar = Lukso.Avatar;
 using System.Collections;
+using Mediapipe.Unity.SkeletonTracking;
+using Mediapipe.Unity;
 
 public class AvatarManager : MonoBehaviour {
     private List<Avatar> avatars = new List<Avatar>();
@@ -27,6 +29,9 @@ public class AvatarManager : MonoBehaviour {
     public bool vrmClothOnly = false;
     public Material discardMaterial;
 
+    private SkeletonTrackingGraph skelGraph;
+    private Camera3DController cam3d;
+
     [Range(-0.01f, 0.01f)]
     public float transparentBodyShrinkAmount = 0.04f;
 
@@ -39,7 +44,47 @@ public class AvatarManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         posManager.newPoseEvent += UpdateSkeleton;
+        Init();
     }
+
+    private void Init() {
+        skelGraph = FindObjectOfType<SkeletonTrackingGraph>();
+        skelGraph.newFrameRendered += OnNewFrameRendered;
+        cam3d = FindObjectOfType<Camera3DController>();
+    }
+
+    private void OnDestroy() {
+        if (skelGraph != null) {
+            skelGraph.newFrameRendered -= OnNewFrameRendered;
+        }
+    }
+
+    private void OnNewFrameRendered(Texture2D texture) {
+
+        if (texture == null) {
+            return;
+        }
+        texture.wrapMode = TextureWrapMode.Clamp;
+
+        float w = cam3d.ScreenSize.x;
+        float h = cam3d.ScreenSize.y;
+
+
+        var im = ImageSourceProvider.ImageSource;
+        var angle = (int)im.rotation;
+
+        var mat = new Matrix4x4(new Vector4(1 / w, 0, 0, 0), new Vector4(0, 1 / h, 0, 0), Vector3.zero, new Vector4((w - 1) / 2 / w, (h - 1) / 2 / h, 0, 1));
+
+        Quaternion rot = Quaternion.Euler(0, 0, angle);
+        Matrix4x4 m = Matrix4x4.Translate(new Vector3(0.5f, 0.5f, 0)) * Matrix4x4.Rotate(rot) * Matrix4x4.Scale(im.isFrontFacing ? new Vector3(-1, 1, 1) : Vector3.one) * Matrix4x4.Translate(new Vector3(-0.5f, -0.5f, 0));
+
+        mat = m * mat;
+
+        transparentMaterial.mainTexture = texture;
+        transparentMaterial.SetMatrix("_TextureMat", mat);
+
+    }
+
 
     public async void Load(string url, bool replaceModel) {
         if (url.ToLower().EndsWith("glb")) {
@@ -178,7 +223,8 @@ public class AvatarManager : MonoBehaviour {
             for (int i = 0; i < matArray.Length; ++i) {
                 var name = matArray[i].name.ToLower();
                 if (name.Contains("ear") || !name.Contains("cloth")) {
-                    matArray[i] = discardMaterial;
+                    //matArray[i] = discardMaterial;
+                    matArray[i] = transparentMaterial;
                 }
             }
             r.materials = matArray;

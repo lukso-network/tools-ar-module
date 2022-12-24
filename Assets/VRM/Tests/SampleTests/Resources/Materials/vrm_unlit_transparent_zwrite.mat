@@ -98,7 +98,7 @@ Material:
     - _GlossyReflections: 1
     - _IndirectLightIntensity: 0.1
     - _LightColorAttenuation: 0
-    - _MToonVersion: 35
+    - _MToonVersion: 38
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -130,3 +130,4 @@ Material:
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadeColor: {r: 0.96999997, g: 0.81, b: 0.86, a: 1}
+  m_BuildTextureStacks: []

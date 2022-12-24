@@ -267,6 +267,15 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
     }
 
     [Binding]
+    public bool IsReplaceVrmMaterial {
+        get { return avatarManager.replaceVRMMaterial; }// return skeletonManager.controller?.obj?.activeSelf ?? true; }
+        set {
+            avatarManager.replaceVRMMaterial = value;
+            OnPropertyChanged("IsReplaceVrmMaterial");
+        }
+    }
+
+    [Binding]
     public float RootScaleValue {
         get { return 1; }// return skeletonManager.controller.GetHips().transform.localScale.x; }
         set {
@@ -298,6 +307,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
         OnPropertyChanged("IsUsePhysics");
         OnPropertyChanged("IsFaceAnimationEnabled");
         OnPropertyChanged("IsVrmCloth");
+        OnPropertyChanged("IsReplaceVrmMaterial");
 
         StartCoroutine(WaitBootStrap());
 
