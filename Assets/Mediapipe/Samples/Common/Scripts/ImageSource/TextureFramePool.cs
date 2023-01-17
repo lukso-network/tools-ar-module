@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mediapipe.Unity
@@ -23,10 +24,12 @@ namespace Mediapipe.Unity
     private TextureFormat _format = TextureFormat.RGBA32;
 
     private Queue<TextureFrame> _availableTextureFrames;
+    private System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
     /// <remarks>
     ///   key: TextureFrame's instance ID
     /// </remarks>
     private Dictionary<Guid, TextureFrame> _textureFramesInUse;
+    private const long lifeTime = 100000;
 
     /// <returns>
     ///   The total number of texture frames in the pool.
@@ -46,7 +49,12 @@ namespace Mediapipe.Unity
     {
       _availableTextureFrames = new Queue<TextureFrame>(_poolSize);
       _textureFramesInUse = new Dictionary<Guid, TextureFrame>();
+      timer.Start();
     }
+
+       protected long GetCurrentTimestampMicrosec() {
+            return timer.ElapsedTicks / (TimeSpan.TicksPerMillisecond / 1000);
+        }
 
     private void OnDestroy()
     {
@@ -105,6 +113,7 @@ namespace Mediapipe.Unity
       TextureFrame nextFrame = null;
       lock (((ICollection)_availableTextureFrames).SyncRoot)
       {
+        Debug.Log($"Available: {_availableTextureFrames.Count}, InUse: {_textureFramesInUse.Count} ");
         if (_poolSize <= frameCount)
         {
           while (_availableTextureFrames.Count > 0)
@@ -124,15 +133,20 @@ namespace Mediapipe.Unity
         }
       }
 
-      if (nextFrame == null)
+     var time = GetCurrentTimestampMicrosec();
+     if (nextFrame == null)
       {
         outFrame = null;
+        RemoveOutdated(time, lifeTime);
         return false;
       }
 
+     
+      nextFrame.activationTime = time;
       lock (((ICollection)_textureFramesInUse).SyncRoot)
       {
         _textureFramesInUse.Add(nextFrame.GetInstanceID(), nextFrame);
+        RemoveOutdated(time, lifeTime);
       }
 
       nextFrame.WaitUntilReleased();
@@ -144,6 +158,7 @@ namespace Mediapipe.Unity
     {
       lock (((ICollection)_textureFramesInUse).SyncRoot)
       {
+        textureFrame.activationTime = 0;
         if (!_textureFramesInUse.Remove(textureFrame.GetInstanceID()))
         {
           // won't be run
@@ -158,6 +173,15 @@ namespace Mediapipe.Unity
         _availableTextureFrames.Enqueue(textureFrame);
       }
     }
+
+    public void RemoveOutdated(long currentTime, long lifetime) {
+            lock (((ICollection)_textureFramesInUse).SyncRoot) {
+                var toDelete = _textureFramesInUse.Where(kv => kv.Value.activationTime != 0 && currentTime - kv.Value.activationTime > lifetime).ToList();
+                foreach (var t in toDelete) {
+                    t.Value.Release();
+                }
+            }
+        }
 
     private bool IsStale(TextureFrame textureFrame)
     {

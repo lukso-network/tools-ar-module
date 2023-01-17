@@ -141,13 +141,14 @@ namespace Mediapipe.Unity {
                     yield return waitWhilePausing;
                 }
 
+                while (!imageSource.didUpdateSinceLastAsk) {
+                    yield return new WaitForEndOfFrame();
+                }
+
+                
                 if (!textureFramePool.TryGetTextureFrame(out var textureFrame)) {
                     yield return new WaitForEndOfFrame();
                     continue;
-                }
-
-                while (!imageSource.didUpdateSinceLastAsk) {
-                    yield return new WaitForEndOfFrame();
                 }
 
                 // Copy current image to TextureFrame

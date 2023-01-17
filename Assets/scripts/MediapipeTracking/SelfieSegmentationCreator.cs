@@ -146,9 +146,13 @@ namespace Mediapipe.Unity.SelfieSegmentation {
                 //maskTexture.SetPixels32(mask.GetPixels32());
 
                 ConvertMask(mask);
+                textureFrame.Release();
                 return maskTexture;
             }
 
+            if (textureFrame != null) {
+                textureFrame.Release();
+            }
             return null;
 
         }

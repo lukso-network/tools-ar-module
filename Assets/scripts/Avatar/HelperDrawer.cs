@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Skeleton = Lukso.Skeleton;
 using Avatar = Lukso.Avatar;
+using System;
 
 namespace Lukso {
     public class HelperDrawer : MonoBehaviour {
@@ -250,19 +251,21 @@ namespace Lukso {
 
         // Update is called once per frame
         void Update() {
-
-            if (avatar == null && skeletonManager.HasAnyAvatar()) {
-                InitAvatar();
-            }
-
-            if (avatar != null) {
-                rawPointsRoot.SetActive(showRawPoints);
-                rawPointBonesRoot.SetActive(showRawPoints);
-                //TODO for debugging only
-                // when paused mode is active
-                if (updateAutomatically) {
-                    UpdateHelpers(true);
+            try {
+                if (avatar == null && skeletonManager.HasAnyAvatar()) {
+                    InitAvatar();
                 }
+
+                if (avatar != null) {
+                    rawPointsRoot.SetActive(showRawPoints);
+                    rawPointBonesRoot.SetActive(showRawPoints);
+                    //TODO for debugging only
+                    // when paused mode is active
+                    if (updateAutomatically) {
+                        UpdateHelpers(true);
+                    }
+                }
+            } catch (Exception e) { 
             }
 
         }

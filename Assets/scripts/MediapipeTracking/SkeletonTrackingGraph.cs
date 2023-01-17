@@ -88,7 +88,7 @@ namespace Mediapipe.Unity.SkeletonTracking {
         private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _skeletonLandmarksStream;
         private OutputStream<NormalizedLandmarkListPacket, NormalizedLandmarkList> _faceLandmarksStream;
         private OutputStream<LandmarkListPacket, LandmarkList> _skeletonWorldLandmarksStream;
-        public Dictionary<long, TextureFrame> sentTextures = new Dictionary<long, TextureFrame>();
+        private Dictionary<long, TextureFrame> sentTextures = new Dictionary<long, TextureFrame>();
 
         // MEdiapipe can return value near to long.MaxValue
         private static long MAX_TIMESTAMP = long.MaxValue / 2;
@@ -117,7 +117,6 @@ namespace Mediapipe.Unity.SkeletonTracking {
         }
 
         private void TexturePoolCleaner() {
-
             while (true) {
                 Thread.Sleep(10);
 
@@ -126,17 +125,20 @@ namespace Mediapipe.Unity.SkeletonTracking {
                 lock (syncObject) {
                     try {
                         // delete outdated textures
-                        var toDelete = sentTextures.Keys.Where(k => k < Math.Max(lastRenderedTimestamp, ts - textureLifetime) && !sentTextures[k].isOnScreen).ToList();
+                        //var toDelete = sentTextures.Keys.Where(k => k < Math.Max(lastRenderedTimestamp, ts - textureLifetime) && !sentTextures[k].isOnScreen).ToList();
+
+                        // delete outdated textures
+                        var toDelete = sentTextures.Keys.Where(k => k < Math.Max(lastRenderedTimestamp, ts - textureLifetime)).ToList();
 
                         //Debug.Log("************ToDelete:" + toDelete.Count + " of " + sentTextures.Count);
                         foreach (var key in toDelete) {
 
                             var text = sentTextures[key];
                             sentTextures.Remove(key);
-                            text.Release();
+                           // text.Release();
                         }
                     } catch (Exception ex) {
-
+                        Debug.LogError(ex);
                     }
                 }
             }

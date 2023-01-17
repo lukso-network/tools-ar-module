@@ -28,6 +28,7 @@ namespace Mediapipe.Unity
     private IntPtr _nativeTexturePtr = IntPtr.Zero;
     private GlSyncPoint _glSyncToken;
     public long packetTime;
+    public long activationTime = 0;
     
 
     // Buffers that will be used to copy texture data on CPU.
