@@ -141,7 +141,7 @@ namespace Assets.scripts {
             //dir = FilterDir(dir);
             var imageSource = ImageSourceProvider.ImageSource;
             if (imageSource.isHorizontallyFlipped ^ imageSource.isFrontFacing) {
-                dir.x = -dir.x;
+                //dir.x = -dir.x;
             }
             lightDir = dir;
 

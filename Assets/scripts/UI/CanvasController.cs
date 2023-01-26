@@ -133,6 +133,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
         var t = ImageSourceProvider.ImageSource.type;
         if (t == ImageSource.SourceType.Image) {
             ImageSourceProvider.SwitchSource(ImageSource.SourceType.Camera);
+        } else if (t == ImageSource.SourceType.Camera) {
+            ImageSourceProvider.SwitchSource(ImageSource.SourceType.Video);
         } else {
             ImageSourceProvider.SwitchSource(ImageSource.SourceType.Image);
         }

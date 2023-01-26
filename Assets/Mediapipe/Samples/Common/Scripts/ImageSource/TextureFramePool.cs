@@ -113,7 +113,7 @@ namespace Mediapipe.Unity
       TextureFrame nextFrame = null;
       lock (((ICollection)_availableTextureFrames).SyncRoot)
       {
-        Debug.Log($"Available: {_availableTextureFrames.Count}, InUse: {_textureFramesInUse.Count} ");
+        //Debug.Log($"Available: {_availableTextureFrames.Count}, InUse: {_textureFramesInUse.Count} ");
         if (_poolSize <= frameCount)
         {
           while (_availableTextureFrames.Count > 0)
