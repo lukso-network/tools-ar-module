@@ -36,6 +36,11 @@ namespace Lukso{
         private void Init() {
             var jsonDescr = Resources.Load<TextAsset>("skeletons").text;
             supportedSkeletons = SkeletonSet.CreateFromJSON(jsonDescr);
+            foreach (var s in supportedSkeletons.skeletons) {
+                foreach (var descr in s.description) {
+                    descr.node = descr.node.ToLower();
+                }
+            }
         }
 
         public Avatar GetOrCreateControllerAvatar(GameObject obj, bool unique_avatar = false) {

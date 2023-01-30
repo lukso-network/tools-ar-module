@@ -10,9 +10,9 @@ using UnityWeld.Binding;
 using SimpleFileBrowser;
 using System.IO;
 using Mediapipe.Unity.SkeletonTracking;
-
-
-
+using UnityEngine.Networking;
+using System.IO.Compression;
+using UnityEngine.UI;
 
 [Binding]
 public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
@@ -25,12 +25,18 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
     public SizeManager sizeManager;
     private string initFilePath = null;
 
+    private const string TEST_MODEL_NAME = "test_models.zip";
+    private const string TEST_MODEL_DIR_NAME = "lukso_models";
+    private const string TEST_MODEL_URL = "http://88.210.9.16:8000/testmodel_set.zip";
+
 
     [SerializeField] private SkeletonTrackingSolution solution;
     [SerializeField] private Camera screenCamera;
     [SerializeField] private SelfieSegmentationCreator segmentation;
     [SerializeField] private ApiManager apiManager;
     [SerializeField] private GameObject annotationLayer;
+    [SerializeField] private GameObject modelLoadingMessage;
+    [SerializeField] private GameObject uiPanel;
 
 
 
@@ -85,6 +91,71 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
         #endif
         */
         StartCoroutine(ShowLoadDialogCoroutine());
+    }
+
+
+    [Binding]
+    public void DownloadModels() {
+        StartCoroutine(LoadTestModels());
+    }
+
+    IEnumerator LoadTestModels() {
+        yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.Folders, true, null, null, "Select files to download test models", "Load");
+        if (FileBrowser.Success) {
+            var path = FileBrowser.Result[0];
+            var filePath = path + "/" + TEST_MODEL_NAME;
+            var outDir = path + "/" + TEST_MODEL_DIR_NAME;
+            modelLoadingMessage.SetActive(true);
+            var successed = true;
+
+            using (var uwr = new UnityWebRequest(TEST_MODEL_URL)) {
+                var dh = new DownloadHandlerFile(filePath);
+                dh.removeFileOnAbort = true;
+                uwr.downloadHandler = dh;
+                var oper = uwr.SendWebRequest();
+
+                while (!oper.isDone) {
+                    yield return new WaitForSeconds(1);
+                    modelLoadingMessage.GetComponentInChildren<Text>().text = $"Loaded {(int)(uwr.downloadProgress * 100)} %";
+                }
+
+                if (uwr.result != UnityWebRequest.Result.Success) {
+                    Debug.LogError(uwr.error);
+                    successed = false;
+                } else {
+                    Debug.Log("Download saved to: " + filePath + " " + uwr.error);
+                    try {
+                        using (ZipArchive source = ZipFile.Open(filePath, ZipArchiveMode.Read, null)) {
+                            foreach (ZipArchiveEntry entry in source.Entries) {
+                                string fullPath = Path.GetFullPath(Path.Combine(outDir, entry.FullName));
+
+                                if (Path.GetFileName(fullPath).Length != 0) {
+                                    Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                                    entry.ExtractToFile(fullPath, true);
+                                }
+                            }
+                        }
+                    } catch (Exception ex) {
+                        successed = false;
+                        Debug.LogError("Can't unzip models");
+                    }
+                    initFilePath = outDir;
+                    
+                }
+            }
+
+
+            if (successed) {
+                modelLoadingMessage.GetComponentInChildren<Text>().text = $"Loaded into: {outDir}";
+                modelLoadingMessage.GetComponent<Image>().color = Color.green;
+            } else {
+                modelLoadingMessage.GetComponentInChildren<Text>().text = "Can't download models";
+                modelLoadingMessage.GetComponent<Image>().color = Color.red;
+            }
+            yield return new WaitForSeconds(5);
+
+            modelLoadingMessage.SetActive(false);
+        }
     }
 
 
@@ -191,6 +262,15 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
         set {
             helper.ShowBody = value;
             OnPropertyChanged("IsShowBody");
+        }
+    }
+
+    [Binding]
+    public bool IsUiEnabled {
+        get { return uiPanel.activeSelf; }
+        set {
+            uiPanel.SetActive(value);
+            OnPropertyChanged("IsUiEnabled");
         }
     }
 
@@ -310,6 +390,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
         OnPropertyChanged("IsFaceAnimationEnabled");
         OnPropertyChanged("IsVrmCloth");
         OnPropertyChanged("IsReplaceVrmMaterial");
+        OnPropertyChanged("IsUiEnabled");
 
         StartCoroutine(WaitBootStrap());
 
