@@ -372,6 +372,9 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
     }
 
     void Start() {
+#if UNITY_EDITOR
+        uiPanel.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
+#endif
         OnPropertyChanged("IsPaused");
         OnPropertyChanged("PlaybackSpeed");
         OnPropertyChanged("IsShowBody");
