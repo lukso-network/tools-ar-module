@@ -95,6 +95,7 @@ namespace Lukso {
         [SerializeField] private OneEuroFilterParams movementFactorFilterParams;
         [SerializeField] private bool useSameParams;
         [SerializeField] private bool enableZFilter = true;
+        [SerializeField] [Range(0,1)] private float invisiblePointsFilterScale = 0.1f;
         private OneEuroFilter[] posFIlterZ;
         private OneEuroFilter[] posFIlterX;
         private OneEuroFilter[] posFIlterY;
@@ -375,10 +376,10 @@ namespace Lukso {
                     //mn = Vector3.Min(mn, points[i]);
                     mx = Vector3.Max(mx, points[i] * filterScale);
                     mn = Vector3.Min(mn, points[i] * filterScale);
-                    float presenceFactor = presence[i] ? 1 : 0.01f;
-                    points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp) / filterScale;
-                    points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp) / filterScale;
-                    points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp) / filterScale;
+                    float presenceFactor = presence[i] ? 1 : invisiblePointsFilterScale;
+                    points[i].z = posFIlterZ[i].Filter(points[i].z * filterScale, timestamp, presenceFactor) / filterScale;
+                    points[i].x = posFIlterX[i].Filter(points[i].x * filterScale, timestamp, presenceFactor) / filterScale;
+                    points[i].y = posFIlterY[i].Filter(points[i].y * filterScale, timestamp, presenceFactor) / filterScale;
                 }
             }
 
