@@ -7444,6 +7444,7 @@ MonoBehaviour:
     movementFactor: 1
   useSameParams: 0
   enableZFilter: 1
+  invisiblePointsFilterScale: 0.11
   enableFaceAnimation: 0
 --- !u!1 &801571590
 GameObject:
