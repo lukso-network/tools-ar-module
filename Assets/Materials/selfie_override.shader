@@ -8,6 +8,7 @@ Shader "Unlit/selfie_override"
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
+        Cull Off
 
         Pass
         {
@@ -16,7 +17,7 @@ Shader "Unlit/selfie_override"
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
-
+            
             #include "UnityCG.cginc"
 
             struct appdata
