@@ -205,7 +205,7 @@ namespace Lukso{
             skeleton.clothPoints.Add(new ClothAttachementMoveAlongAxis(Point.CHEST, 0.05f));
             skeleton.clothPoints.Add(new ClothAttachementMoveAlongAxis(Point.SPINE, 0.05f));
             skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_SHOULDER, 0.25f));
-            skeleton.clothPoints.Add(new ClothAttachementMoveAlongAxis(Point.LEFT_SHOULDER, 0.25f));
+            skeleton.clothPoints.Add(new ClothAttachementMoveAlongAxis(Point.LEFT_SHOULDER, 0.04f));
             //skeleton.clothPoints.Add(new ClothAttachement1DNormal(Point.LEFT_ELBOW, 0.1f));
             skeleton.clothPoints.Add(new ClothAttachementMoveAlongAxis(Point.LEFT_ELBOW, 0.25f));
             //skeleton.clothPoints.Add(new ClothAttachmentScale(Point.SPINE, 1, 0.5f));

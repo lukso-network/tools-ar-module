@@ -62,6 +62,7 @@ namespace Lukso {
         [SerializeField] private GameObject screenPlane;
         [SerializeField] private Camera skeletonCamera;
         [SerializeField] UnityEngine.UI.RawImage outputUI = null;
+        [SerializeField] private GameObject bodyPrefab = null;
 
         [Range(-0.5f, 0.5f)]
         [SerializeField] private float[] clothParametersTest;
@@ -122,7 +123,7 @@ namespace Lukso {
                 }
             }
 
-            return;
+            //return;
             InitClothCamera();
             var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
             //  Debug.Log(v);
@@ -196,10 +197,27 @@ namespace Lukso {
             }
             yield break;
             */
-            var mask = selfieSegmentation.CaptureSelfieToTexture();
-            if (mask == null) {
+
+            var avatar = skeletonManager.GetClothController();
+            if (avatar == null) {
                 yield break;
             }
+
+            var prevTransparentState = avatarManager.ShowTransparentBody;
+            
+
+            var trBody = avatarManager.LoadTransparentBodyModel(bodyPrefab);
+            var bodyAvatar = skeletonManager.GetOrCreateControllerAvatar(trBody);
+            yield return new WaitForSeconds(0.2f);
+
+            var mask = selfieSegmentation.CaptureSelfieToTexture();
+            if (mask == null) {
+                avatarManager.RemoveModel(trBody);
+                
+                yield break;
+            }
+
+            ResetSize();
 
             calculateionInProgres = true;
             var imageSource = ImageSourceProvider.ImageSource;
@@ -209,7 +227,7 @@ namespace Lukso {
             poseManager.PauseProcessing(true);
 
             avatarManager.SetSkinRecalulation(true);
-
+            avatarManager.ShowTransparentBody = useTransparentBody;
 
             //!!! Very strange problem
             // if InitClothCamera is used then /yield return new WaitForEndOfFrame(); should be used too
@@ -218,33 +236,26 @@ namespace Lukso {
 
             InitClothCamera(); //yield return new WaitForEndOfFrame(); // use at the same time
 
-
-
-
-
-            var avatar = skeletonManager.GetClothController();
-            if (avatar == null) {
-                yield break;
-            }
-
-            var prevTransparentState = avatarManager.ShowTransparentBody;
-            avatarManager.ShowTransparentBody = useTransparentBody;
             yield return avatar.FindBestCloth(() => {
+                
+                bodyAvatar.CopyClothParametersFrom(avatar);
+                bodyAvatar.ApplyClothShift(true);
                 avatar.ApplyClothShift(true);
                 avatarManager.UpdateSkeleton(true);
-                // var old = clothCamera.targetTexture;
-                // RenderTexture.active = clothCamera.targetTexture;
+                 var old = clothCamera.targetTexture;
+                 RenderTexture.active = clothCamera.targetTexture;
                 clothCamera.Render();
-                // RenderTexture.active = old;
+                 RenderTexture.active = old;
 
                 SetClothTexture(clothCamera.targetTexture);
 
                 // minus as we find maximum ior
                 var ior = CalculateIOR(mask, clothCamera.targetTexture);
-                //Debug.Log("Ior:" + ior);
+                Debug.Log("Ior1:" + ior);
                 return -ior;
             });
 
+            avatarManager.RemoveModel(trBody);
             //yield return new WaitForSeconds(1);
             poseManager.PauseProcessing(false);
             if (!isPaused) {

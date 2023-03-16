@@ -56,7 +56,6 @@ namespace Lukso{
             }
         }
 
-
         public void ApplyClothShift(bool keepPrevious) {
             clothSkeletonTransform.CopyTo(clothJoints);
 
@@ -116,6 +115,17 @@ namespace Lukso{
                 parameters[i] = clothPointParameters[i].Get();
             }
         }
+
+
+        public void CopyClothParametersFrom(Avatar avatar) {
+            var cp = new float[clothPointParameters.Count];
+            var l = Math.Min(avatar.clothPointParameters.Count, clothPointParameters.Count);
+            for (int i = 0; i < l; ++i) {
+                clothPointParameters[i].Set(avatar.clothPointParameters[i].Get());
+            }
+
+        }
+
 
 
         public IEnumerator FindBestCloth(Func<float> target) {

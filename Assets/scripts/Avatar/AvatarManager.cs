@@ -248,6 +248,31 @@ public class AvatarManager : MonoBehaviour {
 
     }
 
+    public void RemoveModel(GameObject model) {
+        foreach (Transform child in modelRoot.transform) {
+            if (model == child.gameObject) {
+                GameObject.DestroyImmediate(child.gameObject);
+
+                for (int idx = 0; idx < avatars.Count; ++idx) {
+                    if (avatars[idx].obj == model) {
+                        avatars.RemoveAt(idx);
+                        CleanUpUnusedSkeletons();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+/*
+        var usedAvatars = new List<Avatar>();
+        foreach (Transform child in modelRoot.transform) {
+            var avatar = skeletonManager.GetControllerAvatar(child.gameObject);
+            if (avatar != null) {
+                usedAvatars.Add(avatar);
+            }
+        }*/
+    }
+
     public void LoadNextTestModel() {
         if (testSpawner.transform.childCount == 0) {
             return;
@@ -259,14 +284,18 @@ public class AvatarManager : MonoBehaviour {
 
 
         var testObj = testSpawner.transform.GetChild(testModelIdx);
-        var md = testObj.GetComponent<ModelDescriptor>();
-
+        
         foreach (Transform child in testObj.transform) {
             var cpy = GameObject.Instantiate(child.gameObject, modelRoot.transform);
             AddModel(cpy);
         }
-
     }
+
+    public GameObject LoadTransparentBodyModel(GameObject prefab) {
+        var cpy = GameObject.Instantiate(prefab, modelRoot.transform);
+        return AddModel(cpy);
+    }
+
 
     private void SplitModel(GameObject model) {
         List<Transform> children = new List<Transform>();
@@ -294,7 +323,7 @@ public class AvatarManager : MonoBehaviour {
         }
     }
 
-    public void AddModel(GameObject obj, bool unique_avatar = false) {
+    public GameObject AddModel(GameObject obj, bool unique_avatar = false) {
         var root = new GameObject("LinearRoot:" + obj.name);
         root.transform.parent = modelRoot.transform;
 
@@ -303,7 +332,7 @@ public class AvatarManager : MonoBehaviour {
         var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj, unique_avatar);
         if (controllerAvatar == null) {
             GameObject.Destroy(obj);
-            return;
+            return null;
         }
 
         bool enablePhysics = posManager.UsePhysics;
@@ -341,6 +370,8 @@ public class AvatarManager : MonoBehaviour {
         if (!IsTransparent(obj)) {
             AddTransparentBody(root, controllerAvatar);
         }
+
+        return root;
     }
 
     private bool IsTransparent(GameObject obj) {
