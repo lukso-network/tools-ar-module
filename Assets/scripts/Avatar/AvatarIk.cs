@@ -494,11 +494,8 @@ namespace Lukso{
 
         }
 
-
-
-
-        private void ScaleHips() {
-            float l1 = GetScaleBonesLength(skeleton);
+        public void ScaleHips() {
+            float l1 = boneLength;
             float l2 = GetTargetBonesLength(skeleton);
 
             float scale = l2 / l1;

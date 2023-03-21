@@ -61,6 +61,8 @@ namespace Lukso{
         private Vector3?[] allTarget;
         private Quaternion headRotation = Quaternion.identity;
 
+        private float boneLength;
+
         public bool Destroyed { get; set; }
 
         private Transform[] ikSource;
@@ -96,6 +98,8 @@ namespace Lukso{
 
 
             gradientDrawer = GameObject.FindObjectOfType<GradientDrawer>();
+
+            this.boneLength = GetScaleBonesLength(skeleton);
         }
         private Joint GetHips() {
             return GetJointByPoint(Skeleton.Point.HIPS);
@@ -325,9 +329,9 @@ namespace Lukso{
 
 
         public float GetRelativeBonesScale(Avatar avatar) {
-            float l0 = GetScaleBonesLength(skeleton);
+            float l0 = boneLength;
             // l0 = GetScaleBonesLength(skeleton);
-            float l1 = avatar.GetScaleBonesLength(skeleton);
+            float l1 = avatar.boneLength;
 
             return l1 / l0;
 

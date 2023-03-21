@@ -123,7 +123,7 @@ namespace Lukso {
                 }
             }
 
-            //return;
+            return;
             InitClothCamera();
             var v = CalculateIOR(selfieSegmentation.GetLastMask(), clothCamera.targetTexture);
             //  Debug.Log(v);

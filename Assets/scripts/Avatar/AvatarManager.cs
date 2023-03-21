@@ -351,7 +351,7 @@ public class AvatarManager : MonoBehaviour {
         controllerAvatar.RestoreSkeleton();
 
         var curController = new Avatar(root, controllerAvatar.Skeleton);
-        float scale = controllerAvatar.GetRelativeBonesScale(curController);
+        float scale = 1;// controllerAvatar.GetRelativeBonesScale(curController);
 
         obj.transform.localScale /= scale;
 
@@ -464,6 +464,9 @@ public class AvatarManager : MonoBehaviour {
 
             var controller = skeletonManager.GetController(avatar.Skeleton);
             if (controller != null) {
+                var s = controller.GetRelativeBonesScale(avatar);
+
+                skinScaler /= s;
                 avatar.CopyToLocalFromGlobal(controller, skinScaler, skeletonManager.ikSettings.resizeBones);
                 avatar.obj.transform.localPosition = pos;
             }
