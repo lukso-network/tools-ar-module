@@ -139,7 +139,7 @@ namespace Lukso {
             }
 
             clothCamera.Render();
-            //return;
+            return;
             maskMaterial.SetTexture("_MaskTexture", mask);
             maskMaterial.SetTexture("_ClothTexture", clothCamera.targetTexture);
             Graphics.Blit(null, renderedMask, maskMaterial);
@@ -205,15 +205,8 @@ namespace Lukso {
 
             var prevTransparentState = avatarManager.ShowTransparentBody;
             
-
-            var trBody = avatarManager.LoadTransparentBodyModel(bodyPrefab);
-            var bodyAvatar = skeletonManager.GetOrCreateControllerAvatar(trBody);
-            yield return new WaitForSeconds(0.2f);
-
             var mask = selfieSegmentation.CaptureSelfieToTexture();
             if (mask == null) {
-                avatarManager.RemoveModel(trBody);
-                
                 yield break;
             }
 
@@ -237,15 +230,12 @@ namespace Lukso {
             InitClothCamera(); //yield return new WaitForEndOfFrame(); // use at the same time
 
             yield return avatar.FindBestCloth(() => {
-                
-                bodyAvatar.CopyClothParametersFrom(avatar);
-                bodyAvatar.ApplyClothShift(true);
                 avatar.ApplyClothShift(true);
                 avatarManager.UpdateSkeleton(true);
-                 var old = clothCamera.targetTexture;
-                 RenderTexture.active = clothCamera.targetTexture;
+                var old = clothCamera.targetTexture;
+                RenderTexture.active = clothCamera.targetTexture;
                 clothCamera.Render();
-                 RenderTexture.active = old;
+                RenderTexture.active = old;
 
                 SetClothTexture(clothCamera.targetTexture);
 
@@ -255,7 +245,6 @@ namespace Lukso {
                 return -ior;
             });
 
-            avatarManager.RemoveModel(trBody);
             //yield return new WaitForSeconds(1);
             poseManager.PauseProcessing(false);
             if (!isPaused) {

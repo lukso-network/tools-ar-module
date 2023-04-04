@@ -20,6 +20,8 @@ namespace Lukso{
         private OneEuroFilter hipFilter;
 
         private Dictionary<Point, Joint[]> dependendJoints = new Dictionary<Point, Joint[]>();
+        public bool updateEnabled = true;
+
 
         public void Update(float gradStep, float moveStep, int steps) {
             /*if (ikTarget.Length > 0) {
@@ -120,6 +122,10 @@ namespace Lukso{
         // 2 calculate step for every parameter (more difference, more speed)
         // 3 keep change of every parameter if small then ignore several times
         public void UpdateFastBySteps(float gradStep, float moveStep, int steps) {
+            
+            if (!updateEnabled) {
+                return;
+            }
 
             if (settings.useOldIk) {
                 UpdateFastBySteps2(gradStep, moveStep, steps);

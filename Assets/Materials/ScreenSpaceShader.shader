@@ -4,7 +4,7 @@ Shader "Unlit/ScreenSpaceShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Aspect("Texture aspect", Float) = 1 
-        _ShrinkSize("Shrink", Range(-1, 1)) = 0.05
+        _ShrinkSize("Shrink", Range(-0.01, 0.01)) = 0.05
         _OffsetFactor("Offset factor", Range(-1, 1)) = 0
         _OffsetUnits("Offset units", Range(-1, 1)) = 0
     }
@@ -12,9 +12,9 @@ Shader "Unlit/ScreenSpaceShader"
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
-           Offset[_OffsetFactor],[_OffsetUnits]
+        Offset[_OffsetFactor],[_OffsetUnits]
         //Offset -1, 1
-        Cull Off
+        Cull Front
          Pass
         {
 
@@ -75,7 +75,7 @@ Shader "Unlit/ScreenSpaceShader"
                 float2 uv = mul(m, float4(screenPosition.x, screenPosition.y, 0, 1)).xy;
 
                 float4 col = tex2D(_MainTex, uv) ;
-                //col = float4(1, 1, 1, 1);
+            //    col = float4(1, 0, 1, 1);
   //              col = (i.scrPos + float4(0, 0, 0, 10));
                // col.x = col.y = 0;
     

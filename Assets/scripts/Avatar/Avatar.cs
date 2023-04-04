@@ -56,6 +56,7 @@ namespace Lukso{
 
         private Skeleton skeleton;
         public Skeleton Skeleton => skeleton;
+        public readonly Avatar controllerAvatar;
 
         private Vector3?[] ikTarget;
         private Vector3?[] allTarget;
@@ -78,6 +79,7 @@ namespace Lukso{
 
         public IkSettings settings;
 
+        
         //alias
         public GameObject obj => avatar;
 
@@ -89,9 +91,10 @@ namespace Lukso{
         };
 
 
-        public Avatar(GameObject avatar, Skeleton skeleton) {
+        public Avatar(GameObject avatar, Skeleton skeleton, Avatar controllerAvatar = null) {
             this.avatar = avatar;
             this.skeleton = skeleton;
+            this.controllerAvatar = controllerAvatar;
             InitJoints();
             InitCloth();
             CopyRotationFromAvatar();

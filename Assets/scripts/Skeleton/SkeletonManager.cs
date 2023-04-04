@@ -47,26 +47,37 @@ namespace Lukso{
             // find skeleton
             // check if this skeleton is already exist
             // add new avatar or link with existed
-
+            var ch = obj.GetComponentInChildren<ControllerAvatarHolder>();
+            if (ch != null) {
+                return ch.controller;
+            }
             var skeletonDescription = FindSkeletonType(obj);
 
             if (skeletonDescription == null) {
                 return null;
             }
 
-
             var name = unique_avatar ? $"{skeletonDescription.name}_{Time.realtimeSinceStartup}" : $"{skeletonDescription.name}";
             if (contollerAvatars.ContainsKey(name)) {
+                ch = obj.AddComponent<ControllerAvatarHolder>();
+                ch.controller = contollerAvatars[name];
                 return contollerAvatars[name];
             }
 
+
+
+            ch = obj.AddComponent<ControllerAvatarHolder>();
             obj = Instantiate(obj, transform);
+           
+
             obj.name = name + ": " + obj.name;
             obj.SetActive(false);
             var skeleton = InitNewSkeleton(skeletonDescription, obj, name);
             var controller = new Avatar(obj, skeleton);
             controller.settings = ikSettings;
             controller.SetIkSource();
+
+            ch.controller = controller;
 
 
             contollerAvatars[name] = controller;
@@ -304,6 +315,10 @@ namespace Lukso{
         public Avatar GetClothController() {
             return contollerAvatars.Values.FirstOrDefault();
 
+        }
+
+        public List<Avatar> GetAllAvatars() {
+            return new List<Avatar>(contollerAvatars.Values);
         }
     }
 

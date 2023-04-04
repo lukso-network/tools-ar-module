@@ -28,9 +28,10 @@ public class AvatarManager : MonoBehaviour {
     public bool replaceVRMMaterial;
     public bool vrmClothOnly = false;
     public Material discardMaterial;
-
     private SkeletonTrackingGraph skelGraph;
     private Camera3DController cam3d;
+    [SerializeField] private bool useTransparentBody;
+    [SerializeField] private GameObject bodyPrefab = null;
 
     [Range(-0.01f, 0.01f)]
     public float transparentBodyShrinkAmount = 0.04f;
@@ -104,7 +105,7 @@ public class AvatarManager : MonoBehaviour {
             if (replaceModel) {
                 RemoveAllModels(false);
             }
-            AddModel(model);
+            AddModel(model, true);
         }
     }
 
@@ -293,7 +294,7 @@ public class AvatarManager : MonoBehaviour {
 
     public GameObject LoadTransparentBodyModel(GameObject prefab) {
         var cpy = GameObject.Instantiate(prefab, modelRoot.transform);
-        return AddModel(cpy);
+        return AddModel(cpy, true);
     }
 
 
@@ -350,7 +351,7 @@ public class AvatarManager : MonoBehaviour {
 
         controllerAvatar.RestoreSkeleton();
 
-        var curController = new Avatar(root, controllerAvatar.Skeleton);
+        var curController = new Avatar(root, controllerAvatar.Skeleton, controllerAvatar);
         float scale = 1;// controllerAvatar.GetRelativeBonesScale(curController);
 
         obj.transform.localScale /= scale;
@@ -395,14 +396,18 @@ public class AvatarManager : MonoBehaviour {
             }
         }
 
-        var body = transpBodyRoot.Find(female ? (name + "_female") : name);
+        //var body = transpBodyRoot.Find(female ? (name + "_female") : name);
+        var body = transpBodyRoot.Find(female ? ("Alice_female") : name);
         if (body == null) {
+            // use standard model instead of sharing existing
+            var trBody = LoadTransparentBodyModel(bodyPrefab);
+            trBody.name = transp_name;
             return;
         }
 
         var transpObj = GameObject.Instantiate(body.gameObject);
         transpObj.name = transp_name;
-        AddModel(transpObj);
+        AddModel(transpObj, false);
     }
 
     public void ShowAvatar(bool value) {
@@ -423,6 +428,9 @@ public class AvatarManager : MonoBehaviour {
 
             if (IsTransparent(avatar.obj)) {
                 avatar.obj.SetActive(ShowTransparentBody);
+
+                // possible optimization - don't caluclate transparent objects 
+                //avatar.controllerAvatar.updateEnabled = ShowTransparentBody;
             }
 
         }
@@ -459,17 +467,20 @@ public class AvatarManager : MonoBehaviour {
         UpdateTransparentBody();
 
         foreach (var avatar in avatars) {
+            UpdateAvatar(avatar);
+        }
+    }
 
-            var pos = avatar.obj.transform.localPosition;
+    public void UpdateAvatar(Avatar avatar) {
+        var pos = avatar.obj.transform.localPosition;
 
-            var controller = skeletonManager.GetController(avatar.Skeleton);
-            if (controller != null) {
-                var s = controller.GetRelativeBonesScale(avatar);
+        var controller = avatar.controllerAvatar;// skeletonManager.GetController(avatar.Skeleton);
+        if (controller != null) {
+            var s = controller.GetRelativeBonesScale(avatar);
 
-                skinScaler /= s;
-                avatar.CopyToLocalFromGlobal(controller, skinScaler, skeletonManager.ikSettings.resizeBones);
-                avatar.obj.transform.localPosition = pos;
-            }
+            skinScaler /= s;
+            avatar.CopyToLocalFromGlobal(controller, skinScaler, skeletonManager.ikSettings.resizeBones);
+            avatar.obj.transform.localPosition = pos;
         }
     }
 }
