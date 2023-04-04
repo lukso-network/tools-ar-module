@@ -1,25 +1,8 @@
 ﻿using UnityEngine;
 
 namespace Lukso {
-    public class JointController : MonoBehaviour {
-        public Joint joint;
+    public class ControllerAvatarHolder : MonoBehaviour {
+        public Avatar controller;
 
-        public bool gradientEnabled;
-
-        // Use this for initialization
-        void Start() {
-
-        }
-
-        // Update is called once per frame
-        void Update() {
-
-        }
-
-        void OnValidate() {
-            if (joint != null) {
-                joint.gradEnabled = gradientEnabled;
-            }
-        }
     }
 }
