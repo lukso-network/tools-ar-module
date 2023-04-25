@@ -215,8 +215,10 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
     [Binding]
     public void SelectNextResolution() {
 
-        ImageSourceProvider.ImageSource.SelectNextResolution();
-        solution.StartTracking();
+        // ImageSourceProvider.ImageSource.SelectNextResolution();
+        // solution.StartTracking();
+
+        sizeManager.Experiment();
     }
 
     [Binding]

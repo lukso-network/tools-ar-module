@@ -1,7 +1,10 @@
 using Mediapipe.Unity;
 using Mediapipe.Unity.SelfieSegmentation;
 using System.Collections;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
+using Screen = UnityEngine.Screen;
 
 namespace Lukso {
 
@@ -68,6 +71,8 @@ namespace Lukso {
         [SerializeField] private float[] clothParametersTest;
         [SerializeField] private bool manualClothParameters;
         [SerializeField] private bool useTransparentBody;
+        //[SerializeField] private LayerMask layermask;
+        [SerializeField] Shader whiteMaskShader;
 
         private ComputeBuffer iouBuffer;
         private int iouKernerlHandle;
@@ -232,7 +237,7 @@ namespace Lukso {
             yield return avatar.FindBestCloth(() => {
                 avatar.ApplyClothShift(true);
                 avatarManager.UpdateSkeleton(true);
-                var old = clothCamera.targetTexture;
+                var old = RenderTexture.active;
                 RenderTexture.active = clothCamera.targetTexture;
                 clothCamera.Render();
                 RenderTexture.active = old;
@@ -376,6 +381,199 @@ namespace Lukso {
             return ior;
         }
 
+        Texture2D toTexture2D(RenderTexture rTex) {
+            Texture2D tex = new Texture2D(rTex.width, rTex.height, TextureFormat.RGB24, false);
+            RenderTexture.active = rTex;
+            tex.ReadPixels(new Rect(0, 0, rTex.width, rTex.height), 0, 0);
+            tex.Apply();
+            return tex;
+        }
+
+        byte[] SaveTexturePNG(RenderTexture rTex, string fileName) {
+            byte[] bytes = toTexture2D(rTex).EncodeToPNG();
+            File.WriteAllBytes(fileName, bytes);
+            return bytes;
+        }
+
+
+        private byte[] RenderFullImage(string name, params Camera[] cams) {
+            // Создаем RenderTexture с размерами экрана
+            RenderTexture rt = new RenderTexture(Screen.width, Screen.height, 24);
+
+            //var cam = GameObject.Find("Skeleton Camera").GetComponent<Camera>();
+            // Устанавливаем RenderTexture в качестве цели для рендеринга камеры
+            //cam.targetTexture = rt;
+
+            // Создаем Texture2D с размерами экрана
+            Texture2D screenShot = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+
+            foreach(var c in cams) {
+                c.targetTexture = rt;
+                c.Render();
+            }
+
+            // Рендерим кадр в RenderTexture
+            //cam.Render();
+
+            // Активируем RenderTexture
+            RenderTexture.active = rt;
+
+            // Копируем пиксели из RenderTexture в Texture2D
+            screenShot.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+
+            // Применяем изменения в Texture2D
+            screenShot.Apply();
+
+            foreach (var c in cams) {
+                c.targetTexture = null;
+            }
+
+            RenderTexture.active = null;
+            var bytes = SaveTexturePNG(rt, name);
+            // Освобождаем память от RenderTexture
+            Destroy(rt);
+            return bytes;
+        }
+
+        public void Experiment() {
+
+            int idx = (int)Time.realtimeSinceStartup;
+
+            var ui = GameObject.Find("UI");
+        //    ui.SetActive(false);
+
+            var cam2 = GameObject.Find("Skeleton Camera").GetComponent<Camera>();
+            var cam1 = GameObject.Find("MP Camera").GetComponent<Camera>();
+
+            
+            //var cam = GameObject.Find("MP Camera").GetComponent<Camera>();
+            var oldMask = cam2.cullingMask;
+            
+            var image1 = RenderFullImage($"d:\\mpimages\\cloth-full_{idx}.png", cam1, cam2);
+            //ScreenCapture.CaptureScreenshot("d:\\mpimages\\cloth-full2_{idx}.png");
+
+
+            //cam2.cullingMask = layermask;
+          //  cam2.SetReplacementShader(whiteMaskShader, null);
+            cam2.cullingMask = clothCamera.cullingMask;// layermask;
+            var oldTexture = avatarManager.transparentMaterial.mainTexture;
+            avatarManager.transparentMaterial.mainTexture = Texture2D.blackTexture;
+            var image2 = RenderFullImage($"d:\\mpimages\\cloth-mask_{idx}.png", cam2);
+            avatarManager.transparentMaterial.mainTexture = oldTexture;
+
+            ui.SetActive(true);
+            cam2.cullingMask = oldMask;
+            cam2.SetReplacementShader(null, null);
+
+
+            StartCoroutine(CallSBProcessing(image1, image2));
+
+            return;
+
+            //  SaveTexturePNG(RenderTexture.active, "d:\\cloth-full.png");
+            var old = RenderTexture.active;
+            RenderTexture.active = clothCamera.targetTexture;
+            clothCamera.Render();
+            RenderTexture.active = old;
+            SaveTexturePNG(clothCamera.targetTexture, $"d:\\mpimages\\cloth-mask2_{idx}.png");
+            //SetClothTexture(clothCamera.targetTexture);
+        }
+
+        class AcceptAllCertificatesSignedWithASpecificPublicKey : CertificateHandler {
+            // Encoded RSAPublicKey
+            private static string PUB_KEY = "somepublickey";
+
+            protected override bool ValidateCertificate(byte[] certificateData) {
+                //X509Certificate2 certificate = new X509Certificate2(certificateData);
+
+                //string pk = certificate.GetPublicKeyString();
+                //Debug.Log(pk.ToLower());
+                //return pk.Equals(PUB_KEY);
+                return true; // pk.Equals(PUB_KEY);
+            }
+        }
+
+        private IEnumerator CallSBProcessing(byte[] image1Bytes, byte[] image2Bytes) {
+            // Create form to send data
+            WWWForm form = new WWWForm();
+            form.AddBinaryData("image1", image1Bytes);
+            form.AddBinaryData("image2", image2Bytes);
+
+            // Send data to REST API
+            UnityWebRequest www = UnityWebRequest.Post("http://127.0.0.1:5001/process", form);
+            ///www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
+
+
+            Debug.Log("Sent images");
+            yield return www.SendWebRequest();
+            /*UnityWebRequest www = new UnityWebRequest();
+
+            // Set custom certificate handler
+            www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
+
+            // Set other properties and send request
+            www.url = "https://127.0.0.1:5000";
+            www.method = UnityWebRequest.kHttpVerbPOST;
+
+            yield return www.SendWebRequest();
+            */
+
+
+            // Check for errors
+            if (www.result != UnityWebRequest.Result.Success) {
+                Debug.Log(www.error);
+            } else {
+                // Get response data
+                byte[] responseData = www.downloadHandler.data;
+                Debug.Log("Received images");
+
+                // Create new texture from response data
+                Texture2D newImage = new Texture2D(2, 2);
+                newImage.LoadImage(responseData);
+
+                // Use newImage here
+            }
+        }
+
+        public void Experiment2() {
+
+            int idx = (int)Time.realtimeSinceStartup;
+
+            var ui = GameObject.Find("UI");
+            //    ui.SetActive(false);
+
+            var cam2 = GameObject.Find("Skeleton Camera").GetComponent<Camera>();
+            var cam1 = GameObject.Find("MP Camera").GetComponent<Camera>();
+
+
+            //var cam = GameObject.Find("MP Camera").GetComponent<Camera>();
+            var oldMask = cam2.cullingMask;
+
+            RenderFullImage($"d:\\mpimages\\cloth-full_{idx}.png", cam1, cam2);
+            //ScreenCapture.CaptureScreenshot("d:\\mpimages\\cloth-full2_{idx}.png");
+
+
+            //cam2.cullingMask = layermask;
+            //  cam2.SetReplacementShader(whiteMaskShader, null);
+            cam2.cullingMask = clothCamera.cullingMask;// layermask;
+            var oldTexture = avatarManager.transparentMaterial.mainTexture;
+            avatarManager.transparentMaterial.mainTexture = Texture2D.blackTexture;
+            RenderFullImage($"d:\\mpimages\\cloth-mask_{idx}.png", cam2);
+            avatarManager.transparentMaterial.mainTexture = oldTexture;
+
+            ui.SetActive(true);
+            cam2.cullingMask = oldMask;
+            cam2.SetReplacementShader(null, null);
+            return;
+
+            //  SaveTexturePNG(RenderTexture.active, "d:\\cloth-full.png");
+            var old = RenderTexture.active;
+            RenderTexture.active = clothCamera.targetTexture;
+            clothCamera.Render();
+            RenderTexture.active = old;
+            SaveTexturePNG(clothCamera.targetTexture, $"d:\\mpimages\\cloth-mask2_{idx}.png");
+            //SetClothTexture(clothCamera.targetTexture);
+        }
 
     }
 }

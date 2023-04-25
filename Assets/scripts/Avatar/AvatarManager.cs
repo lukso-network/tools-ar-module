@@ -304,7 +304,9 @@ public class AvatarManager : MonoBehaviour {
 
         var layer = LayerMask.NameToLayer(avatarLayerMask);
         foreach (Transform t in children) {
-            t.gameObject.layer = layer;
+            if (!IsTransparent(t.gameObject)) {
+                t.gameObject.layer = layer;
+            }
             t.transform.parent = model.transform.parent;
             var skin = t.gameObject.GetComponent<SkinnedMeshRenderer>();
             if (skin != null) {
