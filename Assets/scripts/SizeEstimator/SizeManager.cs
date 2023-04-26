@@ -390,8 +390,10 @@ namespace Lukso {
         }
 
         byte[] SaveTexturePNG(RenderTexture rTex, string fileName) {
+            
+            
             byte[] bytes = toTexture2D(rTex).EncodeToPNG();
-            File.WriteAllBytes(fileName, bytes);
+            //File.WriteAllBytes(fileName, bytes);
             return bytes;
         }
 
@@ -444,15 +446,17 @@ namespace Lukso {
 
             var cam2 = GameObject.Find("Skeleton Camera").GetComponent<Camera>();
             var cam1 = GameObject.Find("MP Camera").GetComponent<Camera>();
+           // cam2.clearFlags = CameraClearFlags.Color;
 
-            
+
             //var cam = GameObject.Find("MP Camera").GetComponent<Camera>();
             var oldMask = cam2.cullingMask;
             
             var image1 = RenderFullImage($"d:\\mpimages\\cloth-full_{idx}.png", cam1, cam2);
             //ScreenCapture.CaptureScreenshot("d:\\mpimages\\cloth-full2_{idx}.png");
 
-
+            var clearFlag = cam2.clearFlags;
+            cam2.clearFlags = CameraClearFlags.Color;
             //cam2.cullingMask = layermask;
           //  cam2.SetReplacementShader(whiteMaskShader, null);
             cam2.cullingMask = clothCamera.cullingMask;// layermask;
@@ -462,6 +466,7 @@ namespace Lukso {
             avatarManager.transparentMaterial.mainTexture = oldTexture;
 
             ui.SetActive(true);
+            cam2.clearFlags = clearFlag;
             cam2.cullingMask = oldMask;
             cam2.SetReplacementShader(null, null);
 
@@ -500,38 +505,25 @@ namespace Lukso {
             form.AddBinaryData("image2", image2Bytes);
 
             // Send data to REST API
-            UnityWebRequest www = UnityWebRequest.Post("http://127.0.0.1:5001/process", form);
-            ///www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
 
+            using (UnityWebRequest www = UnityWebRequest.Post("http://10.8.0.204:5002/process", form)) {
 
-            Debug.Log("Sent images");
-            yield return www.SendWebRequest();
-            /*UnityWebRequest www = new UnityWebRequest();
+                Debug.Log("Sent images");
+                yield return www.SendWebRequest();
+                // Check for errors
+                if (www.result != UnityWebRequest.Result.Success) {
+                    Debug.Log(www.error);
+                } else {
+                    // Get response data
+                    byte[] responseData = www.downloadHandler.data;
+                    Debug.Log("Received images");
 
-            // Set custom certificate handler
-            www.certificateHandler = new AcceptAllCertificatesSignedWithASpecificPublicKey();
+                    // Create new texture from response data
+                //    Texture2D newImage = new Texture2D(2, 2);
+                   // newImage.LoadImage(responseData);
 
-            // Set other properties and send request
-            www.url = "https://127.0.0.1:5000";
-            www.method = UnityWebRequest.kHttpVerbPOST;
-
-            yield return www.SendWebRequest();
-            */
-
-
-            // Check for errors
-            if (www.result != UnityWebRequest.Result.Success) {
-                Debug.Log(www.error);
-            } else {
-                // Get response data
-                byte[] responseData = www.downloadHandler.data;
-                Debug.Log("Received images");
-
-                // Create new texture from response data
-                Texture2D newImage = new Texture2D(2, 2);
-                newImage.LoadImage(responseData);
-
-                // Use newImage here
+                    // Use newImage here
+                }
             }
         }
 

@@ -7608,6 +7608,22 @@ MonoBehaviour:
   - {fileID: 2800000, guid: d38984bec3a9b994fa0f4620340167bf, type: 3}
   - {fileID: 2800000, guid: 7a6516247090e144fb4d182703e986ab, type: 3}
   - {fileID: 2800000, guid: 055742eee429be14b885614d0b54601f, type: 3}
+  - {fileID: 2800000, guid: bed87c7f7645b6446910662cd40cb5dd, type: 3}
+  - {fileID: 2800000, guid: 1b04b5c04b67c554fac5a06cc313396d, type: 3}
+  - {fileID: 2800000, guid: fddef547750c77e4db03eb3f1629dbeb, type: 3}
+  - {fileID: 2800000, guid: 9a0f15ae49c84884c810cfb9c71cc223, type: 3}
+  - {fileID: 2800000, guid: 9f04c3cae415b2d44bc7d33b15f364f3, type: 3}
+  - {fileID: 2800000, guid: 53210a93eb231334b9cd864e1d314657, type: 3}
+  - {fileID: 2800000, guid: dbd53284a5ff4504caf2812920b20ca7, type: 3}
+  - {fileID: 2800000, guid: e1c0fdc62054e804384e132863197abb, type: 3}
+  - {fileID: 2800000, guid: dc49fa4985768f84e99d355010f13927, type: 3}
+  - {fileID: 2800000, guid: e7e080a8379008f4a997f4b9e9e8af84, type: 3}
+  - {fileID: 2800000, guid: 8c58c8a3d2cacaf409a8bb1633703e89, type: 3}
+  - {fileID: 2800000, guid: f28ff3b9b5115384ab6a0b0e7b2eec15, type: 3}
+  - {fileID: 2800000, guid: 509861782b8872d4798c33dfa413e041, type: 3}
+  - {fileID: 2800000, guid: b5c7f90fc6979bd4abb54902a055197f, type: 3}
+  - {fileID: 2800000, guid: 6dc43436e8e345048a03dcab322018e7, type: 3}
+  - {fileID: 2800000, guid: 657e269a14ca40b45bedab17afd33b57, type: 3}
   _defaultAvailableResolutions:
   - width: 0
     height: 0
@@ -15676,6 +15692,7 @@ MonoBehaviour:
   - 0
   manualClothParameters: 0
   useTransparentBody: 1
+  whiteMaskShader: {fileID: 0}
 --- !u!1 &1770147786
 GameObject:
   m_ObjectHideFlags: 0

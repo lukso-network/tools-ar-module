@@ -27,7 +27,7 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
 
     private const string TEST_MODEL_NAME = "test_models.zip";
     private const string TEST_MODEL_DIR_NAME = "lukso_models";
-    private const string TEST_MODEL_URL = "http://88.210.9.16:8000/testmodel_set.zip";
+    private const string TEST_MODEL_URL = "http://62.84.103.163:8000/testmodel_set.zip";
 
 
     [SerializeField] private SkeletonTrackingSolution solution;
