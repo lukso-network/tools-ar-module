@@ -119,7 +119,6 @@ namespace Lukso {
 
         void Update() {
 
-
             var avatar = skeletonManager.GetClothController();
             if (avatar != null) {
                 if (manualClothParameters) {
@@ -168,8 +167,10 @@ namespace Lukso {
         // }
 
         public void ResetSize() {
-            skeletonManager.GetClothController()?.ResetClothSize();
-            skeletonManager.GetClothController()?.CopyFromClothParameters(clothParametersTest);
+            foreach (var avatar in skeletonManager.GetAllAvatars()) {
+                avatar.ResetClothSize();
+                avatar.CopyFromClothParameters(clothParametersTest);
+            }
         }
 
         public void CalculateSize() {

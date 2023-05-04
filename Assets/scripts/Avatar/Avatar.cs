@@ -65,6 +65,7 @@ namespace Lukso{
         private float boneLength;
 
         public bool Destroyed { get; set; }
+        public bool IsTransparent { get; set; }
 
         private Transform[] ikSource;
         private Dictionary<String, Joint> transformByName = new Dictionary<string, Joint>();

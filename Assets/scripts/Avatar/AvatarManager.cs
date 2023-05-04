@@ -294,7 +294,7 @@ public class AvatarManager : MonoBehaviour {
 
     public GameObject LoadTransparentBodyModel(GameObject prefab) {
         var cpy = GameObject.Instantiate(prefab, modelRoot.transform);
-        return AddModel(cpy, true);
+        return AddModel(cpy, true, true);
     }
 
 
@@ -326,13 +326,13 @@ public class AvatarManager : MonoBehaviour {
         }
     }
 
-    public GameObject AddModel(GameObject obj, bool unique_avatar = false) {
+    public GameObject AddModel(GameObject obj, bool unique_avatar = false, bool transparent = false) {
         var root = new GameObject("LinearRoot:" + obj.name);
         root.transform.parent = modelRoot.transform;
 
         obj.transform.parent = root.transform;
 
-        var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj, unique_avatar);
+        var controllerAvatar = skeletonManager.GetOrCreateControllerAvatar(obj, unique_avatar, transparent);
         if (controllerAvatar == null) {
             GameObject.Destroy(obj);
             return null;

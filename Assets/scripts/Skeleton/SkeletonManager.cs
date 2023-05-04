@@ -43,7 +43,7 @@ namespace Lukso{
             }
         }
 
-        public Avatar GetOrCreateControllerAvatar(GameObject obj, bool unique_avatar = false) {
+        public Avatar GetOrCreateControllerAvatar(GameObject obj, bool unique_avatar = false, bool transparent = false) {
             // find skeleton
             // check if this skeleton is already exist
             // add new avatar or link with existed
@@ -74,6 +74,7 @@ namespace Lukso{
             obj.SetActive(false);
             var skeleton = InitNewSkeleton(skeletonDescription, obj, name);
             var controller = new Avatar(obj, skeleton);
+            controller.IsTransparent = transparent;
             controller.settings = ikSettings;
             controller.SetIkSource();
 
@@ -313,8 +314,7 @@ namespace Lukso{
         }
 
         public Avatar GetClothController() {
-            return contollerAvatars.Values.FirstOrDefault();
-
+            return contollerAvatars.Values.Where(x => !x.IsTransparent).FirstOrDefault();
         }
 
         public List<Avatar> GetAllAvatars() {
