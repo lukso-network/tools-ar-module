@@ -97,8 +97,8 @@ namespace Lukso {
 
         public void Experiment() {
 
-            GetComponent<TextureSwapper>().CaptureAndSave();
-            return;
+            //GetComponent<TextureSwapper>().CaptureAndSave();
+            //return;
 
             int idx = (int)Time.realtimeSinceStartup;
 
@@ -138,7 +138,8 @@ namespace Lukso {
             // Send data to REST API
 
 
-            using (UnityWebRequest req = UnityWebRequest.Post("http://10.8.0.204:5002/process", form)) {
+           //using (UnityWebRequest req = UnityWebRequest.Post("http://10.8.0.204:5002/process", form)) {
+            using (UnityWebRequest req = UnityWebRequest.Post("http://127.0.0.1:5002/process", form)) {
                 ShowLoader();
                 req.timeout = 120;
                 Debug.Log("Sent images");
@@ -156,6 +157,8 @@ namespace Lukso {
                     Texture2D texture = DownloadHandlerTexture.GetContent(req);
                     Debug.Log(texture.width);
                     ShowImage(texture);
+                    GetComponent<TextureSwapper>().CaptureAndSave(texture);
+                    
                 }
             }
         }

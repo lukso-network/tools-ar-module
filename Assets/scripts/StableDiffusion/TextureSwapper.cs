@@ -63,16 +63,18 @@ public class TextureSwapper : MonoBehaviour {
     }
 
 
-    public void CaptureAndSave() {
+    public void CaptureAndSave(Texture2D replaceTexture = null) {
 
         SwapAllTextures();
         //Shader.SetGlobalFloat("_ShowCoordinates", 1);
         //return;
 
-        
+
         //RenderTexture renderTexture = captureCamera.targetTexture;
         //RenderTexture renderTexture = new RenderTexture(Screen.width *4, Screen.height *4 , 32);
-        RenderTexture renderTexture = new RenderTexture(Screen.width * 4, Screen.height * 4, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+        const int scale = 4;
+
+        RenderTexture renderTexture = new RenderTexture(Screen.width * scale, Screen.height * scale, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
 
         RenderTexture.active = renderTexture;
@@ -134,8 +136,9 @@ public class TextureSwapper : MonoBehaviour {
             }
         }
 
-
-   
+        var srcColors = replaceTexture != null ? replaceTexture.GetPixels() : null;
+        bytes = replaceTexture.EncodeToPNG();
+        File.WriteAllBytes("d://replace-texture.png", bytes);
 
         int id = 0;
         for (int y = 0; y < texture.height; ++y) {
@@ -150,19 +153,28 @@ public class TextureSwapper : MonoBehaviour {
                 var (u2, v2, matId2) = GetMatParams(x + 1, y + 1, texture.width, texture.height, coordinates, materials);
                 var (u3, v3, matId3) = GetMatParams(x, y + 1, texture.width, texture.height, coordinates, materials);
                 //xyColor.r *= 30;
+
+                //color = new Color(x / texture.width, y / texture.height, 1, 1);
                 Material mat;
                 if (matById.TryGetValue(matId, out mat)) {
+
+                    var color = new Color(u, 0, 0, 1);
+                    if (srcColors != null) {
+                        int y1 = (int)((y / (float)texture.height) * replaceTexture.height);
+                        int x1 = (int)((x / (float)texture.width) * replaceTexture.width);
+                        color = srcColors[y1 * replaceTexture.width + x1];
+                    }
+
                     var tex = (Texture2D)mat.mainTexture;
                     if (tex != null && tex.isReadable) {//if (tex != null && tex.isReadable && (tex.format == TextureFormat.RGBA32 || tex.format == TextureFormat.ARGB32)) {
                         //texture.SetPixels(squarePosition.x, squarePosition.y, squareSize.x, squareSize.y, colors);
-                        tex.SetPixel((int)(u * tex.width), (int)(v * tex.height), new Color(u, 0, 0, 1));
+                        tex.SetPixel((int)(u * tex.width), (int)(v * tex.height), color);
 
                         const float t = 0.2f;
 
-                        var c = new Color(v, 0, 0, 1);
                         if (matId2 == matId && matId == matId1 && Math.Abs(u - u1) < t && Math.Abs(u - u2) < t && Math.Abs(u1 - u2) < t
                                 && Math.Abs(v - v1) < t && Math.Abs(v - v2) < t && Math.Abs(v1 - v2) < t) {
-                            DrawTriangle(tex, c,
+                            DrawTriangle(tex, color,
                             new Vector2Int((int)(u * tex.width), (int)(v * tex.height)),
                             //new Vector2Int((int)(u * tex.width+2), (int)(v * tex.height+0)),
                             //new Vector2Int((int)(u * tex.width), (int)(v * tex.height + 2)));
@@ -172,7 +184,7 @@ public class TextureSwapper : MonoBehaviour {
 
                         if (matId2 == matId && matId == matId3 && Math.Abs(u - u3) < t && Math.Abs(u - u2) < t && Math.Abs(u3 - u2) < t
                                 && Math.Abs(v - v3) < t && Math.Abs(v - v2) < t && Math.Abs(v3 - v2) < t) {
-                            DrawTriangle(tex, c,
+                            DrawTriangle(tex, color,
                             new Vector2Int((int)(u * tex.width), (int)(v * tex.height)),
                             new Vector2Int((int)(u2 * tex.width), (int)(v2 * tex.height)),
                             new Vector2Int((int)(u3 * tex.width), (int)(v3 * tex.height)));
@@ -222,7 +234,7 @@ public class TextureSwapper : MonoBehaviour {
 
 
             try {
-                ((Texture2D)m.mainTexture).Apply();
+                ((Texture2D)m.mainTexture).Apply(true, true);
             } catch (Exception e) {
                 Debug.LogError("EEEE:" + matiId + " " + m.name + " " + e);
             }
