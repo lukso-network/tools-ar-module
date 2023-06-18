@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10345,6 +10345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1109023619}
   - component: {fileID: 1109023620}
+  - component: {fileID: 1109023621}
   m_Layer: 0
   m_Name: StableDiffusion
   m_TagString: Untagged
@@ -10385,6 +10386,20 @@ MonoBehaviour:
   clothCamera: {fileID: 974677400}
   avatarManager: {fileID: 548813479}
   loader: {fileID: 1855046515}
+--- !u!114 &1109023621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109023618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d38007dd10ec974bb1e0b5e6c076b75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materialIdShader: {fileID: 4800000, guid: c81ffab7249b9314f948e87e87a7e288, type: 3}
+  captureCamera: {fileID: 985747844}
 --- !u!1 &1113359856
 GameObject:
   m_ObjectHideFlags: 0
@@ -11764,7 +11779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -14.999985}
+  m_AnchoredPosition: {x: 0, y: -15}
   m_SizeDelta: {x: 0, y: -70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1262345764

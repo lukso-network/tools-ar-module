@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using Lukso;
 
 public class TextureSwapper : MonoBehaviour {
     
@@ -28,6 +29,9 @@ public class TextureSwapper : MonoBehaviour {
         foreach (Renderer renderer in renderers) {
             originalMaterials[renderer] = renderer.materials;
             Material[] newMaterials = new Material[renderer.materials.Length];
+            if (renderer.gameObject.GetComponent<TransparentMaterialRenderer>() != null ) {
+                continue;
+            }
             for (int i = 0; i < newMaterials.Length; i++) {
                 var curMat = renderer.materials[i];
                 if (false && matMap.ContainsKey(curMat.name)) {
@@ -35,6 +39,8 @@ public class TextureSwapper : MonoBehaviour {
                     newMaterials[i] = m;
                 } else {
                     matById[count] = curMat;
+
+                  
                     var newMat = new Material(materialIdShader);
                     //newMat.mainTexture = curMat.mainTexture;
                     matMap[curMat.name] = newMaterials[i] = newMat;
@@ -44,6 +50,29 @@ public class TextureSwapper : MonoBehaviour {
             }
             renderer.materials = newMaterials;
         }
+
+        foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
+            Renderer renderer = kvp.Key;
+            Material[] materials = kvp.Value;
+
+            foreach(var curMat in materials) {
+                var originalTexture = curMat.mainTexture as Texture2D;
+                if (originalTexture != null) {
+                    Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
+
+                    if (originalTexture.isReadable) {
+                        copyTexture.SetPixels(originalTexture.GetPixels());
+                    } else {
+                        Graphics.ConvertTexture(originalTexture, copyTexture);
+                    }
+                    
+                    copyTexture.Apply();
+                    curMat.mainTexture = copyTexture;
+                }
+            }
+
+        }
+
     }
 
 
@@ -168,7 +197,7 @@ public class TextureSwapper : MonoBehaviour {
                     var tex = (Texture2D)mat.mainTexture;
                     if (tex != null && tex.isReadable) {//if (tex != null && tex.isReadable && (tex.format == TextureFormat.RGBA32 || tex.format == TextureFormat.ARGB32)) {
                         //texture.SetPixels(squarePosition.x, squarePosition.y, squareSize.x, squareSize.y, colors);
-                        tex.SetPixel((int)(u * tex.width), (int)(v * tex.height), color);
+                        SetRGB(tex, (int)(u * tex.width), (int)(v * tex.height), color);
 
                         const float t = 0.2f;
 
@@ -234,7 +263,7 @@ public class TextureSwapper : MonoBehaviour {
 
 
             try {
-                ((Texture2D)m.mainTexture).Apply(true, true);
+                ((Texture2D)m.mainTexture).Apply();
             } catch (Exception e) {
                 Debug.LogError("EEEE:" + matiId + " " + m.name + " " + e);
             }
@@ -245,6 +274,10 @@ public class TextureSwapper : MonoBehaviour {
         RestoreAllTextures();
     }
 
+    private void SetRGB(Texture2D tex, int u, int v, Color c) {
+        c.a = tex.GetPixel(u, v).a;
+        tex.SetPixel(u, v, c);
+    }
 
     private (float, float, int) GetMatParams(int x, int y, int w, int h, Color[] coordinates, Color32[] materials) {
         x = Math.Min(x, w - 1);
@@ -278,7 +311,7 @@ public class TextureSwapper : MonoBehaviour {
             int x2 = (int)(p1.x + k2 * (y - p1.y));
             if (x1 > x2) Swap(ref x1, ref x2);
             for (int x = x1; x <= x2; x++) {
-                texture.SetPixel(x, y, color);
+                SetRGB(texture, x, y, color);
             }
         }
 
@@ -288,7 +321,7 @@ public class TextureSwapper : MonoBehaviour {
             int x2 = (int)(p2.x + k3 * (y - p2.y));
             if (x1 > x2) Swap(ref x1, ref x2);
             for (int x = x1; x <= x2; x++) {
-                texture.SetPixel(x, y, color);
+                SetRGB(texture, x, y, color);
             }
         }
     }
