@@ -45,16 +45,16 @@ Shader "Unlit/materialIdShader"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-              //  UNITY_TRANSFER_FOG(o,o.vertex);
+              //  UNITY_TRANSFER_FOG(o,o.vertex); 
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
-            {
-                // sample the texture
-                //float4 col1 = float4(floor(i.uv.x * 255) / 255, frac(i.uv.x * 255), floor(i.uv.y * 255) / 255, frac(i.uv.y * 255));
+            fixed4 frag(v2f i) : SV_Target {
+              // sample the texture
+              // float4 col1 = float4(floor(i.uv.x * 255) / 255, frac(i.uv.x * 255), floor(i.uv.y * 255) / 255, frac(i.uv.y * 255));
 
-                float4 col1 = float4(floor(i.uv.y * 255) / 255, frac(i.uv.y * 255), floor(i.uv.x * 255) / 255, frac(i.uv.x * 255));
+              float2 c = frac(i.uv);
+                float4 col1 = float4(floor(c.y * 255) / 255, frac(c.y * 255), floor(c.x * 255) / 255, frac(c.x * 255));
                 //float4 col1 = float4(frac(i.uv.y * 255),0, 0,0);
                 float4 col2 = float4(_IdColor.x, _IdColor.y, _IdColor.z, _IdColor.w);
 

@@ -16,6 +16,7 @@ public class TextureSwapper : MonoBehaviour {
     private Dictionary<int, Material> matById = new Dictionary<int, Material>();
     
     private System.Random rnd = new System.Random();
+    private List<Material> repMat = new List<Material>();
 
     void Start() {
     }
@@ -45,34 +46,106 @@ public class TextureSwapper : MonoBehaviour {
                     //newMat.mainTexture = curMat.mainTexture;
                     matMap[curMat.name] = newMaterials[i] = newMat;
                     newMaterials[i].SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
+                   // int z = 0;
+                  //  newMaterials[i].SetColor("_IdColor", new Color(z / 256.0f, (float)rnd.NextDouble(), (z + 1) / 256.0f, 1));
                     count += 1;
                 }
             }
             renderer.materials = newMaterials;
         }
-
+       // return;
         foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
             Renderer renderer = kvp.Key;
             Material[] materials = kvp.Value;
 
             foreach(var curMat in materials) {
+                //UpdateMaterialTexture(curMat);
+                //continue;
                 var originalTexture = curMat.mainTexture as Texture2D;
                 if (originalTexture != null) {
                     Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
-
+                    
                     if (originalTexture.isReadable) {
                         copyTexture.SetPixels(originalTexture.GetPixels());
                     } else {
-                        Graphics.ConvertTexture(originalTexture, copyTexture);
-                    }
                     
+                        RenderTexture previous = RenderTexture.active;
+
+                        RenderTexture tmp = RenderTexture.GetTemporary(
+                                            originalTexture.width,
+                                            originalTexture.height,
+                                            0,
+                                            RenderTextureFormat.Default,
+                                            RenderTextureReadWrite.Linear);
+
+                        Graphics.Blit(originalTexture, tmp);
+                        RenderTexture.active = tmp;
+                        copyTexture.ReadPixels(new Rect(0, 0, tmp.width, tmp.height), 0, 0);
+                        copyTexture.Apply();
+                        RenderTexture.active = previous;
+                        RenderTexture.ReleaseTemporary(tmp);
+
+                    }
+
+                    //if (!Graphics.ConvertTexture(originalTexture, copyTexture)) {
+                    //  Debug.LogError("Can't create a copy of texture");
+                    //}
                     copyTexture.Apply();
+                    /*
+                    var c = copyTexture.GetPixels32(0);
+                    for(int i = 0; i < c.Length; ++i) {
+                        c[i] = new Color32(10, 10, 10, 255);
+                    }
+                    copyTexture.SetPixels32(c);
+                    copyTexture.Apply();*/
                     curMat.mainTexture = copyTexture;
+                    repMat.Add(curMat);
                 }
             }
 
         }
 
+    }
+
+    private void UpdateMaterialTexture(Material mat) {
+        return;
+        var prefix = "_replaced_lukso";
+        var originalTexture = mat.mainTexture as Texture2D;
+        if (!originalTexture || originalTexture.name.StartsWith(prefix)) {
+            return;
+        }
+        ///if (!mat.mainTexture.isReadable && !mat.mainTexture.name.StartsWith(prefix)) {
+
+        Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
+        copyTexture.name = prefix + mat.mainTexture.name;
+
+        if (originalTexture.isReadable) {
+            copyTexture.SetPixels(originalTexture.GetPixels());
+        } else {
+
+            RenderTexture previous = RenderTexture.active;
+
+            RenderTexture tmp = RenderTexture.GetTemporary(
+                                originalTexture.width,
+                                originalTexture.height,
+                                0,
+                                RenderTextureFormat.Default,
+                                RenderTextureReadWrite.Linear);
+
+            Graphics.Blit(originalTexture, tmp);
+            RenderTexture.active = tmp;
+            copyTexture.ReadPixels(new Rect(0, 0, tmp.width, tmp.height), 0, 0);
+            copyTexture.Apply();
+
+            RenderTexture.active = previous;
+            RenderTexture.ReleaseTemporary(tmp);
+        }
+
+        copyTexture.Apply();
+
+        mat.mainTexture = copyTexture;
+
+        
     }
 
 
@@ -87,7 +160,7 @@ public class TextureSwapper : MonoBehaviour {
 
     public void Update() {
         if (Time.frameCount == 10) {
-            CaptureAndSave();
+       //     CaptureAndSave();
         }
     }
 
@@ -95,14 +168,16 @@ public class TextureSwapper : MonoBehaviour {
     public void CaptureAndSave(Texture2D replaceTexture = null) {
 
         SwapAllTextures();
+     //   return;
         //Shader.SetGlobalFloat("_ShowCoordinates", 1);
         //return;
 
 
         //RenderTexture renderTexture = captureCamera.targetTexture;
         //RenderTexture renderTexture = new RenderTexture(Screen.width *4, Screen.height *4 , 32);
-        const int scale = 4;
+        const int scale = 1;
 
+        var prevRenderTexture = RenderTexture.active;
         RenderTexture renderTexture = new RenderTexture(Screen.width * scale, Screen.height * scale, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
 
@@ -126,6 +201,8 @@ public class TextureSwapper : MonoBehaviour {
         captureCamera.Render();
         texture.ReadPixels(rect, 0, 0);
         texture.Apply();
+
+        RenderTexture.active = prevRenderTexture;
 
         captureCamera.targetTexture = null;
         //captureCamera.SetReplacementShader(null, null);
@@ -186,14 +263,14 @@ public class TextureSwapper : MonoBehaviour {
                 //color = new Color(x / texture.width, y / texture.height, 1, 1);
                 Material mat;
                 if (matById.TryGetValue(matId, out mat)) {
-
-                    var color = new Color(u, 0, 0, 1);
+                    var color = Color.black;
                     if (srcColors != null) {
                         int y1 = (int)((y / (float)texture.height) * replaceTexture.height);
                         int x1 = (int)((x / (float)texture.width) * replaceTexture.width);
                         color = srcColors[y1 * replaceTexture.width + x1];
                     }
 
+                    UpdateMaterialTexture(mat);
                     var tex = (Texture2D)mat.mainTexture;
                     if (tex != null && tex.isReadable) {//if (tex != null && tex.isReadable && (tex.format == TextureFormat.RGBA32 || tex.format == TextureFormat.ARGB32)) {
                         //texture.SetPixels(squarePosition.x, squarePosition.y, squareSize.x, squareSize.y, colors);
