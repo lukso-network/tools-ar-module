@@ -16,7 +16,7 @@ public class TextureSwapper : MonoBehaviour {
     private Dictionary<int, Material> matById = new Dictionary<int, Material>();
     
     private System.Random rnd = new System.Random();
-    private List<Material> repMat = new List<Material>();
+    
 
     void Start() {
     }
@@ -26,7 +26,7 @@ public class TextureSwapper : MonoBehaviour {
         matById.Clear();
         Renderer[] renderers = FindObjectsOfType<Renderer>();
         int count = 0;
-        Dictionary<string, Material> matMap = new Dictionary<string, Material>();
+
         foreach (Renderer renderer in renderers) {
             originalMaterials[renderer] = renderer.materials;
             Material[] newMaterials = new Material[renderer.materials.Length];
@@ -35,22 +35,13 @@ public class TextureSwapper : MonoBehaviour {
             }
             for (int i = 0; i < newMaterials.Length; i++) {
                 var curMat = renderer.materials[i];
-                if (false && matMap.ContainsKey(curMat.name)) {
-                    var m = matMap[curMat.name];
-                    newMaterials[i] = m;
-                } else {
-                    matById[count] = curMat;
-
-                  
-                    var newMat = new Material(materialIdShader);
-                    //newMat.mainTexture = curMat.mainTexture;
-                    matMap[curMat.name] = newMaterials[i] = newMat;
-                    newMaterials[i].SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
-                   // int z = 0;
-                  //  newMaterials[i].SetColor("_IdColor", new Color(z / 256.0f, (float)rnd.NextDouble(), (z + 1) / 256.0f, 1));
-                    count += 1;
-                }
+                matById[count] = curMat;
+                var newMat = new Material(materialIdShader);
+                newMat.SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
+                newMaterials[i] = newMat;
+                count += 1;
             }
+
             renderer.materials = newMaterials;
         }
         
@@ -72,7 +63,6 @@ public class TextureSwapper : MonoBehaviour {
         if (!originalTexture || originalTexture.name.StartsWith(prefix)) {
             return;
         }
-        ///if (!mat.mainTexture.isReadable && !mat.mainTexture.name.StartsWith(prefix)) {
 
         Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
         copyTexture.name = prefix + mat.mainTexture.name;
@@ -102,10 +92,7 @@ public class TextureSwapper : MonoBehaviour {
         copyTexture.Apply();
 
         mat.mainTexture = copyTexture;
-
-        
     }
-
 
     public void RestoreAllTextures() {
         foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
@@ -116,21 +103,11 @@ public class TextureSwapper : MonoBehaviour {
         originalMaterials.Clear();
     }
 
-    public void Update() {
-        if (Time.frameCount == 10) {
-       //     CaptureAndSave();
-        }
-    }
-
-
-    public void CaptureAndSave(Texture2D replaceTexture = null) {
-
-        SwapAllTextures();
-     
+    private (Color[], Color32[], int, int) RenderCoordinatesAndMaterials() {
         const int scale = 1;
 
         var prevRenderTexture = RenderTexture.active;
-        RenderTexture renderTexture = new RenderTexture(Screen.width * scale, Screen.height * scale, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
+        RenderTexture renderTexture = RenderTexture.GetTemporary(Screen.width * scale, Screen.height * scale, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
 
         RenderTexture.active = renderTexture;
@@ -139,76 +116,50 @@ public class TextureSwapper : MonoBehaviour {
         //captureCamera.SetReplacementShader(replacementShader, null);
 
         captureCamera.targetTexture = renderTexture;
+
         Shader.SetGlobalFloat("_ShowCoordinates", 1);
         captureCamera.Render();
-
         texture.ReadPixels(rect, 0, 0);
         texture.Apply();
-        byte[] bytes = texture.EncodeToPNG();
-        File.WriteAllBytes("d://rendered-coord.png", bytes);
-
         Color[] coordinates = texture.GetPixels();
+
         Shader.SetGlobalFloat("_ShowCoordinates", 0);
         captureCamera.Render();
         texture.ReadPixels(rect, 0, 0);
         texture.Apply();
+        Color32[] materials = texture.GetPixels32();
 
         RenderTexture.active = prevRenderTexture;
+        RenderTexture.ReleaseTemporary(renderTexture);
 
         captureCamera.targetTexture = null;
-        //captureCamera.SetReplacementShader(null, null);
 
-        bytes = texture.EncodeToPNG();
-        File.WriteAllBytes("d://rendered-mats.png", bytes);
+        return (coordinates, materials, texture.width, texture.height);
+    }
 
-        Color32[] materials = texture.GetPixels32();
+    public void CaptureAndSave(Texture2D replaceTexture = null) {
+
+        SwapAllTextures();
+
+        var (coordinates, materials, width, height) = RenderCoordinatesAndMaterials();
+
+
         HashSet<int> updatedMaterials = new HashSet<int>();
-        for (int y = 0; y < texture.height; ++y) {
-            for (int x = 0; x < texture.width; ++x) {
-                /*var xyColor = coordinates[id];
-                var matId = (int)(materials[id].r);
-                var v = (float)((xyColor.r  + xyColor.g/ 255.0f));
-                var u = (float)((xyColor.b + xyColor.a / 255.0f) );
-                //(u,v) = (v, u);*/
-                var (u, v, matId) = GetMatParams(x, y, texture.width, texture.height, coordinates, materials);
-                Material mat;
-                if (!updatedMaterials.Contains(matId) && matById.TryGetValue(matId, out mat)) {
-                    var tex = (Texture2D)mat.mainTexture;
-                    if (tex != null) {
-                        Debug.Log(matId + ":" + mat + " " + mat.mainTexture.name + " " + tex.format + " " + tex.graphicsFormat);
-                        if ( false) {// && !tex.isReadable || (tex.format != TextureFormat.RGBA32 && tex.format != TextureFormat.ARGB32)) {
-                            var newText = new Texture2D(mat.mainTexture.width, mat.mainTexture.height, TextureFormat.ARGB32, true);
-                            //var newText = new Texture2D(tex.width, tex.height, tex.format, true);
-                            bool res = Graphics.ConvertTexture(tex, newText);
-                            Debug.Log("Convertion result:" + res);
-
-                            bytes = newText.EncodeToPNG();
-                            File.WriteAllBytes($"d://rendered-mats-{matId}.png", bytes);
-                            newText.Apply(false, true);
-                            mat.mainTexture = newText;
-                        }
-                        updatedMaterials.Add(matId);
-                    }
-                }
-            }
-        }
-
+     
         var srcColors = replaceTexture != null ? replaceTexture.GetPixels() : null;
-        bytes = replaceTexture.EncodeToPNG();
-        File.WriteAllBytes("d://replace-texture.png", bytes);
 
         int id = 0;
-        for (int y = 0; y < texture.height; ++y) {
-            for (int x = 0; x < texture.width; ++x, ++id) {
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x, ++id) {
                 /*var xyColor = coordinates[id];
                 var matId = (int)(materials[id].r);
                 var v = (float)((xyColor.r  + xyColor.g/ 255.0f));
                 var u = (float)((xyColor.b + xyColor.a / 255.0f) );
                 //(u,v) = (v, u);*/
-                var (u, v, matId) = GetMatParams(x, y, texture.width, texture.height, coordinates, materials);
-                var (u1, v1, matId1) = GetMatParams(x + 1, y, texture.width, texture.height, coordinates, materials);
-                var (u2, v2, matId2) = GetMatParams(x + 1, y + 1, texture.width, texture.height, coordinates, materials);
-                var (u3, v3, matId3) = GetMatParams(x, y + 1, texture.width, texture.height, coordinates, materials);
+                var (u, v, matId) = GetMatParams(x, y, width, height, coordinates, materials);
+                var (u1, v1, matId1) = GetMatParams(x + 1, y, width, height, coordinates, materials);
+                var (u2, v2, matId2) = GetMatParams(x + 1, y + 1, width, height, coordinates, materials);
+                var (u3, v3, matId3) = GetMatParams(x, y + 1, width, height, coordinates, materials);
                 //xyColor.r *= 30;
 
                 //color = new Color(x / texture.width, y / texture.height, 1, 1);
@@ -216,14 +167,17 @@ public class TextureSwapper : MonoBehaviour {
                 if (matById.TryGetValue(matId, out mat)) {
                     var color = Color.black;
                     if (srcColors != null) {
-                        int y1 = (int)((y / (float)texture.height) * replaceTexture.height);
-                        int x1 = (int)((x / (float)texture.width) * replaceTexture.width);
+                        int y1 = (int)((y / (float)height) * replaceTexture.height);
+                        int x1 = (int)((x / (float)width) * replaceTexture.width);
                         color = srcColors[y1 * replaceTexture.width + x1];
                     }
 
                     UpdateMaterialTexture(mat);
                     var tex = (Texture2D)mat.mainTexture;
                     if (tex != null && tex.isReadable) {
+                        updatedMaterials.Add(matId);
+
+
                         SetRGB(tex, (int)(u * tex.width), (int)(v * tex.height), color);
 
                         const float t = 0.2f;
@@ -249,18 +203,8 @@ public class TextureSwapper : MonoBehaviour {
             }
         }
 
-
-
-        texture.Apply();
-        bytes = texture.EncodeToPNG();
-        File.WriteAllBytes("d://rendered2.png", bytes);
-
-
-
-        //foreach(var m in matById.Values) {
         foreach (var matiId in updatedMaterials) {
             var m = matById[matiId];
-
 
             try {
                 ((Texture2D)m.mainTexture).Apply();
@@ -268,8 +212,6 @@ public class TextureSwapper : MonoBehaviour {
                 Debug.LogError("EEEE:" + matiId + " " + m.name + " " + e);
             }
         }
-
-
 
         RestoreAllTextures();
     }
