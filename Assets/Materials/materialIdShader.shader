@@ -10,7 +10,7 @@ Shader "Unlit/materialIdShader"
     {
         Tags { "RenderType"="Opaque" }
         LOD 100
-
+        Cull Off
         Pass
         {
             CGPROGRAM
@@ -50,26 +50,11 @@ Shader "Unlit/materialIdShader"
             }
 
             fixed4 frag(v2f i) : SV_Target {
-              // sample the texture
-              // float4 col1 = float4(floor(i.uv.x * 255) / 255, frac(i.uv.x * 255), floor(i.uv.y * 255) / 255, frac(i.uv.y * 255));
-
-              float2 c = frac(i.uv);
+                float2 c = frac(i.uv);
                 float4 col1 = float4(floor(c.y * 255) / 255, frac(c.y * 255), floor(c.x * 255) / 255, frac(c.x * 255));
-                //float4 col1 = float4(frac(i.uv.y * 255),0, 0,0);
                 float4 col2 = float4(_IdColor.x, _IdColor.y, _IdColor.z, _IdColor.w);
 
                 float4 col = col2 + (col1 - col2) * _ShowCoordinates;
-              //  float4 col = float4( _IdColor.x, _IdColor.y, 0,1);// tex2D(_MainTex, i.uv);
-                // apply fog
-                //UNITY_APPLY_FOG(i.fogCoord, col);
-
-/*
-#if UNITY_COLORSPACE_GAMMA
-                return col;
-#else
-                return fixed4(GammaToLinearSpace(col.xyz), 1);
-#endif
-*/
                 return col;
             }
             ENDCG

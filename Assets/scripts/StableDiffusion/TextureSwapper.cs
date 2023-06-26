@@ -53,62 +53,20 @@ public class TextureSwapper : MonoBehaviour {
             }
             renderer.materials = newMaterials;
         }
-       // return;
+        
+        return;
         foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
             Renderer renderer = kvp.Key;
             Material[] materials = kvp.Value;
 
             foreach(var curMat in materials) {
-                //UpdateMaterialTexture(curMat);
-                //continue;
-                var originalTexture = curMat.mainTexture as Texture2D;
-                if (originalTexture != null) {
-                    Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
-                    
-                    if (originalTexture.isReadable) {
-                        copyTexture.SetPixels(originalTexture.GetPixels());
-                    } else {
-                    
-                        RenderTexture previous = RenderTexture.active;
-
-                        RenderTexture tmp = RenderTexture.GetTemporary(
-                                            originalTexture.width,
-                                            originalTexture.height,
-                                            0,
-                                            RenderTextureFormat.Default,
-                                            RenderTextureReadWrite.Linear);
-
-                        Graphics.Blit(originalTexture, tmp);
-                        RenderTexture.active = tmp;
-                        copyTexture.ReadPixels(new Rect(0, 0, tmp.width, tmp.height), 0, 0);
-                        copyTexture.Apply();
-                        RenderTexture.active = previous;
-                        RenderTexture.ReleaseTemporary(tmp);
-
-                    }
-
-                    //if (!Graphics.ConvertTexture(originalTexture, copyTexture)) {
-                    //  Debug.LogError("Can't create a copy of texture");
-                    //}
-                    copyTexture.Apply();
-                    /*
-                    var c = copyTexture.GetPixels32(0);
-                    for(int i = 0; i < c.Length; ++i) {
-                        c[i] = new Color32(10, 10, 10, 255);
-                    }
-                    copyTexture.SetPixels32(c);
-                    copyTexture.Apply();*/
-                    curMat.mainTexture = copyTexture;
-                    repMat.Add(curMat);
-                }
+                UpdateMaterialTexture(curMat);
             }
-
         }
-
     }
 
     private void UpdateMaterialTexture(Material mat) {
-        return;
+       // return;
         var prefix = "_replaced_lukso";
         var originalTexture = mat.mainTexture as Texture2D;
         if (!originalTexture || originalTexture.name.StartsWith(prefix)) {
@@ -168,13 +126,7 @@ public class TextureSwapper : MonoBehaviour {
     public void CaptureAndSave(Texture2D replaceTexture = null) {
 
         SwapAllTextures();
-     //   return;
-        //Shader.SetGlobalFloat("_ShowCoordinates", 1);
-        //return;
-
-
-        //RenderTexture renderTexture = captureCamera.targetTexture;
-        //RenderTexture renderTexture = new RenderTexture(Screen.width *4, Screen.height *4 , 32);
+     
         const int scale = 1;
 
         var prevRenderTexture = RenderTexture.active;
@@ -182,7 +134,6 @@ public class TextureSwapper : MonoBehaviour {
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
 
         RenderTexture.active = renderTexture;
-
 
         Rect rect = new Rect(0, 0, renderTexture.width, renderTexture.height);
         //captureCamera.SetReplacementShader(replacementShader, null);
@@ -272,8 +223,7 @@ public class TextureSwapper : MonoBehaviour {
 
                     UpdateMaterialTexture(mat);
                     var tex = (Texture2D)mat.mainTexture;
-                    if (tex != null && tex.isReadable) {//if (tex != null && tex.isReadable && (tex.format == TextureFormat.RGBA32 || tex.format == TextureFormat.ARGB32)) {
-                        //texture.SetPixels(squarePosition.x, squarePosition.y, squareSize.x, squareSize.y, colors);
+                    if (tex != null && tex.isReadable) {
                         SetRGB(tex, (int)(u * tex.width), (int)(v * tex.height), color);
 
                         const float t = 0.2f;
@@ -281,45 +231,18 @@ public class TextureSwapper : MonoBehaviour {
                         if (matId2 == matId && matId == matId1 && Math.Abs(u - u1) < t && Math.Abs(u - u2) < t && Math.Abs(u1 - u2) < t
                                 && Math.Abs(v - v1) < t && Math.Abs(v - v2) < t && Math.Abs(v1 - v2) < t) {
                             DrawTriangle(tex, color,
-                            new Vector2Int((int)(u * tex.width), (int)(v * tex.height)),
-                            //new Vector2Int((int)(u * tex.width+2), (int)(v * tex.height+0)),
-                            //new Vector2Int((int)(u * tex.width), (int)(v * tex.height + 2)));
-                            new Vector2Int((int)(u1 * tex.width), (int)(v1 * tex.height)),
-                            new Vector2Int((int)(u2 * tex.width), (int)(v2 * tex.height)));
+                                new Vector2Int((int)(u * tex.width), (int)(v * tex.height)),
+                                new Vector2Int((int)(u1 * tex.width), (int)(v1 * tex.height)),
+                                new Vector2Int((int)(u2 * tex.width), (int)(v2 * tex.height)));
                         }
 
                         if (matId2 == matId && matId == matId3 && Math.Abs(u - u3) < t && Math.Abs(u - u2) < t && Math.Abs(u3 - u2) < t
                                 && Math.Abs(v - v3) < t && Math.Abs(v - v2) < t && Math.Abs(v3 - v2) < t) {
                             DrawTriangle(tex, color,
-                            new Vector2Int((int)(u * tex.width), (int)(v * tex.height)),
-                            new Vector2Int((int)(u2 * tex.width), (int)(v2 * tex.height)),
-                            new Vector2Int((int)(u3 * tex.width), (int)(v3 * tex.height)));
+                                new Vector2Int((int)(u * tex.width), (int)(v * tex.height)),
+                                new Vector2Int((int)(u2 * tex.width), (int)(v2 * tex.height)),
+                                new Vector2Int((int)(u3 * tex.width), (int)(v3 * tex.height)));
                         }
-
-                        /*
-                        DrawTriangle(tex, Color.green, 
-                        new Vector2Int((int)(0.5 * tex.width), (int)(0.8 * tex.height)), 
-                        new Vector2Int((int)(0.7 * tex.width), (int)(0.6 * tex.height)), 
-                        new Vector2Int((int)(0.3 * tex.width), (int)(0.4f * tex.height)));
-                        x = 100000;
-                        y = 100000;
-                        break;
-                        */
-                        //tex.
-                        //tex.SetPixel((int)(u * tex.width), (int)(v * tex.height), Color.green, 1);
-                        //tex.SetPixel((int)(u * tex.width), (int)(v * tex.height), Color.green, 2);
-                        //tex.SetPixel((int)(u * tex.width), (int)(v * tex.height), Color.green, 3);
-
-                        //texture.SetPixel(x, y, xyColor);// Color.red);
-                        //texture.SetPixel(x, y, xyColor, 1);
-                        //texture.SetPixel(x, y, xyColor, 2);
-                        //texture.SetPixel(x, y, xyColor, 3);
-
-                        //    tex.SetPixel((int)(u * tex.width)+1, (int)(v * tex.height), Color.red);
-
-                        //   tex.SetPixel((int)(u * tex.height), (int)(v * tex.width), Color.red);
-                        // tex.SetPixel((int)(v * tex.width), (int)(u * tex.height), Color.red);
-                        //tex.SetPixel((int)(u * tex.height) + 1, (int)(v * tex.height), Color.green);
                     }
                 }
 
