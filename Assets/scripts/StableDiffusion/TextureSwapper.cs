@@ -14,9 +14,10 @@ public class TextureSwapper : MonoBehaviour {
 
     private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
     private Dictionary<int, Material> matById = new Dictionary<int, Material>();
+    private Dictionary<Texture, Texture> textureReplacement = new Dictionary<Texture, Texture>();
     
     private System.Random rnd = new System.Random();
-    
+    public bool restore_textures = true;
 
     void Start() {
     }
@@ -24,22 +25,45 @@ public class TextureSwapper : MonoBehaviour {
     public void SwapAllTextures() {
         originalMaterials.Clear();
         matById.Clear();
+        textureReplacement.Clear();
         Renderer[] renderers = FindObjectsOfType<Renderer>();
-        int count = 0;
-
+        int count = 1;
+        //var transpMaterial = FindObjectOfType<AvatarManager>().transparentMaterial;
         foreach (Renderer renderer in renderers) {
             originalMaterials[renderer] = renderer.materials;
             Material[] newMaterials = new Material[renderer.materials.Length];
             if (renderer.gameObject.GetComponent<TransparentMaterialRenderer>() != null ) {
                 continue;
             }
+
+            if (!(renderer is MeshRenderer) && !(renderer is SkinnedMeshRenderer)) {
+                continue;
+            }
+
+            
             for (int i = 0; i < newMaterials.Length; i++) {
                 var curMat = renderer.materials[i];
-                matById[count] = curMat;
-                var newMat = new Material(materialIdShader);
-                newMat.SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
+                var newMat = curMat;
+                if (!curMat.name.StartsWith("TransparentMaterial")) {
+                    matById[count] = curMat;
+                    newMat = new Material(materialIdShader);
+                    //newMat.SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
+                    var (r, g, b) = ((count / 100), (count % 100) / 10, count % 10);
+                    //newMat.SetColor("_IdColor", new Color(count / 256.0f, (count + 10) / 256.0f, (count + 1) / 256.0f, 1));
+                    newMat.SetColor("_IdColor", new Color((r * 20 + 10) / 256.0f, (g * 20 + 10) / 256.0f, (b * 20 + 10) / 256.0f, 1));
+                    newMat.SetTexture("_MainTex", curMat.mainTexture);
+                    newMat.renderQueue = curMat.renderQueue;
+
+                    if (curMat.HasProperty("_Cutoff")) {
+                        newMat.SetFloat("_Cutoff", curMat.GetFloat("_Cutoff"));
+                    }
+
+                    count += 1;
+                }
+
                 newMaterials[i] = newMat;
-                count += 1;
+
+
             }
 
             renderer.materials = newMaterials;
@@ -64,8 +88,15 @@ public class TextureSwapper : MonoBehaviour {
             return;
         }
 
+        if (textureReplacement.ContainsKey(originalTexture)) {
+            var existed = textureReplacement[originalTexture];
+            mat.mainTexture = existed;
+            return;
+        }
+
         Texture2D copyTexture = new Texture2D(originalTexture.width, originalTexture.height);
         copyTexture.name = prefix + mat.mainTexture.name;
+        textureReplacement[originalTexture] = copyTexture;
 
         if (originalTexture.isReadable) {
             copyTexture.SetPixels(originalTexture.GetPixels());
@@ -95,6 +126,11 @@ public class TextureSwapper : MonoBehaviour {
     }
 
     public void RestoreAllTextures() {
+
+        if (!restore_textures) {
+            return;
+        }
+//        return;
         foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
             Renderer renderer = kvp.Key;
             Material[] materials = kvp.Value;
@@ -104,7 +140,7 @@ public class TextureSwapper : MonoBehaviour {
     }
 
     private (Color[], Color32[], int, int) RenderCoordinatesAndMaterials() {
-        const int scale = 1;
+        const int scale = 2;
 
         var prevRenderTexture = RenderTexture.active;
         RenderTexture renderTexture = RenderTexture.GetTemporary(Screen.width * scale, Screen.height * scale, 32, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
@@ -123,11 +159,21 @@ public class TextureSwapper : MonoBehaviour {
         texture.Apply();
         Color[] coordinates = texture.GetPixels();
 
+        byte[] bytes = texture.EncodeToPNG();
+        File.WriteAllBytes("d://rendered-coord.png", bytes);
+
+
+
         Shader.SetGlobalFloat("_ShowCoordinates", 0);
         captureCamera.Render();
         texture.ReadPixels(rect, 0, 0);
         texture.Apply();
         Color32[] materials = texture.GetPixels32();
+
+        bytes = texture.EncodeToPNG();
+        File.WriteAllBytes("d://rendered-mat.png", bytes);
+
+
 
         RenderTexture.active = prevRenderTexture;
         RenderTexture.ReleaseTemporary(renderTexture);
@@ -199,14 +245,20 @@ public class TextureSwapper : MonoBehaviour {
                         }
                     }
                 }
-
             }
         }
+
+        Debug.Log("============================================ Updated materials: " + updatedMaterials.Count);
 
         foreach (var matiId in updatedMaterials) {
             var m = matById[matiId];
 
             try {
+                Debug.Log("Mat: " + matiId + " " + m.name + " " + m.mainTexture.name);
+
+                byte[] bytes = ((Texture2D)m.mainTexture).EncodeToPNG();
+                File.WriteAllBytes($"d://textures/{matiId}_{m.name}.png", bytes);
+
                 ((Texture2D)m.mainTexture).Apply();
             } catch (Exception e) {
                 Debug.LogError("EEEE:" + matiId + " " + m.name + " " + e);
@@ -218,6 +270,7 @@ public class TextureSwapper : MonoBehaviour {
 
     private void SetRGB(Texture2D tex, int u, int v, Color c) {
         c.a = tex.GetPixel(u, v).a;
+     //   c.a = 1;
         tex.SetPixel(u, v, c);
     }
 
@@ -226,7 +279,17 @@ public class TextureSwapper : MonoBehaviour {
         y = Math.Min(y, h - 1);
         int id = y * w + x;
         var xyColor = coordinates[id];
-        var matId = (int)(materials[id].r);
+        var (r, g, b) = ((int)(materials[id].r), (int)(materials[id].g), (int)(materials[id].b));
+
+        var matId = (r / 20) * 100 + (g / 20) * 10 + (b / 20);
+        //var matId = (int)(materials[id].r);
+        //var matIdG = (int)(materials[id].g);
+        //var matIdB = (int)(materials[id].b);
+
+        //if (matId != 0 && (matId  + 1 != matIdB || matId + 10 != matIdG)) {
+            //Debug.LogError("Incorrect color material!:" + matId + " " + matIdG + " " +  matIdB + ":" + x + " " + y + ":" + materials[id]);
+            //matId = matIdG - 10;
+        //}
         var v = (float)((xyColor.r + xyColor.g / 255.0f));
         var u = (float)((xyColor.b + xyColor.a / 255.0f));
 
