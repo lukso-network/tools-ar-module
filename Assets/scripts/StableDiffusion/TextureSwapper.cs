@@ -8,14 +8,14 @@ using System;
 using Lukso;
 
 public class TextureSwapper : MonoBehaviour {
-    
+
     public Shader materialIdShader;
     public Camera captureCamera;
 
-    private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
+    private List<(Renderer, Material[])> originalMaterials = new List<(Renderer, Material[])>();
     private Dictionary<int, Material> matById = new Dictionary<int, Material>();
     private Dictionary<Texture, Texture> textureReplacement = new Dictionary<Texture, Texture>();
-    
+
     private System.Random rnd = new System.Random();
     public bool restore_textures = true;
 
@@ -30,9 +30,9 @@ public class TextureSwapper : MonoBehaviour {
         int count = 1;
         //var transpMaterial = FindObjectOfType<AvatarManager>().transparentMaterial;
         foreach (Renderer renderer in renderers) {
-            originalMaterials[renderer] = renderer.materials;
-            Material[] newMaterials = new Material[renderer.materials.Length];
-            if (renderer.gameObject.GetComponent<TransparentMaterialRenderer>() != null ) {
+            originalMaterials.Add((renderer, renderer.sharedMaterials));
+            Material[] newMaterials = new Material[renderer.sharedMaterials.Length];
+            if (renderer.gameObject.GetComponent<TransparentMaterialRenderer>() != null) {
                 continue;
             }
 
@@ -40,9 +40,9 @@ public class TextureSwapper : MonoBehaviour {
                 continue;
             }
 
-            
+
             for (int i = 0; i < newMaterials.Length; i++) {
-                var curMat = renderer.materials[i];
+                var curMat = renderer.sharedMaterials[i];
                 var newMat = curMat;
                 if (!curMat.name.StartsWith("TransparentMaterial")) {
                     matById[count] = curMat;
@@ -66,22 +66,13 @@ public class TextureSwapper : MonoBehaviour {
 
             }
 
-            renderer.materials = newMaterials;
+            renderer.sharedMaterials = newMaterials;
         }
-        
-        return;
-        foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
-            Renderer renderer = kvp.Key;
-            Material[] materials = kvp.Value;
 
-            foreach(var curMat in materials) {
-                UpdateMaterialTexture(curMat);
-            }
-        }
     }
 
     private void UpdateMaterialTexture(Material mat) {
-       // return;
+        // return;
         var prefix = "_replaced_lukso";
         var originalTexture = mat.mainTexture as Texture2D;
         if (!originalTexture || originalTexture.name.StartsWith(prefix)) {
@@ -130,11 +121,9 @@ public class TextureSwapper : MonoBehaviour {
         if (!restore_textures) {
             return;
         }
-//        return;
-        foreach (KeyValuePair<Renderer, Material[]> kvp in originalMaterials) {
-            Renderer renderer = kvp.Key;
-            Material[] materials = kvp.Value;
-            renderer.materials = materials;
+        //        return;
+        foreach (var (renderer, materials) in originalMaterials) {
+            renderer.sharedMaterials = materials;
         }
         originalMaterials.Clear();
     }
@@ -159,8 +148,8 @@ public class TextureSwapper : MonoBehaviour {
         texture.Apply();
         Color[] coordinates = texture.GetPixels();
 
-        byte[] bytes = texture.EncodeToPNG();
-        File.WriteAllBytes("d://rendered-coord.png", bytes);
+      //  byte[] bytes = texture.EncodeToPNG();
+      //  File.WriteAllBytes("d://rendered-coord.png", bytes);
 
 
 
@@ -170,8 +159,8 @@ public class TextureSwapper : MonoBehaviour {
         texture.Apply();
         Color32[] materials = texture.GetPixels32();
 
-        bytes = texture.EncodeToPNG();
-        File.WriteAllBytes("d://rendered-mat.png", bytes);
+      //  bytes = texture.EncodeToPNG();
+      //  File.WriteAllBytes("d://rendered-mat.png", bytes);
 
 
 
@@ -191,7 +180,7 @@ public class TextureSwapper : MonoBehaviour {
 
 
         HashSet<int> updatedMaterials = new HashSet<int>();
-     
+
         var srcColors = replaceTexture != null ? replaceTexture.GetPixels() : null;
 
         int id = 0;
@@ -248,16 +237,16 @@ public class TextureSwapper : MonoBehaviour {
             }
         }
 
-        Debug.Log("============================================ Updated materials: " + updatedMaterials.Count);
+     //   Debug.Log("============================================ Updated materials: " + updatedMaterials.Count);
 
         foreach (var matiId in updatedMaterials) {
             var m = matById[matiId];
 
             try {
-                Debug.Log("Mat: " + matiId + " " + m.name + " " + m.mainTexture.name);
+              //  Debug.Log("Mat: " + matiId + " " + m.name + " " + m.mainTexture.name);
 
-                byte[] bytes = ((Texture2D)m.mainTexture).EncodeToPNG();
-                File.WriteAllBytes($"d://textures/{matiId}_{m.name}.png", bytes);
+               // byte[] bytes = ((Texture2D)m.mainTexture).EncodeToPNG();
+              //  File.WriteAllBytes($"d://textures/{matiId}_{m.name}.png", bytes);
 
                 ((Texture2D)m.mainTexture).Apply();
             } catch (Exception e) {
@@ -270,7 +259,7 @@ public class TextureSwapper : MonoBehaviour {
 
     private void SetRGB(Texture2D tex, int u, int v, Color c) {
         c.a = tex.GetPixel(u, v).a;
-     //   c.a = 1;
+        //   c.a = 1;
         tex.SetPixel(u, v, c);
     }
 
@@ -287,8 +276,8 @@ public class TextureSwapper : MonoBehaviour {
         //var matIdB = (int)(materials[id].b);
 
         //if (matId != 0 && (matId  + 1 != matIdB || matId + 10 != matIdG)) {
-            //Debug.LogError("Incorrect color material!:" + matId + " " + matIdG + " " +  matIdB + ":" + x + " " + y + ":" + materials[id]);
-            //matId = matIdG - 10;
+        //Debug.LogError("Incorrect color material!:" + matId + " " + matIdG + " " +  matIdB + ":" + x + " " + y + ":" + materials[id]);
+        //matId = matIdG - 10;
         //}
         var v = (float)((xyColor.r + xyColor.g / 255.0f));
         var u = (float)((xyColor.b + xyColor.a / 255.0f));
