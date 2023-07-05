@@ -15,6 +15,7 @@ public class TextureSwapper : MonoBehaviour {
     private List<(Renderer, Material[])> originalMaterials = new List<(Renderer, Material[])>();
     private Dictionary<int, Material> matById = new Dictionary<int, Material>();
     private Dictionary<Texture, Texture> textureReplacement = new Dictionary<Texture, Texture>();
+    private Dictionary<string, Material> matByName = new Dictionary<string, Material>();
 
     private System.Random rnd = new System.Random();
     public bool restore_textures = true;
@@ -46,7 +47,10 @@ public class TextureSwapper : MonoBehaviour {
                 var newMat = curMat;
                 if (!curMat.name.StartsWith("TransparentMaterial")) {
                     matById[count] = curMat;
-                    newMat = new Material(materialIdShader);
+                    if (!matByName.TryGetValue(curMat.name, out newMat)) {
+                        newMat = new Material(materialIdShader);
+                    }
+                    
                     //newMat.SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
                     var (r, g, b) = ((count / 100), (count % 100) / 10, count % 10);
                     //newMat.SetColor("_IdColor", new Color(count / 256.0f, (count + 10) / 256.0f, (count + 1) / 256.0f, 1));

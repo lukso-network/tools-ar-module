@@ -17,6 +17,7 @@ namespace Lukso {
         [SerializeField] Camera clothCamera;
         [SerializeField] AvatarManager avatarManager;
         [SerializeField] RectTransform loader;
+        [SerializeField] DMBTDemoManager poseManger;
         // Use this for initialization
         void Start() {
             Close();
@@ -97,6 +98,7 @@ namespace Lukso {
 
         public void Experiment() {
 
+            poseManger.PauseProcessing(true);
             //GetComponent<TextureSwapper>().CaptureAndSave();
             //return;
 
@@ -161,6 +163,8 @@ namespace Lukso {
                     
                 }
             }
+
+            poseManger.PauseProcessing(false);
         }
 
     }
