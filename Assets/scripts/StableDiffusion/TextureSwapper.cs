@@ -9,8 +9,10 @@ using Lukso;
 
 public class TextureSwapper : MonoBehaviour {
 
-    public Shader materialIdShader;
-    public Camera captureCamera;
+    [SerializeField] private Shader materialIdShader;
+    [SerializeField] private Camera captureCamera;
+    [SerializeField] private bool setUnlit = false;
+    [SerializeField] private Shader unitShader;
 
     private List<(Renderer, Material[])> originalMaterials = new List<(Renderer, Material[])>();
     private Dictionary<int, Material> matById = new Dictionary<int, Material>();
@@ -49,6 +51,16 @@ public class TextureSwapper : MonoBehaviour {
                     matById[count] = curMat;
                     if (!matByName.TryGetValue(curMat.name, out newMat)) {
                         newMat = new Material(materialIdShader);
+                    }
+
+                    if (setUnlit) {
+                        int rq = curMat.renderQueue;
+                        curMat.shader = unitShader;
+                        // hack to force update renderqueue
+                        curMat.renderQueue = 1;
+                        curMat.renderQueue = rq;
+                        curMat.SetColor("_Color", Color.white);
+
                     }
                     
                     //newMat.SetColor("_IdColor", new Color(count / 256.0f, (float)rnd.NextDouble(), ( count + 1)/ 256.0f, 1));
