@@ -1,14 +1,18 @@
-﻿using System;
+using Lukso;
+using Mediapipe.Unity;
+using Mediapipe.Unity.SkeletonTracking;
+using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Assets.scripts.Api
-{
-    public class ApiManager : MonoBehaviour
-    {
+namespace Assets.scripts.Api {
+    public class ApiManager : MonoBehaviour {
         public AvatarManager avatarManager;
         public CanvasController canvasController;
-        public SceneDirector sceneDirector;
+        public SizeManager sizeManager;
+        public DMBTDemoManager poseManager;
+
+        [SerializeField] private SkeletonTrackingSolution solution;
         // Use this for initialization
         void Start() {
 
@@ -29,11 +33,11 @@ namespace Assets.scripts.Api
         }
 
         public async void LoadModel(string url) {
-            avatarManager.LoadGltf(url, true);
+            avatarManager.Load(url, true);
         }
 
         public async void AppendModel(string url) {
-            avatarManager.LoadGltf(url, false);
+            avatarManager.Load(url, false);
         }
 
         public async void ShowUI(string boolStr) {
@@ -41,18 +45,38 @@ namespace Assets.scripts.Api
             canvasController.GetComponent<Canvas>().enabled = ToBool(boolStr);
         }
 
+        public async void UseVRMPhysics(string boolStr) {
+            poseManager.UsePhysics = ToBool(boolStr);
+            canvasController.IsUsePhysics = ToBool(boolStr);
+        }
+
         public async void SelectCamera(string intStr) {
             int camIdx = ToInt(intStr);
-            var devices = WebCamTexture.devices;
 
-            if (camIdx >= devices.Length) {
+            var devices = ImageSourceProvider.ImageSource.sourceCandidateNames;
+
+            if (camIdx >= devices.Length || camIdx < 0) {
                 Debug.LogError($"Camera does not exist:{camIdx} is requested");
                 return;
             }
-            sceneDirector.ChangeWebCamDevice(devices[camIdx]);
 
-            //canvasController.gameObject.SetActive(ToBool(boolStr));
+
+            StartCoroutine(PlayCamera(camIdx));
+
         }
+
+        private IEnumerator PlayCamera(int camIdx) {
+            ImageSourceProvider.ImageSource.Stop();
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+            ImageSourceProvider.ImageSource.SelectSource(camIdx);
+            solution.StartTracking();
+        }
+
+
+
+        //canvasController.gameObject.SetActive(ToBool(boolStr));
+
 
         public async void ShowHelpers(string boolStr) {
             var show = ToBool(boolStr);
@@ -61,8 +85,13 @@ namespace Assets.scripts.Api
             //canvasController.IsShowTransparent = show;
         }
 
+        public async void CalculateSize() {
+            sizeManager.CalculateSize();
+        }
+
         private bool ToBool(string boolStr) {
-            return boolStr == "true";
+
+            return string.Equals(boolStr, "true", StringComparison.OrdinalIgnoreCase);
         }
 
         private int ToInt(string intStr) {
@@ -82,5 +111,6 @@ namespace Assets.scripts.Api
                 return 0;
             }
         }
+
     }
 }

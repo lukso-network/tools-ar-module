@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.scripts.Avatar
-{
+namespace Lukso {
     [RequireComponent(typeof(HelperDrawer))]
-    public class GradientDrawer : MonoBehaviour
-    {
+    public class GradientDrawer : MonoBehaviour {
 
         [Range(0, 200)]
         public int stepToDisplay = 0;

@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Assets.PoseEstimator
-{
-    public class RawPointFilter : Filter<Vector3[]>
-    {
+namespace Lukso {
+    public class RawPointFilter : Filter<Vector3[]> {
         private readonly float discardValue;
         private readonly float step;
 
@@ -23,8 +21,8 @@ namespace Assets.PoseEstimator
             //Array.Sort(d);
 
 
-           // var str = String.Join(",", d);
-          //  Debug.Log($"av:{av}, disp:{disp}, max:{d.Max()}, {str}");
+            // var str = String.Join(",", d);
+            //  Debug.Log($"av:{av}, disp:{disp}, max:{d.Max()}, {str}");
 
             float threshold = av + disp * discardValue + 0.0001f;
             /* {
@@ -46,16 +44,16 @@ namespace Assets.PoseEstimator
                   }*/
 
 
-                var atten = d[i] / av * step/10;
+                var atten = d[i] / av * step / 10;
                 if (atten < 1) {
                     prevValue[i] = v[i];
                 } else {
                     prevValue[i] += (v[i] - prevValue[i]) / atten;
                 }
-                
+
             }
 
-           // var res = new float[prev];
+            // var res = new float[prev];
             //Array.Copy(v, prevInputValue, v.Length);
             return (Vector3[])prevValue.Clone();
         }

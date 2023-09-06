@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.scripts
-{
-    public class WebCamTets : MonoBehaviour
-    {
+namespace Assets.scripts {
+    public class WebCamTets : MonoBehaviour {
         public WebCamTexture webcamTexture;
         public Quaternion baseRotation;
         void Start() {

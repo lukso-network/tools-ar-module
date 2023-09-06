@@ -1,7 +1,5 @@
-﻿namespace Assets.PoseEstimator
-{
-    public enum FilterType
-    {
+﻿namespace Lukso {
+    public enum FilterType {
         None,
         XV,
         XVA,

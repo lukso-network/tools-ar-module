@@ -1,10 +1,8 @@
 ﻿using System;
-using UnityEngine;
 
-namespace Assets
-{
-    public class Position3DGradCalculator : GradCalculator
-    {
+
+namespace Lukso{
+    public class Position3DGradCalculator : GradCalculator {
         public Position3DGradCalculator() {
             this.grad = new float[3];
         }
@@ -12,9 +10,9 @@ namespace Assets
             if (step == 0) {
                 return;
             }
-        
+
             var pos = joint.transform.localPosition;
-        //    step *= ikSettings.posMoveMultiplier;
+            //    step *= ikSettings.posMoveMultiplier;
             if (MoveByV3Gradient(ref pos, step, threshold)) {
                 joint.transform.localPosition = pos;
             }

@@ -1,13 +1,10 @@
-﻿namespace Assets.PoseEstimator
-{
+﻿namespace Lukso {
 
-    public interface IFilter
-    {
+    public interface IFilter {
         public object Filter(object t);
     }
 
-    public abstract class Filter<T> : IFilter
-    {
+    public abstract class Filter<T> : IFilter {
         protected T prevValue;
         protected T prevInputValue;
         private bool isFirst = true;
@@ -22,7 +19,7 @@
             return filterInternal(v);
         }
 
-        
+
         protected abstract T filterInternal(T v);
 
         object IFilter.Filter(object t) {

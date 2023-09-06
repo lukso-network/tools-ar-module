@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-namespace Assets.PoseEstimator
-{
-    class KalmanVectorFilter
-    {
+namespace Lukso {
+    class KalmanVectorFilter {
         private KalmanPointFilter[] filters = new KalmanPointFilter[3];
         private FilterSettings settings;
         public KalmanVectorFilter(FilterSettings settings) {
@@ -13,12 +11,12 @@ namespace Assets.PoseEstimator
             }
         }
 
-        public KalmanVectorFilter(float sigma, float dt, FilterType filterType) : this(new FilterSettings(sigma, dt, filterType)) { 
+        public KalmanVectorFilter(float sigma, float dt, FilterType filterType) : this(new FilterSettings(sigma, dt, filterType)) {
         }
 
         public Vector3 Update(Vector3 p) {
             if (settings.IsModified) {
-                foreach(var f in filters) {
+                foreach (var f in filters) {
                     f.SetFilterModified();
                 }
             }

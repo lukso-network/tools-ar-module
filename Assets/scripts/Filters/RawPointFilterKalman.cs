@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
-namespace Assets.PoseEstimator
-{
-    public class RawPointFilterKalman : Filter<Vector3[]>
-    {
+namespace Lukso {
+    public class RawPointFilterKalman : Filter<Vector3[]> {
         private readonly float sigma;
         private readonly bool enabled;
         private KalmanVectorFilter[] filters = new KalmanVectorFilter[17];
@@ -31,7 +29,7 @@ namespace Assets.PoseEstimator
             }
 
             Vector3 c = Vector3.zero;
-            foreach(var p in v) {
+            foreach (var p in v) {
                 c += p;
             }
             c /= v.Length;
@@ -43,7 +41,7 @@ namespace Assets.PoseEstimator
 
 
             for (int i = 0; i < v.Length; ++i) {
-             //   prevValue[i] = filters[i].Update(v[i]-c2)+c2;
+                //   prevValue[i] = filters[i].Update(v[i]-c2)+c2;
                 prevValue[i] = filters[i].Update(v[i]);
             }
             return (Vector3[])prevValue.Clone();

@@ -1,12 +1,9 @@
 ﻿using System;
 
-namespace Assets
-{
-    public class StretchingGradCalculator : GradCalculator
-    {
-        public enum Axis : int
-        {
-            X,Y,Z,PARENT
+namespace Lukso{
+    public class StretchingGradCalculator : GradCalculator {
+        public enum Axis : int {
+            X, Y, Z, PARENT
         }
 
         private float? initValue;
@@ -14,8 +11,8 @@ namespace Assets
         public StretchingGradCalculator(Axis axis, Constraint constraint) : base(constraint) {
             this.grad = new float[1];
             this.axis = axis;
-        }        
-        
+        }
+
         public StretchingGradCalculator(float minX, float maxX, StretchingGradCalculator.Axis axis) : this(axis, new StretchingConstraint(minX, maxX, axis)) {
         }
 
@@ -29,18 +26,18 @@ namespace Assets
         }
         public override void apply(Joint joint, float step, float threshold, IkSettings ikSettings) {
 
-          //  return;
+            //  return;
             if (!ikSettings.stretchingEnabled) {
                 return;
             }
-         //   step *= ikSettings.stretchingMoveMultiplier;
+            //   step *= ikSettings.stretchingMoveMultiplier;
             var pos = joint.transform.localPosition;
 
             if (axis == Axis.PARENT) {
                 var l = pos.normalized;
-                pos += -grad[0]* l * step * initValue.Value;
+                pos += -grad[0] * l * step * initValue.Value;
             } else {
-                pos[(int)axis] -= grad[0]* step * initValue.Value;
+                pos[(int)axis] -= grad[0] * step * initValue.Value;
             }
             joint.transform.localPosition = pos;
         }

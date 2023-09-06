@@ -2,15 +2,13 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Assets
-{
-    public abstract class GradCalculator
-    {
+namespace Lukso{
+    public abstract class GradCalculator {
         protected float[] grad;
         protected readonly Constraint constraint;
 
         public abstract void calc(ref float zeroLevel, Func<float> targetFunction, Joint joint, float step, IkSettings ikSettings);
-      
+
         public virtual void calc(ICalcFilter calcFilter, ref float zeroLevel, Func<float> targetFunction, Joint joint, float step, IkSettings ikSettings) {
             if (calcFilter.Filter(this)) {
                 calc(ref zeroLevel, targetFunction, joint, step, ikSettings);

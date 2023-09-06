@@ -1,0 +1,41 @@
+fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Editor/UnityWeld/UnityWeld_Editor.dll.meta
+guid: db45b2e5edd416046bff66459f5856a6
+=======
+guid: 2e8941ad33d65584f8ef2f8b829a05e7
+>>>>>>> feature_stable_diffusion:Assets/VRM_Samples/SimpleViewer/Plugins/OpenFile.jslib.meta
+PluginImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  iconMap: {}
+  executionOrder: {}
+  defineConstraints: []
+  isPreloaded: 0
+  isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
+  platformData:
+  - first:
+      Any: 
+    second:
+      enabled: 0
+      settings: {}
+  - first:
+      Editor: Editor
+    second:
+      enabled: 0
+      settings:
+        DefaultValueInitialized: true
+  - first:
+<<<<<<< HEAD:Assets/Editor/UnityWeld/UnityWeld_Editor.dll.meta
+      Windows Store Apps: WindowsStoreApps
+=======
+      WebGL: WebGL
+>>>>>>> feature_stable_diffusion:Assets/VRM_Samples/SimpleViewer/Plugins/OpenFile.jslib.meta
+    second:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

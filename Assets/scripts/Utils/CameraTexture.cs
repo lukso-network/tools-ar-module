@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CameraTexture : MonoBehaviour
-{
-    public RawImage camera_texture;
+public class CameraTexture : MonoBehaviour {
+    public RenderTexture renderImage;
     private RawImage rawImage;
     // Start is called before the first frame update
     void Start() {
@@ -14,6 +13,6 @@ public class CameraTexture : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        rawImage.texture = camera_texture.texture;
+        rawImage.texture = renderImage;
     }
 }

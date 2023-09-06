@@ -1,11 +1,8 @@
 ﻿using System;
 
-namespace Assets
-{
-    public class Rotation1DGradCalculator : GradCalculator
-    {
-        public enum Axis
-        {
+namespace Lukso{
+    public class Rotation1DGradCalculator : GradCalculator {
+        public enum Axis {
             X, Y, Z
         }
 
@@ -13,8 +10,8 @@ namespace Assets
         public Rotation1DGradCalculator(Constraint constraint, Axis axis) : base(constraint) {
             this.grad = new float[1];
             this.axis = axis;
-        }        
-        
+        }
+
         public Rotation1DGradCalculator(float minX, float maxX, Rotation1DGradCalculator.Axis axis) : this(new Rotation1DConstraint(minX, maxX, axis), axis) {
         }
         public override void apply(Joint joint, float step, float threshold, IkSettings ikSettings) {
@@ -22,7 +19,7 @@ namespace Assets
                 return;
             }
 
-          //  step *= ikSettings.rotationMoveMultiplier;
+            //  step *= ikSettings.rotationMoveMultiplier;
             var euler = joint.transform.localEulerAngles;
             euler[(int)axis] -= step * grad[0];
             joint.transform.localEulerAngles = euler;

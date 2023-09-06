@@ -1,19 +1,17 @@
-﻿using Assets.PoseEstimator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets
-{
+namespace Lukso{
 
-    public class Joint
-    {
+    public class Joint {
         public Transform transform;
 
         public Vector3 initPosition;
         public Vector3 initLocalPosition;
         public Vector3 initLossyScale;
+        public Quaternion boneNormalRotation;
 
         public JointFilter filter;
         public Joint parent;
@@ -22,6 +20,7 @@ namespace Assets
         private readonly GradCalculator gradCalculator;
         public JointDefinition definition;
         public float lengthScale = 1;
+        public Vector3 clothScale;
 
         public Joint(Transform tr, JointDefinition definition) {
             this.filter = definition?.filter;
@@ -57,13 +56,13 @@ namespace Assets
                 return zeroLevel;
             }
             gradCalculator.calc(calcFilter, ref zeroLevel, targetFunction, this, step, ikSettings);
-         //   CalcRotGradient(ref zeroLevel, targetFunction, transform, step, ref i);
-           // CalcStretchingGradient(ref zeroLevel, targetFunction, transform, posStep, ref i);
-         
+            //   CalcRotGradient(ref zeroLevel, targetFunction, transform, step, ref i);
+            // CalcStretchingGradient(ref zeroLevel, targetFunction, transform, posStep, ref i);
+
             return zeroLevel;
             //transform.localRotation = rotation;
         }
-  
+
         internal virtual void FixConstraints() {
             gradCalculator.FixConstraint(this);
         }
@@ -83,15 +82,15 @@ namespace Assets
             } else {
                 gradCalculator.apply(calcFilter, this, step, threshold, ikSettings);
             }
-        
+
         }
 
         internal void ApplyRotation(Joint joint) {
             transform.localRotation = joint.transform.localRotation;
             transform.localScale = joint.transform.localScale;
             transform.localPosition = joint.transform.localPosition;
-        }       
-        
+        }
+
         internal void CopyRotationAndPosition(Joint joint) {
             transform.localPosition = joint.transform.localPosition;
             transform.localRotation = joint.transform.localRotation;
@@ -124,5 +123,5 @@ namespace Assets
         }
 
     }
-  
+
 }

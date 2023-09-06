@@ -1,13 +1,11 @@
-﻿//using GD.MinMaxSlider;
+//using GD.MinMaxSlider;
 using System;
 using UnityEngine;
 
-namespace Assets
-{
+namespace Lukso{
 
     [Serializable]
-    public class IkSettings
-    {
+    public class IkSettings {
 
         [Range(0, 5)]
         public float gradientCalcStep = 0.1f;
@@ -26,6 +24,23 @@ namespace Assets
 
         [Range(0, 1f)]
         public float scaleMoveMultiplier = 0.001f;
+
+        [Range(0, 0.5f)]
+        public float clothLambdaGradient = 1f;
+
+        [Range(0, 0.02f)]
+        public float clothStepGradient = 0.1f;
+
+        [Range(0, 6f)]
+        public float clothRegularization = 0.001f;
+
+        [Range(-5, 5)]
+        public float clothPenalty = 1;
+
+        [Range(0, 1)]
+        public float clothTooThinPenalty = 1;
+
+        public bool clothDemoMode = false;
 
 
         public bool resizeBones = true;
@@ -52,23 +67,44 @@ namespace Assets
         public bool stretchingEnabled = true;
 
         public bool useConstraints = true;
+
+        [Header("GradientDescent")]
+        [Range(0.001f, 0.2f)]
+        public float gradDescentStep = 0.1f;
+
+        [Range(0, 0.8f)]
+        public float ikRegularization = 1f;
+
+        [Range(0, 0.1f)]
+        public float ikGradDescentLambda = 0.1f;
+
+        public bool enablePostIKSmoothing = true;
+        public OneEuroFilterParams filterPosSmoothingParams;
+        public OneEuroFilterParams hipScaler;
+
+        [Range(0, 2)]
+        public float targetFunctionZScale = 1;
+        public bool useOldIk = false;
+        public bool manualIk = false;
+
+        [Range(-2, 2)]
+        public float[] parametersTest;
     }
 
 
     [Serializable]
-    public class BoneValidator
-    {
+    public class BoneValidator {
 
-     //   [MinMaxSlider(0.1f, 1.5f)]
+        //   [MinMaxSlider(0.1f, 1.5f)]
         public Vector2 arm1to2 = new Vector2(0.64f, 1.3f);
 
-       // [MinMaxSlider(0.4f, 0.8f)]
+        // [MinMaxSlider(0.4f, 0.8f)]
         public Vector2 arm2toSpine = new Vector2(0.4f, 0.7f);
 
-     //   [MinMaxSlider(0.1f, 1.3f)]
+        //   [MinMaxSlider(0.1f, 1.3f)]
         public Vector2 leg1to2 = new Vector2(0.75f, 1.05f);
 
-     //   [MinMaxSlider(0.25f, 1.6f)]
+        //   [MinMaxSlider(0.25f, 1.6f)]
         public Vector2 leg2toSpine = new Vector2(0.34f, 0.9f);
 
     }

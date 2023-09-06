@@ -1,12 +1,13 @@
-﻿using Joint = Assets.Joint;
+﻿using Joint = Lukso.Joint;
 
-public class GeneralConstraint
-{
-    public GeneralConstraint(params Constraint[] constraints) {
+namespace Lukso {
+    public class GeneralConstraint {
+        public GeneralConstraint(params Constraint[] constraints) {
 
-    }
-    internal virtual void Fix(Joint joint) {
-    }
-    internal virtual void KeepPrevState(Joint joint) {
+        }
+        internal virtual void Fix(Joint joint) {
+        }
+        internal virtual void KeepPrevState(Joint joint) {
+        }
     }
 }

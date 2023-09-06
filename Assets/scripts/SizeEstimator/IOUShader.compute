@@ -1,0 +1,31 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel IOU
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+Texture2D<float4> image;// mask image
+Texture2D<float4> image2;// cloth texture
+SamplerState my_point_clamp_sampler;
+RWStructuredBuffer<uint> sum_buffer;
+
+[numthreads(8, 8, 1)]
+void IOU(uint3 id : SV_DispatchThreadID)
+{
+    //TODO
+    float u = id.x / 256.0;
+    float v = id.y / 256.0;
+    float2 uv = float2 (u, v);
+    float2 uv2 = float2 (u, v);
+
+    float4 color = image.SampleLevel(my_point_clamp_sampler, uv, 0);
+    float4 color2 = image2.SampleLevel(my_point_clamp_sampler, uv2, 0);
+    int value1 = ceil(color.r - 0.5);
+    int value2 = ceil(color2.r);
+    //uint and = value1 * value2;
+    //uint or = value1 + value2 - and;
+    InterlockedAdd(sum_buffer[value2 * 2 + value1], 1);
+    //InterlockedAdd(sum_buffer[0], and);
+    //InterlockedAdd(sum_buffer[1], or);
+    //InterlockedAdd(sum_buffer[2], value1);
+    //InterlockedAdd(sum_buffer[3], value2);
+}
