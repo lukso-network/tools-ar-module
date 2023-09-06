@@ -13,6 +13,7 @@ using Mediapipe.Unity.SkeletonTracking;
 using UnityEngine.Networking;
 using System.IO.Compression;
 using UnityEngine.UI;
+using UnityEngine.Android;
 
 [Binding]
 public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
@@ -91,6 +92,10 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
             avatarManager.LoadGltf(path, false);
         #endif
         */
+
+        if (!Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead)) {
+            Permission.RequestUserPermission(Permission.ExternalStorageRead);
+        }
         StartCoroutine(ShowLoadDialogCoroutine());
     }
 
@@ -102,6 +107,8 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
 
     IEnumerator LoadTestModels() {
         yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.Folders, true, null, null, "Select files to download test models", "Load");
+
+
         if (FileBrowser.Success) {
             var path = FileBrowser.Result[0];
             var filePath = path + "/" + TEST_MODEL_NAME;
@@ -166,9 +173,15 @@ public class CanvasController : MonoBehaviour, INotifyPropertyChanged {
 
         if (FileBrowser.Success) {
             var file = FileBrowser.Result[0];
+            if (file.StartsWith("content:")) {
+                string tempFilePath = Path.Combine(Application.temporaryCachePath, "tempfile" + file.Substring(file.Length - 4));
 
-            initFilePath = Path.GetDirectoryName(file);
-            avatarManager.Load(file, false);
+                FileBrowserHelpers.CopyFile(FileBrowser.Result[0], tempFilePath);
+                file = tempFilePath;
+            } else {
+                initFilePath = Path.GetDirectoryName(file);
+            }
+           avatarManager.Load(file, false);
         }
     }
 
