@@ -25,7 +25,7 @@
 bazel-*
 *.apk
 
-Assets/StreamingAssets*
+#Assets/StreamingAssets*
 
 Packages/com.github.homuler.mediapipe/Runtime/Resources/*
 !Packages/com.github.homuler.mediapipe/Runtime/Resources/*.meta
