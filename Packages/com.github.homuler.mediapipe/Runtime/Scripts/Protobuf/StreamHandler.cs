@@ -49,23 +49,31 @@ namespace Mediapipe {
   /// <summary>
   /// Settings specifying an input stream handler.
   /// </summary>
-  public sealed partial class InputStreamHandlerConfig : pb::IMessage<InputStreamHandlerConfig> {
+  public sealed partial class InputStreamHandlerConfig : pb::IMessage<InputStreamHandlerConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<InputStreamHandlerConfig> _parser = new pb::MessageParser<InputStreamHandlerConfig>(() => new InputStreamHandlerConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<InputStreamHandlerConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.StreamHandlerReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputStreamHandlerConfig() {
       OnConstruction();
     }
@@ -73,13 +81,15 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputStreamHandlerConfig(InputStreamHandlerConfig other) : this() {
       inputStreamHandler_ = other.inputStreamHandler_;
-      options_ = other.HasOptions ? other.options_.Clone() : null;
+      options_ = other.options_ != null ? other.options_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputStreamHandlerConfig Clone() {
       return new InputStreamHandlerConfig(this);
     }
@@ -93,6 +103,7 @@ namespace Mediapipe {
     /// Name of the registered input stream handler class.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string InputStreamHandler {
       get { return inputStreamHandler_ ?? InputStreamHandlerDefaultValue; }
       set {
@@ -101,11 +112,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "input_stream_handler" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasInputStreamHandler {
       get { return inputStreamHandler_ != null; }
     }
     /// <summary>Clears the value of the "input_stream_handler" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearInputStreamHandler() {
       inputStreamHandler_ = null;
     }
@@ -117,29 +130,22 @@ namespace Mediapipe {
     /// Options for the input stream handler.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MediaPipeOptions Options {
       get { return options_; }
       set {
         options_ = value;
       }
     }
-    /// <summary>Gets whether the options field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasOptions {
-      get { return options_ != null; }
-    }
-    /// <summary>Clears the value of the options field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearOptions() {
-      options_ = null;
-    }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as InputStreamHandlerConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(InputStreamHandlerConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -153,10 +159,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasInputStreamHandler) hash ^= InputStreamHandler.GetHashCode();
-      if (HasOptions) hash ^= Options.GetHashCode();
+      if (options_ != null) hash ^= Options.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -164,32 +171,57 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasInputStreamHandler) {
         output.WriteRawTag(10);
         output.WriteString(InputStreamHandler);
       }
-      if (HasOptions) {
+      if (options_ != null) {
         output.WriteRawTag(26);
         output.WriteMessage(Options);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasInputStreamHandler) {
+        output.WriteRawTag(10);
+        output.WriteString(InputStreamHandler);
+      }
+      if (options_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Options);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasInputStreamHandler) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(InputStreamHandler);
       }
-      if (HasOptions) {
+      if (options_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Options);
       }
       if (_unknownFields != null) {
@@ -199,6 +231,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(InputStreamHandlerConfig other) {
       if (other == null) {
         return;
@@ -206,8 +239,8 @@ namespace Mediapipe {
       if (other.HasInputStreamHandler) {
         InputStreamHandler = other.InputStreamHandler;
       }
-      if (other.HasOptions) {
-        if (!HasOptions) {
+      if (other.options_ != null) {
+        if (options_ == null) {
           Options = new global::Mediapipe.MediaPipeOptions();
         }
         Options.MergeFrom(other.Options);
@@ -216,7 +249,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -228,7 +265,33 @@ namespace Mediapipe {
             break;
           }
           case 26: {
-            if (!HasOptions) {
+            if (options_ == null) {
+              Options = new global::Mediapipe.MediaPipeOptions();
+            }
+            input.ReadMessage(Options);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            InputStreamHandler = input.ReadString();
+            break;
+          }
+          case 26: {
+            if (options_ == null) {
               Options = new global::Mediapipe.MediaPipeOptions();
             }
             input.ReadMessage(Options);
@@ -237,29 +300,38 @@ namespace Mediapipe {
         }
       }
     }
+    #endif
 
   }
 
   /// <summary>
   /// Settings specifying an output stream handler.
   /// </summary>
-  public sealed partial class OutputStreamHandlerConfig : pb::IMessage<OutputStreamHandlerConfig> {
+  public sealed partial class OutputStreamHandlerConfig : pb::IMessage<OutputStreamHandlerConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<OutputStreamHandlerConfig> _parser = new pb::MessageParser<OutputStreamHandlerConfig>(() => new OutputStreamHandlerConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<OutputStreamHandlerConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.StreamHandlerReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OutputStreamHandlerConfig() {
       OnConstruction();
     }
@@ -267,14 +339,16 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OutputStreamHandlerConfig(OutputStreamHandlerConfig other) : this() {
       outputStreamHandler_ = other.outputStreamHandler_;
       inputSidePacket_ = other.inputSidePacket_.Clone();
-      options_ = other.HasOptions ? other.options_.Clone() : null;
+      options_ = other.options_ != null ? other.options_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public OutputStreamHandlerConfig Clone() {
       return new OutputStreamHandlerConfig(this);
     }
@@ -288,6 +362,7 @@ namespace Mediapipe {
     /// Name of the registered output stream handler class.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string OutputStreamHandler {
       get { return outputStreamHandler_ ?? OutputStreamHandlerDefaultValue; }
       set {
@@ -296,11 +371,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "output_stream_handler" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasOutputStreamHandler {
       get { return outputStreamHandler_ != null; }
     }
     /// <summary>Clears the value of the "output_stream_handler" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearOutputStreamHandler() {
       outputStreamHandler_ = null;
     }
@@ -315,6 +392,7 @@ namespace Mediapipe {
     /// from the side packets for the calculator (but could be shared).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> InputSidePacket {
       get { return inputSidePacket_; }
     }
@@ -326,29 +404,22 @@ namespace Mediapipe {
     /// Options for the output stream handler.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MediaPipeOptions Options {
       get { return options_; }
       set {
         options_ = value;
       }
     }
-    /// <summary>Gets whether the options field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasOptions {
-      get { return options_ != null; }
-    }
-    /// <summary>Clears the value of the options field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearOptions() {
-      options_ = null;
-    }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as OutputStreamHandlerConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(OutputStreamHandlerConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -363,11 +434,12 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasOutputStreamHandler) hash ^= OutputStreamHandler.GetHashCode();
       hash ^= inputSidePacket_.GetHashCode();
-      if (HasOptions) hash ^= Options.GetHashCode();
+      if (options_ != null) hash ^= Options.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -375,34 +447,60 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasOutputStreamHandler) {
         output.WriteRawTag(10);
         output.WriteString(OutputStreamHandler);
       }
       inputSidePacket_.WriteTo(output, _repeated_inputSidePacket_codec);
-      if (HasOptions) {
+      if (options_ != null) {
         output.WriteRawTag(26);
         output.WriteMessage(Options);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasOutputStreamHandler) {
+        output.WriteRawTag(10);
+        output.WriteString(OutputStreamHandler);
+      }
+      inputSidePacket_.WriteTo(ref output, _repeated_inputSidePacket_codec);
+      if (options_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Options);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasOutputStreamHandler) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OutputStreamHandler);
       }
       size += inputSidePacket_.CalculateSize(_repeated_inputSidePacket_codec);
-      if (HasOptions) {
+      if (options_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Options);
       }
       if (_unknownFields != null) {
@@ -412,6 +510,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(OutputStreamHandlerConfig other) {
       if (other == null) {
         return;
@@ -420,8 +519,8 @@ namespace Mediapipe {
         OutputStreamHandler = other.OutputStreamHandler;
       }
       inputSidePacket_.Add(other.inputSidePacket_);
-      if (other.HasOptions) {
-        if (!HasOptions) {
+      if (other.options_ != null) {
+        if (options_ == null) {
           Options = new global::Mediapipe.MediaPipeOptions();
         }
         Options.MergeFrom(other.Options);
@@ -430,7 +529,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -446,7 +549,37 @@ namespace Mediapipe {
             break;
           }
           case 26: {
-            if (!HasOptions) {
+            if (options_ == null) {
+              Options = new global::Mediapipe.MediaPipeOptions();
+            }
+            input.ReadMessage(Options);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            OutputStreamHandler = input.ReadString();
+            break;
+          }
+          case 18: {
+            inputSidePacket_.AddEntriesFrom(ref input, _repeated_inputSidePacket_codec);
+            break;
+          }
+          case 26: {
+            if (options_ == null) {
               Options = new global::Mediapipe.MediaPipeOptions();
             }
             input.ReadMessage(Options);
@@ -455,6 +588,7 @@ namespace Mediapipe {
         }
       }
     }
+    #endif
 
   }
 

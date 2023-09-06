@@ -48,24 +48,32 @@ namespace Mediapipe {
 
   }
   #region Messages
-  public sealed partial class Detection : pb::IMessage<Detection> {
+  public sealed partial class Detection : pb::IMessage<Detection>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<Detection> _parser = new pb::MessageParser<Detection>(() => new Detection());
     private pb::UnknownFieldSet _unknownFields;
     private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<Detection> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.DetectionReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Detection() {
       OnConstruction();
     }
@@ -73,12 +81,13 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Detection(Detection other) : this() {
       _hasBits0 = other._hasBits0;
       label_ = other.label_.Clone();
       labelId_ = other.labelId_.Clone();
       score_ = other.score_.Clone();
-      locationData_ = other.HasLocationData ? other.locationData_.Clone() : null;
+      locationData_ = other.locationData_ != null ? other.locationData_.Clone() : null;
       featureTag_ = other.featureTag_;
       trackId_ = other.trackId_;
       detectionId_ = other.detectionId_;
@@ -89,6 +98,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Detection Clone() {
       return new Detection(this);
     }
@@ -102,6 +112,7 @@ namespace Mediapipe {
     /// i-th label or label_id has a score encoded by the i-th element in score.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> Label {
       get { return label_; }
     }
@@ -112,6 +123,7 @@ namespace Mediapipe {
         = pb::FieldCodec.ForInt32(18);
     private readonly pbc::RepeatedField<int> labelId_ = new pbc::RepeatedField<int>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<int> LabelId {
       get { return labelId_; }
     }
@@ -122,6 +134,7 @@ namespace Mediapipe {
         = pb::FieldCodec.ForFloat(26);
     private readonly pbc::RepeatedField<float> score_ = new pbc::RepeatedField<float>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<float> Score {
       get { return score_; }
     }
@@ -133,21 +146,12 @@ namespace Mediapipe {
     /// Location data corresponding to all detected labels above.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.LocationData LocationData {
       get { return locationData_; }
       set {
         locationData_ = value;
       }
-    }
-    /// <summary>Gets whether the location_data field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasLocationData {
-      get { return locationData_ != null; }
-    }
-    /// <summary>Clears the value of the location_data field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearLocationData() {
-      locationData_ = null;
     }
 
     /// <summary>Field number for the "feature_tag" field.</summary>
@@ -160,6 +164,7 @@ namespace Mediapipe {
     /// associating a name to the pipeline used to generate this detection.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string FeatureTag {
       get { return featureTag_ ?? FeatureTagDefaultValue; }
       set {
@@ -168,11 +173,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "feature_tag" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasFeatureTag {
       get { return featureTag_ != null; }
     }
     /// <summary>Clears the value of the "feature_tag" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearFeatureTag() {
       featureTag_ = null;
     }
@@ -186,6 +193,7 @@ namespace Mediapipe {
     /// Optional string to specify track_id if detection is part of a track.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string TrackId {
       get { return trackId_ ?? TrackIdDefaultValue; }
       set {
@@ -194,11 +202,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "track_id" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasTrackId {
       get { return trackId_ != null; }
     }
     /// <summary>Clears the value of the "track_id" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearTrackId() {
       trackId_ = null;
     }
@@ -212,6 +222,7 @@ namespace Mediapipe {
     /// Optional unique id to help associate different Detections to each other.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long DetectionId {
       get { if ((_hasBits0 & 1) != 0) { return detectionId_; } else { return DetectionIdDefaultValue; } }
       set {
@@ -221,11 +232,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "detection_id" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasDetectionId {
       get { return (_hasBits0 & 1) != 0; }
     }
     /// <summary>Clears the value of the "detection_id" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearDetectionId() {
       _hasBits0 &= ~1;
     }
@@ -236,6 +249,7 @@ namespace Mediapipe {
         = pb::FieldCodec.ForMessage(66, global::Mediapipe.Detection.Types.AssociatedDetection.Parser);
     private readonly pbc::RepeatedField<global::Mediapipe.Detection.Types.AssociatedDetection> associatedDetections_ = new pbc::RepeatedField<global::Mediapipe.Detection.Types.AssociatedDetection>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.Detection.Types.AssociatedDetection> AssociatedDetections {
       get { return associatedDetections_; }
     }
@@ -250,6 +264,7 @@ namespace Mediapipe {
     /// display name corresponds to the label (or label_id). This is optional.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> DisplayName {
       get { return displayName_; }
     }
@@ -264,6 +279,7 @@ namespace Mediapipe {
     /// created/detected.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long TimestampUsec {
       get { if ((_hasBits0 & 2) != 0) { return timestampUsec_; } else { return TimestampUsecDefaultValue; } }
       set {
@@ -273,21 +289,25 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "timestamp_usec" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasTimestampUsec {
       get { return (_hasBits0 & 2) != 0; }
     }
     /// <summary>Clears the value of the "timestamp_usec" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearTimestampUsec() {
       _hasBits0 &= ~2;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as Detection);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(Detection other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -309,12 +329,13 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       hash ^= label_.GetHashCode();
       hash ^= labelId_.GetHashCode();
       hash ^= score_.GetHashCode();
-      if (HasLocationData) hash ^= LocationData.GetHashCode();
+      if (locationData_ != null) hash ^= LocationData.GetHashCode();
       if (HasFeatureTag) hash ^= FeatureTag.GetHashCode();
       if (HasTrackId) hash ^= TrackId.GetHashCode();
       if (HasDetectionId) hash ^= DetectionId.GetHashCode();
@@ -328,16 +349,21 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       label_.WriteTo(output, _repeated_label_codec);
       labelId_.WriteTo(output, _repeated_labelId_codec);
       score_.WriteTo(output, _repeated_score_codec);
-      if (HasLocationData) {
+      if (locationData_ != null) {
         output.WriteRawTag(34);
         output.WriteMessage(LocationData);
       }
@@ -362,15 +388,52 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      label_.WriteTo(ref output, _repeated_label_codec);
+      labelId_.WriteTo(ref output, _repeated_labelId_codec);
+      score_.WriteTo(ref output, _repeated_score_codec);
+      if (locationData_ != null) {
+        output.WriteRawTag(34);
+        output.WriteMessage(LocationData);
+      }
+      if (HasFeatureTag) {
+        output.WriteRawTag(42);
+        output.WriteString(FeatureTag);
+      }
+      if (HasTrackId) {
+        output.WriteRawTag(50);
+        output.WriteString(TrackId);
+      }
+      if (HasDetectionId) {
+        output.WriteRawTag(56);
+        output.WriteInt64(DetectionId);
+      }
+      associatedDetections_.WriteTo(ref output, _repeated_associatedDetections_codec);
+      displayName_.WriteTo(ref output, _repeated_displayName_codec);
+      if (HasTimestampUsec) {
+        output.WriteRawTag(80);
+        output.WriteInt64(TimestampUsec);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       size += label_.CalculateSize(_repeated_label_codec);
       size += labelId_.CalculateSize(_repeated_labelId_codec);
       size += score_.CalculateSize(_repeated_score_codec);
-      if (HasLocationData) {
+      if (locationData_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(LocationData);
       }
       if (HasFeatureTag) {
@@ -394,6 +457,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(Detection other) {
       if (other == null) {
         return;
@@ -401,8 +465,8 @@ namespace Mediapipe {
       label_.Add(other.label_);
       labelId_.Add(other.labelId_);
       score_.Add(other.score_);
-      if (other.HasLocationData) {
-        if (!HasLocationData) {
+      if (other.locationData_ != null) {
+        if (locationData_ == null) {
           LocationData = new global::Mediapipe.LocationData();
         }
         LocationData.MergeFrom(other.LocationData);
@@ -425,7 +489,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -447,7 +515,7 @@ namespace Mediapipe {
             break;
           }
           case 34: {
-            if (!HasLocationData) {
+            if (locationData_ == null) {
               LocationData = new global::Mediapipe.LocationData();
             }
             input.ReadMessage(LocationData);
@@ -479,35 +547,105 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            label_.AddEntriesFrom(ref input, _repeated_label_codec);
+            break;
+          }
+          case 18:
+          case 16: {
+            labelId_.AddEntriesFrom(ref input, _repeated_labelId_codec);
+            break;
+          }
+          case 26:
+          case 29: {
+            score_.AddEntriesFrom(ref input, _repeated_score_codec);
+            break;
+          }
+          case 34: {
+            if (locationData_ == null) {
+              LocationData = new global::Mediapipe.LocationData();
+            }
+            input.ReadMessage(LocationData);
+            break;
+          }
+          case 42: {
+            FeatureTag = input.ReadString();
+            break;
+          }
+          case 50: {
+            TrackId = input.ReadString();
+            break;
+          }
+          case 56: {
+            DetectionId = input.ReadInt64();
+            break;
+          }
+          case 66: {
+            associatedDetections_.AddEntriesFrom(ref input, _repeated_associatedDetections_codec);
+            break;
+          }
+          case 74: {
+            displayName_.AddEntriesFrom(ref input, _repeated_displayName_codec);
+            break;
+          }
+          case 80: {
+            TimestampUsec = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
     #region Nested types
     /// <summary>Container for nested types declared in the Detection message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
       /// <summary>
       /// Useful for associating a detection with other detections based on the
       /// detection_id. For example, this could be used to associate a face detection
       /// with a body detection when they belong to the same person.
       /// </summary>
-      public sealed partial class AssociatedDetection : pb::IMessage<AssociatedDetection> {
+      public sealed partial class AssociatedDetection : pb::IMessage<AssociatedDetection>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
         private static readonly pb::MessageParser<AssociatedDetection> _parser = new pb::MessageParser<AssociatedDetection>(() => new AssociatedDetection());
         private pb::UnknownFieldSet _unknownFields;
         private int _hasBits0;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<AssociatedDetection> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
           get { return global::Mediapipe.Detection.Descriptor.NestedTypes[0]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public AssociatedDetection() {
           OnConstruction();
         }
@@ -515,6 +653,7 @@ namespace Mediapipe {
         partial void OnConstruction();
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public AssociatedDetection(AssociatedDetection other) : this() {
           _hasBits0 = other._hasBits0;
           id_ = other.id_;
@@ -523,6 +662,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public AssociatedDetection Clone() {
           return new AssociatedDetection(this);
         }
@@ -533,6 +673,7 @@ namespace Mediapipe {
 
         private int id_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Id {
           get { if ((_hasBits0 & 1) != 0) { return id_; } else { return IdDefaultValue; } }
           set {
@@ -542,11 +683,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "id" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasId {
           get { return (_hasBits0 & 1) != 0; }
         }
         /// <summary>Clears the value of the "id" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearId() {
           _hasBits0 &= ~1;
         }
@@ -557,6 +700,7 @@ namespace Mediapipe {
 
         private float confidence_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Confidence {
           get { if ((_hasBits0 & 2) != 0) { return confidence_; } else { return ConfidenceDefaultValue; } }
           set {
@@ -566,21 +710,25 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "confidence" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasConfidence {
           get { return (_hasBits0 & 2) != 0; }
         }
         /// <summary>Clears the value of the "confidence" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearConfidence() {
           _hasBits0 &= ~2;
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
           return Equals(other as AssociatedDetection);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool Equals(AssociatedDetection other) {
           if (ReferenceEquals(other, null)) {
             return false;
@@ -594,6 +742,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
           if (HasId) hash ^= Id.GetHashCode();
@@ -605,12 +754,17 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override string ToString() {
           return pb::JsonFormatter.ToDiagnosticString(this);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
           if (HasId) {
             output.WriteRawTag(8);
             output.WriteInt32(Id);
@@ -622,9 +776,29 @@ namespace Mediapipe {
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
+        #endif
         }
 
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (HasId) {
+            output.WriteRawTag(8);
+            output.WriteInt32(Id);
+          }
+          if (HasConfidence) {
+            output.WriteRawTag(21);
+            output.WriteFloat(Confidence);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
           if (HasId) {
@@ -640,6 +814,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(AssociatedDetection other) {
           if (other == null) {
             return;
@@ -654,7 +829,11 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
             switch(tag) {
@@ -671,7 +850,31 @@ namespace Mediapipe {
               }
             }
           }
+        #endif
         }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 8: {
+                Id = input.ReadInt32();
+                break;
+              }
+              case 21: {
+                Confidence = input.ReadFloat();
+                break;
+              }
+            }
+          }
+        }
+        #endif
 
       }
 
@@ -683,23 +886,31 @@ namespace Mediapipe {
   /// <summary>
   /// Group of Detection protos.
   /// </summary>
-  public sealed partial class DetectionList : pb::IMessage<DetectionList> {
+  public sealed partial class DetectionList : pb::IMessage<DetectionList>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<DetectionList> _parser = new pb::MessageParser<DetectionList>(() => new DetectionList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<DetectionList> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.DetectionReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public DetectionList() {
       OnConstruction();
     }
@@ -707,12 +918,14 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public DetectionList(DetectionList other) : this() {
       detection_ = other.detection_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public DetectionList Clone() {
       return new DetectionList(this);
     }
@@ -723,16 +936,19 @@ namespace Mediapipe {
         = pb::FieldCodec.ForMessage(10, global::Mediapipe.Detection.Parser);
     private readonly pbc::RepeatedField<global::Mediapipe.Detection> detection_ = new pbc::RepeatedField<global::Mediapipe.Detection>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.Detection> Detection {
       get { return detection_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as DetectionList);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(DetectionList other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -745,6 +961,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       hash ^= detection_.GetHashCode();
@@ -755,19 +972,37 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       detection_.WriteTo(output, _repeated_detection_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      detection_.WriteTo(ref output, _repeated_detection_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       size += detection_.CalculateSize(_repeated_detection_codec);
@@ -778,6 +1013,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(DetectionList other) {
       if (other == null) {
         return;
@@ -787,7 +1023,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -800,7 +1040,27 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            detection_.AddEntriesFrom(ref input, _repeated_detection_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

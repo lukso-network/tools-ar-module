@@ -46,23 +46,31 @@ namespace Mediapipe.FaceGeometry {
   /// <summary>
   /// Defines the face geometry pipeline estimation result format.
   /// </summary>
-  public sealed partial class FaceGeometry : pb::IMessage<FaceGeometry> {
+  public sealed partial class FaceGeometry : pb::IMessage<FaceGeometry>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<FaceGeometry> _parser = new pb::MessageParser<FaceGeometry>(() => new FaceGeometry());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<FaceGeometry> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.FaceGeometry.FaceGeometryReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public FaceGeometry() {
       OnConstruction();
     }
@@ -70,13 +78,15 @@ namespace Mediapipe.FaceGeometry {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public FaceGeometry(FaceGeometry other) : this() {
-      mesh_ = other.HasMesh ? other.mesh_.Clone() : null;
-      poseTransformMatrix_ = other.HasPoseTransformMatrix ? other.poseTransformMatrix_.Clone() : null;
+      mesh_ = other.mesh_ != null ? other.mesh_.Clone() : null;
+      poseTransformMatrix_ = other.poseTransformMatrix_ != null ? other.poseTransformMatrix_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public FaceGeometry Clone() {
       return new FaceGeometry(this);
     }
@@ -106,21 +116,12 @@ namespace Mediapipe.FaceGeometry {
     ///       (keypoints) for the face pose transformation matrix, not the mesh.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.FaceGeometry.Mesh3d Mesh {
       get { return mesh_; }
       set {
         mesh_ = value;
       }
-    }
-    /// <summary>Gets whether the mesh field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasMesh {
-      get { return mesh_ != null; }
-    }
-    /// <summary>Clears the value of the mesh field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearMesh() {
-      mesh_ = null;
     }
 
     /// <summary>Field number for the "pose_transform_matrix" field.</summary>
@@ -140,29 +141,22 @@ namespace Mediapipe.FaceGeometry {
     /// The last row is guaranteed to be `[0 0 0 1]`.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MatrixData PoseTransformMatrix {
       get { return poseTransformMatrix_; }
       set {
         poseTransformMatrix_ = value;
       }
     }
-    /// <summary>Gets whether the pose_transform_matrix field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasPoseTransformMatrix {
-      get { return poseTransformMatrix_ != null; }
-    }
-    /// <summary>Clears the value of the pose_transform_matrix field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearPoseTransformMatrix() {
-      poseTransformMatrix_ = null;
-    }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as FaceGeometry);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(FaceGeometry other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -176,10 +170,11 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (HasMesh) hash ^= Mesh.GetHashCode();
-      if (HasPoseTransformMatrix) hash ^= PoseTransformMatrix.GetHashCode();
+      if (mesh_ != null) hash ^= Mesh.GetHashCode();
+      if (poseTransformMatrix_ != null) hash ^= PoseTransformMatrix.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -187,32 +182,57 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (HasMesh) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (mesh_ != null) {
         output.WriteRawTag(10);
         output.WriteMessage(Mesh);
       }
-      if (HasPoseTransformMatrix) {
+      if (poseTransformMatrix_ != null) {
         output.WriteRawTag(18);
         output.WriteMessage(PoseTransformMatrix);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (mesh_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Mesh);
+      }
+      if (poseTransformMatrix_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(PoseTransformMatrix);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (HasMesh) {
+      if (mesh_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Mesh);
       }
-      if (HasPoseTransformMatrix) {
+      if (poseTransformMatrix_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(PoseTransformMatrix);
       }
       if (_unknownFields != null) {
@@ -222,18 +242,19 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(FaceGeometry other) {
       if (other == null) {
         return;
       }
-      if (other.HasMesh) {
-        if (!HasMesh) {
+      if (other.mesh_ != null) {
+        if (mesh_ == null) {
           Mesh = new global::Mediapipe.FaceGeometry.Mesh3d();
         }
         Mesh.MergeFrom(other.Mesh);
       }
-      if (other.HasPoseTransformMatrix) {
-        if (!HasPoseTransformMatrix) {
+      if (other.poseTransformMatrix_ != null) {
+        if (poseTransformMatrix_ == null) {
           PoseTransformMatrix = new global::Mediapipe.MatrixData();
         }
         PoseTransformMatrix.MergeFrom(other.PoseTransformMatrix);
@@ -242,7 +263,11 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -250,14 +275,43 @@ namespace Mediapipe.FaceGeometry {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (!HasMesh) {
+            if (mesh_ == null) {
               Mesh = new global::Mediapipe.FaceGeometry.Mesh3d();
             }
             input.ReadMessage(Mesh);
             break;
           }
           case 18: {
-            if (!HasPoseTransformMatrix) {
+            if (poseTransformMatrix_ == null) {
+              PoseTransformMatrix = new global::Mediapipe.MatrixData();
+            }
+            input.ReadMessage(PoseTransformMatrix);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (mesh_ == null) {
+              Mesh = new global::Mediapipe.FaceGeometry.Mesh3d();
+            }
+            input.ReadMessage(Mesh);
+            break;
+          }
+          case 18: {
+            if (poseTransformMatrix_ == null) {
               PoseTransformMatrix = new global::Mediapipe.MatrixData();
             }
             input.ReadMessage(PoseTransformMatrix);
@@ -266,6 +320,7 @@ namespace Mediapipe.FaceGeometry {
         }
       }
     }
+    #endif
 
   }
 

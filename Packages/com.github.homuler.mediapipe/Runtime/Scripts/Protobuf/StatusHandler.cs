@@ -43,23 +43,31 @@ namespace Mediapipe {
   /// <summary>
   /// The settings specifying a status handler and its required external inputs.
   /// </summary>
-  public sealed partial class StatusHandlerConfig : pb::IMessage<StatusHandlerConfig> {
+  public sealed partial class StatusHandlerConfig : pb::IMessage<StatusHandlerConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<StatusHandlerConfig> _parser = new pb::MessageParser<StatusHandlerConfig>(() => new StatusHandlerConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<StatusHandlerConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.StatusHandlerReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public StatusHandlerConfig() {
       OnConstruction();
     }
@@ -67,15 +75,17 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public StatusHandlerConfig(StatusHandlerConfig other) : this() {
       statusHandler_ = other.statusHandler_;
       inputSidePacket_ = other.inputSidePacket_.Clone();
       externalInput_ = other.externalInput_.Clone();
-      options_ = other.HasOptions ? other.options_.Clone() : null;
+      options_ = other.options_ != null ? other.options_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public StatusHandlerConfig Clone() {
       return new StatusHandlerConfig(this);
     }
@@ -89,6 +99,7 @@ namespace Mediapipe {
     /// The name of the registered status handler class.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string StatusHandler {
       get { return statusHandler_ ?? StatusHandlerDefaultValue; }
       set {
@@ -97,11 +108,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "status_handler" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasStatusHandler {
       get { return statusHandler_ != null; }
     }
     /// <summary>Clears the value of the "status_handler" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearStatusHandler() {
       statusHandler_ = null;
     }
@@ -119,6 +132,7 @@ namespace Mediapipe {
     /// produces one fails).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> InputSidePacket {
       get { return inputSidePacket_; }
     }
@@ -132,6 +146,7 @@ namespace Mediapipe {
     /// DEPRECATED(mgeorg) The old name for input_side_packet.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ExternalInput {
       get { return externalInput_; }
     }
@@ -143,29 +158,22 @@ namespace Mediapipe {
     /// The options for the status handler.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MediaPipeOptions Options {
       get { return options_; }
       set {
         options_ = value;
       }
     }
-    /// <summary>Gets whether the options field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasOptions {
-      get { return options_ != null; }
-    }
-    /// <summary>Clears the value of the options field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearOptions() {
-      options_ = null;
-    }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as StatusHandlerConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(StatusHandlerConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -181,12 +189,13 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasStatusHandler) hash ^= StatusHandler.GetHashCode();
       hash ^= inputSidePacket_.GetHashCode();
       hash ^= externalInput_.GetHashCode();
-      if (HasOptions) hash ^= Options.GetHashCode();
+      if (options_ != null) hash ^= Options.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -194,18 +203,23 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasStatusHandler) {
         output.WriteRawTag(10);
         output.WriteString(StatusHandler);
       }
       inputSidePacket_.WriteTo(output, _repeated_inputSidePacket_codec);
-      if (HasOptions) {
+      if (options_ != null) {
         output.WriteRawTag(26);
         output.WriteMessage(Options);
       }
@@ -213,9 +227,31 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasStatusHandler) {
+        output.WriteRawTag(10);
+        output.WriteString(StatusHandler);
+      }
+      inputSidePacket_.WriteTo(ref output, _repeated_inputSidePacket_codec);
+      if (options_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Options);
+      }
+      externalInput_.WriteTo(ref output, _repeated_externalInput_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasStatusHandler) {
@@ -223,7 +259,7 @@ namespace Mediapipe {
       }
       size += inputSidePacket_.CalculateSize(_repeated_inputSidePacket_codec);
       size += externalInput_.CalculateSize(_repeated_externalInput_codec);
-      if (HasOptions) {
+      if (options_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Options);
       }
       if (_unknownFields != null) {
@@ -233,6 +269,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(StatusHandlerConfig other) {
       if (other == null) {
         return;
@@ -242,8 +279,8 @@ namespace Mediapipe {
       }
       inputSidePacket_.Add(other.inputSidePacket_);
       externalInput_.Add(other.externalInput_);
-      if (other.HasOptions) {
-        if (!HasOptions) {
+      if (other.options_ != null) {
+        if (options_ == null) {
           Options = new global::Mediapipe.MediaPipeOptions();
         }
         Options.MergeFrom(other.Options);
@@ -252,7 +289,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -268,7 +309,7 @@ namespace Mediapipe {
             break;
           }
           case 26: {
-            if (!HasOptions) {
+            if (options_ == null) {
               Options = new global::Mediapipe.MediaPipeOptions();
             }
             input.ReadMessage(Options);
@@ -280,7 +321,42 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            StatusHandler = input.ReadString();
+            break;
+          }
+          case 18: {
+            inputSidePacket_.AddEntriesFrom(ref input, _repeated_inputSidePacket_codec);
+            break;
+          }
+          case 26: {
+            if (options_ == null) {
+              Options = new global::Mediapipe.MediaPipeOptions();
+            }
+            input.ReadMessage(Options);
+            break;
+          }
+          case 8018: {
+            externalInput_.AddEntriesFrom(ref input, _repeated_externalInput_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

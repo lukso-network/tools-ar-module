@@ -45,25 +45,33 @@ namespace Mediapipe {
   /// <summary>
   /// Options used by a PacketGenerator.
   /// </summary>
-  public sealed partial class PacketGeneratorOptions : pb::IExtendableMessage<PacketGeneratorOptions> {
+  public sealed partial class PacketGeneratorOptions : pb::IExtendableMessage<PacketGeneratorOptions>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<PacketGeneratorOptions> _parser = new pb::MessageParser<PacketGeneratorOptions>(() => new PacketGeneratorOptions());
     private pb::UnknownFieldSet _unknownFields;
     private pb::ExtensionSet<PacketGeneratorOptions> _extensions;
     private pb::ExtensionSet<PacketGeneratorOptions> _Extensions { get { return _extensions; } }
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<PacketGeneratorOptions> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.PacketGeneratorReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PacketGeneratorOptions() {
       OnConstruction();
     }
@@ -71,22 +79,26 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PacketGeneratorOptions(PacketGeneratorOptions other) : this() {
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
       _extensions = pb::ExtensionSet.Clone(other._extensions);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PacketGeneratorOptions Clone() {
       return new PacketGeneratorOptions(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as PacketGeneratorOptions);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(PacketGeneratorOptions other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -101,6 +113,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (_extensions != null) {
@@ -113,21 +126,41 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (_extensions != null) {
         _extensions.WriteTo(output);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (_extensions != null) {
+        _extensions.WriteTo(ref output);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (_extensions != null) {
@@ -140,6 +173,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(PacketGeneratorOptions other) {
       if (other == null) {
         return;
@@ -149,7 +183,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -160,7 +198,25 @@ namespace Mediapipe {
             break;
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            if (!pb::ExtensionSet.TryMergeFieldFrom(ref _extensions, ref input)) {
+              _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            }
+            break;
+        }
+      }
+    }
+    #endif
 
     public TValue GetExtension<TValue>(pb::Extension<PacketGeneratorOptions, TValue> extension) {
       return pb::ExtensionSet.Get(ref _extensions, extension);
@@ -189,23 +245,31 @@ namespace Mediapipe {
   /// <summary>
   /// The settings specifying a packet generator and how it is connected.
   /// </summary>
-  public sealed partial class PacketGeneratorConfig : pb::IMessage<PacketGeneratorConfig> {
+  public sealed partial class PacketGeneratorConfig : pb::IMessage<PacketGeneratorConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<PacketGeneratorConfig> _parser = new pb::MessageParser<PacketGeneratorConfig>(() => new PacketGeneratorConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<PacketGeneratorConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.PacketGeneratorReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PacketGeneratorConfig() {
       OnConstruction();
     }
@@ -213,17 +277,19 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PacketGeneratorConfig(PacketGeneratorConfig other) : this() {
       packetGenerator_ = other.packetGenerator_;
       inputSidePacket_ = other.inputSidePacket_.Clone();
       externalInput_ = other.externalInput_.Clone();
       outputSidePacket_ = other.outputSidePacket_.Clone();
       externalOutput_ = other.externalOutput_.Clone();
-      options_ = other.HasOptions ? other.options_.Clone() : null;
+      options_ = other.options_ != null ? other.options_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public PacketGeneratorConfig Clone() {
       return new PacketGeneratorConfig(this);
     }
@@ -237,6 +303,7 @@ namespace Mediapipe {
     /// The name of the registered packet generator class.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string PacketGenerator {
       get { return packetGenerator_ ?? PacketGeneratorDefaultValue; }
       set {
@@ -245,11 +312,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "packet_generator" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasPacketGenerator {
       get { return packetGenerator_ != null; }
     }
     /// <summary>Clears the value of the "packet_generator" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearPacketGenerator() {
       packetGenerator_ = null;
     }
@@ -264,6 +333,7 @@ namespace Mediapipe {
     /// to access its input side packets either by index or by tag.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> InputSidePacket {
       get { return inputSidePacket_; }
     }
@@ -277,6 +347,7 @@ namespace Mediapipe {
     /// DEPRECATED(mgeorg) The old name for input_side_packet.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ExternalInput {
       get { return externalInput_; }
     }
@@ -292,6 +363,7 @@ namespace Mediapipe {
     /// either by index or by tag.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> OutputSidePacket {
       get { return outputSidePacket_; }
     }
@@ -305,6 +377,7 @@ namespace Mediapipe {
     /// DEPRECATED(mgeorg) The old name for output_side_packet.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ExternalOutput {
       get { return externalOutput_; }
     }
@@ -316,29 +389,22 @@ namespace Mediapipe {
     /// The options for the packet generator.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.PacketGeneratorOptions Options {
       get { return options_; }
       set {
         options_ = value;
       }
     }
-    /// <summary>Gets whether the options field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasOptions {
-      get { return options_ != null; }
-    }
-    /// <summary>Clears the value of the options field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearOptions() {
-      options_ = null;
-    }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as PacketGeneratorConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(PacketGeneratorConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -356,6 +422,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasPacketGenerator) hash ^= PacketGenerator.GetHashCode();
@@ -363,7 +430,7 @@ namespace Mediapipe {
       hash ^= externalInput_.GetHashCode();
       hash ^= outputSidePacket_.GetHashCode();
       hash ^= externalOutput_.GetHashCode();
-      if (HasOptions) hash ^= Options.GetHashCode();
+      if (options_ != null) hash ^= Options.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -371,19 +438,24 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasPacketGenerator) {
         output.WriteRawTag(10);
         output.WriteString(PacketGenerator);
       }
       inputSidePacket_.WriteTo(output, _repeated_inputSidePacket_codec);
       outputSidePacket_.WriteTo(output, _repeated_outputSidePacket_codec);
-      if (HasOptions) {
+      if (options_ != null) {
         output.WriteRawTag(34);
         output.WriteMessage(Options);
       }
@@ -392,9 +464,33 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasPacketGenerator) {
+        output.WriteRawTag(10);
+        output.WriteString(PacketGenerator);
+      }
+      inputSidePacket_.WriteTo(ref output, _repeated_inputSidePacket_codec);
+      outputSidePacket_.WriteTo(ref output, _repeated_outputSidePacket_codec);
+      if (options_ != null) {
+        output.WriteRawTag(34);
+        output.WriteMessage(Options);
+      }
+      externalInput_.WriteTo(ref output, _repeated_externalInput_codec);
+      externalOutput_.WriteTo(ref output, _repeated_externalOutput_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasPacketGenerator) {
@@ -404,7 +500,7 @@ namespace Mediapipe {
       size += externalInput_.CalculateSize(_repeated_externalInput_codec);
       size += outputSidePacket_.CalculateSize(_repeated_outputSidePacket_codec);
       size += externalOutput_.CalculateSize(_repeated_externalOutput_codec);
-      if (HasOptions) {
+      if (options_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Options);
       }
       if (_unknownFields != null) {
@@ -414,6 +510,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(PacketGeneratorConfig other) {
       if (other == null) {
         return;
@@ -425,8 +522,8 @@ namespace Mediapipe {
       externalInput_.Add(other.externalInput_);
       outputSidePacket_.Add(other.outputSidePacket_);
       externalOutput_.Add(other.externalOutput_);
-      if (other.HasOptions) {
-        if (!HasOptions) {
+      if (other.options_ != null) {
+        if (options_ == null) {
           Options = new global::Mediapipe.PacketGeneratorOptions();
         }
         Options.MergeFrom(other.Options);
@@ -435,7 +532,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -455,7 +556,7 @@ namespace Mediapipe {
             break;
           }
           case 34: {
-            if (!HasOptions) {
+            if (options_ == null) {
               Options = new global::Mediapipe.PacketGeneratorOptions();
             }
             input.ReadMessage(Options);
@@ -471,7 +572,50 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            PacketGenerator = input.ReadString();
+            break;
+          }
+          case 18: {
+            inputSidePacket_.AddEntriesFrom(ref input, _repeated_inputSidePacket_codec);
+            break;
+          }
+          case 26: {
+            outputSidePacket_.AddEntriesFrom(ref input, _repeated_outputSidePacket_codec);
+            break;
+          }
+          case 34: {
+            if (options_ == null) {
+              Options = new global::Mediapipe.PacketGeneratorOptions();
+            }
+            input.ReadMessage(Options);
+            break;
+          }
+          case 8018: {
+            externalInput_.AddEntriesFrom(ref input, _repeated_externalInput_codec);
+            break;
+          }
+          case 8026: {
+            externalOutput_.AddEntriesFrom(ref input, _repeated_externalOutput_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 

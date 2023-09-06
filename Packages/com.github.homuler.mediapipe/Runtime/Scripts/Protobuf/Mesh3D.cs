@@ -43,24 +43,32 @@ namespace Mediapipe.FaceGeometry {
 
   }
   #region Messages
-  public sealed partial class Mesh3d : pb::IMessage<Mesh3d> {
+  public sealed partial class Mesh3d : pb::IMessage<Mesh3d>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<Mesh3d> _parser = new pb::MessageParser<Mesh3d>(() => new Mesh3d());
     private pb::UnknownFieldSet _unknownFields;
     private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<Mesh3d> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.FaceGeometry.Mesh3DReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Mesh3d() {
       OnConstruction();
     }
@@ -68,6 +76,7 @@ namespace Mediapipe.FaceGeometry {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Mesh3d(Mesh3d other) : this() {
       _hasBits0 = other._hasBits0;
       vertexType_ = other.vertexType_;
@@ -78,6 +87,7 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Mesh3d Clone() {
       return new Mesh3d(this);
     }
@@ -88,6 +98,7 @@ namespace Mediapipe.FaceGeometry {
 
     private global::Mediapipe.FaceGeometry.Mesh3d.Types.VertexType vertexType_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.FaceGeometry.Mesh3d.Types.VertexType VertexType {
       get { if ((_hasBits0 & 1) != 0) { return vertexType_; } else { return VertexTypeDefaultValue; } }
       set {
@@ -97,11 +108,13 @@ namespace Mediapipe.FaceGeometry {
     }
     /// <summary>Gets whether the "vertex_type" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasVertexType {
       get { return (_hasBits0 & 1) != 0; }
     }
     /// <summary>Clears the value of the "vertex_type" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearVertexType() {
       _hasBits0 &= ~1;
     }
@@ -112,6 +125,7 @@ namespace Mediapipe.FaceGeometry {
 
     private global::Mediapipe.FaceGeometry.Mesh3d.Types.PrimitiveType primitiveType_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.FaceGeometry.Mesh3d.Types.PrimitiveType PrimitiveType {
       get { if ((_hasBits0 & 2) != 0) { return primitiveType_; } else { return PrimitiveTypeDefaultValue; } }
       set {
@@ -121,11 +135,13 @@ namespace Mediapipe.FaceGeometry {
     }
     /// <summary>Gets whether the "primitive_type" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasPrimitiveType {
       get { return (_hasBits0 & 2) != 0; }
     }
     /// <summary>Clears the value of the "primitive_type" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearPrimitiveType() {
       _hasBits0 &= ~2;
     }
@@ -140,6 +156,7 @@ namespace Mediapipe.FaceGeometry {
     /// VERTEX_PT).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<float> VertexBuffer {
       get { return vertexBuffer_; }
     }
@@ -154,16 +171,19 @@ namespace Mediapipe.FaceGeometry {
     /// TRIANGLE).
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<uint> IndexBuffer {
       get { return indexBuffer_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as Mesh3d);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(Mesh3d other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -179,6 +199,7 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasVertexType) hash ^= VertexType.GetHashCode();
@@ -192,12 +213,17 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasVertexType) {
         output.WriteRawTag(8);
         output.WriteEnum((int) VertexType);
@@ -211,9 +237,31 @@ namespace Mediapipe.FaceGeometry {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasVertexType) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) VertexType);
+      }
+      if (HasPrimitiveType) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) PrimitiveType);
+      }
+      vertexBuffer_.WriteTo(ref output, _repeated_vertexBuffer_codec);
+      indexBuffer_.WriteTo(ref output, _repeated_indexBuffer_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasVertexType) {
@@ -231,6 +279,7 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(Mesh3d other) {
       if (other == null) {
         return;
@@ -247,7 +296,11 @@ namespace Mediapipe.FaceGeometry {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -274,11 +327,46 @@ namespace Mediapipe.FaceGeometry {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            VertexType = (global::Mediapipe.FaceGeometry.Mesh3d.Types.VertexType) input.ReadEnum();
+            break;
+          }
+          case 16: {
+            PrimitiveType = (global::Mediapipe.FaceGeometry.Mesh3d.Types.PrimitiveType) input.ReadEnum();
+            break;
+          }
+          case 26:
+          case 29: {
+            vertexBuffer_.AddEntriesFrom(ref input, _repeated_vertexBuffer_codec);
+            break;
+          }
+          case 34:
+          case 32: {
+            indexBuffer_.AddEntriesFrom(ref input, _repeated_indexBuffer_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
     #region Nested types
     /// <summary>Container for nested types declared in the Mesh3d message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
       public enum VertexType {
         /// <summary>

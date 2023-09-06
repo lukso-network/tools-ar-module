@@ -58,24 +58,32 @@ namespace Mediapipe {
 
   }
   #region Messages
-  public sealed partial class LocationData : pb::IMessage<LocationData> {
+  public sealed partial class LocationData : pb::IMessage<LocationData>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<LocationData> _parser = new pb::MessageParser<LocationData>(() => new LocationData());
     private pb::UnknownFieldSet _unknownFields;
     private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<LocationData> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.LocationDataReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LocationData() {
       OnConstruction();
     }
@@ -83,17 +91,19 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LocationData(LocationData other) : this() {
       _hasBits0 = other._hasBits0;
       format_ = other.format_;
-      boundingBox_ = other.HasBoundingBox ? other.boundingBox_.Clone() : null;
-      relativeBoundingBox_ = other.HasRelativeBoundingBox ? other.relativeBoundingBox_.Clone() : null;
-      mask_ = other.HasMask ? other.mask_.Clone() : null;
+      boundingBox_ = other.boundingBox_ != null ? other.boundingBox_.Clone() : null;
+      relativeBoundingBox_ = other.relativeBoundingBox_ != null ? other.relativeBoundingBox_.Clone() : null;
+      mask_ = other.mask_ != null ? other.mask_.Clone() : null;
       relativeKeypoints_ = other.relativeKeypoints_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LocationData Clone() {
       return new LocationData(this);
     }
@@ -104,6 +114,7 @@ namespace Mediapipe {
 
     private global::Mediapipe.LocationData.Types.Format format_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.LocationData.Types.Format Format {
       get { if ((_hasBits0 & 1) != 0) { return format_; } else { return FormatDefaultValue; } }
       set {
@@ -113,11 +124,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "format" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasFormat {
       get { return (_hasBits0 & 1) != 0; }
     }
     /// <summary>Clears the value of the "format" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearFormat() {
       _hasBits0 &= ~1;
     }
@@ -126,63 +139,36 @@ namespace Mediapipe {
     public const int BoundingBoxFieldNumber = 2;
     private global::Mediapipe.LocationData.Types.BoundingBox boundingBox_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.LocationData.Types.BoundingBox BoundingBox {
       get { return boundingBox_; }
       set {
         boundingBox_ = value;
       }
     }
-    /// <summary>Gets whether the bounding_box field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasBoundingBox {
-      get { return boundingBox_ != null; }
-    }
-    /// <summary>Clears the value of the bounding_box field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearBoundingBox() {
-      boundingBox_ = null;
-    }
 
     /// <summary>Field number for the "relative_bounding_box" field.</summary>
     public const int RelativeBoundingBoxFieldNumber = 3;
     private global::Mediapipe.LocationData.Types.RelativeBoundingBox relativeBoundingBox_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.LocationData.Types.RelativeBoundingBox RelativeBoundingBox {
       get { return relativeBoundingBox_; }
       set {
         relativeBoundingBox_ = value;
       }
     }
-    /// <summary>Gets whether the relative_bounding_box field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasRelativeBoundingBox {
-      get { return relativeBoundingBox_ != null; }
-    }
-    /// <summary>Clears the value of the relative_bounding_box field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearRelativeBoundingBox() {
-      relativeBoundingBox_ = null;
-    }
 
     /// <summary>Field number for the "mask" field.</summary>
     public const int MaskFieldNumber = 4;
     private global::Mediapipe.LocationData.Types.BinaryMask mask_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.LocationData.Types.BinaryMask Mask {
       get { return mask_; }
       set {
         mask_ = value;
       }
-    }
-    /// <summary>Gets whether the mask field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool HasMask {
-      get { return mask_ != null; }
-    }
-    /// <summary>Clears the value of the mask field</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void ClearMask() {
-      mask_ = null;
     }
 
     /// <summary>Field number for the "relative_keypoints" field.</summary>
@@ -191,16 +177,19 @@ namespace Mediapipe {
         = pb::FieldCodec.ForMessage(42, global::Mediapipe.LocationData.Types.RelativeKeypoint.Parser);
     private readonly pbc::RepeatedField<global::Mediapipe.LocationData.Types.RelativeKeypoint> relativeKeypoints_ = new pbc::RepeatedField<global::Mediapipe.LocationData.Types.RelativeKeypoint>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.LocationData.Types.RelativeKeypoint> RelativeKeypoints {
       get { return relativeKeypoints_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as LocationData);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(LocationData other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -217,12 +206,13 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasFormat) hash ^= Format.GetHashCode();
-      if (HasBoundingBox) hash ^= BoundingBox.GetHashCode();
-      if (HasRelativeBoundingBox) hash ^= RelativeBoundingBox.GetHashCode();
-      if (HasMask) hash ^= Mask.GetHashCode();
+      if (boundingBox_ != null) hash ^= BoundingBox.GetHashCode();
+      if (relativeBoundingBox_ != null) hash ^= RelativeBoundingBox.GetHashCode();
+      if (mask_ != null) hash ^= Mask.GetHashCode();
       hash ^= relativeKeypoints_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -231,25 +221,30 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasFormat) {
         output.WriteRawTag(8);
         output.WriteEnum((int) Format);
       }
-      if (HasBoundingBox) {
+      if (boundingBox_ != null) {
         output.WriteRawTag(18);
         output.WriteMessage(BoundingBox);
       }
-      if (HasRelativeBoundingBox) {
+      if (relativeBoundingBox_ != null) {
         output.WriteRawTag(26);
         output.WriteMessage(RelativeBoundingBox);
       }
-      if (HasMask) {
+      if (mask_ != null) {
         output.WriteRawTag(34);
         output.WriteMessage(Mask);
       }
@@ -257,21 +252,50 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasFormat) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Format);
+      }
+      if (boundingBox_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(BoundingBox);
+      }
+      if (relativeBoundingBox_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(RelativeBoundingBox);
+      }
+      if (mask_ != null) {
+        output.WriteRawTag(34);
+        output.WriteMessage(Mask);
+      }
+      relativeKeypoints_.WriteTo(ref output, _repeated_relativeKeypoints_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasFormat) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Format);
       }
-      if (HasBoundingBox) {
+      if (boundingBox_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(BoundingBox);
       }
-      if (HasRelativeBoundingBox) {
+      if (relativeBoundingBox_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(RelativeBoundingBox);
       }
-      if (HasMask) {
+      if (mask_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Mask);
       }
       size += relativeKeypoints_.CalculateSize(_repeated_relativeKeypoints_codec);
@@ -282,6 +306,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(LocationData other) {
       if (other == null) {
         return;
@@ -289,20 +314,20 @@ namespace Mediapipe {
       if (other.HasFormat) {
         Format = other.Format;
       }
-      if (other.HasBoundingBox) {
-        if (!HasBoundingBox) {
+      if (other.boundingBox_ != null) {
+        if (boundingBox_ == null) {
           BoundingBox = new global::Mediapipe.LocationData.Types.BoundingBox();
         }
         BoundingBox.MergeFrom(other.BoundingBox);
       }
-      if (other.HasRelativeBoundingBox) {
-        if (!HasRelativeBoundingBox) {
+      if (other.relativeBoundingBox_ != null) {
+        if (relativeBoundingBox_ == null) {
           RelativeBoundingBox = new global::Mediapipe.LocationData.Types.RelativeBoundingBox();
         }
         RelativeBoundingBox.MergeFrom(other.RelativeBoundingBox);
       }
-      if (other.HasMask) {
-        if (!HasMask) {
+      if (other.mask_ != null) {
+        if (mask_ == null) {
           Mask = new global::Mediapipe.LocationData.Types.BinaryMask();
         }
         Mask.MergeFrom(other.Mask);
@@ -312,7 +337,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -324,21 +353,21 @@ namespace Mediapipe {
             break;
           }
           case 18: {
-            if (!HasBoundingBox) {
+            if (boundingBox_ == null) {
               BoundingBox = new global::Mediapipe.LocationData.Types.BoundingBox();
             }
             input.ReadMessage(BoundingBox);
             break;
           }
           case 26: {
-            if (!HasRelativeBoundingBox) {
+            if (relativeBoundingBox_ == null) {
               RelativeBoundingBox = new global::Mediapipe.LocationData.Types.RelativeBoundingBox();
             }
             input.ReadMessage(RelativeBoundingBox);
             break;
           }
           case 34: {
-            if (!HasMask) {
+            if (mask_ == null) {
               Mask = new global::Mediapipe.LocationData.Types.BinaryMask();
             }
             input.ReadMessage(Mask);
@@ -350,11 +379,57 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Format = (global::Mediapipe.LocationData.Types.Format) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            if (boundingBox_ == null) {
+              BoundingBox = new global::Mediapipe.LocationData.Types.BoundingBox();
+            }
+            input.ReadMessage(BoundingBox);
+            break;
+          }
+          case 26: {
+            if (relativeBoundingBox_ == null) {
+              RelativeBoundingBox = new global::Mediapipe.LocationData.Types.RelativeBoundingBox();
+            }
+            input.ReadMessage(RelativeBoundingBox);
+            break;
+          }
+          case 34: {
+            if (mask_ == null) {
+              Mask = new global::Mediapipe.LocationData.Types.BinaryMask();
+            }
+            input.ReadMessage(Mask);
+            break;
+          }
+          case 42: {
+            relativeKeypoints_.AddEntriesFrom(ref input, _repeated_relativeKeypoints_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
     #region Nested types
     /// <summary>Container for nested types declared in the LocationData message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
       /// <summary>
       /// The supported formats for representing location data. A single location
@@ -389,24 +464,32 @@ namespace Mediapipe {
       /// A bounding box in pixel units. The box is defined by its upper left corner
       /// (xmin, ymin) and its width and height.
       /// </summary>
-      public sealed partial class BoundingBox : pb::IMessage<BoundingBox> {
+      public sealed partial class BoundingBox : pb::IMessage<BoundingBox>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
         private static readonly pb::MessageParser<BoundingBox> _parser = new pb::MessageParser<BoundingBox>(() => new BoundingBox());
         private pb::UnknownFieldSet _unknownFields;
         private int _hasBits0;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<BoundingBox> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
           get { return global::Mediapipe.LocationData.Descriptor.NestedTypes[0]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public BoundingBox() {
           OnConstruction();
         }
@@ -414,6 +497,7 @@ namespace Mediapipe {
         partial void OnConstruction();
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public BoundingBox(BoundingBox other) : this() {
           _hasBits0 = other._hasBits0;
           xmin_ = other.xmin_;
@@ -424,6 +508,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public BoundingBox Clone() {
           return new BoundingBox(this);
         }
@@ -434,6 +519,7 @@ namespace Mediapipe {
 
         private int xmin_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Xmin {
           get { if ((_hasBits0 & 1) != 0) { return xmin_; } else { return XminDefaultValue; } }
           set {
@@ -443,11 +529,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "xmin" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasXmin {
           get { return (_hasBits0 & 1) != 0; }
         }
         /// <summary>Clears the value of the "xmin" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearXmin() {
           _hasBits0 &= ~1;
         }
@@ -458,6 +546,7 @@ namespace Mediapipe {
 
         private int ymin_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Ymin {
           get { if ((_hasBits0 & 2) != 0) { return ymin_; } else { return YminDefaultValue; } }
           set {
@@ -467,11 +556,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "ymin" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasYmin {
           get { return (_hasBits0 & 2) != 0; }
         }
         /// <summary>Clears the value of the "ymin" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearYmin() {
           _hasBits0 &= ~2;
         }
@@ -482,6 +573,7 @@ namespace Mediapipe {
 
         private int width_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Width {
           get { if ((_hasBits0 & 4) != 0) { return width_; } else { return WidthDefaultValue; } }
           set {
@@ -491,11 +583,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "width" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasWidth {
           get { return (_hasBits0 & 4) != 0; }
         }
         /// <summary>Clears the value of the "width" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearWidth() {
           _hasBits0 &= ~4;
         }
@@ -506,6 +600,7 @@ namespace Mediapipe {
 
         private int height_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Height {
           get { if ((_hasBits0 & 8) != 0) { return height_; } else { return HeightDefaultValue; } }
           set {
@@ -515,21 +610,25 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "height" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasHeight {
           get { return (_hasBits0 & 8) != 0; }
         }
         /// <summary>Clears the value of the "height" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearHeight() {
           _hasBits0 &= ~8;
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
           return Equals(other as BoundingBox);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool Equals(BoundingBox other) {
           if (ReferenceEquals(other, null)) {
             return false;
@@ -545,6 +644,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
           if (HasXmin) hash ^= Xmin.GetHashCode();
@@ -558,12 +658,17 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override string ToString() {
           return pb::JsonFormatter.ToDiagnosticString(this);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
           if (HasXmin) {
             output.WriteRawTag(8);
             output.WriteInt32(Xmin);
@@ -583,9 +688,37 @@ namespace Mediapipe {
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
+        #endif
         }
 
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (HasXmin) {
+            output.WriteRawTag(8);
+            output.WriteInt32(Xmin);
+          }
+          if (HasYmin) {
+            output.WriteRawTag(16);
+            output.WriteInt32(Ymin);
+          }
+          if (HasWidth) {
+            output.WriteRawTag(24);
+            output.WriteInt32(Width);
+          }
+          if (HasHeight) {
+            output.WriteRawTag(32);
+            output.WriteInt32(Height);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
           if (HasXmin) {
@@ -607,6 +740,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(BoundingBox other) {
           if (other == null) {
             return;
@@ -627,7 +761,11 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
             switch(tag) {
@@ -652,7 +790,39 @@ namespace Mediapipe {
               }
             }
           }
+        #endif
         }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 8: {
+                Xmin = input.ReadInt32();
+                break;
+              }
+              case 16: {
+                Ymin = input.ReadInt32();
+                break;
+              }
+              case 24: {
+                Width = input.ReadInt32();
+                break;
+              }
+              case 32: {
+                Height = input.ReadInt32();
+                break;
+              }
+            }
+          }
+        }
+        #endif
 
       }
 
@@ -661,24 +831,32 @@ namespace Mediapipe {
       /// and its width and height, all in coordinates normalized by the image
       /// dimensions.
       /// </summary>
-      public sealed partial class RelativeBoundingBox : pb::IMessage<RelativeBoundingBox> {
+      public sealed partial class RelativeBoundingBox : pb::IMessage<RelativeBoundingBox>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
         private static readonly pb::MessageParser<RelativeBoundingBox> _parser = new pb::MessageParser<RelativeBoundingBox>(() => new RelativeBoundingBox());
         private pb::UnknownFieldSet _unknownFields;
         private int _hasBits0;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<RelativeBoundingBox> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
           get { return global::Mediapipe.LocationData.Descriptor.NestedTypes[1]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public RelativeBoundingBox() {
           OnConstruction();
         }
@@ -686,6 +864,7 @@ namespace Mediapipe {
         partial void OnConstruction();
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public RelativeBoundingBox(RelativeBoundingBox other) : this() {
           _hasBits0 = other._hasBits0;
           xmin_ = other.xmin_;
@@ -696,6 +875,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public RelativeBoundingBox Clone() {
           return new RelativeBoundingBox(this);
         }
@@ -706,6 +886,7 @@ namespace Mediapipe {
 
         private float xmin_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Xmin {
           get { if ((_hasBits0 & 1) != 0) { return xmin_; } else { return XminDefaultValue; } }
           set {
@@ -715,11 +896,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "xmin" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasXmin {
           get { return (_hasBits0 & 1) != 0; }
         }
         /// <summary>Clears the value of the "xmin" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearXmin() {
           _hasBits0 &= ~1;
         }
@@ -730,6 +913,7 @@ namespace Mediapipe {
 
         private float ymin_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Ymin {
           get { if ((_hasBits0 & 2) != 0) { return ymin_; } else { return YminDefaultValue; } }
           set {
@@ -739,11 +923,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "ymin" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasYmin {
           get { return (_hasBits0 & 2) != 0; }
         }
         /// <summary>Clears the value of the "ymin" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearYmin() {
           _hasBits0 &= ~2;
         }
@@ -754,6 +940,7 @@ namespace Mediapipe {
 
         private float width_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Width {
           get { if ((_hasBits0 & 4) != 0) { return width_; } else { return WidthDefaultValue; } }
           set {
@@ -763,11 +950,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "width" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasWidth {
           get { return (_hasBits0 & 4) != 0; }
         }
         /// <summary>Clears the value of the "width" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearWidth() {
           _hasBits0 &= ~4;
         }
@@ -778,6 +967,7 @@ namespace Mediapipe {
 
         private float height_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Height {
           get { if ((_hasBits0 & 8) != 0) { return height_; } else { return HeightDefaultValue; } }
           set {
@@ -787,21 +977,25 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "height" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasHeight {
           get { return (_hasBits0 & 8) != 0; }
         }
         /// <summary>Clears the value of the "height" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearHeight() {
           _hasBits0 &= ~8;
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
           return Equals(other as RelativeBoundingBox);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool Equals(RelativeBoundingBox other) {
           if (ReferenceEquals(other, null)) {
             return false;
@@ -817,6 +1011,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
           if (HasXmin) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Xmin);
@@ -830,12 +1025,17 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override string ToString() {
           return pb::JsonFormatter.ToDiagnosticString(this);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
           if (HasXmin) {
             output.WriteRawTag(13);
             output.WriteFloat(Xmin);
@@ -855,9 +1055,37 @@ namespace Mediapipe {
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
+        #endif
         }
 
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (HasXmin) {
+            output.WriteRawTag(13);
+            output.WriteFloat(Xmin);
+          }
+          if (HasYmin) {
+            output.WriteRawTag(21);
+            output.WriteFloat(Ymin);
+          }
+          if (HasWidth) {
+            output.WriteRawTag(29);
+            output.WriteFloat(Width);
+          }
+          if (HasHeight) {
+            output.WriteRawTag(37);
+            output.WriteFloat(Height);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
           if (HasXmin) {
@@ -879,6 +1107,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(RelativeBoundingBox other) {
           if (other == null) {
             return;
@@ -899,7 +1128,11 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
             switch(tag) {
@@ -924,7 +1157,39 @@ namespace Mediapipe {
               }
             }
           }
+        #endif
         }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 13: {
+                Xmin = input.ReadFloat();
+                break;
+              }
+              case 21: {
+                Ymin = input.ReadFloat();
+                break;
+              }
+              case 29: {
+                Width = input.ReadFloat();
+                break;
+              }
+              case 37: {
+                Height = input.ReadFloat();
+                break;
+              }
+            }
+          }
+        }
+        #endif
 
       }
 
@@ -932,24 +1197,32 @@ namespace Mediapipe {
       /// A mask of size equivalent to the image size. It encodes a region, which
       /// can be thought of as a foreground object mask.
       /// </summary>
-      public sealed partial class BinaryMask : pb::IMessage<BinaryMask> {
+      public sealed partial class BinaryMask : pb::IMessage<BinaryMask>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
         private static readonly pb::MessageParser<BinaryMask> _parser = new pb::MessageParser<BinaryMask>(() => new BinaryMask());
         private pb::UnknownFieldSet _unknownFields;
         private int _hasBits0;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<BinaryMask> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
           get { return global::Mediapipe.LocationData.Descriptor.NestedTypes[2]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public BinaryMask() {
           OnConstruction();
         }
@@ -957,15 +1230,17 @@ namespace Mediapipe {
         partial void OnConstruction();
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public BinaryMask(BinaryMask other) : this() {
           _hasBits0 = other._hasBits0;
           width_ = other.width_;
           height_ = other.height_;
-          rasterization_ = other.HasRasterization ? other.rasterization_.Clone() : null;
+          rasterization_ = other.rasterization_ != null ? other.rasterization_.Clone() : null;
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public BinaryMask Clone() {
           return new BinaryMask(this);
         }
@@ -979,6 +1254,7 @@ namespace Mediapipe {
         /// Dimensions of the mask.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Width {
           get { if ((_hasBits0 & 1) != 0) { return width_; } else { return WidthDefaultValue; } }
           set {
@@ -988,11 +1264,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "width" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasWidth {
           get { return (_hasBits0 & 1) != 0; }
         }
         /// <summary>Clears the value of the "width" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearWidth() {
           _hasBits0 &= ~1;
         }
@@ -1003,6 +1281,7 @@ namespace Mediapipe {
 
         private int height_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int Height {
           get { if ((_hasBits0 & 2) != 0) { return height_; } else { return HeightDefaultValue; } }
           set {
@@ -1012,11 +1291,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "height" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasHeight {
           get { return (_hasBits0 & 2) != 0; }
         }
         /// <summary>Clears the value of the "height" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearHeight() {
           _hasBits0 &= ~2;
         }
@@ -1028,29 +1309,22 @@ namespace Mediapipe {
         /// A rasterization-like format for storing the mask.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::Mediapipe.Rasterization Rasterization {
           get { return rasterization_; }
           set {
             rasterization_ = value;
           }
         }
-        /// <summary>Gets whether the rasterization field is set</summary>
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public bool HasRasterization {
-          get { return rasterization_ != null; }
-        }
-        /// <summary>Clears the value of the rasterization field</summary>
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        public void ClearRasterization() {
-          rasterization_ = null;
-        }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
           return Equals(other as BinaryMask);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool Equals(BinaryMask other) {
           if (ReferenceEquals(other, null)) {
             return false;
@@ -1065,11 +1339,12 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
           if (HasWidth) hash ^= Width.GetHashCode();
           if (HasHeight) hash ^= Height.GetHashCode();
-          if (HasRasterization) hash ^= Rasterization.GetHashCode();
+          if (rasterization_ != null) hash ^= Rasterization.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
           }
@@ -1077,12 +1352,17 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override string ToString() {
           return pb::JsonFormatter.ToDiagnosticString(this);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
           if (HasWidth) {
             output.WriteRawTag(8);
             output.WriteInt32(Width);
@@ -1091,16 +1371,40 @@ namespace Mediapipe {
             output.WriteRawTag(16);
             output.WriteInt32(Height);
           }
-          if (HasRasterization) {
+          if (rasterization_ != null) {
             output.WriteRawTag(26);
             output.WriteMessage(Rasterization);
           }
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
+        #endif
         }
 
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (HasWidth) {
+            output.WriteRawTag(8);
+            output.WriteInt32(Width);
+          }
+          if (HasHeight) {
+            output.WriteRawTag(16);
+            output.WriteInt32(Height);
+          }
+          if (rasterization_ != null) {
+            output.WriteRawTag(26);
+            output.WriteMessage(Rasterization);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
           if (HasWidth) {
@@ -1109,7 +1413,7 @@ namespace Mediapipe {
           if (HasHeight) {
             size += 1 + pb::CodedOutputStream.ComputeInt32Size(Height);
           }
-          if (HasRasterization) {
+          if (rasterization_ != null) {
             size += 1 + pb::CodedOutputStream.ComputeMessageSize(Rasterization);
           }
           if (_unknownFields != null) {
@@ -1119,6 +1423,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(BinaryMask other) {
           if (other == null) {
             return;
@@ -1129,8 +1434,8 @@ namespace Mediapipe {
           if (other.HasHeight) {
             Height = other.Height;
           }
-          if (other.HasRasterization) {
-            if (!HasRasterization) {
+          if (other.rasterization_ != null) {
+            if (rasterization_ == null) {
               Rasterization = new global::Mediapipe.Rasterization();
             }
             Rasterization.MergeFrom(other.Rasterization);
@@ -1139,7 +1444,11 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
             switch(tag) {
@@ -1155,7 +1464,37 @@ namespace Mediapipe {
                 break;
               }
               case 26: {
-                if (!HasRasterization) {
+                if (rasterization_ == null) {
+                  Rasterization = new global::Mediapipe.Rasterization();
+                }
+                input.ReadMessage(Rasterization);
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 8: {
+                Width = input.ReadInt32();
+                break;
+              }
+              case 16: {
+                Height = input.ReadInt32();
+                break;
+              }
+              case 26: {
+                if (rasterization_ == null) {
                   Rasterization = new global::Mediapipe.Rasterization();
                 }
                 input.ReadMessage(Rasterization);
@@ -1164,6 +1503,7 @@ namespace Mediapipe {
             }
           }
         }
+        #endif
 
       }
 
@@ -1171,24 +1511,32 @@ namespace Mediapipe {
       /// A keypoint. The keypoint is defined by the coordinates (x, y), normalized
       /// by the image dimensions.
       /// </summary>
-      public sealed partial class RelativeKeypoint : pb::IMessage<RelativeKeypoint> {
+      public sealed partial class RelativeKeypoint : pb::IMessage<RelativeKeypoint>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
         private static readonly pb::MessageParser<RelativeKeypoint> _parser = new pb::MessageParser<RelativeKeypoint>(() => new RelativeKeypoint());
         private pb::UnknownFieldSet _unknownFields;
         private int _hasBits0;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<RelativeKeypoint> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
           get { return global::Mediapipe.LocationData.Descriptor.NestedTypes[3]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public RelativeKeypoint() {
           OnConstruction();
         }
@@ -1196,6 +1544,7 @@ namespace Mediapipe {
         partial void OnConstruction();
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public RelativeKeypoint(RelativeKeypoint other) : this() {
           _hasBits0 = other._hasBits0;
           x_ = other.x_;
@@ -1206,6 +1555,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public RelativeKeypoint Clone() {
           return new RelativeKeypoint(this);
         }
@@ -1216,6 +1566,7 @@ namespace Mediapipe {
 
         private float x_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float X {
           get { if ((_hasBits0 & 1) != 0) { return x_; } else { return XDefaultValue; } }
           set {
@@ -1225,11 +1576,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "x" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasX {
           get { return (_hasBits0 & 1) != 0; }
         }
         /// <summary>Clears the value of the "x" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearX() {
           _hasBits0 &= ~1;
         }
@@ -1240,6 +1593,7 @@ namespace Mediapipe {
 
         private float y_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Y {
           get { if ((_hasBits0 & 2) != 0) { return y_; } else { return YDefaultValue; } }
           set {
@@ -1249,11 +1603,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "y" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasY {
           get { return (_hasBits0 & 2) != 0; }
         }
         /// <summary>Clears the value of the "y" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearY() {
           _hasBits0 &= ~2;
         }
@@ -1264,6 +1620,7 @@ namespace Mediapipe {
 
         private string keypointLabel_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public string KeypointLabel {
           get { return keypointLabel_ ?? KeypointLabelDefaultValue; }
           set {
@@ -1272,11 +1629,13 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "keypoint_label" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasKeypointLabel {
           get { return keypointLabel_ != null; }
         }
         /// <summary>Clears the value of the "keypoint_label" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearKeypointLabel() {
           keypointLabel_ = null;
         }
@@ -1287,6 +1646,7 @@ namespace Mediapipe {
 
         private float score_;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public float Score {
           get { if ((_hasBits0 & 4) != 0) { return score_; } else { return ScoreDefaultValue; } }
           set {
@@ -1296,21 +1656,25 @@ namespace Mediapipe {
         }
         /// <summary>Gets whether the "score" field is set</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool HasScore {
           get { return (_hasBits0 & 4) != 0; }
         }
         /// <summary>Clears the value of the "score" field</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void ClearScore() {
           _hasBits0 &= ~4;
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
           return Equals(other as RelativeKeypoint);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool Equals(RelativeKeypoint other) {
           if (ReferenceEquals(other, null)) {
             return false;
@@ -1326,6 +1690,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
           if (HasX) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
@@ -1339,12 +1704,17 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override string ToString() {
           return pb::JsonFormatter.ToDiagnosticString(this);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
           if (HasX) {
             output.WriteRawTag(13);
             output.WriteFloat(X);
@@ -1364,9 +1734,37 @@ namespace Mediapipe {
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
+        #endif
         }
 
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (HasX) {
+            output.WriteRawTag(13);
+            output.WriteFloat(X);
+          }
+          if (HasY) {
+            output.WriteRawTag(21);
+            output.WriteFloat(Y);
+          }
+          if (HasKeypointLabel) {
+            output.WriteRawTag(26);
+            output.WriteString(KeypointLabel);
+          }
+          if (HasScore) {
+            output.WriteRawTag(37);
+            output.WriteFloat(Score);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
           if (HasX) {
@@ -1388,6 +1786,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(RelativeKeypoint other) {
           if (other == null) {
             return;
@@ -1408,7 +1807,11 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
             switch(tag) {
@@ -1433,7 +1836,39 @@ namespace Mediapipe {
               }
             }
           }
+        #endif
         }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 13: {
+                X = input.ReadFloat();
+                break;
+              }
+              case 21: {
+                Y = input.ReadFloat();
+                break;
+              }
+              case 26: {
+                KeypointLabel = input.ReadString();
+                break;
+              }
+              case 37: {
+                Score = input.ReadFloat();
+                break;
+              }
+            }
+          }
+        }
+        #endif
 
       }
 

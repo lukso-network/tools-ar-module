@@ -42,7 +42,7 @@ namespace Mediapipe {
             "RVhUEAMSFwoTSU5WQUxJRF9VUFBFUl9CT1VORBAEIkoKEklucHV0Q29sbGVj",
             "dGlvblNldBI0ChBpbnB1dF9jb2xsZWN0aW9uGAEgAygLMhoubWVkaWFwaXBl",
             "LklucHV0Q29sbGVjdGlvbiI3Cg9JbnB1dFN0cmVhbUluZm8SEQoJdGFnX2lu",
-            "ZGV4GAEgASgJEhEKCWJhY2tfZWRnZRgCIAEoCCK2BAoOUHJvZmlsZXJDb25m",
+            "ZGV4GAEgASgJEhEKCWJhY2tfZWRnZRgCIAEoCCLRBAoOUHJvZmlsZXJDb25m",
             "aWcSJAocaGlzdG9ncmFtX2ludGVydmFsX3NpemVfdXNlYxgBIAEoAxIfChdu",
             "dW1faGlzdG9ncmFtX2ludGVydmFscxgCIAEoAxInChtlbmFibGVfaW5wdXRf",
             "b3V0cHV0X2xhdGVuY3kYAyABKAhCAhgBEhcKD2VuYWJsZV9wcm9maWxlchgE",
@@ -55,39 +55,40 @@ namespace Mediapipe {
             "b2dfZHVyYXRpb25fZXZlbnRzGA0gASgIQgIYARIgChh0cmFjZV9sb2dfaW50",
             "ZXJ2YWxfY291bnQYDiABKAUSGgoSdHJhY2VfbG9nX2Rpc2FibGVkGA8gASgI",
             "EhUKDXRyYWNlX2VuYWJsZWQYECABKAgSIAoYdHJhY2VfbG9nX2luc3RhbnRf",
-            "ZXZlbnRzGBEgASgIItoKChVDYWxjdWxhdG9yR3JhcGhDb25maWcSMwoEbm9k",
-            "ZRgBIAMoCzIlLm1lZGlhcGlwZS5DYWxjdWxhdG9yR3JhcGhDb25maWcuTm9k",
-            "ZRI2Cg5wYWNrZXRfZmFjdG9yeRgGIAMoCzIeLm1lZGlhcGlwZS5QYWNrZXRG",
-            "YWN0b3J5Q29uZmlnEjoKEHBhY2tldF9nZW5lcmF0b3IYByADKAsyIC5tZWRp",
-            "YXBpcGUuUGFja2V0R2VuZXJhdG9yQ29uZmlnEhMKC251bV90aHJlYWRzGAgg",
-            "ASgFEjYKDnN0YXR1c19oYW5kbGVyGAkgAygLMh4ubWVkaWFwaXBlLlN0YXR1",
-            "c0hhbmRsZXJDb25maWcSFAoMaW5wdXRfc3RyZWFtGAogAygJEhUKDW91dHB1",
-            "dF9zdHJlYW0YDyADKAkSGQoRaW5wdXRfc2lkZV9wYWNrZXQYECADKAkSGgoS",
-            "b3V0cHV0X3NpZGVfcGFja2V0GBEgAygJEhYKDm1heF9xdWV1ZV9zaXplGAsg",
-            "ASgFEhcKD3JlcG9ydF9kZWFkbG9jaxgVIAEoCBJBChRpbnB1dF9zdHJlYW1f",
-            "aGFuZGxlchgMIAEoCzIjLm1lZGlhcGlwZS5JbnB1dFN0cmVhbUhhbmRsZXJD",
-            "b25maWcSQwoVb3V0cHV0X3N0cmVhbV9oYW5kbGVyGA0gASgLMiQubWVkaWFw",
-            "aXBlLk91dHB1dFN0cmVhbUhhbmRsZXJDb25maWcSKwoIZXhlY3V0b3IYDiAD",
-            "KAsyGS5tZWRpYXBpcGUuRXhlY3V0b3JDb25maWcSMgoPcHJvZmlsZXJfY29u",
-            "ZmlnGBIgASgLMhkubWVkaWFwaXBlLlByb2ZpbGVyQ29uZmlnEg8KB3BhY2th",
-            "Z2UYEyABKAkSDAoEdHlwZRgUIAEoCRItCgdvcHRpb25zGOkHIAEoCzIbLm1l",
-            "ZGlhcGlwZS5NZWRpYVBpcGVPcHRpb25zEiwKDWdyYXBoX29wdGlvbnMY6gcg",
-            "AygLMhQuZ29vZ2xlLnByb3RvYnVmLkFueRrQBAoETm9kZRIMCgRuYW1lGAEg",
-            "ASgJEhIKCmNhbGN1bGF0b3IYAiABKAkSFAoMaW5wdXRfc3RyZWFtGAMgAygJ",
-            "EhUKDW91dHB1dF9zdHJlYW0YBCADKAkSGQoRaW5wdXRfc2lkZV9wYWNrZXQY",
-            "BSADKAkSGgoSb3V0cHV0X3NpZGVfcGFja2V0GAYgAygJEi0KB29wdGlvbnMY",
-            "ByABKAsyHC5tZWRpYXBpcGUuQ2FsY3VsYXRvck9wdGlvbnMSKgoMbm9kZV9v",
-            "cHRpb25zGAggAygLMhQuZ29vZ2xlLnByb3RvYnVmLkFueRIUCgxzb3VyY2Vf",
-            "bGF5ZXIYCSABKAUSGAoQYnVmZmVyX3NpemVfaGludBgKIAEoBRJBChRpbnB1",
-            "dF9zdHJlYW1faGFuZGxlchgLIAEoCzIjLm1lZGlhcGlwZS5JbnB1dFN0cmVh",
-            "bUhhbmRsZXJDb25maWcSQwoVb3V0cHV0X3N0cmVhbV9oYW5kbGVyGAwgASgL",
-            "MiQubWVkaWFwaXBlLk91dHB1dFN0cmVhbUhhbmRsZXJDb25maWcSNQoRaW5w",
-            "dXRfc3RyZWFtX2luZm8YDSADKAsyGi5tZWRpYXBpcGUuSW5wdXRTdHJlYW1J",
-            "bmZvEhAKCGV4ZWN1dG9yGA4gASgJEjYKD3Byb2ZpbGVyX2NvbmZpZxgPIAEo",
-            "CzIZLm1lZGlhcGlwZS5Qcm9maWxlckNvbmZpZ0ICGAESFQoNbWF4X2luX2Zs",
-            "aWdodBgQIAEoBRIXCg5leHRlcm5hbF9pbnB1dBjtByADKAlCLQoaY29tLmdv",
-            "b2dsZS5tZWRpYXBpcGUucHJvdG9CD0NhbGN1bGF0b3JQcm90b1AAYgZwcm90",
-            "bzM="));
+            "ZXZlbnRzGBEgASgIEhkKEWNhbGN1bGF0b3JfZmlsdGVyGBIgASgJIvAKChVD",
+            "YWxjdWxhdG9yR3JhcGhDb25maWcSMwoEbm9kZRgBIAMoCzIlLm1lZGlhcGlw",
+            "ZS5DYWxjdWxhdG9yR3JhcGhDb25maWcuTm9kZRI2Cg5wYWNrZXRfZmFjdG9y",
+            "eRgGIAMoCzIeLm1lZGlhcGlwZS5QYWNrZXRGYWN0b3J5Q29uZmlnEjoKEHBh",
+            "Y2tldF9nZW5lcmF0b3IYByADKAsyIC5tZWRpYXBpcGUuUGFja2V0R2VuZXJh",
+            "dG9yQ29uZmlnEhMKC251bV90aHJlYWRzGAggASgFEjYKDnN0YXR1c19oYW5k",
+            "bGVyGAkgAygLMh4ubWVkaWFwaXBlLlN0YXR1c0hhbmRsZXJDb25maWcSFAoM",
+            "aW5wdXRfc3RyZWFtGAogAygJEhUKDW91dHB1dF9zdHJlYW0YDyADKAkSGQoR",
+            "aW5wdXRfc2lkZV9wYWNrZXQYECADKAkSGgoSb3V0cHV0X3NpZGVfcGFja2V0",
+            "GBEgAygJEhYKDm1heF9xdWV1ZV9zaXplGAsgASgFEhcKD3JlcG9ydF9kZWFk",
+            "bG9jaxgVIAEoCBJBChRpbnB1dF9zdHJlYW1faGFuZGxlchgMIAEoCzIjLm1l",
+            "ZGlhcGlwZS5JbnB1dFN0cmVhbUhhbmRsZXJDb25maWcSQwoVb3V0cHV0X3N0",
+            "cmVhbV9oYW5kbGVyGA0gASgLMiQubWVkaWFwaXBlLk91dHB1dFN0cmVhbUhh",
+            "bmRsZXJDb25maWcSKwoIZXhlY3V0b3IYDiADKAsyGS5tZWRpYXBpcGUuRXhl",
+            "Y3V0b3JDb25maWcSMgoPcHJvZmlsZXJfY29uZmlnGBIgASgLMhkubWVkaWFw",
+            "aXBlLlByb2ZpbGVyQ29uZmlnEg8KB3BhY2thZ2UYEyABKAkSDAoEdHlwZRgU",
+            "IAEoCRItCgdvcHRpb25zGOkHIAEoCzIbLm1lZGlhcGlwZS5NZWRpYVBpcGVP",
+            "cHRpb25zEiwKDWdyYXBoX29wdGlvbnMY6gcgAygLMhQuZ29vZ2xlLnByb3Rv",
+            "YnVmLkFueRrmBAoETm9kZRIMCgRuYW1lGAEgASgJEhIKCmNhbGN1bGF0b3IY",
+            "AiABKAkSFAoMaW5wdXRfc3RyZWFtGAMgAygJEhUKDW91dHB1dF9zdHJlYW0Y",
+            "BCADKAkSGQoRaW5wdXRfc2lkZV9wYWNrZXQYBSADKAkSGgoSb3V0cHV0X3Np",
+            "ZGVfcGFja2V0GAYgAygJEi0KB29wdGlvbnMYByABKAsyHC5tZWRpYXBpcGUu",
+            "Q2FsY3VsYXRvck9wdGlvbnMSKgoMbm9kZV9vcHRpb25zGAggAygLMhQuZ29v",
+            "Z2xlLnByb3RvYnVmLkFueRIUCgxzb3VyY2VfbGF5ZXIYCSABKAUSGAoQYnVm",
+            "ZmVyX3NpemVfaGludBgKIAEoBRJBChRpbnB1dF9zdHJlYW1faGFuZGxlchgL",
+            "IAEoCzIjLm1lZGlhcGlwZS5JbnB1dFN0cmVhbUhhbmRsZXJDb25maWcSQwoV",
+            "b3V0cHV0X3N0cmVhbV9oYW5kbGVyGAwgASgLMiQubWVkaWFwaXBlLk91dHB1",
+            "dFN0cmVhbUhhbmRsZXJDb25maWcSNQoRaW5wdXRfc3RyZWFtX2luZm8YDSAD",
+            "KAsyGi5tZWRpYXBpcGUuSW5wdXRTdHJlYW1JbmZvEhAKCGV4ZWN1dG9yGA4g",
+            "ASgJEjYKD3Byb2ZpbGVyX2NvbmZpZxgPIAEoCzIZLm1lZGlhcGlwZS5Qcm9m",
+            "aWxlckNvbmZpZ0ICGAESFQoNbWF4X2luX2ZsaWdodBgQIAEoBRIUCgxvcHRp",
+            "b25fdmFsdWUYESADKAkSFwoOZXh0ZXJuYWxfaW5wdXQY7QcgAygJQi0KGmNv",
+            "bS5nb29nbGUubWVkaWFwaXBlLnByb3RvQg9DYWxjdWxhdG9yUHJvdG9QAGIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Mediapipe.CalculatorOptionsReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.AnyReflection.Descriptor, global::Mediapipe.MediapipeOptionsReflection.Descriptor, global::Mediapipe.PacketFactoryReflection.Descriptor, global::Mediapipe.PacketGeneratorReflection.Descriptor, global::Mediapipe.StatusHandlerReflection.Descriptor, global::Mediapipe.StreamHandlerReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -95,8 +96,8 @@ namespace Mediapipe {
             new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.InputCollection), global::Mediapipe.InputCollection.Parser, new[]{ "Name", "SidePacketName", "ExternalInputName", "InputType", "FileName" }, null, new[]{ typeof(global::Mediapipe.InputCollection.Types.InputType) }, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.InputCollectionSet), global::Mediapipe.InputCollectionSet.Parser, new[]{ "InputCollection" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.InputStreamInfo), global::Mediapipe.InputStreamInfo.Parser, new[]{ "TagIndex", "BackEdge" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.ProfilerConfig), global::Mediapipe.ProfilerConfig.Parser, new[]{ "HistogramIntervalSizeUsec", "NumHistogramIntervals", "EnableInputOutputLatency", "EnableProfiler", "EnableStreamLatency", "UsePacketTimestampForAddedPacket", "TraceLogCapacity", "TraceEventTypesDisabled", "TraceLogPath", "TraceLogCount", "TraceLogIntervalUsec", "TraceLogMarginUsec", "TraceLogDurationEvents", "TraceLogIntervalCount", "TraceLogDisabled", "TraceEnabled", "TraceLogInstantEvents" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.CalculatorGraphConfig), global::Mediapipe.CalculatorGraphConfig.Parser, new[]{ "Node", "PacketFactory", "PacketGenerator", "NumThreads", "StatusHandler", "InputStream", "OutputStream", "InputSidePacket", "OutputSidePacket", "MaxQueueSize", "ReportDeadlock", "InputStreamHandler", "OutputStreamHandler", "Executor", "ProfilerConfig", "Package", "Type", "Options", "GraphOptions" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.CalculatorGraphConfig.Types.Node), global::Mediapipe.CalculatorGraphConfig.Types.Node.Parser, new[]{ "Name", "Calculator", "InputStream", "OutputStream", "InputSidePacket", "OutputSidePacket", "Options", "NodeOptions", "SourceLayer", "BufferSizeHint", "InputStreamHandler", "OutputStreamHandler", "InputStreamInfo", "Executor", "ProfilerConfig", "MaxInFlight", "ExternalInput" }, null, null, null, null)})
+            new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.ProfilerConfig), global::Mediapipe.ProfilerConfig.Parser, new[]{ "HistogramIntervalSizeUsec", "NumHistogramIntervals", "EnableInputOutputLatency", "EnableProfiler", "EnableStreamLatency", "UsePacketTimestampForAddedPacket", "TraceLogCapacity", "TraceEventTypesDisabled", "TraceLogPath", "TraceLogCount", "TraceLogIntervalUsec", "TraceLogMarginUsec", "TraceLogDurationEvents", "TraceLogIntervalCount", "TraceLogDisabled", "TraceEnabled", "TraceLogInstantEvents", "CalculatorFilter" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.CalculatorGraphConfig), global::Mediapipe.CalculatorGraphConfig.Parser, new[]{ "Node", "PacketFactory", "PacketGenerator", "NumThreads", "StatusHandler", "InputStream", "OutputStream", "InputSidePacket", "OutputSidePacket", "MaxQueueSize", "ReportDeadlock", "InputStreamHandler", "OutputStreamHandler", "Executor", "ProfilerConfig", "Package", "Type", "Options", "GraphOptions" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Mediapipe.CalculatorGraphConfig.Types.Node), global::Mediapipe.CalculatorGraphConfig.Types.Node.Parser, new[]{ "Name", "Calculator", "InputStream", "OutputStream", "InputSidePacket", "OutputSidePacket", "Options", "NodeOptions", "SourceLayer", "BufferSizeHint", "InputStreamHandler", "OutputStreamHandler", "InputStreamInfo", "Executor", "ProfilerConfig", "MaxInFlight", "OptionValue", "ExternalInput" }, null, null, null, null)})
           }));
     }
     #endregion
@@ -106,23 +107,31 @@ namespace Mediapipe {
   /// <summary>
   /// Describes a MediaPipe Executor.
   /// </summary>
-  public sealed partial class ExecutorConfig : pb::IMessage<ExecutorConfig> {
+  public sealed partial class ExecutorConfig : pb::IMessage<ExecutorConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<ExecutorConfig> _parser = new pb::MessageParser<ExecutorConfig>(() => new ExecutorConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<ExecutorConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.CalculatorReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ExecutorConfig() {
       OnConstruction();
     }
@@ -130,6 +139,7 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ExecutorConfig(ExecutorConfig other) : this() {
       name_ = other.name_;
       type_ = other.type_;
@@ -138,6 +148,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ExecutorConfig Clone() {
       return new ExecutorConfig(this);
     }
@@ -155,6 +166,7 @@ namespace Mediapipe {
     /// NOTE: The names "default" and "gpu" are reserved and must not be used.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
       get { return name_; }
       set {
@@ -180,6 +192,7 @@ namespace Mediapipe {
     /// passed to the CalculatorGraph for use.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Type {
       get { return type_; }
       set {
@@ -197,6 +210,7 @@ namespace Mediapipe {
     /// ThreadPoolExecutorOptions.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MediaPipeOptions Options {
       get { return options_; }
       set {
@@ -205,11 +219,13 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as ExecutorConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(ExecutorConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -224,6 +240,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (Name.Length != 0) hash ^= Name.GetHashCode();
@@ -236,12 +253,17 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Name.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(Name);
@@ -257,9 +279,33 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Name.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Name);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Type);
+      }
+      if (options_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Options);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (Name.Length != 0) {
@@ -278,6 +324,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(ExecutorConfig other) {
       if (other == null) {
         return;
@@ -298,7 +345,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -322,30 +373,69 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Name = input.ReadString();
+            break;
+          }
+          case 18: {
+            Type = input.ReadString();
+            break;
+          }
+          case 26: {
+            if (options_ == null) {
+              Options = new global::Mediapipe.MediaPipeOptions();
+            }
+            input.ReadMessage(Options);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
   /// <summary>
   /// A collection of input data to a CalculatorGraph.
   /// </summary>
-  public sealed partial class InputCollection : pb::IMessage<InputCollection> {
+  public sealed partial class InputCollection : pb::IMessage<InputCollection>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<InputCollection> _parser = new pb::MessageParser<InputCollection>(() => new InputCollection());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<InputCollection> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.CalculatorReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputCollection() {
       OnConstruction();
     }
@@ -353,6 +443,7 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputCollection(InputCollection other) : this() {
       name_ = other.name_;
       sidePacketName_ = other.sidePacketName_.Clone();
@@ -363,6 +454,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputCollection Clone() {
       return new InputCollection(this);
     }
@@ -374,6 +466,7 @@ namespace Mediapipe {
     /// The name of the input collection.  Name must match [a-z_][a-z0-9_]*
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Name {
       get { return name_; }
       set {
@@ -391,6 +484,7 @@ namespace Mediapipe {
     /// must match the number of packets generated by the input file.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> SidePacketName {
       get { return sidePacketName_; }
     }
@@ -404,6 +498,7 @@ namespace Mediapipe {
     /// DEPRECATED: old way of referring to side_packet_name.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> ExternalInputName {
       get { return externalInputName_; }
     }
@@ -416,6 +511,7 @@ namespace Mediapipe {
     /// The default value is UNKNOWN.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.InputCollection.Types.InputType InputType {
       get { return inputType_; }
       set {
@@ -432,6 +528,7 @@ namespace Mediapipe {
     /// specified using @N or glob expressions.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string FileName {
       get { return fileName_; }
       set {
@@ -440,11 +537,13 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as InputCollection);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(InputCollection other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -461,6 +560,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (Name.Length != 0) hash ^= Name.GetHashCode();
@@ -475,12 +575,17 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (Name.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(Name);
@@ -498,9 +603,35 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Name.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Name);
+      }
+      sidePacketName_.WriteTo(ref output, _repeated_sidePacketName_codec);
+      if (InputType != global::Mediapipe.InputCollection.Types.InputType.Unknown) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) InputType);
+      }
+      if (FileName.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(FileName);
+      }
+      externalInputName_.WriteTo(ref output, _repeated_externalInputName_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (Name.Length != 0) {
@@ -521,6 +652,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(InputCollection other) {
       if (other == null) {
         return;
@@ -540,7 +672,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -569,11 +705,48 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Name = input.ReadString();
+            break;
+          }
+          case 18: {
+            sidePacketName_.AddEntriesFrom(ref input, _repeated_sidePacketName_codec);
+            break;
+          }
+          case 24: {
+            InputType = (global::Mediapipe.InputCollection.Types.InputType) input.ReadEnum();
+            break;
+          }
+          case 34: {
+            FileName = input.ReadString();
+            break;
+          }
+          case 8018: {
+            externalInputName_.AddEntriesFrom(ref input, _repeated_externalInputName_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
     #region Nested types
     /// <summary>Container for nested types declared in the InputCollection message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
       /// <summary>
       /// The input can be specified in several ways.
@@ -623,23 +796,31 @@ namespace Mediapipe {
   /// <summary>
   /// A convenient way to specify a number of InputCollections.
   /// </summary>
-  public sealed partial class InputCollectionSet : pb::IMessage<InputCollectionSet> {
+  public sealed partial class InputCollectionSet : pb::IMessage<InputCollectionSet>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<InputCollectionSet> _parser = new pb::MessageParser<InputCollectionSet>(() => new InputCollectionSet());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<InputCollectionSet> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.CalculatorReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputCollectionSet() {
       OnConstruction();
     }
@@ -647,12 +828,14 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputCollectionSet(InputCollectionSet other) : this() {
       inputCollection_ = other.inputCollection_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputCollectionSet Clone() {
       return new InputCollectionSet(this);
     }
@@ -663,16 +846,19 @@ namespace Mediapipe {
         = pb::FieldCodec.ForMessage(10, global::Mediapipe.InputCollection.Parser);
     private readonly pbc::RepeatedField<global::Mediapipe.InputCollection> inputCollection_ = new pbc::RepeatedField<global::Mediapipe.InputCollection>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.InputCollection> InputCollection {
       get { return inputCollection_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as InputCollectionSet);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(InputCollectionSet other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -685,6 +871,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       hash ^= inputCollection_.GetHashCode();
@@ -695,19 +882,37 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       inputCollection_.WriteTo(output, _repeated_inputCollection_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      inputCollection_.WriteTo(ref output, _repeated_inputCollection_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       size += inputCollection_.CalculateSize(_repeated_inputCollection_codec);
@@ -718,6 +923,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(InputCollectionSet other) {
       if (other == null) {
         return;
@@ -727,7 +933,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -740,30 +950,58 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            inputCollection_.AddEntriesFrom(ref input, _repeated_inputCollection_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
   /// <summary>
   /// Additional information about an input stream.
   /// </summary>
-  public sealed partial class InputStreamInfo : pb::IMessage<InputStreamInfo> {
+  public sealed partial class InputStreamInfo : pb::IMessage<InputStreamInfo>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<InputStreamInfo> _parser = new pb::MessageParser<InputStreamInfo>(() => new InputStreamInfo());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<InputStreamInfo> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.CalculatorReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputStreamInfo() {
       OnConstruction();
     }
@@ -771,6 +1009,7 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputStreamInfo(InputStreamInfo other) : this() {
       tagIndex_ = other.tagIndex_;
       backEdge_ = other.backEdge_;
@@ -778,6 +1017,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public InputStreamInfo Clone() {
       return new InputStreamInfo(this);
     }
@@ -801,6 +1041,7 @@ namespace Mediapipe {
     ///   "VIDEO:2" -> tag "VIDEO", index 2
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string TagIndex {
       get { return tagIndex_; }
       set {
@@ -821,6 +1062,7 @@ namespace Mediapipe {
     /// please see https://en.wikipedia.org/wiki/Depth-first_search.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool BackEdge {
       get { return backEdge_; }
       set {
@@ -829,11 +1071,13 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as InputStreamInfo);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(InputStreamInfo other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -847,6 +1091,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (TagIndex.Length != 0) hash ^= TagIndex.GetHashCode();
@@ -858,12 +1103,17 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (TagIndex.Length != 0) {
         output.WriteRawTag(10);
         output.WriteString(TagIndex);
@@ -875,9 +1125,29 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TagIndex.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(TagIndex);
+      }
+      if (BackEdge != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(BackEdge);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (TagIndex.Length != 0) {
@@ -893,6 +1163,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(InputStreamInfo other) {
       if (other == null) {
         return;
@@ -907,7 +1178,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -924,30 +1199,62 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            TagIndex = input.ReadString();
+            break;
+          }
+          case 16: {
+            BackEdge = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
   }
 
   /// <summary>
   /// Configs for the profiler for a calculator. Not applicable to subgraphs.
   /// </summary>
-  public sealed partial class ProfilerConfig : pb::IMessage<ProfilerConfig> {
+  public sealed partial class ProfilerConfig : pb::IMessage<ProfilerConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<ProfilerConfig> _parser = new pb::MessageParser<ProfilerConfig>(() => new ProfilerConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<ProfilerConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.CalculatorReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ProfilerConfig() {
       OnConstruction();
     }
@@ -955,6 +1262,7 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ProfilerConfig(ProfilerConfig other) : this() {
       histogramIntervalSizeUsec_ = other.histogramIntervalSizeUsec_;
       numHistogramIntervals_ = other.numHistogramIntervals_;
@@ -973,10 +1281,12 @@ namespace Mediapipe {
       traceLogDisabled_ = other.traceLogDisabled_;
       traceEnabled_ = other.traceEnabled_;
       traceLogInstantEvents_ = other.traceLogInstantEvents_;
+      calculatorFilter_ = other.calculatorFilter_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ProfilerConfig Clone() {
       return new ProfilerConfig(this);
     }
@@ -990,6 +1300,7 @@ namespace Mediapipe {
     /// If not specified, the interval is 1000000 usec = 1 sec.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long HistogramIntervalSizeUsec {
       get { return histogramIntervalSizeUsec_; }
       set {
@@ -1005,6 +1316,7 @@ namespace Mediapipe {
     /// If not specified, one interval is used.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long NumHistogramIntervals {
       get { return numHistogramIntervals_; }
       set {
@@ -1023,6 +1335,7 @@ namespace Mediapipe {
     /// </summary>
     [global::System.ObsoleteAttribute]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool EnableInputOutputLatency {
       get { return enableInputOutputLatency_; }
       set {
@@ -1037,6 +1350,7 @@ namespace Mediapipe {
     /// If true, the profiler starts profiling when graph is initialized.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool EnableProfiler {
       get { return enableProfiler_; }
       set {
@@ -1053,6 +1367,7 @@ namespace Mediapipe {
     /// No-op if enable_profiler is false.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool EnableStreamLatency {
       get { return enableStreamLatency_; }
       set {
@@ -1070,6 +1385,7 @@ namespace Mediapipe {
     /// If false, uses profiler's clock.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool UsePacketTimestampForAddedPacket {
       get { return usePacketTimestampForAddedPacket_; }
       set {
@@ -1085,6 +1401,7 @@ namespace Mediapipe {
     /// The default value buffers up to 20000 events.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long TraceLogCapacity {
       get { return traceLogCapacity_; }
       set {
@@ -1101,6 +1418,7 @@ namespace Mediapipe {
     /// Trace event types that are not logged.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<int> TraceEventTypesDisabled {
       get { return traceEventTypesDisabled_; }
     }
@@ -1113,6 +1431,7 @@ namespace Mediapipe {
     /// Log files are written to: StrCat(trace_log_path, index, ".binarypb")
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string TraceLogPath {
       get { return traceLogPath_; }
       set {
@@ -1129,6 +1448,7 @@ namespace Mediapipe {
     /// The default value specifies 2 output files retained.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int TraceLogCount {
       get { return traceLogCount_; }
       set {
@@ -1144,6 +1464,7 @@ namespace Mediapipe {
     /// The default value specifies trace log output once every 0.5 sec.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long TraceLogIntervalUsec {
       get { return traceLogIntervalUsec_; }
       set {
@@ -1160,6 +1481,7 @@ namespace Mediapipe {
     /// to be appended to the TraceBuffer.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public long TraceLogMarginUsec {
       get { return traceLogMarginUsec_; }
       set {
@@ -1175,6 +1497,7 @@ namespace Mediapipe {
     /// </summary>
     [global::System.ObsoleteAttribute]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool TraceLogDurationEvents {
       get { return traceLogDurationEvents_; }
       set {
@@ -1191,6 +1514,7 @@ namespace Mediapipe {
     /// The default value specifies 10 intervals per file.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int TraceLogIntervalCount {
       get { return traceLogIntervalCount_; }
       set {
@@ -1206,6 +1530,7 @@ namespace Mediapipe {
     /// disk is enabled by default.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool TraceLogDisabled {
       get { return traceLogDisabled_; }
       set {
@@ -1220,6 +1545,7 @@ namespace Mediapipe {
     /// If true, tracer timing events are recorded and reported.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool TraceEnabled {
       get { return traceEnabled_; }
       set {
@@ -1235,6 +1561,7 @@ namespace Mediapipe {
     /// True specifies a separate event for each start and finish time.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool TraceLogInstantEvents {
       get { return traceLogInstantEvents_; }
       set {
@@ -1242,12 +1569,29 @@ namespace Mediapipe {
       }
     }
 
+    /// <summary>Field number for the "calculator_filter" field.</summary>
+    public const int CalculatorFilterFieldNumber = 18;
+    private string calculatorFilter_ = "";
+    /// <summary>
+    /// Limits calculator-profile histograms to a subset of calculators.
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CalculatorFilter {
+      get { return calculatorFilter_; }
+      set {
+        calculatorFilter_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as ProfilerConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(ProfilerConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -1272,10 +1616,12 @@ namespace Mediapipe {
       if (TraceLogDisabled != other.TraceLogDisabled) return false;
       if (TraceEnabled != other.TraceEnabled) return false;
       if (TraceLogInstantEvents != other.TraceLogInstantEvents) return false;
+      if (CalculatorFilter != other.CalculatorFilter) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HistogramIntervalSizeUsec != 0L) hash ^= HistogramIntervalSizeUsec.GetHashCode();
@@ -1295,6 +1641,7 @@ namespace Mediapipe {
       if (TraceLogDisabled != false) hash ^= TraceLogDisabled.GetHashCode();
       if (TraceEnabled != false) hash ^= TraceEnabled.GetHashCode();
       if (TraceLogInstantEvents != false) hash ^= TraceLogInstantEvents.GetHashCode();
+      if (CalculatorFilter.Length != 0) hash ^= CalculatorFilter.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1302,12 +1649,17 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HistogramIntervalSizeUsec != 0L) {
         output.WriteRawTag(8);
         output.WriteInt64(HistogramIntervalSizeUsec);
@@ -1373,12 +1725,97 @@ namespace Mediapipe {
         output.WriteRawTag(136, 1);
         output.WriteBool(TraceLogInstantEvents);
       }
+      if (CalculatorFilter.Length != 0) {
+        output.WriteRawTag(146, 1);
+        output.WriteString(CalculatorFilter);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HistogramIntervalSizeUsec != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(HistogramIntervalSizeUsec);
+      }
+      if (NumHistogramIntervals != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(NumHistogramIntervals);
+      }
+      if (EnableInputOutputLatency != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(EnableInputOutputLatency);
+      }
+      if (EnableProfiler != false) {
+        output.WriteRawTag(32);
+        output.WriteBool(EnableProfiler);
+      }
+      if (EnableStreamLatency != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(EnableStreamLatency);
+      }
+      if (UsePacketTimestampForAddedPacket != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(UsePacketTimestampForAddedPacket);
+      }
+      if (TraceLogCapacity != 0L) {
+        output.WriteRawTag(56);
+        output.WriteInt64(TraceLogCapacity);
+      }
+      traceEventTypesDisabled_.WriteTo(ref output, _repeated_traceEventTypesDisabled_codec);
+      if (TraceLogPath.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(TraceLogPath);
+      }
+      if (TraceLogCount != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(TraceLogCount);
+      }
+      if (TraceLogIntervalUsec != 0L) {
+        output.WriteRawTag(88);
+        output.WriteInt64(TraceLogIntervalUsec);
+      }
+      if (TraceLogMarginUsec != 0L) {
+        output.WriteRawTag(96);
+        output.WriteInt64(TraceLogMarginUsec);
+      }
+      if (TraceLogDurationEvents != false) {
+        output.WriteRawTag(104);
+        output.WriteBool(TraceLogDurationEvents);
+      }
+      if (TraceLogIntervalCount != 0) {
+        output.WriteRawTag(112);
+        output.WriteInt32(TraceLogIntervalCount);
+      }
+      if (TraceLogDisabled != false) {
+        output.WriteRawTag(120);
+        output.WriteBool(TraceLogDisabled);
+      }
+      if (TraceEnabled != false) {
+        output.WriteRawTag(128, 1);
+        output.WriteBool(TraceEnabled);
+      }
+      if (TraceLogInstantEvents != false) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(TraceLogInstantEvents);
+      }
+      if (CalculatorFilter.Length != 0) {
+        output.WriteRawTag(146, 1);
+        output.WriteString(CalculatorFilter);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HistogramIntervalSizeUsec != 0L) {
@@ -1430,6 +1867,9 @@ namespace Mediapipe {
       if (TraceLogInstantEvents != false) {
         size += 2 + 1;
       }
+      if (CalculatorFilter.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(CalculatorFilter);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1437,6 +1877,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(ProfilerConfig other) {
       if (other == null) {
         return;
@@ -1490,11 +1931,18 @@ namespace Mediapipe {
       if (other.TraceLogInstantEvents != false) {
         TraceLogInstantEvents = other.TraceLogInstantEvents;
       }
+      if (other.CalculatorFilter.Length != 0) {
+        CalculatorFilter = other.CalculatorFilter;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -1570,9 +2018,102 @@ namespace Mediapipe {
             TraceLogInstantEvents = input.ReadBool();
             break;
           }
+          case 146: {
+            CalculatorFilter = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            HistogramIntervalSizeUsec = input.ReadInt64();
+            break;
+          }
+          case 16: {
+            NumHistogramIntervals = input.ReadInt64();
+            break;
+          }
+          case 24: {
+            EnableInputOutputLatency = input.ReadBool();
+            break;
+          }
+          case 32: {
+            EnableProfiler = input.ReadBool();
+            break;
+          }
+          case 40: {
+            EnableStreamLatency = input.ReadBool();
+            break;
+          }
+          case 48: {
+            UsePacketTimestampForAddedPacket = input.ReadBool();
+            break;
+          }
+          case 56: {
+            TraceLogCapacity = input.ReadInt64();
+            break;
+          }
+          case 66:
+          case 64: {
+            traceEventTypesDisabled_.AddEntriesFrom(ref input, _repeated_traceEventTypesDisabled_codec);
+            break;
+          }
+          case 74: {
+            TraceLogPath = input.ReadString();
+            break;
+          }
+          case 80: {
+            TraceLogCount = input.ReadInt32();
+            break;
+          }
+          case 88: {
+            TraceLogIntervalUsec = input.ReadInt64();
+            break;
+          }
+          case 96: {
+            TraceLogMarginUsec = input.ReadInt64();
+            break;
+          }
+          case 104: {
+            TraceLogDurationEvents = input.ReadBool();
+            break;
+          }
+          case 112: {
+            TraceLogIntervalCount = input.ReadInt32();
+            break;
+          }
+          case 120: {
+            TraceLogDisabled = input.ReadBool();
+            break;
+          }
+          case 128: {
+            TraceEnabled = input.ReadBool();
+            break;
+          }
+          case 136: {
+            TraceLogInstantEvents = input.ReadBool();
+            break;
+          }
+          case 146: {
+            CalculatorFilter = input.ReadString();
+            break;
+          }
         }
       }
     }
+    #endif
 
   }
 
@@ -1582,23 +2123,31 @@ namespace Mediapipe {
   /// "back_edge" in InputStreamInfo.  Use a mediapipe::CalculatorGraph object to
   /// run the graph.
   /// </summary>
-  public sealed partial class CalculatorGraphConfig : pb::IMessage<CalculatorGraphConfig> {
+  public sealed partial class CalculatorGraphConfig : pb::IMessage<CalculatorGraphConfig>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<CalculatorGraphConfig> _parser = new pb::MessageParser<CalculatorGraphConfig>(() => new CalculatorGraphConfig());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<CalculatorGraphConfig> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.CalculatorReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public CalculatorGraphConfig() {
       OnConstruction();
     }
@@ -1606,6 +2155,7 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public CalculatorGraphConfig(CalculatorGraphConfig other) : this() {
       node_ = other.node_.Clone();
       packetFactory_ = other.packetFactory_.Clone();
@@ -1630,6 +2180,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public CalculatorGraphConfig Clone() {
       return new CalculatorGraphConfig(this);
     }
@@ -1643,6 +2194,7 @@ namespace Mediapipe {
     /// The nodes.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.CalculatorGraphConfig.Types.Node> Node {
       get { return node_; }
     }
@@ -1659,6 +2211,7 @@ namespace Mediapipe {
     /// packets and produces a single output side packet.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.PacketFactoryConfig> PacketFactory {
       get { return packetFactory_; }
     }
@@ -1681,6 +2234,7 @@ namespace Mediapipe {
     /// must be a directed acyclic graph.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.PacketGeneratorConfig> PacketGenerator {
       get { return packetGenerator_; }
     }
@@ -1696,6 +2250,7 @@ namespace Mediapipe {
     /// see: http://g3doc/mediapipe/g3doc/running.md.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int NumThreads {
       get { return numThreads_; }
       set {
@@ -1719,6 +2274,7 @@ namespace Mediapipe {
     /// the handler with missing input side packets will be skipped.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.StatusHandlerConfig> StatusHandler {
       get { return statusHandler_; }
     }
@@ -1735,6 +2291,7 @@ namespace Mediapipe {
     /// the mediapipe graph.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> InputStream {
       get { return inputStream_; }
     }
@@ -1748,6 +2305,7 @@ namespace Mediapipe {
     /// Output streams for the graph when used as a subgraph.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> OutputStream {
       get { return outputStream_; }
     }
@@ -1761,6 +2319,7 @@ namespace Mediapipe {
     /// Input side packets for the graph when used as a subgraph.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> InputSidePacket {
       get { return inputSidePacket_; }
     }
@@ -1774,6 +2333,7 @@ namespace Mediapipe {
     /// Output side packets for the graph when used as a subgraph.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<string> OutputSidePacket {
       get { return outputSidePacket_; }
     }
@@ -1796,6 +2356,7 @@ namespace Mediapipe {
     /// the limit is 100 packets.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int MaxQueueSize {
       get { return maxQueueSize_; }
       set {
@@ -1812,6 +2373,7 @@ namespace Mediapipe {
     /// is adjusted when throttling prevents all calculators from running.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool ReportDeadlock {
       get { return reportDeadlock_; }
       set {
@@ -1834,6 +2396,7 @@ namespace Mediapipe {
     /// preprocessing.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.InputStreamHandlerConfig InputStreamHandler {
       get { return inputStreamHandler_; }
       set {
@@ -1850,6 +2413,7 @@ namespace Mediapipe {
     /// installed by the framework which does not modify any outgoing packets.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.OutputStreamHandlerConfig OutputStreamHandler {
       get { return outputStreamHandler_; }
       set {
@@ -1871,6 +2435,7 @@ namespace Mediapipe {
     /// CalculatorGraphConfig must not have the num_threads field.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Mediapipe.ExecutorConfig> Executor {
       get { return executor_; }
     }
@@ -1885,6 +2450,7 @@ namespace Mediapipe {
     /// |profiler_config| specified for a node.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.ProfilerConfig ProfilerConfig {
       get { return profilerConfig_; }
       set {
@@ -1901,6 +2467,7 @@ namespace Mediapipe {
     /// this namespace first and then in enclosing namespaces.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Package {
       get { return package_; }
       set {
@@ -1916,6 +2483,7 @@ namespace Mediapipe {
     /// the graph config.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string Type {
       get { return type_; }
       set {
@@ -1930,6 +2498,7 @@ namespace Mediapipe {
     /// The types and default values for graph options, in proto2 syntax.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MediaPipeOptions Options {
       get { return options_; }
       set {
@@ -1946,16 +2515,19 @@ namespace Mediapipe {
     /// The types and default values for graph options, in proto3 syntax.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Any> GraphOptions {
       get { return graphOptions_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as CalculatorGraphConfig);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(CalculatorGraphConfig other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -1986,6 +2558,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       hash ^= node_.GetHashCode();
@@ -2014,12 +2587,17 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       node_.WriteTo(output, _repeated_node_codec);
       packetFactory_.WriteTo(output, _repeated_packetFactory_codec);
       packetGenerator_.WriteTo(output, _repeated_packetGenerator_codec);
@@ -2069,9 +2647,67 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      node_.WriteTo(ref output, _repeated_node_codec);
+      packetFactory_.WriteTo(ref output, _repeated_packetFactory_codec);
+      packetGenerator_.WriteTo(ref output, _repeated_packetGenerator_codec);
+      if (NumThreads != 0) {
+        output.WriteRawTag(64);
+        output.WriteInt32(NumThreads);
+      }
+      statusHandler_.WriteTo(ref output, _repeated_statusHandler_codec);
+      inputStream_.WriteTo(ref output, _repeated_inputStream_codec);
+      if (MaxQueueSize != 0) {
+        output.WriteRawTag(88);
+        output.WriteInt32(MaxQueueSize);
+      }
+      if (inputStreamHandler_ != null) {
+        output.WriteRawTag(98);
+        output.WriteMessage(InputStreamHandler);
+      }
+      if (outputStreamHandler_ != null) {
+        output.WriteRawTag(106);
+        output.WriteMessage(OutputStreamHandler);
+      }
+      executor_.WriteTo(ref output, _repeated_executor_codec);
+      outputStream_.WriteTo(ref output, _repeated_outputStream_codec);
+      inputSidePacket_.WriteTo(ref output, _repeated_inputSidePacket_codec);
+      outputSidePacket_.WriteTo(ref output, _repeated_outputSidePacket_codec);
+      if (profilerConfig_ != null) {
+        output.WriteRawTag(146, 1);
+        output.WriteMessage(ProfilerConfig);
+      }
+      if (Package.Length != 0) {
+        output.WriteRawTag(154, 1);
+        output.WriteString(Package);
+      }
+      if (Type.Length != 0) {
+        output.WriteRawTag(162, 1);
+        output.WriteString(Type);
+      }
+      if (ReportDeadlock != false) {
+        output.WriteRawTag(168, 1);
+        output.WriteBool(ReportDeadlock);
+      }
+      if (options_ != null) {
+        output.WriteRawTag(202, 62);
+        output.WriteMessage(Options);
+      }
+      graphOptions_.WriteTo(ref output, _repeated_graphOptions_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       size += node_.CalculateSize(_repeated_node_codec);
@@ -2118,6 +2754,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(CalculatorGraphConfig other) {
       if (other == null) {
         return;
@@ -2175,7 +2812,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -2272,32 +2913,145 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            node_.AddEntriesFrom(ref input, _repeated_node_codec);
+            break;
+          }
+          case 50: {
+            packetFactory_.AddEntriesFrom(ref input, _repeated_packetFactory_codec);
+            break;
+          }
+          case 58: {
+            packetGenerator_.AddEntriesFrom(ref input, _repeated_packetGenerator_codec);
+            break;
+          }
+          case 64: {
+            NumThreads = input.ReadInt32();
+            break;
+          }
+          case 74: {
+            statusHandler_.AddEntriesFrom(ref input, _repeated_statusHandler_codec);
+            break;
+          }
+          case 82: {
+            inputStream_.AddEntriesFrom(ref input, _repeated_inputStream_codec);
+            break;
+          }
+          case 88: {
+            MaxQueueSize = input.ReadInt32();
+            break;
+          }
+          case 98: {
+            if (inputStreamHandler_ == null) {
+              InputStreamHandler = new global::Mediapipe.InputStreamHandlerConfig();
+            }
+            input.ReadMessage(InputStreamHandler);
+            break;
+          }
+          case 106: {
+            if (outputStreamHandler_ == null) {
+              OutputStreamHandler = new global::Mediapipe.OutputStreamHandlerConfig();
+            }
+            input.ReadMessage(OutputStreamHandler);
+            break;
+          }
+          case 114: {
+            executor_.AddEntriesFrom(ref input, _repeated_executor_codec);
+            break;
+          }
+          case 122: {
+            outputStream_.AddEntriesFrom(ref input, _repeated_outputStream_codec);
+            break;
+          }
+          case 130: {
+            inputSidePacket_.AddEntriesFrom(ref input, _repeated_inputSidePacket_codec);
+            break;
+          }
+          case 138: {
+            outputSidePacket_.AddEntriesFrom(ref input, _repeated_outputSidePacket_codec);
+            break;
+          }
+          case 146: {
+            if (profilerConfig_ == null) {
+              ProfilerConfig = new global::Mediapipe.ProfilerConfig();
+            }
+            input.ReadMessage(ProfilerConfig);
+            break;
+          }
+          case 154: {
+            Package = input.ReadString();
+            break;
+          }
+          case 162: {
+            Type = input.ReadString();
+            break;
+          }
+          case 168: {
+            ReportDeadlock = input.ReadBool();
+            break;
+          }
+          case 8010: {
+            if (options_ == null) {
+              Options = new global::Mediapipe.MediaPipeOptions();
+            }
+            input.ReadMessage(Options);
+            break;
+          }
+          case 8018: {
+            graphOptions_.AddEntriesFrom(ref input, _repeated_graphOptions_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
     #region Nested types
     /// <summary>Container for nested types declared in the CalculatorGraphConfig message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
       /// <summary>
       /// A single node in the DAG.
       /// </summary>
-      public sealed partial class Node : pb::IMessage<Node> {
+      public sealed partial class Node : pb::IMessage<Node>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
         private static readonly pb::MessageParser<Node> _parser = new pb::MessageParser<Node>(() => new Node());
         private pb::UnknownFieldSet _unknownFields;
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pb::MessageParser<Node> Parser { get { return _parser; } }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
           get { return global::Mediapipe.CalculatorGraphConfig.Descriptor.NestedTypes[0]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public Node() {
           OnConstruction();
         }
@@ -2305,6 +3059,7 @@ namespace Mediapipe {
         partial void OnConstruction();
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public Node(Node other) : this() {
           name_ = other.name_;
           calculator_ = other.calculator_;
@@ -2322,11 +3077,13 @@ namespace Mediapipe {
           executor_ = other.executor_;
           profilerConfig_ = other.profilerConfig_ != null ? other.profilerConfig_.Clone() : null;
           maxInFlight_ = other.maxInFlight_;
+          optionValue_ = other.optionValue_.Clone();
           externalInput_ = other.externalInput_.Clone();
           _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public Node Clone() {
           return new Node(this);
         }
@@ -2339,6 +3096,7 @@ namespace Mediapipe {
         /// need to be specified, but does improve error messaging.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public string Name {
           get { return name_; }
           set {
@@ -2354,6 +3112,7 @@ namespace Mediapipe {
         /// or of a subgraph (via REGISTER_MEDIAPIPE_GRAPH).
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public string Calculator {
           get { return calculator_; }
           set {
@@ -2372,6 +3131,7 @@ namespace Mediapipe {
         /// A calculator with no input stream is a source.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<string> InputStream {
           get { return inputStream_; }
         }
@@ -2387,6 +3147,7 @@ namespace Mediapipe {
         /// other output_streams specified for other nodes in the graph.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<string> OutputStream {
           get { return outputStream_; }
         }
@@ -2401,6 +3162,7 @@ namespace Mediapipe {
         /// "TAG:" part is optional, see above.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<string> InputSidePacket {
           get { return inputSidePacket_; }
         }
@@ -2416,6 +3178,7 @@ namespace Mediapipe {
         /// "TAG:" part is optional, see above.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<string> OutputSidePacket {
           get { return outputSidePacket_; }
         }
@@ -2427,6 +3190,7 @@ namespace Mediapipe {
         /// The options passed to the Calculator, in proto2 syntax.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::Mediapipe.CalculatorOptions Options {
           get { return options_; }
           set {
@@ -2446,6 +3210,7 @@ namespace Mediapipe {
         /// only the message in |options| is used.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<global::Google.Protobuf.WellKnownTypes.Any> NodeOptions {
           get { return nodeOptions_; }
         }
@@ -2472,6 +3237,7 @@ namespace Mediapipe {
         /// be used in the second decoder.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int SourceLayer {
           get { return sourceLayer_; }
           set {
@@ -2493,6 +3259,7 @@ namespace Mediapipe {
         /// The default value 0 indicates that the node has no buffering behavior.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int BufferSizeHint {
           get { return bufferSizeHint_; }
           set {
@@ -2508,6 +3275,7 @@ namespace Mediapipe {
         /// If unspecified, the graph-level input stream handler will be used.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::Mediapipe.InputStreamHandlerConfig InputStreamHandler {
           get { return inputStreamHandler_; }
           set {
@@ -2523,6 +3291,7 @@ namespace Mediapipe {
         /// If unspecified, the graph-level output stream handler will be used.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::Mediapipe.OutputStreamHandlerConfig OutputStreamHandler {
           get { return outputStreamHandler_; }
           set {
@@ -2540,6 +3309,7 @@ namespace Mediapipe {
         /// InputStreamInfo must match an input_stream.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<global::Mediapipe.InputStreamInfo> InputStreamInfo {
           get { return inputStreamInfo_; }
         }
@@ -2551,6 +3321,7 @@ namespace Mediapipe {
         /// Set the executor which the calculator will execute on.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public string Executor {
           get { return executor_; }
           set {
@@ -2567,6 +3338,7 @@ namespace Mediapipe {
         /// </summary>
         [global::System.ObsoleteAttribute]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public global::Mediapipe.ProfilerConfig ProfilerConfig {
           get { return profilerConfig_; }
           set {
@@ -2582,11 +3354,26 @@ namespace Mediapipe {
         /// If not specified, the limit is one invocation.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int MaxInFlight {
           get { return maxInFlight_; }
           set {
             maxInFlight_ = value;
           }
+        }
+
+        /// <summary>Field number for the "option_value" field.</summary>
+        public const int OptionValueFieldNumber = 17;
+        private static readonly pb::FieldCodec<string> _repeated_optionValue_codec
+            = pb::FieldCodec.ForString(138);
+        private readonly pbc::RepeatedField<string> optionValue_ = new pbc::RepeatedField<string>();
+        /// <summary>
+        /// Defines an option value for this Node from graph options or packets.
+        /// </summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public pbc::RepeatedField<string> OptionValue {
+          get { return optionValue_; }
         }
 
         /// <summary>Field number for the "external_input" field.</summary>
@@ -2601,16 +3388,19 @@ namespace Mediapipe {
         /// config canonicalization.
         /// </summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public pbc::RepeatedField<string> ExternalInput {
           get { return externalInput_; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override bool Equals(object other) {
           return Equals(other as Node);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public bool Equals(Node other) {
           if (ReferenceEquals(other, null)) {
             return false;
@@ -2634,11 +3424,13 @@ namespace Mediapipe {
           if (Executor != other.Executor) return false;
           if (!object.Equals(ProfilerConfig, other.ProfilerConfig)) return false;
           if (MaxInFlight != other.MaxInFlight) return false;
+          if(!optionValue_.Equals(other.optionValue_)) return false;
           if(!externalInput_.Equals(other.externalInput_)) return false;
           return Equals(_unknownFields, other._unknownFields);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override int GetHashCode() {
           int hash = 1;
           if (Name.Length != 0) hash ^= Name.GetHashCode();
@@ -2657,6 +3449,7 @@ namespace Mediapipe {
           if (Executor.Length != 0) hash ^= Executor.GetHashCode();
           if (profilerConfig_ != null) hash ^= ProfilerConfig.GetHashCode();
           if (MaxInFlight != 0) hash ^= MaxInFlight.GetHashCode();
+          hash ^= optionValue_.GetHashCode();
           hash ^= externalInput_.GetHashCode();
           if (_unknownFields != null) {
             hash ^= _unknownFields.GetHashCode();
@@ -2665,12 +3458,17 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public override string ToString() {
           return pb::JsonFormatter.ToDiagnosticString(this);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
           if (Name.Length != 0) {
             output.WriteRawTag(10);
             output.WriteString(Name);
@@ -2717,13 +3515,74 @@ namespace Mediapipe {
             output.WriteRawTag(128, 1);
             output.WriteInt32(MaxInFlight);
           }
+          optionValue_.WriteTo(output, _repeated_optionValue_codec);
           externalInput_.WriteTo(output, _repeated_externalInput_codec);
           if (_unknownFields != null) {
             _unknownFields.WriteTo(output);
           }
+        #endif
         }
 
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (Name.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(Name);
+          }
+          if (Calculator.Length != 0) {
+            output.WriteRawTag(18);
+            output.WriteString(Calculator);
+          }
+          inputStream_.WriteTo(ref output, _repeated_inputStream_codec);
+          outputStream_.WriteTo(ref output, _repeated_outputStream_codec);
+          inputSidePacket_.WriteTo(ref output, _repeated_inputSidePacket_codec);
+          outputSidePacket_.WriteTo(ref output, _repeated_outputSidePacket_codec);
+          if (options_ != null) {
+            output.WriteRawTag(58);
+            output.WriteMessage(Options);
+          }
+          nodeOptions_.WriteTo(ref output, _repeated_nodeOptions_codec);
+          if (SourceLayer != 0) {
+            output.WriteRawTag(72);
+            output.WriteInt32(SourceLayer);
+          }
+          if (BufferSizeHint != 0) {
+            output.WriteRawTag(80);
+            output.WriteInt32(BufferSizeHint);
+          }
+          if (inputStreamHandler_ != null) {
+            output.WriteRawTag(90);
+            output.WriteMessage(InputStreamHandler);
+          }
+          if (outputStreamHandler_ != null) {
+            output.WriteRawTag(98);
+            output.WriteMessage(OutputStreamHandler);
+          }
+          inputStreamInfo_.WriteTo(ref output, _repeated_inputStreamInfo_codec);
+          if (Executor.Length != 0) {
+            output.WriteRawTag(114);
+            output.WriteString(Executor);
+          }
+          if (profilerConfig_ != null) {
+            output.WriteRawTag(122);
+            output.WriteMessage(ProfilerConfig);
+          }
+          if (MaxInFlight != 0) {
+            output.WriteRawTag(128, 1);
+            output.WriteInt32(MaxInFlight);
+          }
+          optionValue_.WriteTo(ref output, _repeated_optionValue_codec);
+          externalInput_.WriteTo(ref output, _repeated_externalInput_codec);
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public int CalculateSize() {
           int size = 0;
           if (Name.Length != 0) {
@@ -2762,6 +3621,7 @@ namespace Mediapipe {
           if (MaxInFlight != 0) {
             size += 2 + pb::CodedOutputStream.ComputeInt32Size(MaxInFlight);
           }
+          size += optionValue_.CalculateSize(_repeated_optionValue_codec);
           size += externalInput_.CalculateSize(_repeated_externalInput_codec);
           if (_unknownFields != null) {
             size += _unknownFields.CalculateSize();
@@ -2770,6 +3630,7 @@ namespace Mediapipe {
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(Node other) {
           if (other == null) {
             return;
@@ -2822,12 +3683,17 @@ namespace Mediapipe {
           if (other.MaxInFlight != 0) {
             MaxInFlight = other.MaxInFlight;
           }
+          optionValue_.Add(other.optionValue_);
           externalInput_.Add(other.externalInput_);
           _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
             switch(tag) {
@@ -2910,13 +3776,117 @@ namespace Mediapipe {
                 MaxInFlight = input.ReadInt32();
                 break;
               }
+              case 138: {
+                optionValue_.AddEntriesFrom(input, _repeated_optionValue_codec);
+                break;
+              }
               case 8042: {
                 externalInput_.AddEntriesFrom(input, _repeated_externalInput_codec);
                 break;
               }
             }
           }
+        #endif
         }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+            switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                Name = input.ReadString();
+                break;
+              }
+              case 18: {
+                Calculator = input.ReadString();
+                break;
+              }
+              case 26: {
+                inputStream_.AddEntriesFrom(ref input, _repeated_inputStream_codec);
+                break;
+              }
+              case 34: {
+                outputStream_.AddEntriesFrom(ref input, _repeated_outputStream_codec);
+                break;
+              }
+              case 42: {
+                inputSidePacket_.AddEntriesFrom(ref input, _repeated_inputSidePacket_codec);
+                break;
+              }
+              case 50: {
+                outputSidePacket_.AddEntriesFrom(ref input, _repeated_outputSidePacket_codec);
+                break;
+              }
+              case 58: {
+                if (options_ == null) {
+                  Options = new global::Mediapipe.CalculatorOptions();
+                }
+                input.ReadMessage(Options);
+                break;
+              }
+              case 66: {
+                nodeOptions_.AddEntriesFrom(ref input, _repeated_nodeOptions_codec);
+                break;
+              }
+              case 72: {
+                SourceLayer = input.ReadInt32();
+                break;
+              }
+              case 80: {
+                BufferSizeHint = input.ReadInt32();
+                break;
+              }
+              case 90: {
+                if (inputStreamHandler_ == null) {
+                  InputStreamHandler = new global::Mediapipe.InputStreamHandlerConfig();
+                }
+                input.ReadMessage(InputStreamHandler);
+                break;
+              }
+              case 98: {
+                if (outputStreamHandler_ == null) {
+                  OutputStreamHandler = new global::Mediapipe.OutputStreamHandlerConfig();
+                }
+                input.ReadMessage(OutputStreamHandler);
+                break;
+              }
+              case 106: {
+                inputStreamInfo_.AddEntriesFrom(ref input, _repeated_inputStreamInfo_codec);
+                break;
+              }
+              case 114: {
+                Executor = input.ReadString();
+                break;
+              }
+              case 122: {
+                if (profilerConfig_ == null) {
+                  ProfilerConfig = new global::Mediapipe.ProfilerConfig();
+                }
+                input.ReadMessage(ProfilerConfig);
+                break;
+              }
+              case 128: {
+                MaxInFlight = input.ReadInt32();
+                break;
+              }
+              case 138: {
+                optionValue_.AddEntriesFrom(ref input, _repeated_optionValue_codec);
+                break;
+              }
+              case 8042: {
+                externalInput_.AddEntriesFrom(ref input, _repeated_externalInput_codec);
+                break;
+              }
+            }
+          }
+        }
+        #endif
 
       }
 

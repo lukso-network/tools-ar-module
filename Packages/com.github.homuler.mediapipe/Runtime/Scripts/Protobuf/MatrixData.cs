@@ -45,24 +45,32 @@ namespace Mediapipe {
   /// Proto for serializing Matrix data.
   /// Data are stored in column-major order by default.
   /// </summary>
-  public sealed partial class MatrixData : pb::IMessage<MatrixData> {
+  public sealed partial class MatrixData : pb::IMessage<MatrixData>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
     private static readonly pb::MessageParser<MatrixData> _parser = new pb::MessageParser<MatrixData>(() => new MatrixData());
     private pb::UnknownFieldSet _unknownFields;
     private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<MatrixData> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Mediapipe.MatrixDataReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public MatrixData() {
       OnConstruction();
     }
@@ -70,6 +78,7 @@ namespace Mediapipe {
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public MatrixData(MatrixData other) : this() {
       _hasBits0 = other._hasBits0;
       rows_ = other.rows_;
@@ -80,6 +89,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public MatrixData Clone() {
       return new MatrixData(this);
     }
@@ -90,6 +100,7 @@ namespace Mediapipe {
 
     private int rows_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Rows {
       get { if ((_hasBits0 & 1) != 0) { return rows_; } else { return RowsDefaultValue; } }
       set {
@@ -99,11 +110,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "rows" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasRows {
       get { return (_hasBits0 & 1) != 0; }
     }
     /// <summary>Clears the value of the "rows" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearRows() {
       _hasBits0 &= ~1;
     }
@@ -114,6 +127,7 @@ namespace Mediapipe {
 
     private int cols_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int Cols {
       get { if ((_hasBits0 & 2) != 0) { return cols_; } else { return ColsDefaultValue; } }
       set {
@@ -123,11 +137,13 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "cols" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasCols {
       get { return (_hasBits0 & 2) != 0; }
     }
     /// <summary>Clears the value of the "cols" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearCols() {
       _hasBits0 &= ~2;
     }
@@ -138,6 +154,7 @@ namespace Mediapipe {
         = pb::FieldCodec.ForFloat(26);
     private readonly pbc::RepeatedField<float> packedData_ = new pbc::RepeatedField<float>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public pbc::RepeatedField<float> PackedData {
       get { return packedData_; }
     }
@@ -152,6 +169,7 @@ namespace Mediapipe {
     /// the default for mediapipe::Matrix and Eigen::Matrix*.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Mediapipe.MatrixData.Types.Layout Layout {
       get { if ((_hasBits0 & 4) != 0) { return layout_; } else { return LayoutDefaultValue; } }
       set {
@@ -161,21 +179,25 @@ namespace Mediapipe {
     }
     /// <summary>Gets whether the "layout" field is set</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool HasLayout {
       get { return (_hasBits0 & 4) != 0; }
     }
     /// <summary>Clears the value of the "layout" field</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void ClearLayout() {
       _hasBits0 &= ~4;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
       return Equals(other as MatrixData);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool Equals(MatrixData other) {
       if (ReferenceEquals(other, null)) {
         return false;
@@ -191,6 +213,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
       if (HasRows) hash ^= Rows.GetHashCode();
@@ -204,12 +227,17 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override string ToString() {
       return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
       if (HasRows) {
         output.WriteRawTag(8);
         output.WriteInt32(Rows);
@@ -226,9 +254,34 @@ namespace Mediapipe {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
+    #endif
     }
 
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (HasRows) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Rows);
+      }
+      if (HasCols) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Cols);
+      }
+      packedData_.WriteTo(ref output, _repeated_packedData_codec);
+      if (HasLayout) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) Layout);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
       if (HasRows) {
@@ -248,6 +301,7 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(MatrixData other) {
       if (other == null) {
         return;
@@ -266,7 +320,11 @@ namespace Mediapipe {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -292,11 +350,45 @@ namespace Mediapipe {
           }
         }
       }
+    #endif
     }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Rows = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            Cols = input.ReadInt32();
+            break;
+          }
+          case 26:
+          case 29: {
+            packedData_.AddEntriesFrom(ref input, _repeated_packedData_codec);
+            break;
+          }
+          case 32: {
+            Layout = (global::Mediapipe.MatrixData.Types.Layout) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    }
+    #endif
 
     #region Nested types
     /// <summary>Container for nested types declared in the MatrixData message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
       public enum Layout {
         [pbr::OriginalName("COLUMN_MAJOR")] ColumnMajor = 0,
