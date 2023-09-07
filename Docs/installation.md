@@ -4,18 +4,7 @@ LICENSE: [Apache License 2.0](/LICENSE)
 
 - [Mediapipe building](#mediapipe-building)
 - [Start desktop application](#start-desktop-application)
-- [Supported features](#supported-features)
-	- [Skeleton calculation](#skeleton-calculation)
-	- [Multiple models support](#multiple-models-support)
-	- [Cloth calculation](#cloth-calculation)
-	- [GLTF model loading](#gltf-model-loading)
-	- [Light estimation](#light-estimation)
-	- [VRM model loading](#vrm-model-loading)
-	- [VRM model material replacement](#vrm-material-replacement)
-	- [VRM animation of eye and mounth](#vrm-animation)
-	- [VRM physics](#vrm-physics)
-- [Technology description](#technology-description)
-- [3rd party libraries](#third-party-libraries)
+- [Application usage](/Docs/application_usage.md)
 
 ## Mediapipe building
 
@@ -29,7 +18,13 @@ A full compilation of Mediapipe Unity Plugin is described in a native documentat
 ## Start desktop application
 
 - Open Unity (testend in 2020.3)
-- Open **Lukso Single** scene ![](Docs/lukso_scene.jpg)
+- Open **Lukso Single** scene ![](/Docs/images/lukso_scene.jpg)
+- Start application:
+
+By defaul application start with web camera. You can switch to test video or image using UI: ![](/Docs/images/sources.jpg)
+
+There are several test images and videos in the **/Assets/vid** folder. It can be deleted for Android build to decrease apk size
+
 
 
 
