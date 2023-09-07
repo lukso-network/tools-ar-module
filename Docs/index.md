@@ -2,6 +2,13 @@
 
 LICENSE: [Apache License 2.0](/LICENSE)
 
+## Installation process
+Fully described [here](/Docs/application_usage.md)
+
+## Application usage
+[Here](/Docs/application_usage.md)
+
+## Techincal details:
 - [Android API](#android-api)
 - [API methods](#api-methods)
 - [Supported features](#supported-features)
@@ -14,6 +21,7 @@ LICENSE: [Apache License 2.0](/LICENSE)
 	- [VRM model material replacement](#vrm-material-replacement)
 	- [VRM animation of eye and mounth](#vrm-animation)
 	- [VRM physics](#vrm-physics)
+ 	- [Stable diffusion](#stable-diffusion)
 - [Technology description](#technology-description)
 - [3rd party libraries](#third-party-libraries)
 
@@ -161,6 +169,21 @@ We have added experimental functionality to capture animation from the user's fa
 The vrm plugin supports hair and clothing physics in models. When loading into the application, it is possible to enable or disable this functionality. 
 **Note:** Models must be true-to-life in order to correctly simulate vrm physics.
 **Note:** Each vrm file has the same basic structure, but is not compatible with each other and cannot use the same avatar (weights of bones, clothing and hair nodes are different). Therefore, when loading a vrm file, each model is associated with its own avatar.
+
+## Stable diffusion
+
+This feature uses a powerfull image generation technique to create a photo realistic image. It also uses an innovative approach to display the generated image over the model.
+It requires a server support as image generation can taks 20-30 seconds
+
+Main steps:
+1. Lusko application captures current image and send it to a simple proxy server using REST protocol.
+2. Proxy server preprocess image, generate a correct request for stable diffusion (promts, parameters and so on) and passes it to main Stable diffusion server.
+3. Processed image is passed back to lukso appplication
+4. Lukso application shows this image and also update model's texture to show image over the model
+
+Required software
+1. Proxy server - a simple rest server [Look here](/sb_server)
+2. Stable diffusion [server](https://gitgud.io/AUTOMATIC1111/stable-diffusion-webui) with control net model installed
 
 ------------
 ## Technology description
