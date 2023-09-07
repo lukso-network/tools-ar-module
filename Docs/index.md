@@ -3,7 +3,7 @@
 LICENSE: [Apache License 2.0](/LICENSE)
 
 ## Installation process
-Fully described [here](/Docs/application_usage.md)
+Fully described [here](/Docs/installation.md)
 
 ## Application usage
 [Here](/Docs/application_usage.md)
