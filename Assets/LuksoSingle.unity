@@ -10386,6 +10386,7 @@ MonoBehaviour:
   clothCamera: {fileID: 974677400}
   avatarManager: {fileID: 548813479}
   loader: {fileID: 1855046515}
+  poseManger: {fileID: 780931513}
 --- !u!114 &1109023621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10400,6 +10401,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   materialIdShader: {fileID: 4800000, guid: c81ffab7249b9314f948e87e87a7e288, type: 3}
   captureCamera: {fileID: 985747844}
+  setUnlit: 1
+  unitShader: {fileID: 4800000, guid: b0b6856545ef75844aff6a62b9d0a78d, type: 3}
+  restore_textures: 1
 --- !u!1 &1113359856
 GameObject:
   m_ObjectHideFlags: 0
