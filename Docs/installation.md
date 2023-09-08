@@ -7,6 +7,7 @@ LICENSE: [Apache License 2.0](/LICENSE)
 - [Application usage](/Docs/application_usage.md)
 - [Stable diffusion](#stable-diffusion)
 - [Android build](#android-build)
+- [Full application build](#full-application-build)
 
 ## Mediapipe building
 
@@ -44,10 +45,21 @@ To build android version of unity part just use standard unity pipeline:
 2. Build application
 
 ## Full application build 
+
 To build application (Unity module + Android logic) please do the following:
 1. Clone android application with submodules: ```>git clone --recurse-submodules git@github.com:lukso-network/digitalwardrobe-android-app.git```
 1. Export unity build to some empty folder (for example 'unity_export'). It will create a separate android application
-1. Merge this exported code with Android application^
-   -
+1. Merge this exported code with Android application:
+   - copy all necessary files from exported files to ```\digitalwardrobe-android-app\digitalwardrobe-ar-module-prebuilt``` folder with the following windows script (or similar bash)
+   ```
+   set dst=..\digitalwardrobe-android-app\digitalwardrobe-ar-module-prebuilt\
+   xcopy /E /Y .\unitylibrary\libs %dst%\unityLibrary\libs
+   xcopy /E /Y .\unitylibrary\symbols %dst%\unityLibrary\symbols
+   xcopy /E /Y .\unitylibrary\src\main\assets %dst%\unityLibrary\src\main\assets
+   xcopy /E /Y .\unitylibrary\src\main\Il2CppOutputProject %dst%\unityLibrary\src\main\Il2CppOutputProject
+   xcopy /E /Y .\unitylibrary\src\main\jniLibs %dst%\unityLibrary\src\main\jniLibs
+   xcopy /E /Y .\unitylibrary\src\main\jniStaticLibs %dst%\unityLibrary\src\main\jniStaticLibs
+
+   ```
 
 
