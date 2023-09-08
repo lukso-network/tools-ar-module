@@ -185,10 +185,10 @@ Required software
 1. Proxy server - a simple rest server [Look here](/sb_server)
 2. Stable diffusion [server](https://gitgud.io/AUTOMATIC1111/stable-diffusion-webui) with control net model installed
 
-![NOTE]
-Texture calculation requires to use [gamma color space](https://docs.unity3d.com/Manual/LinearRendering-LinearOrGammaWorkflow.html)
+**Note:**
+Texture calculation requires to use [gamma color space](https://docs.unity3d.com/Manual/LinearRendering-LinearOrGammaWorkflow.html).
 We use the following settings:
-![](/Docs/images/gammas_settings.jpg)
+![](/Docs/images/gamma_settings.jpg)
 
 ------------
 ## Technology description
