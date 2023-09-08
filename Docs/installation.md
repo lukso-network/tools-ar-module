@@ -39,5 +39,15 @@ You also need to enable REST api and add control net models
 
 ## Android build
 
+To build android version of unity part just use standard unity pipeline:
+1. In the build settings switch to Adroid platform
+2. Build application
+
+## Full application build 
+To build application (Unity module + Android logic) please do the following:
+1. Clone android application with submodules: ```>git clone --recurse-submodules git@github.com:lukso-network/digitalwardrobe-android-app.git```
+1. Export unity build to some empty folder (for example 'unity_export'). It will create a separate android application
+1. Merge this exported code with Android application^
+   -
 
 
