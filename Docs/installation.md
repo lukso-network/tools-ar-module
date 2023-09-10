@@ -47,7 +47,17 @@ To build android version of unity part just use standard unity pipeline:
 ## Full application build 
 
 To build application (Unity module + Android logic) please do the following:
-1. Clone android application with submodules: ```>git clone --recurse-submodules git@github.com:lukso-network/digitalwardrobe-android-app.git```
+1. Clone android application with submodules: ```git clone --recurse-submodules git@github.com:lukso-network/digitalwardrobe-android-app.git``` <br>
+Note. On windows you probably need to add the following settings to enable long paths in git: ```git config --system core.longpaths true```
+1. Switch application to branch 'unity_build': ```git checkout unity_build_clean```
+1. Go to **digitalwardrobe-ar-module-prebuilt** subfolder (it's a git submodule) and checkout branch ```git checkout os/windows/unity_clean```. This branch contains compiled version of last unity version
+1. Open Android Studio and build the project. (You need to specify sdk and ndk paths or add local.properties file: <br>
+   local.properties example:
+   ```
+   sdk.dir=D\:\\installed\\dev\\2020.3.30f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK
+   ndk.dir=D\:/installed/dev/2020.3.30f1/Editor/Data/PlaybackEngines/AndroidPlayer/NDK
+   ```
+2. 
 1. Export unity build to some empty folder (for example 'unity_export'). It will create a separate android application
 1. Merge this exported code with Android application:
    - copy all necessary files from exported files to ```\digitalwardrobe-android-app\digitalwardrobe-ar-module-prebuilt``` folder with the following windows script (or similar bash)
