@@ -57,7 +57,8 @@ Note. On windows you probably need to add the following settings to enable long 
    sdk.dir=D\:\\installed\\dev\\2020.3.30f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK
    ndk.dir=D\:/installed/dev/2020.3.30f1/Editor/Data/PlaybackEngines/AndroidPlayer/NDK
    ```
-2. 
+   If GRADLE JDK is not detected automatically please set it to 'Use embedded' (Settings->Build,Execution,Deploymonet->Build Tools->Gradle settings)
+
 1. Export unity build to some empty folder (for example 'unity_export'). It will create a separate android application
 1. Merge this exported code with Android application:
    - copy all necessary files from exported files to ```\digitalwardrobe-android-app\digitalwardrobe-ar-module-prebuilt``` folder with the following windows script (or similar bash)
