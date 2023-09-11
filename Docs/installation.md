@@ -59,7 +59,7 @@ Note. On windows you probably need to add the following settings to enable long 
    ndk.dir=D\:/installed/dev/2020.3.30f1/Editor/Data/PlaybackEngines/AndroidPlayer/NDK
    ```
    If GRADLE JDK is not detected automatically please set it to 'Use embedded' (Settings->Build,Execution,Deploymonet->Build Tools->Gradle settings)
-1. Compile project. 
+1. Compile project.
 
 ## Update andorid project
 
@@ -68,8 +68,8 @@ Every time when unity module is changed you need to export changes and update fu
 1. Export unity build to some empty folder (for example 'unity_export'). It will create a separate android application
    ![](/Docs/images/export.jpg)
 1. Merge this exported code with Android application:
-   Copy all necessary files from exported files to ```\digitalwardrobe-android-app\digitalwardrobe-ar-module-prebuilt``` folder with the following windows script (or similar bash)
-   You can use [copy_files.bat](/Docs/copy_files.bat) script to do it or as reference for linux:
+   Copy all necessary files from 'unity_export' folder to ```\digitalwardrobe-android-app\digitalwardrobe-ar-module-prebuilt``` folder. 
+   Use this scipt [copy_files.bat](/Docs/copy_files.bat) in windows or copy the same folders on linux
 
 
 
