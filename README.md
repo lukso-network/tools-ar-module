@@ -1,6 +1,7 @@
 
 # LUKSO AR module
-Please look [here](/Docs/index.md)
+
+[See documentation for details](/Docs/index.md)
 
 
 
